@@ -1,0 +1,125 @@
+<?php
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+?>
+<div id="sub_type_3" class="subtypes">
+	
+	<input type="hidden" name="require_configurable" title="<?=lang('br_details').' - '.lang('br_configurable_product_required').' '.lang('br_is_required')?>" id="sub_type_req_3"  value="1" class="{required:true} sub_type_req" />
+
+	<?php
+		if(isset($config_opts)){
+	?>
+		
+		<div id="config_opts_container">
+			<div id="config_opts_instructions">
+				<?=lang('br_config_opts_instructions')?>
+			</div>
+			<select id="config_opts" multiple="multiple" name="config_opts[]" title="<?=lang('br_select_attributes')?>">
+				<?php
+					foreach($config_opts as $opts){
+						echo '<option value="'.$opts["attribute_id"].'">'.$opts["title"].'</option>'; 
+					}
+				?>
+				
+			</select>
+			<p>
+				<div id="create_config" class="add_btn"><?=lang('br_create')?></div>
+			</p>
+		</div>
+		<div id="config_form_container"></div>
+				<script type="text/javascript">
+				$(function() {
+					$("#config_opts").asmSelect({
+						addItemTarget: 'bottom',
+						sortable: true
+					});
+					$('#create_config').bind('click',function(){
+						if($('#config_opts').val() != null){
+							$.post(	'<?=$config_opts_link?>',
+									{'fields':$('#config_opts').val()},
+									function(data){
+										$('#config_opts_container').remove();
+										$('#config_form_container').html(data);
+										_bind_config_button();
+									});
+						}else{
+							alert('<?=lang('br_configurable_create_error')?>');
+						}
+						return false; 
+					});
+				}); 
+		</script>
+	
+	<?php
+		}else{
+			echo $config_products;
+			echo '	<script type="text/javascript">
+						$(function(){
+							_bind_config_button();
+							$(\'.config_item_remove\').unbind().click(function(){
+								$(this).parent().parent().remove();
+								return false;
+							});
+						});
+					</script>
+				';
+		}
+	?>
+</div>
+<script type="text/javascript">
+	function _bind_config_button(){
+		$('#config_selected').tableDnD();
+
+		$('#configurableCreate').bind('click',function(){
+			var config_attr = $('#config_attr').val();
+			var config_sku = $('#config_sku').val();
+			var config_qty = $('#config_qty').val();
+			var config_adjust_type = $('#config_adjust_type').val();
+			var config_adjust_type = $('#config_adjust').val();
+			var attr = config_attr.split(',');
+			var tmp = '<tr>';
+			for(i=0;i<attr.length;i++){
+				tmp += '<td><input type="hidden" name="config_attr_'+attr[i]+'[]" value="'+escape($('select[name=configurable_'+attr[i]+'] option:selected').text())+'" />'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'</td>';
+			}
+			tmp += 	'<td class="w50"><input type="text" name="config_sku[]" /></td><td class="w50"><input type="text" name="config_qty[]" value="0" /></td><td>'+
+					'<select style="display:none" name="config_adjust_type[]"><option>fixed</option><option>percent</option></select>'+
+					'<input type="text" name="config_adjust[]" style="width:50px" /></td><td class="w50"><a href="#" class="config_item_remove">remove</a></td></tr>';
+			$(tmp).prependTo($('#config_selected tbody'));
+
+			// reset the dnd for the rows
+				$('#config_selected').unbind().tableDnD();
+	
+			$('.config_item_remove').unbind().bind('click',function(){
+				$(this).parent().parent().remove();
+				var rows = $('#config_selected tbody tr').size();
+				if(rows == 0){
+					$('#sub_type_req_3').val('');
+				}				
+				return false;
+			});
+			
+			$('#sub_type_req_3').val(1);
+		});
+	}
+</script>

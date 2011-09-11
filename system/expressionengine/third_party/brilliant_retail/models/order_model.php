@@ -1,0 +1,409 @@
+<?php
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+
+class Order_model extends CI_Model {
+
+	function get_order($order_id){
+		$this->load->model('customer_model');
+		$order = array();
+		$this->db->select('o.*,m.*');
+		$this->db->from('br_order o');
+		$this->db->join('members m', 'o.member_id = m.member_id');
+		$this->db->where('o.order_id = '.$order_id);
+		$query = $this->db->get();
+		foreach($query->result_array() as $val){
+			$member = $this->customer_model->get_customer_profile($val["member_id"]);
+			$order = $val;
+			$order["member"] = $member;
+		}
+		$this->db->select('	oi.*,
+							opts.options as opts,
+							opts.order_item_option_id');
+		$this->db->from('br_order_item oi');
+		$this->db->where('oi.order_id = '.$order_id);
+		$this->db->join('br_order_options opts', 
+						'opts.order_id = oi.order_id AND opts.order_item_id = oi.order_item_id', 'left');
+		$query = $this->db->get();
+		$i = 0;
+		foreach($query->result_array() as $val){
+			$order['items'][$i] = $val;	
+			$i++;
+		}
+		$this->db->select('*');
+		$this->db->from('br_order_address');
+		$this->db->where('order_id',$order_id);
+		$query = $this->db->get();
+		$i = 0;
+		foreach($query->result_array() as $val){
+			$order['address'][$i] = $val;	
+			$i++;
+		}
+		// Get payment info
+			$this->db->select('*');
+			$this->db->from('br_order_payment');
+			$this->db->where('order_id',$order_id);
+			$query = $this->db->get();
+			$i = 0;
+			foreach($query->result_array() as $val){
+				$order["payment"][$i] = $val;
+				$i++;
+			}		
+
+		// Get shipping info
+			$this->db->select('*');
+			$this->db->from('br_order_ship');
+			$this->db->where('order_id',$order_id);
+			$query = $this->db->get();
+			$i = 0;
+			foreach($query->result_array() as $val){
+				$order["shipment"][$i] = $val;
+				$i++;
+			}	
+			
+		// Order Notes 
+			$this->db->select('*');
+			$this->db->from('br_order_note');
+			$this->db->where('order_id',$order_id);
+			$this->db->order_by('created','desc');
+			$query = $this->db->get();
+			$i = 0;
+			$order["notes"][0] = array();
+			foreach($query->result_array() as $val){
+				$order["notes"][$i] = $val; 
+				$order["notes"][$i]["order_created"] = $val["created"]; 
+				$i++;
+			}	
+		return $order;
+	}
+	
+	function get_order_collection($start_date='',$end_date='',$limit=''){
+		$this->load->model('customer_model');
+		$this->db->select('o.*,m.*');
+		$this->db->from('br_order o');
+		$this->db->join('members m', 'o.member_id = m.member_id');
+		// Are there time boundaries
+			if($start_date != ''){
+				$start_date = date("U",strtotime(date("Y-n-d 00:00:00",strtotime($start_date))));
+				$this->db->where('created >=',$start_date);
+			}
+			if($end_date != ''){
+				$end_date = date("U",strtotime(date("Y-n-d 23:59:59",strtotime($end_date))));
+				$this->db->where('created <=',$end_date);
+			}
+		// Run 
+		$this->db->where('site_id =',$this->config->item('site_id'));
+		$this->db->where('status_id >=',0);
+		$this->db->order_by('created','desc');
+		$query = $this->db->get();
+		
+		// Build the output array
+		$i = 0;
+		$orders = array();
+		foreach($query->result_array() as $val){
+			$member = $this->customer_model->get_customer_data($val["member_id"]);
+			$orders[$i] = array_merge($member["custom"],$val);	
+			$orders[$i]["total"] = ($orders[$i]["base"]+$orders[$i]["tax"]+$orders[$i]["shipping"]-$orders[$i]["discount"]);
+			$i++;
+		}
+		if($limit != ''){
+			$cap = count($orders);
+			for($i=$limit;$i<$cap;$i++){
+				unset($orders[$i]);
+			}
+		}
+		return $orders;
+	}
+	
+	function get_download_collection($start_date='',$end_date='',$limit=''){
+		$this->load->model('customer_model');
+		$this->db->select('o.order_id,o.status_id,m.email,o.created,m.member_id,d.cnt,d.license');
+		$this->db->from('br_order_download d');
+		$this->db->join('br_order o', 'd.order_id = o.order_id');
+		$this->db->join('members m', 'o.member_id = m.member_id');
+		// Are there time boundaries
+			if($start_date != ''){
+				$start_date = date("U",strtotime(date("Y-n-d 00:00:00",strtotime($start_date))));
+				$this->db->where('o.created >=',$start_date);
+			}
+			if($end_date != ''){
+				$end_date = date("U",strtotime(date("Y-n-d 23:59:59",strtotime($end_date))));
+				$this->db->where('o.created <=',$end_date);
+			}
+		// Run 
+		$this->db->where('site_id =',$this->config->item('site_id'));
+		$this->db->where('status_id >=',0);
+		$this->db->order_by('o.created','asc');
+		$query = $this->db->get();
+		
+		// Build the output array
+		$i = 0;
+		$orders = array();
+		foreach($query->result_array() as $val){
+			$member = $this->customer_model->get_customer_data($val["member_id"]);
+			$orders[$i] = array_merge($member["custom"],$val);	
+			$i++;
+		}
+		if($limit != ''){
+			$cap = count($orders);
+			for($i=$limit;$i<$cap;$i++){
+				unset($orders[$i]);
+			}
+		}
+		
+		return $orders;
+	}
+	
+	function get_order_coupons($start_date='',$end_date='',$limit=''){
+		$this->load->model('customer_model');
+		$this->db->select('o.*,m.*');
+		$this->db->from('br_order o');
+		$this->db->join('members m', 'o.member_id = m.member_id');
+		// Are there time boundaries
+			if($start_date != ''){
+				$start_date = date("U",strtotime(date("Y-n-d 00:00:00",strtotime($start_date))));
+				$this->db->where('created >=',$start_date);
+			}
+			if($end_date != ''){
+				$end_date = date("U",strtotime(date("Y-n-d 23:59:59",strtotime($end_date))));
+				$this->db->where('created <=',$end_date);
+			}
+		// Run 
+		$this->db->where('site_id =',$this->config->item('site_id'));
+		$this->db->where('status_id >=',0);
+		$this->db->where('coupon_code <>','');
+		$this->db->order_by('created','desc');
+		$query = $this->db->get();
+		
+		// Build the output array
+		$i = 0;
+		$orders = array();
+		foreach($query->result_array() as $val){
+			$member = $this->customer_model->get_customer_data($val["member_id"]);
+			$orders[$i] = array_merge($member["custom"],$val);	
+			$i++;
+		}
+		if($limit != ''){
+			$cap = count($orders);
+			for($i=$limit;$i<$cap;$i++){
+				unset($orders[$i]);
+			}
+		}
+		return $orders;
+	}
+	
+	function get_best_products($start_date='',$end_date='',$limit=''){
+		$this->db->select('product_id,count(i.product_id)*quantity AS qty, title, SUM((i.price-i.discount)*i.quantity) AS total_sales');
+		$this->db->from('br_order_item i');
+		$this->db->join("br_order o","o.order_id = i.order_id");
+		
+		if($start_date != ''){
+				$start_date = date("Y-n-d 00:00:00",strtotime($start_date));
+				$this->db->where('i.created >=',$start_date);
+			}
+			if($end_date != ''){
+				$end_date = date("Y-n-d 23:59:59",strtotime($end_date));
+				$this->db->where('i.created <=',$end_date);
+			}
+		$this->db->where('o.status_id >=','1');
+		$this->db->where('o.site_id =',$this->config->item('site_id'));
+		$this->db->group_by('i.product_id');
+		$this->db->order_by('qty','desc');
+		
+		$query = $this->db->get();
+		
+		$i = 0;
+		$products = array();
+		foreach($query->result_array() as $val){
+			$products[$i] = array_merge($val);	
+			$i++;
+		}
+		if($limit != ''){
+			$cap = count($products);
+			for($i=$limit;$i<$cap;$i++){
+				unset($products[$i]);
+			}
+		}
+		return $products;
+	}
+	
+	
+	function get_order_by_member($member_id,$order_id=''){
+		$orders = array();
+		$this->db->from('br_order')
+				->order_by('created','desc')
+				->where('member_id',$member_id); 
+		if($order_id != ''){
+			$this->db->where('order_id',$order_id); 
+		}
+		$this->db->where('site_id =',$this->config->item('site_id'));
+		$this->db->where('status_id >=',0); 
+		$query = $this->db->get();
+		foreach ($query->result_array() as $row){
+			$orders[] = $this->get_order($row["order_id"]);
+		}
+		return $orders;
+	}
+	
+	function get_downloads_by_member($member_id,$hash=''){
+		$downloads = array();
+		$this->db->select('	o.*,
+							d.*, 
+							i.title')
+				->from('br_order o')
+				->join('br_order_download d','o.order_id = d.order_id')
+				->join('br_order_item i','i.order_id = d.order_id')
+				->where('o.site_id =',$this->config->item('site_id'))
+				->where('o.member_id',$member_id)
+				->where('o.status_id >=',1); // Canceled = 0 so don't show it. 
+		if($hash != ''){
+			$this->db->where("md5(d.order_download_id)",$hash);
+		}
+		$this->db->group_by("d.order_download_id");
+		
+		$this->db->order_by('o.created','desc'); 
+		$query = $this->db->get();
+		$tmp = array();
+		$file = array();
+		foreach ($query->result_array() as $row){
+			$file = $this->_get_download_file($row);
+			foreach($row as $key => $val){
+				$tmp[$key] = $val;
+			}
+			// We want the purchase version and the current version
+			$tmp["purchase_version"] = $tmp["download_version"];
+			$tmp = array_merge($tmp,$file);
+			$downloads[] = $tmp;
+		}
+		return $downloads;
+	}
+	
+	function update_downloads_by_member($member_id,$order_download_id,$data){
+		$this->db->where('order_download_id',$order_download_id)
+				->update('br_order_download',$data);
+		return true;
+	}
+	
+	function create_order($order){
+		$this->db->insert('br_order',$order);
+		// Grab the order id
+		$order_id = $this->db->insert_id();
+		return $order_id;
+	}
+	
+	function create_shipment($data){
+		$this->db->insert('br_order_ship',$data);
+	}
+	
+	function create_order_address($address){
+		$this->db->insert('br_order_address',$address);
+	}
+
+	function create_order_download($download){
+		$this->db->insert('br_order_download',$download);
+	}
+
+	function create_order_payment($payment){
+		$this->db->insert('br_order_payment',$payment);
+	}
+
+	function create_order_item($item){
+		$this->db->insert('br_order_item',$item);
+	}
+	
+	function reduce_item_inventory($item){
+		// Reduce the Product Inventory 
+			// Get the current quantity 
+				$query = $this->db->select('quantity')->from('br_product')->where('product_id',$item["product_id"])->get();
+				$row = $query->result();
+				$quantity = $row[0]->quantity;
+	
+			// 	New Quantity 
+				$quantity =  $quantity - $item["quantity"];
+				$data = array('quantity' => $quantity);
+				$this->db->where('product_id',$item["product_id"]);
+				$this->db->update('br_product',$data);
+
+		// Reduce the Configurable Product Inventory 
+			if($item["configurable_id"] != 0){
+				// Get the current quantity 
+				$query = $this->db->select('qty')->from('br_product_configurable')->where('configurable_id',$item["configurable_id"])->get();
+				$row = $query->result();
+				$quantity = $row[0]->qty;
+	
+				// 	New Quantity 
+				$quantity =  $quantity - $item["quantity"];
+				$data = array('qty' => $quantity);
+				$this->db->where('configurable_id',$item["configurable_id"]);
+				$this->db->update('br_product_configurable',$data);	
+			}
+	}
+	
+	function create_order_note($arr){
+		$this->db->insert('br_order_note',$arr);
+		return true;	
+	}
+	
+	function remove_order_note($order_note_id){
+		$this->db->where('order_note_id',$order_note_id);
+		$this->db->delete('br_order_note');
+		return true;	
+	}
+	
+	function update_order_status($data){
+		$order_id = $data["order_id"];
+		unset($data["order_id"]);
+		$this->db->where('order_id',$order_id);
+		$this->db->update('br_order',$data);
+		return true;
+	}
+	
+	function update_subscription_status($data){
+		$order_id = $data["order_id"];
+		unset($data["order_id"]);
+		$this->db->where('order_id',$order_id);
+		$this->db->update('br_order_subscription',$data);
+		return true;
+	}	
+	
+	function _get_gateway($gid){
+		$this->db->where('md5(config_id)',$gid);
+		$this->db->from('br_config');
+		$query = $this->db->get();
+		$row = $query->result_array();
+		return $row[0]["code"];
+	}
+	
+	function _get_download_file($item){
+		$this->db->where('product_id',$item["product_id"])
+					->from('br_product_download')
+					->order_by('created',"desc")
+					->limit(1);
+		$query = $this->db->get();
+		$row = $query->result_array();
+		$row[0]["order_id"] = $item["order_id"];
+		return $row[0];
+	}
+	
+}

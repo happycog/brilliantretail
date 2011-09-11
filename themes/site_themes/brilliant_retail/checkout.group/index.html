@@ -1,0 +1,352 @@
+{!-- // Checkout
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+// !--}
+{if {exp:brilliant_retail:cart_items} == 0}
+	{redirect=''}
+{/if}
+{embed="_assets/header"}
+<body>
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- Checkout -->
+<div id="checkout" class="page">
+	<div class="wrapper">
+    
+		<h1>Checkout</h1>
+
+	{if '{exp:brilliant_retail:message_exists}'}
+		{exp:brilliant_retail:show_message}
+	{/if}
+	
+{exp:brilliant_retail:checkout_form}
+
+	{form_open}        
+
+        <div id="checkout_wrapper">
+        	
+			<div class="col1">
+            	{if logged_out}
+	            	<h3>Account</h3>
+
+                    <div class="name">
+	                    <label>First Name *<label>
+	                    <input 	class="txtinp required" 
+	                    		name="br_fname"  
+	                    		value="{if "{exp:brilliant_retail:form_value for='br_fname'}"}{exp:brilliant_retail:form_value for='br_fname'}{if:else}{exp:member:custom_profile_data}{br_billing_fname}{/exp:member:custom_profile_data}{/if}" 
+	                    		type="text" />
+	                </div>
+	                <div class="name">
+	                    <label>Last Name *</label>
+	                    <input 	class="txtinp required" 
+	                    		name="br_lname" 
+	                    		value="{if "{exp:brilliant_retail:form_value for='br_lname'}"}{exp:brilliant_retail:form_value for='br_lname'}{if:else}{exp:member:custom_profile_data}{br_billing_lname}{/exp:member:custom_profile_data}{/if}" 
+	                    		type="text" />
+	                </div>
+	                <div class="clearboth"><!-- --></div>
+                    <div class="address">
+	                    <label>E-mail *</label>
+	                    <input 	class="txtinp required email" 
+	                    		name="email" 
+	                    		value="{if "{exp:brilliant_retail:form_value for='email'}"}{exp:brilliant_retail:form_value for='email'}{/if}"
+	                    		id="email" />
+	                </div>
+                    <div class="address">
+	                    <label>Confirm E-mail *</label>
+	                    	<input 	class="txtinp required email" 
+	                    			equalTo="#email" 
+	                    			value="{if "{exp:brilliant_retail:form_value for='confirm_email'}"}{exp:brilliant_retail:form_value for='confirm_email'}{/if}"
+	                    			id="confirm_email"  />
+	                </div>
+	                <div class="clearboth"><!-- --></div>
+				{if:else}
+	            	{exp:member:custom_profile_data}
+		            	<input type="hidden" name="br_fname" value="{br_fname}" />	
+		            	<input type="hidden" name="br_lname" value="{br_lname}" />	
+	            	{/exp:member:custom_profile_data}
+	            {/if}
+            	
+	            <h3>Billing Address</h3>
+                <div class="name">
+                    <label>First Name *</label>
+                    <input 	class="txtinp required" 
+                    		name="br_billing_fname" 
+                    		value="{if "{exp:brilliant_retail:form_value for='br_billing_fname'}"}{exp:brilliant_retail:form_value for='br_billing_fname'}{if:else}{exp:member:custom_profile_data}{br_billing_fname}{/exp:member:custom_profile_data}{/if}"
+                    		type="text" />
+                </div>
+                <div class="name">
+                    <label>Last Name *</label>
+                    <input 	class="txtinp required" 
+                    		name="br_billing_lname" 
+                    		value="{if "{exp:brilliant_retail:form_value for='br_billing_lname'}"}{exp:brilliant_retail:form_value for='br_billing_lname'}{if:else}{exp:member:custom_profile_data}{br_billing_lname}{/exp:member:custom_profile_data}{/if}"
+                    		type="text" />
+                </div>
+                <div class="clearboth"><!-- --></div>
+                <div class="name">
+                    <label>Company</label>
+                    <input 	class="txtinp" 
+                    		name="br_billing_company" 
+                    		value="{if "{exp:brilliant_retail:form_value for='br_billing_company'}"}{exp:brilliant_retail:form_value for='br_billing_company'}{if:else}{exp:member:custom_profile_data}{br_billing_company}{/exp:member:custom_profile_data}{/if}"
+							type="text" />
+                </div>
+                <div class="name">
+                    <label>Telephone *</label>
+                    <input 	class="txtinp required" 
+                    		name="br_billing_phone" 
+                    		value="{exp:member:custom_profile_data}{br_billing_phone}{/exp:member:custom_profile_data}" 
+                    		type="text" />
+                </div>
+                <div class="clearboth"><!-- --></div>
+                
+                <div class="address">
+                    <label>Address *</label>
+                    <div>
+                    	<input 	class="txtinp required" 
+                    			name="br_billing_address1" 
+                    			value="{exp:member:custom_profile_data}{br_billing_address1}{/exp:member:custom_profile_data}" 
+                    			type="text" />
+                    </div>
+                    <div>
+                	    <input 	class="txtinp" 
+                	    		name="br_billing_address2" 
+                	    		value="{exp:member:custom_profile_data}{br_billing_address2}{/exp:member:custom_profile_data}" 
+                	    		type="text" />
+                    </div>	
+                </div>
+                <div class="country">
+                    <label>Country *</label>
+                  	{if logged_in}
+	                    {exp:member:custom_profile_data}
+		                    {exp:brilliant_retail:countries name="br_billing_country" id="br_billing_country" class="required" value="{br_billing_country}"}
+	                    {/exp:member:custom_profile_data}
+					{if:else}
+					   	{exp:brilliant_retail:countries name="br_billing_country" id="br_billing_country" class="required" value="{br_billing_country}"}
+	                {/if}
+	            </div>
+                
+                <div class="city">
+                    <label>City *</label>
+                    <input class="txtinp required" name="br_billing_city" value="{exp:member:custom_profile_data}{br_billing_city}{/exp:member:custom_profile_data}" type="text" />
+                </div>
+                
+                <div class="state">
+                    <label>State *</label> 
+                    {if logged_in}
+	                    {exp:member:custom_profile_data}
+		                    {exp:brilliant_retail:states name="br_billing_state" id="br_billing_state" class="required" value="{br_billing_state}" country_select="br_billing_country"}
+	                    {/exp:member:custom_profile_data}
+					{if:else} 
+					   	{exp:brilliant_retail:states name="br_billing_state" id="br_billing_state" class="required" value="CA" country_select="br_billing_country"}
+	                {/if}
+                </div>
+
+				<div class="zip">
+                    <label>Zip Code *</label>
+                    <input class="txtinp required" name="br_billing_zip" id="br_billing_zip" value="{exp:member:custom_profile_data}{br_billing_zip}{/exp:member:custom_profile_data}" type="text" />
+                </div>
+                
+                <div class="clearboth"><!-- --></div>
+                
+                <div class="option">
+                    <label>
+                    	<input id="ship_same_address" name="ship_same_address" type="checkbox" checked="checked" /> Ship to the same address
+                    </label>
+                </div>
+                
+                <div id="shipping_address">
+                	<h3>Shipping Address</h3>
+	                <div class="name">
+	                    <label>First Name *</label>
+	                    <input class="txtinp required" name="br_shipping_fname" value="{exp:member:custom_profile_data}{br_shipping_fname}{/exp:member:custom_profile_data}" type="text" />
+	                </div>
+	                <div class="name">
+	                    <label>Last Name *</label>
+	                    <input class="txtinp required" name="br_shipping_lname" value="{exp:member:custom_profile_data}{br_shipping_lname}{/exp:member:custom_profile_data}" type="text" />
+	                </div>
+	                <div class="clearboth"><!-- --></div>
+	                
+	                <div class="name">
+	                    <label>Company</label>
+	                    <input class="txtinp" name="br_shipping_company" value="{exp:member:custom_profile_data}{br_shipping_company}{/exp:member:custom_profile_data}" type="text" />
+	                </div>
+	                <div class="name"> 
+	                    <label>Telephone *</label>
+	                    <input class="txtinp required" name="br_shipping_phone" value="{exp:member:custom_profile_data}{br_shipping_phone}{/exp:member:custom_profile_data}" type="text" />
+	                </div>
+	                <div class="clearboth"><!-- --></div>
+	                
+	                <div class="address">
+	                    <label>Address *</label>
+	                    <div>
+	                    	<input class="txtinp required" name="br_shipping_address1" value="{exp:member:custom_profile_data}{br_shipping_address1}{/exp:member:custom_profile_data}" type="text" />
+	                    </div>
+                    	<div>
+                	    	<input class="txtinp" name="br_shipping_address2" value="{exp:member:custom_profile_data}{br_shipping_address2}{/exp:member:custom_profile_data}" type="text" />
+                	    </div>
+	                </div>
+	                
+                    <div class="country">
+	                    <label>Country *</label>
+		                  	{if logged_in}
+			                    {exp:member:custom_profile_data}
+				                    {exp:brilliant_retail:countries name="br_shipping_country" id="br_shipping_country" class="required" value="{br_shipping_country}"}
+			                    {/exp:member:custom_profile_data}
+							{if:else}
+							   	{exp:brilliant_retail:countries name="br_shipping_country" id="br_shipping_country" class="required" value="{br_shipping_country}"}
+			                {/if}
+	                </div>
+	                
+	                <div class="city">
+	                    <label>City *</label>
+	                    	<input class="txtinp" name="br_shipping_city" value="{exp:member:custom_profile_data}{br_shipping_city}{/exp:member:custom_profile_data}" type="text" />
+	                </div>
+	                
+	                <div class="state">
+	                    <label>State *</label>
+	                {if logged_in}
+	                    {exp:member:custom_profile_data}
+		                    {exp:brilliant_retail:states name="br_shipping_state" id="br_shipping_state" class="required" value="{br_shipping_state}" country_select="br_shipping_country"}
+	                    {/exp:member:custom_profile_data}
+					{if:else} 
+					   	{exp:brilliant_retail:states name="br_shipping_state" id="br_shipping_state" class="required" value="{br_shipping_state}" country_select="br_shipping_country"}
+	                {/if}
+	                </div>
+	                
+	                <div class="zip">
+	                    <label>Zip Code *</label>
+	                    <input class="txtinp" name="br_shipping_zip" id="br_shipping_zip" value="{exp:member:custom_profile_data}{br_shipping_zip}{/exp:member:custom_profile_data}" type="text" />
+	                </div>
+	                
+	                <div class="clearboth"><!-- --></div>
+                </div>
+            </div>
+            
+            <div class="col2">
+            	
+            	<div id="get_shipping_container">
+	                <div class="btn" id="get_shipping_rates">
+	                	Get Shipping Rates
+	                </div>
+				</div> 
+            	<h3>Shipping</h3>                
+                               
+                <div id="shipping_options">
+					<div id="options">
+						Enter your shipping information<br />
+	                	to display options. 
+					</div>
+                </div>
+                
+                <h3>Payment</h3>
+
+                {payment_options}
+
+			</div>
+            
+            <div class="col3">
+                <h3>Shopping Cart</h3>
+                <table>
+                	<thead>
+                    	<tr>
+                        	<th class="col1">Item</th>
+                            <th class="col2">Qty</th>
+                            <th class="col3">Price</th>
+                            <th class="col3">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                    	<tr>
+                        	<td colspan="4">
+	                            {exp:brilliant_retail:cart_discount}
+	                        		SubTotal: <div id="subtotal_container">{subtotal}</div><br />
+	
+									{exp:brilliant_retail:promo_form form="no"}
+										<span class="discount">Discount: <div id="discount_container">({discount})</div></span><br />
+									{/exp:brilliant_retail:promo_form}
+	
+								{/exp:brilliant_retail:cart_discount}
+
+								Tax: <div id="tax_container">-</div><br />
+								Shipping: <div id="shipping_container">-</div><br />
+	                    		<strong>TOTAL:
+	                    			<div id="total_container">
+	                    				{exp:brilliant_retail:cart_total}
+	                    			</div>
+	                    		</strong></td>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    	{exp:brilliant_retail:cart form="no"}
+	                    	{items}
+		                    	<tr>
+		                        	<td class="col1">{title}</td>
+		                            <td class="col2">{quantity}</td>
+		                            <td class="col3">{price}</td>
+		                            <td class="col3">{subtotal}</td>
+		                        </tr>
+	                    	{/items}
+						{/exp:brilliant_retail:cart}
+                    </tbody>
+                </table>
+
+				<div class="ship_instr">
+                    <label>Special Instructions</label>
+                    	<textarea class="txtarea" name="instructions" cols="" rows=""></textarea>
+                </div>
+
+                <div class="option">
+                    <input name="accept_terms" type="checkbox" class="required" value="" /> &nbsp;I accept the <a href="{exp:brilliant_retail:path src='content/terms_of_service'}" target="_blank">terms</a>
+                </div>
+                
+                <div class="btn" id="checkout_btn"> 
+                    <p>Place Order</p>
+                    <input name="" type="image" src="{theme}/images/0.gif" alt="Place Order" />
+                </div>
+                
+            </div>
+            <div class="clearboth"><!-- --></div>
+        
+        </form>
+        </div>
+    </div>
+</div> <!-- checkout -->
+<!-- end of Checkout Page -->
+{/exp:brilliant_retail:checkout_form}
+
+{embed="_assets/footer"}

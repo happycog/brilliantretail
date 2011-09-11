@@ -1,0 +1,60 @@
+{!--
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+{exp:rss:feed channel="blog"}
+<?xml version="1.0" encoding="{encoding}"?>
+<rss version="2.0"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+    xmlns:admin="http://webns.net/mvcb/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/">
+
+    <channel>
+    
+    <title><![CDATA[{site_name} {channel_name}]]></title>
+    <link>{channel_url}</link>
+    <description>{channel_description}</description>
+    <dc:language>{channel_language}</dc:language>
+    <dc:creator></dc:creator>
+    <dc:rights>Copyright {gmt_date format="%Y"}</dc:rights>
+    <dc:date>{gmt_date format="%Y-%m-%dT%H:%i:%s%Q"}</dc:date>
+    <admin:generatorAgent rdf:resource="http://expressionengine.com/" />
+    
+{exp:channel:entries channel="blog" limit="10" dynamic_start="on" disable="member_data|pagination"}
+    <item>
+      <title><![CDATA[{title}]]></title>
+      <link>{title_permalink='site/index'}</link>
+      <guid>{title_permalink='site/index'}#When:{gmt_entry_date format="%H:%i:%sZ"}</guid>
+      <description><![CDATA[{blog_summary}]]></description>
+      <dc:subject><![CDATA[{categories backspace="1"}{category_name}, {/categories}]]></dc:subject>
+      <dc:date>{gmt_entry_date format="%Y-%m-%dT%H:%i:%s%Q"}</dc:date>
+    </item>
+{/exp:channel:entries}
+    
+    </channel>
+</rss>
+
+{/exp:rss:feed}

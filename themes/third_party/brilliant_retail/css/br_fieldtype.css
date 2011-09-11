@@ -1,0 +1,96 @@
+@charset "utf-8";
+
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+
+.br_fieldtype {
+	border:1px #ccc solid;
+	background: url(../images/bg_fieldtype.jpg) repeat-x #fff;
+	padding: 10px 15px;
+	margin-top:10px;
+}
+
+.br_fieldtype div.search {
+	background: url(../images/bg_fieldtype_search.png) repeat-x transparent;
+	float:none;
+	width: 216px;
+	height: 40px;
+}
+
+.br_fieldtype div.search_clear {
+	position: absolute;
+	margin: 0 0 0 192px;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	background: url(../images/br_fieldtype_clear.png) repeat-x transparent;
+	display: none;
+}
+
+.br_fieldtype div.search input {
+	margin-left: 20px;
+	border: none; 
+	background: transparent;
+	height: 18px;
+	font-size: 12px;
+}
+
+.br_fieldtype .br_fieldtype_search, 
+.br_fieldtype .br_fieldtype_results {
+	float:left;
+	width: 50%;
+}
+.br_fieldtype .result_div{
+	height:90px;
+	width: 80%;
+	overflow: auto;
+	border:#ccc solid;
+	border-width:1px;
+	padding:10px;
+	background:#F9F9F9;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+
+.br_fieldtype_results {
+	padding-bottom: 10px;
+}
+
+.br_fieldtype .result_div td,  
+.br_fieldtype .br_fieldtype_results td {
+	padding: 5px 3px;
+}
+
+.br_fieldtype_results h4 {
+	margin-top: 40px;
+	margin-bottom: 10px;
+}
+
+.tDnD_whileDrag td {
+	background-color: #F7F7F7;
+	font-weight: bold;
+}
+.tDnD_whileDrag td a{
+	font-weight: bold;
+}

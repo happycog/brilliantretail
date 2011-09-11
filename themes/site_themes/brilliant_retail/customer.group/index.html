@@ -1,0 +1,184 @@
+{!--
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+{embed="_assets/header"}
+
+<body>
+
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- Account -->
+<div id="account" class="page">
+	<div class="wrapper">
+    
+    	{embed='customer/_sidebar'}
+
+    	<div id="subject">
+			
+			{exp:brilliant_retail:show_message}
+			
+            <table id="profile">
+            	<thead>
+                	<tr>
+                    	<th>Profile</th>
+                        <th colspan="3"><small><a href="{path=customer/profile}">Edit</a></small></th>
+                    </tr>
+                </thead>
+                <tbody>
+    				{exp:brilliant_retail:customer_profile}
+	                	<tr>
+	                    	<td class="col1">
+	                        	<img src="{theme}/images/profile-pic.jpg" alt="" /></td>
+	
+	                        <td class="col2">
+	                        	<strong>User</strong>
+								{br_fname} {br_lname}<br /><br />
+
+	                        	<strong>Username</strong><br />
+	                            {username}<br /><br />
+	                            <strong>Password</strong><br />
+	                            <a href="{exp:brilliant_retail:path src='customer/password'}" id="change_pw_link">change password</a>
+	                            <div id="change_pw">
+		                            {exp:brilliant_retail:customer_pw_form id="profile_edit"}
+		                            	<label>New Password*<br /><input class="txtinp {required:true}" id="new_password" name="new_password" type="password" /></label>
+			                            <label>Confirm New Password*<br /><input class="txtinp {required:true,equalTo:'#new_password'}" id="new_password_confirm" name="new_password_confirm" type="password" /></label>
+			                            <label>Enter Current Password*<br /><input class="txtinp {required:true}" name="password" type="password" /></label>
+		                            	<div class="btn">
+											<input class="inpbtn" name="" type="submit" value="Submit" />
+										</div>
+		                            {/exp:brilliant_retail:customer_pw_form}
+							        <div class="clearboth"><!-- --></div>
+								</div>
+	                            
+	                            <div class="clearboth"><!-- --></div>
+
+								<br />
+								<strong>Email</strong><br />
+	                            {email}<br /><br />
+	                            
+	                            <strong>Phone</strong><br />
+	                            {br_phone}</td>
+	
+	                        <td class="col3">
+	                        	<strong>Shipping Address</strong><br />
+	                            {br_shipping_fname} {br_shipping_lname}<br />
+	                            {br_shipping_company}<br />
+	                            {br_shipping_address1}<br />{if '{br_shipping_address2}' != ''}{br_shipping_address2}<br />{/if}
+	                            {br_shipping_city}, {br_shipping_state} {br_shipping_zip}<br />
+	                            {br_shipping_phone}<br /><br />
+	                            
+	                            <strong>Billing Address</strong><br />
+	                            {br_billing_fname} {br_billing_lname}<br />
+								{br_billing_company}<br />
+								{br_billing_address1}<br />{if '{br_billing_address2}' != ''}{br_billing_address2}<br />{/if}
+								{br_billing_city}, {br_billing_state} {br_billing_zip}<br />
+								{br_billing_phone}</td>
+	
+	                        <td class="col4">
+
+                        		<strong>Bio</strong><br />
+                            	{bio}<br /><br />
+
+                            	<strong>Interests</strong><br />
+                            	{interests}<br /><br />
+                            
+                            	<strong>Chat</strong><br />
+                            	aol: {aol_im}<br />                        
+                            	yahoo: {yahoo_im}<br />                        
+                            	msn: {msn_im}<br />                        
+                            	icq: {icq}<br />                        
+                            </td>
+	                    </tr>
+					{/exp:brilliant_retail:customer_profile}
+                </tbody>
+            </table> <!-- profile -->
+            
+            <h4 id="orders_heading">Recent Orders</h4>
+            
+            <table id="orders" cellspacing="0">
+            	<thead>
+                	<tr>
+                    	<th>Order</th>
+                    	<th>Date</th>
+                    	<th>Ship To</th>
+                    	<th>Status</th>
+                    	<th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{exp:brilliant_retail:customer_orders limit="5"}
+						{orders}
+							<tr>
+		                    	<td class="col1">
+		                        	<a href="{exp:brilliant_retail:path src='customer/order_detail/{order_id}'}">{order_id}</a></td>
+		                        <td class="col2">
+		                        	{created format="%n/%d/%y"}</td>
+		                        <td class="col3">
+		                        	{address}
+		                        		{shipping_fname} {shipping_lname}
+		                        	{/address}</td>
+		                        <td class="col4">
+		                        	{status}</td>
+		                        <td class="col5">
+		                        	{currency_marker}{total}</td>
+		                    </tr>
+						{/orders}
+	            	{/exp:brilliant_retail:customer_orders}
+                </tbody>
+            </table> <!-- orders -->
+            
+
+        </div> <!-- subject -->
+        <div class="clearboth"><!-- --></div>
+    </div>
+</div> 
+<!-- account -->
+<!-- end of Account Page -->
+<script type="text/javascript">
+	$(function(){
+		$('#profile_edit').validate();
+		$('#change_pw_link').bind('click',function(){
+			$(this).hide();
+			$('#change_pw').slideDown();
+			return false;
+		});
+	});
+</script>
+{embed="_assets/footer"}

@@ -1,0 +1,209 @@
+{!--
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+
+{if logged_out}
+{redirect='customer/login'}
+{/if}
+
+{embed="_assets/header"}
+
+<body>
+
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- Account -->
+<div id="account" class="page">
+	<div class="wrapper">
+    
+    	{embed='customer/_sidebar'}
+
+    	<div id="subject">
+			
+			{exp:brilliant_retail:show_message}
+			
+	{exp:brilliant_retail:customer_orders order_id="{segment_3}"}
+
+		{orders}
+
+            <table id="order_detail" width="100%" cellpadding="0" cellspacing="0">
+        		<tr>
+        			<td colspan="2">
+			            <h2>{created format="%n/%d/%y %g:%i:%s %a"}</h2>
+			            <h1>Order #{order_id}</h1></td>
+        		</tr>
+        		<tr>
+        			<td width="50%">
+        				<table width="100%" cellpadding="0" cellspacing="0">
+        					<tr>
+        						<th>
+        							Ship To:</th>
+        					</tr>
+        					<tr>
+        						<td>
+									<p>
+										{address}
+			                        		<b>
+			                        			{shipping_fname} {shipping_lname}
+			                        		</b>
+			                        		<br />
+											{shipping_address1}<br />
+											{shipping_address2}<br />
+											{shipping_city}, {shipping_state} {shipping_zip}
+									</p></td>
+        					</tr>
+        				</table></td>
+        			<td width="50%">
+        				<table width="100%" cellpadding="0" cellspacing="0">
+        					<tr>
+        						<th>
+        							Bill To:</th>
+        					</tr>
+        					<tr>
+        						<td>
+									<p>
+											<b>
+												{billing_fname} {billing_lname}
+											</b>
+											<br />
+											{billing_address1}<br />
+											{billing_address2}<br />
+											{billing_city}, {billing_state} {billing_zip}
+										{/address}
+									</p></td>
+        					</tr>
+        				</table></td>
+        		</tr>
+        		<tr>
+        			<td colspan="2"  style="border-bottom-width:0">
+        				<table width="100%" cellpadding="0" cellspacing="0">
+        					<tr>
+                    			<th>
+                    				Item</th>
+                    			<th>
+                    				SKU</th>
+                    			<th>
+                    				Qty</th>
+                    			<th>
+                    				Price</th>
+                    		</tr>
+        					{items}
+        						<tr class="{switch='odd|even'}">
+        							<td>
+        								<strong>{title}</strong>
+        								<br />
+        								{options}</td>
+        							<td>
+        								{sku}</td>
+        							<td>
+        								{quantity}</td>
+        							<td>
+        								{currency_marker}{price}</td>
+        						</tr>
+        					{/items}
+        				</table></td>
+        		</tr>
+        		<tr>
+        			<td width="50%" valign="top">
+        				<table width="100%" id="payment_info" cellpadding="0" cellspacing="0">
+        					<tr>
+        						<th>
+        							Payment Info</th>
+        					</tr>
+        					<tr>
+        						<td>
+        							{payment}
+        								{payment_type}<br />
+        							{/payment}</td>
+        					</tr>
+        				</table></td>
+        			<td width="50%" valign="top">
+        				<table width="100%" id="order_totals" cellpadding="0" cellspacing="0"> 
+        					<tr>
+        						<th>
+        							Order Totals</th>
+        					</tr>
+        					<tr>
+        						<td>
+        							<label>Subtotal:</label>&nbsp;{currency_marker}{base}
+        							<div class="b2r_clearboth"><!-- --></div>
+									{if {discount} > 0}
+										<label>Discount:</label>&nbsp;{currency_marker}{discount}
+										<div class="b2r_clearboth"><!-- --></div>
+									{/if}
+									<label>Shipping:</label>&nbsp;{currency_marker}{shipping}
+									<div class="b2r_clearboth"><!-- --></div>
+									<label>Tax:</label>&nbsp;{currency_marker}{tax}
+                    				<div class="b2r_clearboth"><!-- --></div>
+									<label><b>Total:</b></label>&nbsp;<b>{currency_marker}{total}</b></td>
+        					</tr>
+        				</table></td>
+        		</tr>  
+          		<tr>
+        			<td colspan="2">
+        				<table width="100%" cellpadding="0" cellspacing="0">
+        					<tr>
+        						<th colspan="2">
+        							Order Notes</th>
+        					</tr>
+							{notes}
+								<tr>
+									<td width="25%">
+										{order_created format="%n/%d/%y %g:%i:%s %a"}</td>
+									<td width="75%">
+										{order_note}</td>
+								</tr>
+							{/notes}
+        				</table></td> 
+        		</tr>                          		
+        	</table>
+		{/orders}
+	{/exp:brilliant_retail:customer_orders}
+            
+            
+
+        </div> <!-- subject -->
+        <div class="clearboth"><!-- --></div>
+    </div>
+</div> 
+<!-- account -->
+<!-- end of Account Page -->
+
+{embed="_assets/footer"}

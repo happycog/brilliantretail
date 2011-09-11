@@ -1,0 +1,150 @@
+{!-- // STORE INDEX PAGE
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+// !--}
+{embed="_assets/header"}
+<body>
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- Home Page -->
+<div id="home" class="page">
+	<div class="wrapper">
+    
+        <div id="promos">
+            <div class="hp_slider" style="position:absolute;">
+                <a href=""><img src="/media/images/home_promo_01.jpg" alt="" /></a>
+            </div>
+            <div class="hp_slider" style="position:absolute;">
+                <a href=""><img src="/media/images/home_promo_02.jpg" alt="" /></a>
+            </div>
+            <div class="hp_slider" style="position:absolute;">
+                <a href=""><img src="/media/images/home_promo_03.jpg" alt="" /></a>
+            </div>
+            <p class="ctrl" id="promo_control"></p>   
+        </div> <!-- promos -->
+    
+    
+    	<div id="left">
+        	<h2>About</h2>
+            <h5>
+			{exp:channel:entries channel="content" limit="1" url_title="about" disable="categories|member_data|pagination|trackbacks"}
+                {exp:snippet total="300"}
+                	{general-content}
+        	    {/exp:snippet}
+            {/exp:channel:entries} 
+            </h5>
+            
+            {exp:channel:entries channel="home" limit="1" url_title="home_page" disable="categories|member_data|pagination|trackbacks"}
+            
+	            <div id="products">
+	            	{best_sellers limit="4" random="yes"}
+					<h2>Best Selling Products</h2>
+						<ul>
+							{items}	
+								<li>
+									<div>
+										{form_open}
+											<div class="img">
+												<a href="{exp:brilliant_retail:path src='product/{url}'}">{exp:brilliant_retail:image src="{image_large}" alt="{title}" width="100" height="120"}</a>
+											</div>
+										<h6><a href="{exp:brilliant_retail:path src='product/{url}'}">{title}</a></h6>
+										{price_html}
+										<input type="hidden" name="quantity" value="1" />
+										<div class="btn">
+						                	<input class="inpbtn" name="" type="submit" value="Add" />
+						                </div>
+										<div class="clearboth"><!-- Clear Both !--></div>		
+										{form_close}
+									</div>
+								</li>
+							{/items}	
+						</ul>
+	         	            <div class="clearboth"><!-- --></div>
+	
+	            	{/best_sellers}
+	            </div>
+	            
+            <div class="clearboth"><!-- --></div>
+
+            {/exp:channel:entries}
+            
+            <div id="benefits">
+                <h2>Twitter Updates</h2>
+                <ul>
+                	{exp:tweetline username="brilliantretail" format="yes" limit="3" mentions="no" retweets="no"}
+						<li>{post}<br />{rel_date}</li>
+					{/exp:tweetline}
+	            </ul>
+            </div> <!-- benefits -->
+            
+            {exp:mailinglist:form list="default" form_id="email_updates"} 
+            	<h4>E-mail Updates</h4>
+                <label>E-mail</label>
+                <input class="inptxt" name="email" value="{email}" type="text" />
+                <div class="btn">Submit<input name="" type="image" src="{theme}/images/0.gif" alt="Submit" /></div>
+            {/exp:mailinglist:form}
+
+            <div class="clearboth"><!-- --></div>
+        </div> <!-- left -->
+        
+        
+        <div id="right">
+        	<h2>Blog</h2>
+            <ul>
+           		{exp:channel:entries channel="blog" limit="3"}
+	            	<li>
+	                	<div class="pic"><img src="{theme}/images/sample_blog_thumb_small.jpg" alt="" /></div>
+	                    <div class="txt">
+	                    	<h3><a href="{exp:brilliant_retail:path src='blog/detail/{url_title}'}">{title}</a></h3>
+	                        <p class="author"><a href="{exp:brilliant_retail:path src='blog/detail/{url_title}'}#comments">{comment_total} Comments</a> | {entry_date format="%n/%d/%y"} by {author}</p>
+	                        <p>
+	                        	{exp:snippet total="100"}{blog_summary}{/exp:snippet}
+	                        </p>
+	                    </div>
+	                    <div class="clearboth"><!-- --></div>
+	                </li>
+				{/exp:channel:entries} 
+            </ul>
+        </div> <!-- right -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- home -->
+<!-- end of Home Page -->
+{embed="_assets/footer"}

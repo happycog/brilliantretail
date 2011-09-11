@@ -1,0 +1,83 @@
+{!--
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+
+<!-- Footer -->
+<div id="footer">
+	<div class="wrapper">
+    
+    	<div class="logo">
+        	<a href="{exp:brilliant_retail:path src=''}"><img src="{exp:brilliant_retail:logo}" width="50" alt="{site_name}" /></a>
+        </div>
+        
+        <div class="left txt">
+
+    		{exp:brilliant_retail:category_menu id="footer_nav" parent_only="yes"}
+				{before}
+					{exp:channel:entries channel="content" entry_id="1" limit="1" disable="categories|category_fields|member_data|pagination|trackbacks" dynamic="off"}
+                        <li><a href='{path=content/{url_title}}'>{title}</a></li>
+                    {/exp:channel:entries}   
+				{/before}
+				{after}
+					<li>
+						<a href="{exp:brilliant_retail:path src='blog'}">Blog</a>
+					</li>
+					<li><a href="{exp:brilliant_retail:path src='contact'}">Contact</a></li>
+				{/after}
+			{/exp:brilliant_retail:category_menu}
+			<div class="clearboth"><!-- cb !--></div>                 
+                 
+            <p class="legal">Copyright &copy;{current_time format="%Y"}
+            	{exp:channel:entries channel="content" entry_id="not 1" limit="5" disable="categories|category_fields|member_data|pagination|trackbacks" dynamic="off"}
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="{path=content/{url_title}}">{title}</a>
+                {/exp:channel:entries} 
+                	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Page loaded in {elapsed_time} seconds
+                	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="http://bugs.brilliantretail.com">Report Bugs</a>
+                	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="http://getsatisfaction.com/brilliantretail">Get Support</a>
+            </p>
+        </div>
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- footer -->
+<!-- end of Footer -->
+<script type="text/javascript">
+<!--
+	sfHover = function() {
+		var sfEls = document.getElementById("nav").getElementsByTagName("LI");
+		for (var i=0; i<sfEls.length; i++) {
+			sfEls[i].onmouseover=function() {
+				this.className+=" sfhover";
+			}
+			sfEls[i].onmouseout=function() {
+				this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+			}
+		}
+	}
+	if (window.attachEvent) window.attachEvent("onload", sfHover);
+//-->
+</script>
+</body>
+</html>

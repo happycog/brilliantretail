@@ -1,0 +1,106 @@
+{!--
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+
+{if logged_out}
+{redirect='customer/login'}
+{/if}
+
+{embed="_assets/header"}
+
+<body>
+
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- Account -->
+<div id="account" class="page">
+	<div class="wrapper">
+    
+    	{embed='customer/_sidebar'}
+
+    	<div id="subject">
+			
+			{exp:brilliant_retail:show_message}
+			
+			<h4 id="orders_heading">Downloads</h4>
+            
+			<table id="orders" cellspacing="0">
+            	<thead>
+                	<tr>
+                    	<th>Order</th>
+                    	<th>Item</th>
+                    	<th>Link</th>
+                    	<th>Status</th>
+                    	<th>Remaining</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{exp:brilliant_retail:customer_downloads}
+						{downloads}
+							<tr>
+		                    	<td class="col1">
+		                        	{order_id}</td>
+		                    	<td class="col2">
+		                        	{title}</td>
+		                        <td class="col3">
+		                        	{license}<br />
+		                        	{if {download_status_id} == 1}
+		                        		<a href="{download_link}" target="_blank">Download File</a>
+		                        	{if:else}
+		                        		- 
+		                        	{/if}</td>
+		                        <td class="col4">
+		                        	{download_status}</td>
+		                        <td class="col5">
+		                        	{download_remaining}</td>
+		                    </tr>
+	                    {/downloads}
+                    {/exp:brilliant_retail:customer_downloads}
+                </tbody>
+            </table> <!-- orders -->
+			
+			</div> <!-- subject -->
+        <div class="clearboth"><!-- --></div>
+    </div>
+</div> 
+<!-- account -->
+<!-- end of Account Page -->
+
+{embed="_assets/footer"}

@@ -1,0 +1,193 @@
+{!-- // PRODUCT DETAIL PAGE
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+// !--}
+
+{embed="_assets/header"}
+
+<body>
+
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+{exp:brilliant_retail:product}
+	{no_results}
+		<div id="product" class="page">
+			<div class="wrapper">
+				<h1>
+					The product you requested is not available. 
+				</h1>
+			</div>
+		</div>
+	{/no_results}
+<!-- Product -->
+<div id="product" class="page">
+	<div class="wrapper">
+    
+    	<p id="crumbs"><a href="{exp:brilliant_retail:path src=''}">Home</a> 
+    		{if '{category_title}' != ''}
+    			&nbsp;&gt;&nbsp; <a href="{exp:brilliant_retail:path src='catalog/{category_url}'}">{category_title}</a> 
+    		{/if}
+    		&nbsp;&gt;&nbsp; {title}</p>
+    	
+    	{exp:brilliant_retail:show_message}
+    	
+        <h1>{title}</h1>
+        
+        <div id="dleft" class="left">
+        	<div id="photos">
+            	<div class="large">
+            		{exp:brilliant_retail:image src="{image_large}" width="390" height="470"}
+            	</div>
+            	
+				{!-- Only show thumbnails if there are more than 1--}
+				
+				{if {image_total} >= 2}
+	                <div class="thumbs">
+	                    <ul>
+	                        {images}
+	                        	<li id="thumb_{image_count}"><a href="{exp:brilliant_retail:image src="{filenm}" width="390" height="470" url_only="yes"}" target="_blank" title="{image_title}">{exp:brilliant_retail:image src="{filenm}" title="{image_title}" width="75" height="90"}</a></li>
+			            	{/images}
+	                    </ul>
+	                </div>
+				{/if}
+                <div class="clearboth"><!-- --></div>
+                <p>{image_large_title}</p>
+            </div><!-- photos -->
+            
+            <h3>Description</h3>
+            <div>
+            	{detail}
+            </div>
+            
+            <h3>Short Link {exp:shortee link="true" 
+							title="{title}" 
+							link_id="short_url" 
+							link_class="short_url" 
+							link_target="_blank"}</h3>
+        </div> <!-- dleft -->
+        
+        
+        <div id="dright" class="right">
+        
+            <div id="details">
+                    {price_html}
+                    <label>Qty:</label>
+                    {quantity_select}
+					<div class="clearboth"><!-- --></div>
+                    {!-- Insert Product Specific Selectors !--}
+                    	{subscription}
+                    		<label>Volume Discount</label>
+                    		{subscription_select}<br />
+                    		<div class="clearboth"><!-- --></div>		
+                    	{/subscription}
+                    	{configurable}
+                    		<label>{configurable_label}</label>
+                    		{configurable_select}<br />
+                    		<div class="clearboth"><!-- --></div>		
+                    	{/configurable}
+                    	{configurable_js}
+                    	{options}
+                    		<h5>
+                    			{option_label}
+                    		</h5>
+                    		{option_input}
+                    		<div class="clearboth"><!-- --></div>
+                    	{/options}
+                    {!-- End Insert Product Specific Selectors !--}
+                    
+                    <div class="btn">
+                    	<input class="inpbtn" name="" type="submit" value="Add to Cart" />
+                    </div>
+            	<div id="features">
+	                {!-- 
+	                	Attribute Tag Pair will display all 
+	                	custom attributes for the product
+						
+						Alternatively you can can call a specific attribute
+						with "code":
+							{attr:code}
+		                		<h3>{label}</h3>
+			                	<p>{value}</p>
+							{/attr:code} 
+	                !--}
+	                {attribute}
+                		<h3>{label}</h3>
+	                	<div>{value}</div>
+					
+					{/attribute}
+                </div> <!-- features -->                
+            </div> <!-- details -->
+            
+            <div id="adv">
+            	<ul>
+                	<li><a href="#"><img src="{theme}/images/sample_ad01.jpg" alt="" /></a></li>
+                </ul>
+            </div> <!-- adv -->
+            <div class="clearboth"><!-- --></div>
+            
+            {exp:brilliant_retail:product_related product_id="{product_id}"}
+				<div id="related">
+	            	<h3>Related Products</h3>
+	                <ul>
+	                	{related_products}
+		                	<li {switch='|class="even"'}>
+		                    	<div class="pic">
+		                    		<a href="{exp:brilliant_retail:path src='product/{related_url}'}">
+		                    			{exp:brilliant_retail:image src="{related_thumb}" width="180" height="150"}</a>
+		                    	</div>
+		                        <h5>{exp:snippet total="50"}{related_title}{/exp:snippet}</h5>
+		                        <p><a href="{exp:brilliant_retail:path src='product/{related_url}'}">Details</a></p>
+		                    </li>
+	                	{/related_products}
+	                </ul>
+	                <div class="clearboth"><!-- --></div>
+	            </div> <!-- related -->	
+			{/exp:brilliant_retail:product_related}
+			
+            
+        </div> <!-- dright -->
+        <div class="clearboth"><!-- --></div>           
+        
+    </div>
+</div> <!-- product -->
+<!-- end of Product Page -->
+
+{/exp:brilliant_retail:product}
+
+{embed="_assets/footer"}

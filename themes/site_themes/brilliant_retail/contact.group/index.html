@@ -1,0 +1,132 @@
+{!-- Contact Page
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+{embed="_assets/header"}
+<body>
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<div id="contact" class="page">
+	<div class="wrapper">
+    
+        <h1>Contact</h1>
+        <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus bsem, sit amet pretium odio tristique non. Proin neque eros, hendrerit eget elementum nec, egestas quis felis. Integer in seibh.</h5>
+        
+        <form action="#" id="contact_form" method="post" enctype="multipart/form-data">
+        	<p class="req">* Required</p>
+        	<label>First Name*<br /><input class="txtinp required" name="FirstName" type="text" /></label>
+            <label>Last Name*<br /><input class="txtinp required" name="LastName" type="text" /></label>
+            <label>Email*<br /><input class="txtinp required email" name="Email" type="text" /></label>
+            <label>Address<br /><input class="txtinp txtinp_nospace" name="Address1" type="text" /></label><input class="txtinp" name="Address2" type="text" />
+            <label>City<br /><input class="txtinp" name="City" type="text" /></label>
+            <label>State<br />
+                {exp:brilliant_retail:states name="state" class="listinp" value="CA"}
+	        </label>
+            <label>Zip Code<br /><input class="txtinp" name="ZipCode" type="text" /></label>
+            <label>Message<br /><textarea class="txtarea" name="Message" cols="" rows=""></textarea></label>
+            <label>How did you hear about us?<br /><input class="txtinp" name="How" type="text" /></label>
+            <label><input class="check" name="EmailUpdates" type="checkbox" value="" /> &nbsp;Signup for email updates. You can unsubscribe anytime.</label>
+            <div class="btn">
+                <input class="inpbtn" name="" type="submit" value="Submit" />
+            </div>
+        </form>
+        
+        
+        <div id="info">
+            {exp:brilliant_retail:store}
+	        	<p><strong>{site_name}</strong><br />
+	            {address1}<br />
+	            {address2}<br />
+	            {city}, {state} {zipcode}<br />
+	            United States</p>
+	            
+	            <p>Office: {phone}<br />
+	            Fax: {fax}</p>
+			{/exp:brilliant_retail:store}
+            
+            <p><a href="http://www.brilliantretail.com">Website</a><br />
+            <a href="http://www.facebook.com/brilliantretail">Facebook</a><br />
+            <a href="http://www.twitter.com/brilliantretail">Twitter</a><br />
+            
+            <p><strong>Hours:</strong><br />
+            Monday: 9:00 am - 6:00 pm<br />
+            Tuesday: 9:00 am - 6:00 pm<br />
+            Wednesday: 9:00 am - 6:00 pm<br />
+            Thursday: 9:00 am - 6:00 pm<br />
+            Friday: 9:00 am - 6:00 pm<br />
+            Saturday: Closed</p>
+            
+            <p><strong>Payments:</strong></p>
+            <ul>
+            	<li>Credit Card
+                    <ul>
+                        <li>Visa</li>
+                        <li>MasterCard</li>
+                        <li>American Express</li>
+                        <li>Paypal Visa</li>
+                    </ul>
+                </li>
+                <li>Check
+                	<ul>
+                    	<li>Personal</li>
+                        <li>Traveler&rsquo;s Check</li>
+                        <li>Bank Transfer</li>
+                    </ul>
+                </li>
+            </ul>
+        </div> <!-- info -->
+        
+        
+        <div id="directions">
+        	<iframe width="300" height="200" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=1234+Main+Street,+Santa+Monica,+CA&amp;sll=37.0625,-95.677068&amp;sspn=63.086946,76.992187&amp;ie=UTF8&amp;hq=&amp;hnear=1234+Main+St,+Los+Angeles,+California+90291&amp;z=14&amp;ll=33.99045,-118.472767&amp;output=embed"></iframe><br />
+        	<br />
+            <p><a href="http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=Brilliant2+&sll=34.043948,-118.469739&sspn=0.028484,0.034461&ie=UTF8&hq=Brilliant2&hnear=&z=15&iwloc=A">Get Directions</a></p>
+            <p><strong>Description:</strong><br />
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus blandit sem, sit amet pretium odio tristique non. Proin neque eros, hendrerit eget elementum nec, egestas quis felis. Integer in sem a nulla sagittis varius id in nibh.</p>
+        </div> <!-- directions -->        
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#contact_form').validate();
+	});
+</script>
+{embed="_assets/footer"}

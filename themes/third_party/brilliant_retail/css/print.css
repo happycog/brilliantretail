@@ -1,0 +1,117 @@
+@charset "utf-8";
+
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+
+* {
+font-family: Arial,'Helvetica Neue',Helvetica,sans-serif;
+font-size: 12px;
+}
+
+#wrapper {
+	width: 700px;
+	margin: 10px auto;
+}
+.clearboth {
+	clear: both;
+}
+#logo {
+	text-align: center;
+}
+#order_id {
+		float:right;
+		margin:5px 15px 0 5px;
+}
+#order_table td {
+	border: 1px #ccc solid;
+}	
+#order_status_id {
+	float:right;
+	margin:10px 0;
+}
+
+#order_totals label{
+	display:block;
+	float:left;
+	width:100px;
+}
+
+#order_table table th{
+	padding: 5px 10px;
+	text-align: left;
+	border-bottom: 1px #CCC solid;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+#order_table table td{
+	vertical-align: top;
+	border-spacing: 0;
+	padding: 8px 10px;
+	border: none;
+}
+#order_table table td h4 {
+	margin: 3px 0;
+}
+#order_table table td p{
+	border-spacing: 0;
+	padding: 5px 10px;
+	border: none;
+	line-height: 14px;
+}
+
+#order_table table tr.odd td,
+#order_table table tr.even td {
+	border-bottom:1px #ccc solid;
+}
+
+#status_text {
+	margin: 2px 0 0 17px;
+}
+#order_member img {
+	float: left;
+	margin: 10px;
+	width: 40px;
+}
+#order_member h5 {
+	color: #7f939b;
+	float: left;
+	font-size: 14px;
+	margin: 14px 0 0;
+} 
+#order_member span {
+	font-size:12px;
+}          
+
+#order_note_form {
+	border: 1px #CCC solid;
+	background:#fff;
+}
+
+#order_note_form table td {
+	background:#fff;
+}
+#order_notes td.order_note {
+	border-bottom: 1px #DDD solid;
+}

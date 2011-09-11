@@ -1,0 +1,69 @@
+{!-- General Content
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+{embed="_assets/header"}
+<body>
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- General -->
+<div id="general" class="page">
+	<div class="wrapper">
+    	{exp:channel:entries channel="content" limit="1" url_title="{segment_2}" disable="categories|member_data|pagination|trackbacks"}
+            {if no_results}
+               	404 File Not Found
+            {/if}
+        
+            <p id="crumbs"><a href="{exp:brilliant_retail:path src='site_index'}">Home</a> &nbsp;&gt;&nbsp; {title}</p>
+            
+            <div id="main">
+            
+                <h1>{title}</h1>
+                {general-content}
+        
+        	</div> <!-- main -->
+        
+        {/exp:channel:entries}           
+        
+    </div>
+</div> <!-- general -->
+<!-- end of General Page -->
+
+
+{embed="_assets/footer"}

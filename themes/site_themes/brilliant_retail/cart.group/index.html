@@ -1,0 +1,169 @@
+{!-- // CART 
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+// !--}
+
+{embed="_assets/header"}
+
+<body>
+
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- Cart -->
+<div id="cart" class="page">
+	<div class="wrapper">
+
+        {exp:brilliant_retail:show_message}
+        
+        {if {exp:brilliant_retail:cart_items} == 0}
+			<div id="br_alert">Your shopping cart is currently empty.</div>
+		{if:else}
+	    
+	    
+	       	{exp:brilliant_retail:cart}        
+        
+                <div id="top">
+		            <h1>Shopping Cart</h1>
+		            <p><a href="{exp:brilliant_retail:path src=''}">&laquo; continue shopping</a>
+		            &nbsp;|&nbsp; <a href="{exp:brilliant_retail:cart_clear_link}" id="empty_cart">empty cart</a> &nbsp;|&nbsp; <a href="{exp:brilliant_retail:path src='checkout'}">checkout &raquo;</a></p>
+		            <div class="clearboth"><!-- --></div>
+		        </div> 
+        
+                <table class="cart">
+	                <thead>
+	                    <tr>
+	                        <th class="col1" colspan="3">Item</th>
+	                        <th class="col2">Qty</th>
+	                        <th class="col5">Price</th>
+	                        <th class="col5">Subtotal</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+ 						{items}
+						    <tr>
+		                        <td class="col1"><a href="{remove_link}">
+		                        	<img src="{theme}/images/remove.jpg" alt="Remove" title="Remove Item" /></a></td>
+		                        <td class="col2"><table><tr><td>{exp:brilliant_retail:image src="{image_thumb}" width="75" height="90"}</td></tr></table></td>
+		                        <td class="col3">
+		                        	<h5><a href="{exp:brilliant_retail:path src='product/{url_title}'}">{title}</a></h5>
+		                           	{options}
+		                        </td>
+		                        <td class="col4">
+		                        	<input name="qty[{hash}]" class="qty" type="text" value="{quantity}" /></td>
+		                        <td class="col5">{price_html}</td>
+		                        <td class="col5">{subtotal}</td>
+		                    </tr>
+		               {/items}
+		               <tr class="update">
+		               		<td colspan="6" class="update">
+		               			<div class="btn">
+				               		<p>Update Cart</p>
+				               		<input name="" type="image" src="{theme}/images/0.gif" alt="Apply" />
+		                        </div></td>
+		               </tr>
+	            </table>
+	        {/exp:brilliant_retail:cart}
+	            <table class="cart">
+	                <tbody>
+			           <tr class="discount">
+	                    	<td>&nbsp;</td>
+	                        <td colspan="2">
+	                        	{exp:brilliant_retail:promo_form}
+									<label>Discount Code:</label>
+		                            <div class="code">
+		                            	<input class="txtinp" name="code" value="{coupon_code}" type="text" />
+		                                <div class="btn">
+		                                	<p>Apply</p>
+		                                    <input name="" type="image" src="{theme}/images/0.gif" alt="Apply" />
+		                                </div>
+		                                <div class="clearboth"><!-- --></div>
+		                            </div>
+		                            <div class="clearboth"><!-- --></div>
+								{/exp:brilliant_retail:promo_form}
+	                        </td>
+	                    </tr>
+	                    <tr class="total">
+	                    	<td>&nbsp;</td>
+	                        <td class="ads">
+	                        	<img src="{theme}/images/sample_ad.jpg" alt="" />&nbsp;
+	                            <a href="{path=product/capture-rx20-digital-slr-camera}"><img src="{theme}/images/sample_ad2.jpg" alt="" /></a>
+	                        </td>
+	                        <td class="summary">
+
+		                        	{exp:brilliant_retail:cart_discount}
+										<p>SubTotal: {subtotal}</p>
+										
+										{exp:brilliant_retail:promo_form}
+											<div class="remove">
+											    <p class="discount">Discount: ({discount})</p>
+												<input type="hidden" name="code" value="remove" />
+												<div class="btn">
+				                                    <input name="" type="image" src="{theme}/images/remove.jpg" alt="Remove" />
+				                                </div>
+				                            </div>
+					                        <div class="clearboth"><!-- --></div>
+		                            	{/exp:brilliant_retail:promo_form}
+		
+									{/exp:brilliant_retail:cart_discount}
+		                        
+		                        <p><strong>TOTAL: &nbsp;{exp:brilliant_retail:cart_total}</strong></p>
+		
+		                        {exp:brilliant_retail:checkout_buttons}
+		                        
+		                        <div class="clearboth"><!-- --></div>
+	                            <p class="continue"><a href="{exp:brilliant_retail:path src=''}">&raquo; continue shopping</a></p>
+	                            <div class="clearboth"><!-- --></div>
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	        
+				{exp:brilliant_retail:cart_related}
+				{/exp:brilliant_retail:cart_related}
+
+	            </ul>
+	            <div class="clearboth"><!-- --></div>
+	        </div> <!-- selected_items -->
+        
+	    {/if} 
+    
+    </div>
+</div> <!-- cart -->
+<!-- end of Cart Page -->
+{embed="_assets/footer"}

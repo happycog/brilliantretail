@@ -1,0 +1,69 @@
+{!-- Topbar
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+<div id="demo">
+	BrilliantRetail Demo Store. Products and Orders are not valid.
+</div>
+<div id="topbar">
+    <table>
+        <tr>
+            <td class="col_left">
+            	<a href="{exp:brilliant_retail:path src=''}"><img src="{exp:brilliant_retail:logo}" alt="{site_name}" /></a>
+            </td>
+            <td class="col_right">
+                <p><a href="{exp:brilliant_retail:path src='cart'}">Cart {if {exp:brilliant_retail:cart_items} >= 1}(<span class="cart_total">{exp:brilliant_retail:cart_total}</span>){/if}</a> &nbsp;&nbsp;
+                <a href="{exp:brilliant_retail:path src='customer'}">Account</a> &nbsp;&nbsp;
+               	<a href="{exp:brilliant_retail:path src='contact'}">Contact</a> &nbsp;&nbsp;
+               	{if logged_in}
+               		<span class="logout"><a href="{exp:brilliant_retail:path src='logout'}">Logout</a></span>
+ 				{if:else}
+               		<a href="{exp:brilliant_retail:path src='customer/login'}">Login</a> &nbsp;&nbsp;
+					<span class="logout"><a href="{exp:brilliant_retail:path src='customer/login'}">Signup</a></span>
+ 				{/if}
+ 				</p>
+                <form id="main_search" action="{exp:brilliant_retail:path src='catalog/search'}" method="post" enctype="multipart/form-data">
+                    <input class="search_txt" name="search" type="text" value="search products" />
+                    <input class="search_btn" name="" type="image" src="{theme}/images/0.gif" alt="Search" />
+                    <div class="clearboth"><!-- --></div>
+                </form>
+                <div class="clearboth"><!-- --></div>
+            </td>
+        </tr>
+    </table>
+</div> <!-- topbar -->
+<script type="text/javascript">
+	$(function(){
+		$('.search_txt','#main_search')
+			.bind('click',function(){
+				$(this).val('');
+			})
+			.bind('blur',function(){
+				var a = $(this);
+				if(a.val() == ''){
+					a.val('search products');
+				}
+		});
+	});
+</script>

@@ -1,0 +1,65 @@
+{!-- // PRODUCT CATEGORY PAGE
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+// !--}
+
+{embed="_assets/header"}
+
+<body>
+
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+{exp:brilliant_retail:product_category url_title="products"}
+	<ul>
+		{products}
+			<li>
+		    	<div class="pic">
+            		<a href="{exp:brilliant_retail:path src='product/{url}'}">{exp:brilliant_retail:image src="{image_thumb}" width="75" height="90"}</a></div>
+                <div class="desc">
+                	<h5><a href="{exp:brilliant_retail:path src='product/{url}'}">{title}</a></h5>
+                    <p>{exp:snippet total="200"}{detail}{/exp:snippet}</p>
+                    <p><a href="{exp:brilliant_retail:path src='product/{url}'}">+Add to cart</a></p>
+                </div>
+                <div class="price">{price_html}</div>
+                <div class="clearboth"><!-- --></div>
+			</li>
+		{/products}
+	</ul>
+{/exp:brilliant_retail:product_category}
+
+{embed="_assets/footer"}

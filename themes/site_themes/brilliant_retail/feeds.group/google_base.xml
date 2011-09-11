@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+<title>{site_name}</title>
+<link>{site_url}</link>
+
+{exp:brilliant_retail:feed code="google_base"}
+<item>
+<title>{title}</title>
+<g:id>{sku}</g:id>
+<g:price>{price}</g:price>
+<link>{site_url}products/{url}</link>
+<description><![CDATA[{detail}]]></description>
+{if image_thumb != ''}
+<g:image_link>{exp:brilliant_retail:image src="{image_thumb}" width="390" height="470" url_only="yes"}</g:image_link>
+{/if}
+<g:quantity>{quantity}</g:quantity>
+<g:condition>new</g:condition>
+</item>
+{/exp:brilliant_retail:feed}
+
+</channel>
+</rss>

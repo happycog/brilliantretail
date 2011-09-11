@@ -1,0 +1,138 @@
+{!--
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+
+{if logged_in}
+{redirect='customer'}
+{/if}
+
+{embed="_assets/header"}
+
+<body>
+
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- login -->
+<div id="login" class="page">
+	<div class="wrapper">
+    	
+    	{exp:brilliant_retail:show_message}
+        
+        <div id="main">
+        
+        	{exp:member:login_form return="customer/index" id="login_form"}
+        		<h3>Login</h3>
+                <label>Email<br /><input class="txtinp {required:true,email:true}" name="username" type="text" /></label>
+                <label>Password<br /><input class="txtinp {required:true}" name="password" type="password" /></label>
+                <p><a href="{exp:brilliant_retail:path src='customer/password'}">forgot password</a></p>
+                <div class="btn">
+                    <input class="inpbtn" name="" type="submit" value="Login" />
+                </div>
+        	{/exp:member:login_form}            
+            
+            {exp:brilliant_retail:register_form id="register_form"}
+            	<h3>Register</h3>
+                <label>
+                	First Name *<br />
+                	<input 	class="txtinp required" 
+                			name="br_fname" 
+                			type="text" 
+                			value="{if "{exp:brilliant_retail:form_value for='br_fname'}"}{exp:brilliant_retail:form_value for='br_fname'}{/if}" />
+                </label>
+                <label>
+                	Last Name *<br /> 
+                	<input 	class="txtinp required" 
+                			name="br_lname" 
+                			value="{if "{exp:brilliant_retail:form_value for='br_lname'}"}{exp:brilliant_retail:form_value for='br_lname'}{/if}" 
+                			type="text" />
+                </label>
+                <div class="clearboth"><!-- --></div>
+                <label>
+                	Email Address *<br />
+                	<input 	class="txtinp2 required email" 
+                			name="email" 
+                			value="{if "{exp:brilliant_retail:form_value for='email'}"}{exp:brilliant_retail:form_value for='email'}{/if}" 
+                			type="text" />
+                </label>
+                <div class="clearboth"><!-- --></div>
+                <label>
+                	Password *<br />
+                	<input class="txtinp2 required" id="password" name="password" type="password" />
+                </label>
+                <div class="clearboth"><!-- --></div>
+                <label>
+                	Confirm Password *<br />
+                	<input class="txtinp2 required" name="confirm_password" type="password" />
+                </label>
+                <div class="clearboth"><!-- --></div>
+                {if captcha}
+					<label>
+						Enter the word below: *<br />
+						{captcha}<br />
+						<input type="text" name="captcha" value="" size="20" maxlength="20" class="txtinp2 required" />
+					</label>
+				{/if}
+                <div class="clearboth"><!-- --></div>
+                <div class="btn">
+                    <input class="inpbtn" name="" type="submit" value="Register" />
+                </div>
+            {/exp:brilliant_retail:register_form}
+            <div class="clearboth"><!-- --></div>            
+        
+        </div> <!-- main -->
+    
+    </div>
+</div> <!-- login -->
+<!-- end of login Page -->
+
+
+<script type="text/javascript">
+	$(function(){
+		$('#login_form').validate();
+		$('#register_form').validate({
+										rules: {
+												password: {minlength : 7},
+												confirm_password : { equalTo: "#password" }
+										}
+									});
+	});
+</script>
+
+{embed="_assets/footer"}
