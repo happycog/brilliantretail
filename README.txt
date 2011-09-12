@@ -145,7 +145,7 @@ http://getsatisfaction.com/brilliantretail
 * Fixed product category sorting didn't display disabled or inventory 0 items.
 * Fixed Bug in SecureHosting Gateway where date format is not accepted when live, but is in test gateway.
 * Updated product image upload limit size to 20 MB via flash uploader
-* Updated all admin view files to call language reference for �cancel� links.
+* Updated all admin view files to call language reference for "cancel" links.
 * Updated mod file to pass email to gateway interface
 
 1.0.2.2
