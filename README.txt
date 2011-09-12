@@ -94,7 +94,7 @@ http://getsatisfaction.com/brilliantretail
 * Fixed extension name on product image upload. It was incorrectly naming the files .jpg instead of .png
 * Fixed javascript issue with RatesMatrix Shipping Method.
 * Fixed incorrect closing div in Blank Theme cart template
-* Fixed double inclusion of id=“main_menu” in Blank Theme
+* Fixed double inclusion of id="main_menu" in Blank Theme
 * Fixed javascript HTML validation error in Blank Theme footer template
 * Fixed html error (closing li) in upd file sample data.
 * Fixed "if" conditional wrapper around br_shipping_state
@@ -145,7 +145,7 @@ http://getsatisfaction.com/brilliantretail
 * Fixed product category sorting didn't display disabled or inventory 0 items.
 * Fixed Bug in SecureHosting Gateway where date format is not accepted when live, but is in test gateway.
 * Updated product image upload limit size to 20 MB via flash uploader
-* Updated all admin view files to call language reference for ÔcancelÕ links.
+* Updated all admin view files to call language reference for ï¿½cancelï¿½ links.
 * Updated mod file to pass email to gateway interface
 
 1.0.2.2
