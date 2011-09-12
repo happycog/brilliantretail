@@ -284,7 +284,7 @@ class Brilliant_retail_core {
 			$files = read_dir_files($dir);
 			
 		// List Local Files
-			$local_dir = PATH_THIRD.'local/brilliant_retail/'.$type;
+			$local_dir = PATH_THIRD.'_local/brilliant_retail/'.$type;
 			$local = read_dir_files($local_dir);
 			
 		// Merge

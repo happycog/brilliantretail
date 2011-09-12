@@ -567,7 +567,7 @@ $lang = array(
 );
 
 // Doing our own magic to load in any custom language files. 
-$local_path = PATH_THIRD.'local/brilliant_retail/language/';
+$local_path = PATH_THIRD.'_local/brilliant_retail/language/';
 if(file_exists($local_path)){
 	$this->EE =& get_instance();
 	$this->EE->load->helper('brilliant_retail');
