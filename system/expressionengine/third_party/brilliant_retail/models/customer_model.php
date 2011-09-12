@@ -72,7 +72,7 @@ class Customer_model extends CI_Model {
 					m.email, 
 					m.join_date, 
 					g.group_title,
-					SUM(o.tax+o.base+o.shipping) as total, 
+					SUM(o.base+o.shipping+o.tax-o.discount) as total, 
 					m.member_id, 
 					m.screen_name, 
 					m.last_visit, 

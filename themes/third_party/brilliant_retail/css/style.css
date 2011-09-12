@@ -887,7 +887,8 @@ table#b2r_db_performance_bot td img {
 .move_sale_price_row,
 .move_price_row,  
 .move_image_row, 
-.move_related_row {
+.move_related_row,
+.move_config_row {
 	cursor: move;
 }
 
@@ -1031,19 +1032,17 @@ div#error p{
 	border: #E4E4E1 solid;
 	border-width: 0 1px 1px;
 }
-#subscription_selected, 
+
 #download_selected {
 	margin-top: 10px;
 	border: #E4E4E1 solid;
 	border-width: 0 1px 1px;
 }
-#subscription_selected tr th, 
 #download_selected tr th,
 #bundle_selected tr th {
 	padding: 4px 10px;
 }
 
-#subscription_selected tr.even td, 
 #download_selected tr.even td , 
 #bundle_selected tr.even td {
 	background-color: #F7F6F2;
@@ -1065,14 +1064,14 @@ div#error p{
 	border-width: 1px 0 0 0;
 }
 
+#subscription_selected tr.even td.indent_title,
 #subscription_selected tr.odd td.indent_title {
 	padding: 7px 10px 4px 35px;
-	background: url(../images/indent_title.gif) 15px 5px no-repeat #FFF; 
+	background-image: url(../images/indent_title.gif);
+	background-position: 15px 5px;
+	background-repeat: no-repeat;
 }
-#subscription_selected tr.even td.indent_title {
-	padding: 7px 10px 4px 35px;
-	background: url(../images/indent_title.gif) 15px 5px no-repeat #F7F6F2; 
-}
+
 .dropOptions div {
 	padding: 5px 10px 5px 35px;
 	background: url(../images/indent_title.gif) 15px 5px no-repeat #FFF; 

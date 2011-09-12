@@ -30,7 +30,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version		= '1.0.3.3'; 
+		public $version		= '1.0.3.4'; 
 		public $vars 		= array();
 		public $site_id 	= '';
 		
@@ -203,7 +203,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		foreach($db_reports as $rep){
 			$report->date_range = $rep;
 			$data = $report->get_report();
-			$total = $data["footer"][5];
+			$total = $data["footer"][6];
 			
 			$this->vars["reports"][] = array(	
 											'title' => lang('br_sales_for').' '.lang($rep),
@@ -214,7 +214,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 		
 		// List orders on the bottom
-		$this->vars['order_collection'] = $this->EE->order_model->get_order_collection('','',6);
+		$orders = $this->EE->order_model->get_order_collection('','',6);
+		$i = 0;
+		foreach($orders["results"] as $s){
+			$orders["results"][$i]["total"] = $this->_currency_round($orders["results"][$i]["total"]);
+			$i++;
+		}
+		$this->vars['order_collection'] = $orders["results"];
 		
 		$this->vars["selected"] = 'dashboard';
 		$this->vars["sidebar_help"] = $this->_get_sidebar_help();
@@ -239,15 +245,55 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function order()
 		{
 			$this->vars['cp_page_title'] = lang('br_order');
-			$this->vars['order_collection'] = $this->EE->order_model->get_order_collection();
-			$this->vars["status"] = $this->_config["status"];	
 			$this->vars["selected"] = 'order';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-
+			
+			// 
+				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
+			
 			return $this->EE->load->view('order/order', $this->vars, TRUE);	
 		}
+		
+		function order_ajax(){
+			$status = $this->_config["status"];	
+			$orders = $this->EE->
+							order_model->
+							get_order_collection('',
+												'',
+												$_GET["iDisplayLength"],
+												$_GET["sSearch"], 
+												$_GET["iDisplayStart"],
+												$_GET["iSortCol_0"],
+												$_GET["sSortDir_0"]);
+			
+			$order = array();
+			
+			foreach ($orders["results"] as $row){
+				// Build the member array
+					$order[] = array('	<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$row["order_id"].'">'.$row["order_id"].'</a>', 
+										date('n/d/y',$row["created"]),
+										'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
+										$row["total"],
+										$status[$row["status_id"]],
+										array('data' => '<input type="checkbox" name="batch['.$row["order_id"].']" />', 'style' => 'text-align:center')
+								);
+			}
+			// Build the response array
+				$output = array(
+					"sEcho" => $_GET["sEcho"],
+					"iTotalRecords" => $orders["total"],
+					"iTotalDisplayRecords" => $orders["displayTotal"],
+					"aaData" => $order  
+				);
+			// Return the json data 
+				@header("HTTP/1.1 200 OK");
+				echo json_encode($output);
+				exit();
+		}
+		
+		
 		
 		function order_detail()
 		{
@@ -662,18 +708,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
 					// some defaults for subscriptions 
 						$this->vars["products"][0]["subscription"][0] = array(
-																				'length' => 30,
-																				'period' => 1,
-																				'group_id' => 0, 
+																				'length' => 1,
+																				'period' => 3,
 																				'trial_offer' => 0,
 																				'trial_price' => '',
-																				'trial_length' => '',
 																				'trial_period' => 1, 
-																				'trial_occur' => 1, 
-																				'notice_1' => 1,
-																				'notice_2' => 7,
-																				'notice_3' => 14,
-																				'cancel' => 21,
+																				'trial_occur' => 1,
+																				'group_id' => 0,  
 																				'cancel_group_id' => 0
 																			);
 					// get the sub_type	
@@ -806,8 +847,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	
 					$values .= '		</select>
 										<input type="text" name="config_adjust[]" style="width:50px" value="'.$c["adjust"].'" /></td>
+									<td class="move_config_row">
+										<img src="'.$this->_theme('images/icon_move.png').'" /></td>
 									<td class="w50">
-										<a href="#" class="config_item_remove">remove</a></td>
+										<a href="#" class="config_item_remove">'.lang('delete').'</a></td>
 								</tr>';
 				}
 			}	
@@ -915,7 +958,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					
 					// Reindex the products
-					$this->_index_products();
+					#$this->_index_products();
 					br_set('message',lang('br_product_delete_success'));
 					header('location: '.$this->base_url.'&method=product');
 					exit();
@@ -984,17 +1027,19 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->product_model->remove_product_from_feed($data['product_id']);
 			
 			// Now we add all the selected feeds to the table
-			foreach($prod_feed as $feed_id)
-			{
-				$feed = array(
-					'feed_id' => $feed_id,
-					'product_id' => $data['product_id']		
-				);
-				$this->EE->product_model->add_product_to_feed($feed);
+			if(isset($prod_feed)){
+				foreach($prod_feed as $feed_id)
+				{
+					$feed = array(
+						'feed_id' => $feed_id,
+						'product_id' => $data['product_id']		
+					);
+					$this->EE->product_model->add_product_to_feed($feed);
+				}
 			}
-			
+							
 			//Reindex product search
-				$this->_index_products();
+				#$this->_index_products();
 			
 			// Clear the meta cache
 				remove_from_cache('meta_info');
@@ -1078,13 +1123,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["promo"] = $this->EE->promo_model->get_promo();
 			
 			// Set the header/breadcrumb 
-				$this->vars['cp_page_title'] = lang('br_promotion').' ('.count($this->vars["promo"]).')';
+				$this->vars['cp_page_title'] = lang('br_promotion');
 			
 				$this->EE->cp->set_right_nav(array(
 					'br_new_promo' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_new'
 				));
 			
-			$this->vars["selected"] = 'promotion';
+			$this->vars["selected"] = 'promo';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1100,7 +1145,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Search Url for selecting individual products
 			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 			
-			$this->vars["selected"] = 'promotion';
+			$this->vars["selected"] = 'promo';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1154,14 +1199,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->cp->add_js_script(  array(
 									'ui' => 'accordion,datepicker' 
 									));
-			$this->vars["selected"] = 'promotion';
+									
+			$this->vars["selected"] = 'promo';
 			
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
-
-			
 			// Get the promo details 
 				$this->vars["promo"] = $this->EE->promo_model->get_promo($promo_id);
 				
@@ -2860,7 +2904,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$str .=	'	<tr>
 							<td>&nbsp;</td>
 							<td>
-								<div id="configurableCreate">'.lang('br_create').'</div></td>
+								<div id="configurableCreate">'.lang('create').'</div></td>
 						</tr>
 						</table>
 								<h4 style="margin-bottom:5px">'.lang('br_products').'</h4>
@@ -2868,7 +2912,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						.$headings.
 						'	<th>'.lang('br_sku').'</th>
 							<th>'.lang('br_quantity').'</th>
-							<th>'.lang('br_price_adjust').'</th><th>&nbsp;</th>';
+							<th>'.lang('br_price_adjust').'</th>
+							<th>&nbsp;</th>
+							<th>&nbsp;</th>';
 												
 			$str .= '			</thead><tbody>'.$values.'</tbody></table>';
 			return $str;

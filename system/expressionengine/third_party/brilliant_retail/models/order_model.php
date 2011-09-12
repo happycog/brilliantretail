@@ -97,43 +97,105 @@ class Order_model extends CI_Model {
 			}	
 		return $order;
 	}
-	
-	function get_order_collection($start_date='',$end_date='',$limit=''){
-		$this->load->model('customer_model');
-		$this->db->select('o.*,m.*');
-		$this->db->from('br_order o');
-		$this->db->join('members m', 'o.member_id = m.member_id');
-		// Are there time boundaries
+	function get_order_collection($start_date='',$end_date='',$limit=0,$search='',$offset=0,$sort='',$dir='',$prefix='exp_'){
+				// Get a simple count of all products
+			$sql = "SELECT 
+						count(order_id) as cnt 
+					FROM 
+						".$prefix."br_order 
+					WHERE 
+						status_id >= 0";
+			$query = $this->db->query($sql);
+			$rst = $query->result_array();
+			$total = $rst[0]["cnt"];
+		
+		
+			// Get the field_id for br_fname
+				if(isset($_SESSION["fl_fname"])){
+					$fl_fname = $_SESSION["fl_fname"];
+				}else{
+					$this->db->where('m_field_name','br_fname')
+								->from('member_fields');
+					$query = $this->db->get();
+					foreach($query->result_array() as $row){
+						$fl_fname = 'm_field_id_'.$row["m_field_id"];
+					}
+					$_SESSION["fl_fname"] = $fl_fname;
+				}
+			// Get the field_id for br_lname 
+				if(isset($_SESSION["fl_lname"])){
+					$fl_lname = $_SESSION["fl_lname"];
+				}else{
+					$this->db->where('m_field_name','br_lname')
+								->from('member_fields');
+					$query = $this->db->get();
+					foreach($query->result_array() as $row){
+						$fl_lname = 'm_field_id_'.$row["m_field_id"];
+					}
+					$_SESSION["fl_lname"] = $fl_lname;
+				}
+								
+			// Create a SQL statement
+			$sql = "SELECT 
+						SQL_CALC_FOUND_ROWS 
+						o.order_id,
+						o.created, 
+						CONCAT(d.".$fl_fname.", ' ', d.".$fl_lname.") as customer,  
+						(o.base + o.shipping + o.tax - o.discount) as total,
+						o.status_id,
+						o.base,
+						o.tax,
+						o.shipping,
+						o.discount,
+						o.member_id  
+					FROM 
+						".$prefix."br_order o,
+						".$prefix."member_data d  
+					WHERE 
+						o.member_id = d.member_id 
+					AND 
+						o.site_id = ".$this->config->item('site_id')." 
+					AND 
+						o.status_id >= 0 ";
+			
 			if($start_date != ''){
 				$start_date = date("U",strtotime(date("Y-n-d 00:00:00",strtotime($start_date))));
-				$this->db->where('created >=',$start_date);
+				$sql .= " AND o.created >= '".$start_date."' ";
 			}
 			if($end_date != ''){
 				$end_date = date("U",strtotime(date("Y-n-d 23:59:59",strtotime($end_date))));
-				$this->db->where('created <=',$end_date);
+				$sql .= " AND o.created <= '".$end_date."' ";
 			}
-		// Run 
-		$this->db->where('site_id =',$this->config->item('site_id'));
-		$this->db->where('status_id >=',0);
-		$this->db->order_by('created','desc');
-		$query = $this->db->get();
+			
+			if($search != ''){
+				$sql .= "AND (	d.".$fl_fname." LIKE '%".$search."%' 
+									|| 
+								d.".$fl_lname." LIKE '%".$search."%' )";	
+			}
+			
+			$sql .= " ORDER BY ".($sort+1)." ".$dir;
+
+			if($limit != 0){
+				$sql .= " LIMIT ".$offset.",".$limit;
+			}
 		
-		// Build the output array
-		$i = 0;
-		$orders = array();
-		foreach($query->result_array() as $val){
-			$member = $this->customer_model->get_customer_data($val["member_id"]);
-			$orders[$i] = array_merge($member["custom"],$val);	
-			$orders[$i]["total"] = ($orders[$i]["base"]+$orders[$i]["tax"]+$orders[$i]["shipping"]-$orders[$i]["discount"]);
-			$i++;
-		}
-		if($limit != ''){
-			$cap = count($orders);
-			for($i=$limit;$i<$cap;$i++){
-				unset($orders[$i]);
-			}
-		}
-		return $orders;
+		// Run the sql
+			$query = $this->db->query($sql);
+			$rst = $query->result_array();
+			$orders = array(
+								"total"		=> $total,
+								"results" 	=> $rst
+							);
+
+		// Get the total without LIMIT restrictions
+			$query = $this->db->query("SELECT FOUND_ROWS() as dTotal");
+			$rst = $query->result_array();
+			$orders["displayTotal"] = $rst[0]["dTotal"];
+			
+			#echo '<pre>';var_dump($orders);echo '<pre>';
+			
+		// Get the count of ALL 
+			return $orders;
 	}
 	
 	function get_download_collection($start_date='',$end_date='',$limit=''){

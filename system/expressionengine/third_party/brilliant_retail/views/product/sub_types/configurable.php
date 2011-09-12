@@ -44,7 +44,7 @@
 				
 			</select>
 			<p>
-				<div id="create_config" class="add_btn"><?=lang('br_create')?></div>
+				<div id="create_config" class="add_btn"><?=lang('create')?></div>
 			</p>
 		</div>
 		<div id="config_form_container"></div>
@@ -89,7 +89,11 @@
 </div>
 <script type="text/javascript">
 	function _bind_config_button(){
-		$('#config_selected').tableDnD();
+		$('#config_selected').tableDnD({
+											dragHandle:'move_config_row',
+											onDragClass: 'tDnD_whileDrag',  
+											onDrop: stripe_table 
+										});
 
 		$('#configurableCreate').bind('click',function(){
 			var config_attr = $('#config_attr').val();
@@ -104,11 +108,17 @@
 			}
 			tmp += 	'<td class="w50"><input type="text" name="config_sku[]" /></td><td class="w50"><input type="text" name="config_qty[]" value="0" /></td><td>'+
 					'<select style="display:none" name="config_adjust_type[]"><option>fixed</option><option>percent</option></select>'+
-					'<input type="text" name="config_adjust[]" style="width:50px" /></td><td class="w50"><a href="#" class="config_item_remove">remove</a></td></tr>';
+					'<input type="text" name="config_adjust[]" style="width:50px" /></td>'+
+					'<td class="move_config_row"><img src="<?=$theme?>images/icon_move.png" /></td>'+
+					'<td class="w50"><a href="#" class="config_item_remove">remove</a></td></tr>';
 			$(tmp).prependTo($('#config_selected tbody'));
 
 			// reset the dnd for the rows
-				$('#config_selected').unbind().tableDnD();
+				$('#config_selected').unbind().tableDnD({
+															dragHandle:'move_config_row',
+															onDragClass: 'tDnD_whileDrag',  
+															onDrop: stripe_table 
+														});
 	
 			$('.config_item_remove').unbind().bind('click',function(){
 				$(this).parent().parent().remove();

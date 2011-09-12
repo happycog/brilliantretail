@@ -13,8 +13,11 @@ http://getsatisfaction.com/brilliantretail
 # CHANGE LOG # 
 
 1.0.3.5
+* Added confirm_email name to checkout template for server side validation
 * Added a forth level of category navigation [#0000092]
+* Added ajax filter to admin product overview [#0000096]
 * Added ajax filter to admin customer overview [#0000090]
+* Added ajax filter to admin order overview [#0000091]
 * Added captcha to member register form [#0000089]
 * Fixed a typo in the delete category language entry [#0000082]
 * Updated local code directory outside of the brilliant_retail package. [#0000093]
@@ -26,6 +29,7 @@ http://getsatisfaction.com/brilliantretail
 * IN PROGRESS - Added category_menu depth parameter to adjust the depth of the nested ul list (default 3)
 
 1.0.3.4
+* Added additional member_id database index to order table. 
 * IN PROGRESS - Added donation product type
 
 1.0.3.3
@@ -35,7 +39,7 @@ http://getsatisfaction.com/brilliantretail
 1.0.3.2
 * Added member based pricing
 * Added product_count variable to catalog results tag pair 
-* IN PROGRESS - Added member based sale pricing
+* Added member based sale pricing
 * IN PROGRESS - Added custom member fields to register form 
 * IN PROGRESS - Added custom member fields to checkout process
 

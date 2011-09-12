@@ -70,15 +70,16 @@
 							</div>								
                             	<div class="b2r_clearboth"><!-- --></div>
 	                            <?=$content?>
-                        		<select id="action" name="action" style="float:right;margin-top:5px">
-                            		<option value="">------------</option> 
-                            		<option value="0"><?=lang('br_delete_selected_products')?></option>
-                            		<option value="1"><?=lang('br_enable_selected_products')?></option>
-                            		<option value="2"><?=lang('br_disable_selected_products')?></option>
-                            	</select>
-                            	<?=form_submit(array('name' => 'submit', 'value' => lang('submit'), 'class'=>'submit', 'id' => 'batch_submit'))?>
-                        	</form>
-	                       	
+                        		<div id="header_buttons">
+	                        		<select id="action" name="action">
+	                            		<option value="">------------</option> 
+	                            		<option value="0"><?=lang('br_delete_selected_products')?></option>
+	                            		<option value="1"><?=lang('br_enable_selected_products')?></option>
+	                            		<option value="2"><?=lang('br_disable_selected_products')?></option>
+	                            	</select>
+	                            	<?=form_submit(array('name' => 'submit', 'value' => lang('submit'), 'class'=>'submit', 'id' => 'batch_submit'))?>
+	                        	</div>
+							</form>
                         	<div class="b2r_clearboth"><!-- --></div>
                         
                     </div> <!-- b2r_dashboard --> 

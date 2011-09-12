@@ -65,13 +65,13 @@ class Report_sales extends Brilliant_retail_report {
 
 		// Header row 
 			
-			$header = array(lang('order_id'),
+			$header = array(lang('br_order_id'),
 							lang('date'),
-							lang('base'),
-							lang('tax'),
-							lang('shipping'),
-							lang('discount'),
-							lang('total'));
+							lang('br_base'),
+							lang('br_tax'),
+							lang('br_shipping'),
+							lang('br_discount'),
+							lang('br_total'));
 	
 		// Results array 	
 			$base = 0;
@@ -86,10 +86,10 @@ class Report_sales extends Brilliant_retail_report {
 				$graph = '';
 			}else{
 				$str = '_get_graph_'.$range_type;
-				$graph = $this->$str($range_type,$orders);
+				$graph = $this->$str($range_type,$orders["results"]);
 			}
 		
-			foreach($orders as $row){
+			foreach($orders["results"] as $row){
 				// only add orders if they are not canceled
 				if($row["status_id"] >= 1){
 					$result[] = array(

@@ -126,19 +126,13 @@ class Brilliant_retail_core {
 														1 => lang('br_basic'),
 														2 => lang('br_bundle'),
 														3 => lang('br_configurable'),
+														7 => lang('br_donation'),
 														4 => lang('br_downloadable'),
-														5 => lang('br_virtual') 
+														5 => lang('br_virtual'),  
+														6 => lang('br_subscription') 
 													);
-													
-			if($this->_config["store"][$this->site_id]["subscription_enabled"] == 1){
-				$this->_config['product_type'][6] = lang('br_subscription');
-			}
-			
-			if($this->_config["store"][$this->site_id]["donation_enabled"] == 1){
-				$this->_config['product_type'][7] = lang('br_donation');
-			}
-			
-									
+										
+												
 		// Check the license
 			$lic = $this->_config["store"][$this->site_id]["license"];
 			$this->_validate_license($lic);	
@@ -394,13 +388,18 @@ class Brilliant_retail_core {
 					$products[0]["configurable_js"] = '';
 				}
 			
-			// Subscription Product Selectors
+			// Subscriptions
 				if($products[0]["type_id"] == 6){
-					$products[0]["subscription"] = $this->_build_subscription_opts($products[0]);
+					$periods = array(
+										1=>strtolower(lang('br_days')),
+										2=>strtolower(lang('br_weeks')),
+										3=>strtolower(lang('br_months')) 
+									);
+					$products[0]["subscription"][0]["renewal"] = $periods[$products[0]["subscription"][0]["period"]];
 				}else{
-					$products[0]["subscription"][0] = array();
+					$products[0]["subscription"][0] = array();				
 				}
-	
+			
 			// Set default images
 			 	if($products[0]["image_large"] == ''){
 			 		$products[0]["image_large"] = 'products/noimage.jpg';
@@ -1045,6 +1044,7 @@ class Brilliant_retail_core {
 			}
 		
 		}
+
 		return $output;
 	}
 	
@@ -1951,29 +1951,6 @@ class Brilliant_retail_core {
 								'config' => $config
 							);
 		return $config_opts;
-	}
-	
-	function _build_subscription_opts($p){
-		$periods = array(
-							1=>lang('br_days'),
-							2=>lang('br_months')
-						);
-		$select = '<input type="hidden" name="subscription_id" value="'.$p["subscription"][0]["subscription_id"].'">';
-		if(isset($p["subscription"][0]["sub_price"])){
-			
-			$length = ($p["subscription"][0]["length"] == 1) ? rtrim($periods[$p["subscription"][0]["period"]],'s') : $periods[$p["subscription"][0]["period"]]; 
-			
-			$select .= '<select name="subscription_select" id="subscription_select">
-						<option value="">'.ucwords(lang('br_every')).' '.strtolower($length).'</option>';
-			$i = 0;
-			foreach($p["subscription"][0]["sub_price"] as $opt){
-				$select .= '<option value="'.$opt["subscription_price_id"].'" class="{periods:'.$opt["periods"].',discount:'.$opt["discount"].'}">'.($p["subscription"][0]["length"] * $opt["periods"]).' '.$periods[$p["subscription"][0]["period"]].' '.lang('br_save').' '.$opt["discount"].'%</option>';
-				$i++;
-			}
-			$select .= '</select>';
-		}
-		$attr[0] = array('subscription_select' => $select);
-		return $attr;
 	}
 	
 	function _build_product_attributes($p){

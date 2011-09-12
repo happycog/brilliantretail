@@ -25,21 +25,21 @@
 ?>
 <div id="sub_type_2" class="subtypes">
 	<div class="search">
-		<?=lang('search')?>
+		<?=lang('br_search')?>
 		<input type="text" id="bundle_search">
 	</div>
-	<h4><?=lang('add_products')?></h4>
+	<h4><?=lang('br_add_products')?></h4>
 	<div id="bundle_result" class="result_div">
 		<table id="bundle_results" width="100%" cellpadding="0" cellspacing="0">
-			<tr><td colspan="4" style="background-color:#fff"><?=lang('bundle_product_search')?></td></tr>
+			<tr><td colspan="4" style="background-color:#fff"><?=lang('br_bundle_product_search')?></td></tr>
 		</table>
 	</div>
 	<p>&nbsp;</p>
-	<h4><?=lang('bundle_products')?></h4>
+	<h4><?=lang('br_bundle_products')?></h4>
 	<table id="bundle_selected" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
-			<th><?=lang('product')?></th>
-			<th><?=lang('type')?></th>
+			<th><?=lang('br_product')?></th>
+			<th><?=lang('br_type')?></th>
 			<th>&nbsp;</th>
 		</tr>
 		<?php
@@ -81,7 +81,7 @@
 	        	function(data){
 	            	brResult.find('tr').remove();
 					$.each(data, function(i,item){
-	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td>'+item.price+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><?=lang('add')?></a></td></tr>').appendTo(brResult);
+	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td>'+item.price+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><?=lang('br_add')?></a></td></tr>').appendTo(brResult);
 	            	});
 	            	$('.add_bundle').unbind('click').bind('click',function(){
 						_add_bundle($(this).metadata().product_id);

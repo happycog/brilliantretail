@@ -21,3 +21,4 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+$sql[] = "ALTER TABLE exp_br_order ADD INDEX order_member_id (member_id);";

@@ -184,7 +184,11 @@ class Product_model extends CI_Model {
 			}
 			
 			if(trim($search) != ''){
-				$sql .= " AND title LIKE '%".mysql_real_escape_string($search)."%' ";
+				$sql .= " AND 
+							( 	title LIKE '%".mysql_real_escape_string($search)."%' 
+								||
+							  	sku LIKE '%".mysql_real_escape_string($search)."%'
+							)";
 			}
 			
 			$sql .= " ORDER BY ".($sort+1)." ".$dir;
@@ -497,8 +501,6 @@ class Product_model extends CI_Model {
 											'group_id' => $data["group_id"], 
 											'trial_offer' => $trial_offer,
 											'trial_price' => $data["trial_price"],
-											'trial_length' => $data["trial_length"],
-											'trial_period' => $data["trial_period"],
 											'trial_occur' => $data["trial_occur"],
 											'cancel_group_id' => $data["cancel_group_id"]
 										);
@@ -517,8 +519,6 @@ class Product_model extends CI_Model {
 				unset($data["group_id"]);
 				unset($data["trial_offer"]);
 				unset($data["trial_price"]);
-				unset($data["trial_length"]);
-				unset($data["trial_period"]);
 				unset($data["trial_occur"]);
 				unset($data["cancel_group_id"]);
 	
@@ -1031,23 +1031,9 @@ class Product_model extends CI_Model {
 			$arr[$i] = $row;
 			$i++;
 		}
-		// check for sub_price
-		$this->db->select('*');
-		$this->db->where('subscription_id',$arr[0]["subscription_id"]);
-		$this->db->from('br_product_subscription_price');	
-		$this->db->order_by('periods');
-					
-		$query = $this->db->get();
-		$i++;
-		$arr[0]["sub_price"] = array();
-		foreach ($query->result_array() as $row){
-			$arr[0]["sub_price"][$i] = $row;
-			$i++;
-		}
 		return $arr;
 	}
-	
-	
+
 	function get_attributes($set_id = '',$product_id = ''){
 			
 			// Editing or new?

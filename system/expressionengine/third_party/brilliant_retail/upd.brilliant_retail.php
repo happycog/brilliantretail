@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.3.3';
+	public $version	= '1.0.3.4';
 	
 	function Brilliant_retail_upd()
 	{
@@ -406,7 +406,8 @@ class Brilliant_retail_upd {
 				  merchant_id varchar(100) NOT NULL,
 				  coupon_code varchar(50) NOT NULL,
 				  created int(10) unsigned NOT NULL default '0',
-				  PRIMARY KEY  (order_id)
+				  PRIMARY KEY  (order_id),
+				  KEY order_member_id (member_id) 
 				) ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;";
 
 ## ----------------------------

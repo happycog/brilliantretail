@@ -196,7 +196,7 @@ function _restripe_images(){
 	$('#imageTable').tableDnD({
 								dragHandle:'move_image_row',
 								onDragClass: 'tDnD_whileDrag',  
-								onDrop: _restripe_images 
+								onDrop: stripe_table  
 							});
 							
 	$('.remove_img').unbind('click').bind('click',function(){

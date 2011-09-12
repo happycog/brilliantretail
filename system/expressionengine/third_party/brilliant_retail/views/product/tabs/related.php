@@ -90,7 +90,7 @@
 		var brResult = $('#related_results');
 		var brClear  = $('#product_clear');
 		
-		_restripe_related();
+		stripe_table();
 		
 		<?php
 			echo "var type = new Array(".count($product_type).")\n";
@@ -117,7 +117,7 @@
 						return false;
 					});
 
-	        		_restripe_related();
+	        		stripe_table();
 	        	}
 	        );
 		});
@@ -134,7 +134,7 @@
 
 	});
 	
-	function _restripe_related(){
+	function stripe_table(){
 		$('#related_selected tr').removeClass('even');
 		$('#related_selected tr:even').addClass('even');
 	}
@@ -161,7 +161,7 @@
 		relatedSelected.tableDnD({
 										dragHandle:'move_related_row',
 										onDragClass: 'tDnD_whileDrag',  
-										onDrop: _restripe_related
+										onDrop: stripe_table
 									});
 			
 		$('.remove_related').unbind('click').bind('click',function(){

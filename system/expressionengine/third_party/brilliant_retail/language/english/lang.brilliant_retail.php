@@ -143,12 +143,13 @@ $lang = array(
 	'br_featured' => 'Featured',
 	
 	// Product types 
-	'br_basic' 	=> 'Basic',
-	'br_bundle' 	=> 'Bundle',
-	'br_configurable' => 'Configurable',
+	'br_basic' 			=> 'Basic',
+	'br_bundle' 		=> 'Bundle',
+	'br_configurable' 	=> 'Configurable',
 	'br_downloadable' 	=> 'Downloads',
-	'br_giftcard' 	=> 'Gift Card',
-	'br_virtual' 	=> 'Service',
+	'br_donation' 		=> 'Donation', 
+	'br_giftcard' 		=> 'Gift Card',
+	'br_virtual' 		=> 'Service',
 	 
 	// Buttons 
 	'br_add_product' => 'Add Product', 
@@ -218,7 +219,10 @@ $lang = array(
 			'br_move_to_group' => 'Move To Group',
 			'br_no_change' => 'No Change', 
 			'br_subscription_period' => 'Subscription Period',
+			'br_renews' => 'Renews', 
+			'br_every' => 'Every', 
 			'br_days' => 'Days',
+			'br_weeks' => 'Weeks',
 			'br_months' => 'Months',
 			'br_daily' => 'Daily',
 			'br_monthly' => 'Monthly',

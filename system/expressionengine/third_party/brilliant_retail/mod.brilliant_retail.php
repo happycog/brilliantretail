@@ -126,8 +126,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$tagdata = preg_replace($pattern,"",$tagdata);
 				$output = $this->EE->TMPL->parse_variables($tagdata, $products);
 				if($form == 'yes'){
+					$hidden = '<input type="hidden" name="product_id" value="'.$products[0]["product_id"].'" />';
+					if($products[0]["type_id"] == 6){
+						$hidden .= '<input 	type="hidden" 
+											name="subscription_id"
+											value="'.$products[0]["subscription"][0]["subscription_id"].'" />';
+					}
+					
 					$output = 	'<form id="form_'.$products[0]["product_id"].'" action="'.$action.'" method="post">
-									<input type="hidden" name="product_id" value="'.$products[0]["product_id"].'" />
+									'.$hidden.' 
 									'.$output.'
 								</form>
 								<script type="text/javascript">
@@ -567,34 +574,35 @@ class Brilliant_retail extends Brilliant_retail_core{
 	
 			// Subscriptions 
 				if($product[0]["type_id"] == 6){
-					$subscription["subscription_id"] = $data["subscription_id"];
+					// We only want to allow 1 per subscription
+						$data["quantity"] = 1;
+					$subscription = $product[0]["subscription"][0];
 					$periods = array(
 										1=>strtolower(lang('br_days')),
-										2=>strtolower(lang('br_months'))
+										2=>strtolower(lang('br_weeks')),
+										3=>strtolower(lang('br_months')) 
 									);
-	
-					$subscription["subscription_price_id"] = $data["subscription_select"];
-					$options .= '<h4>'.lang('br_subscription_label').':</h4>';
-					if($subscription["subscription_price_id"] != ''){
-						foreach($product[0]["subscription"][0]["sub_price"] as $opt){
-							if($opt["subscription_price_id"] == $subscription["subscription_price_id"]){
-								$per = $product[0]["price"] - ($product[0]["price"] * ($opt["discount"]/100));
-
-								// Need to do some price resetting
-									$amt["price"] = $this->_currency_round(($opt["periods"] * $per));
-									$amt["base"] = $this->_currency_round(($opt["periods"] * $per));
-									$amt["label"] = '<p class="price">'.$this->_config["currency_marker"].$amt["price"].'</p>';
-								
-								$options .= $this->_config["currency_marker"].$amt["price"].' '.lang('br_every').' '.$opt["periods"].' '.$periods[$product[0]["subscription"][0]["period"]];
-								$subscription["length"] = $opt["periods"];
-								$subscription["periods"] = $product[0]["subscription"][0]["period"];
-							}
+					$options .= '<div class="subscription_options">';
+					
+					// format the renewal period
+						$length = rtrim($periods[$subscription["period"]],'s').'(s)';
+						
+					// Is there a trial period?
+						$subscription["price"] = $amt["price"];
+						$options .= '<label>'.lang('br_renews').':</label> 
+									'.lang('br_every').' '.$subscription["length"].' '.$length.'
+									<label>'.lang('br_price').':</label>
+									'.$this->_config["currency_marker"].$this->_currency_round($amt["price"]);
+						if($subscription["trial_offer"]){
+							$amt["base"]  = $subscription["trial_price"];
+							$amt["price"] = $subscription["trial_price"];
+							$amt["label"] = $subscription["trial_price"];
+							$options .= '<label>'.lang('br_trial_price').':</label> 
+										'.$this->_config["currency_marker"].$this->_currency_round($subscription["trial_price"]).'<br />
+										<label>'.lang('br_trial_length').':</label> 
+										'.$subscription["trial_occur"].' '.$length;
 						}
-					}else{
-						$options .= $this->_config["currency_marker"].$product[0]["price"].' '.lang('br_every').' '.rtrim($periods[$product[0]["subscription"][0]["period"]],'s');
-						$subscription["length"] 	= $product[0]["subscription"][0]["length"];
-						$subscription["periods"] 	= $product[0]["subscription"][0]["period"];
-					}
+					$options .= '</div>';
 				}
 
 			// Add and adjust for options
@@ -674,25 +682,28 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// New Quantity 
 				$quantity = $this->EE->input->post('qty',TRUE);
 				$cart = $this->EE->product_model->cart_get();
-	
+			
 			foreach($cart["items"] as $key => $val){
 				if(isset($quantity[md5($key)])){
-					
 					if(!is_integer($quantity[md5($key)])){
 						$quantity[md5($key)] = round($quantity[md5($key)] * 1);
 					}
-					
 					if($quantity[md5($key)] <= 0){
 						$this->EE->product_model->cart_unset(md5($key));	
 					}else{
-						$cart["items"][$key]["quantity"] = $quantity[md5($key)];	
-						$cart["items"][$key]["subtotal"] = $this->_currency_round(($cart["items"][$key]["price"] * $quantity[md5($key)])); 	
-						$content = serialize($cart["items"][$key]);
-						$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
-										'session_id' => session_id(), 
-										'content' => $content,
-										'updated' => date("Y-n-d G:i:s"));
-						$this->EE->product_model->cart_update($data,$key);
+						// We don't want more than 1 subscription
+							if($val["type_id"] == 6){
+								$quantity[md5($key)] = 1;
+							}
+						// Update the cart 
+							$cart["items"][$key]["quantity"] = $quantity[md5($key)];	
+							$cart["items"][$key]["subtotal"] = $this->_currency_round(($cart["items"][$key]["price"] * $quantity[md5($key)])); 	
+							$content = serialize($cart["items"][$key]);
+							$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
+											'session_id' => session_id(), 
+											'content' => $content,
+											'updated' => date("Y-n-d G:i:s"));
+							$this->EE->product_model->cart_update($data,$key);
 					}
 				}
 			}
@@ -1015,11 +1026,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$data[$key] = $this->EE->input->post($key,TRUE);
 				}
 
-				// ----------------------------------------------------------------------------------
-				// ----------------------------------------------------------------------------------
-				// ----------------------------------------------------------------------------------
-				// Begin TB Patch 7-30-11
-
 				// Minimum required fields
 				$required_fields = array(
 											'br_fname'           	=> lang('br_fname'), 
@@ -1041,7 +1047,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 							unset($required_fields['email']);
 						
 				// Do we need to require the shipping fields, too?
-				$ship_same_address = (isset($_POST['ship_same_address']) && $_POST['ship_same_address'] != '');
+				$ship_same_address = (isset($data['ship_same_address']) && $data['ship_same_address'] != '');
 
 				// Save this one for later
 				$_SESSION['br_ship_same_address'] = $ship_same_address;
@@ -1064,14 +1070,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 				// Let's do some validation...
 				try {
-					
 
 					// Create new arrays on each request to hold form info
 					$_SESSION['br_form_errors'] = array();
 					$_SESSION['br_form_post_data'] = array();
 
 					// Load our data into a temporary session store so we can redisplay it on error
-					foreach($_POST as $key => $val)
+					foreach($data as $key => $val)
 						$_SESSION['br_form_post_data'][$key] = $this->EE->input->post($key);
 
 
@@ -1082,7 +1087,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$missing_fields = array();
 
 					foreach ($required_fields as $field => $name) 
-						if (! isset($_POST[$field]) || trim($_POST[$field]) == '')
+						if (! isset($data[$field]) || trim($data[$field]) == '')
 						{
 							$_SESSION['br_form_errors'][$field] = lang('br_this_field_is_required');
 							$missing_fields[] = $name;
@@ -1102,14 +1107,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 					// Handle email validity
 					if($member_id == 0){
-						if ($_POST['email'] != $_POST['confirm_email'])
+						if (isset($data['confirm_email']) && $data['email'] != $data['confirm_email'])
 						{
 							$_SESSION['br_form_errors']['email'] = 'The email confirmation you entered doesn\'t match the email you entered';
 							$_SESSION['br_form_errors']['confirm_email'] = 'The email confirmation you entered doesn\'t match the email you entered';
 							$validation_errors[] = "The email confirmation you entered doesn't match the email you entered.";
 						}
 	
-						if (preg_match( "/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])*(\.([a-z0-9])([-a-z0-9_-])([a-z0-9])+)*$/i", $_POST['email'] ) == 0)
+						if (preg_match( "/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])*(\.([a-z0-9])([-a-z0-9_-])([a-z0-9])+)*$/i", $data['email'] ) == 0)
 						{
 							$_SESSION['br_form_errors']['email'] = 'This doesn\'t look like a valid email. Try again or contact us for help placing your order';
 							$validation_errors[] = "The email you entered doesn't appear to be valid.";
@@ -1117,18 +1122,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 
 					// US-specific validation for shipping
-					if (!$ship_same_address && $_POST['br_shipping_country'] == 'US') 
+					if (!$ship_same_address && $data['br_shipping_country'] == 'US') 
 					{
 	
 						// Handle shipping phone validity
-						if (! preg_match( "/^(?:1(?:[. -])?)?(?:\((?=\d{3}\)))?([2-9]\d{2})(?:(?<=\(\d{3})\))? ?(?:(?<=\d{3})[.-])?([2-9]\d{2})[. -]?(\d{4})(?: (?i:ext)\.? ?(\d{1,5}))?$/", $_POST['br_shipping_phone'] ))
+						if (! preg_match( "/^(?:1(?:[. -])?)?(?:\((?=\d{3}\)))?([2-9]\d{2})(?:(?<=\(\d{3})\))? ?(?:(?<=\d{3})[.-])?([2-9]\d{2})[. -]?(\d{4})(?: (?i:ext)\.? ?(\d{1,5}))?$/", $data['br_shipping_phone'] ))
 						{
 							$_SESSION['br_form_errors']['br_shipping_phone'] = 'This doesn\'t look like a valid phone number. Try again or contact us for help placing your order';
 							$validation_errors[] = "The shipping phone number you entered doesn't appear to be valid.";
 						}
 
 						// Handle shipping zip validity
-						if (! preg_match("/^([0-9]{5})(-[0-9]{4})?$/", $_POST['br_shipping_zip'])) 
+						if (! preg_match("/^([0-9]{5})(-[0-9]{4})?$/", $data['br_shipping_zip'])) 
 						{
 							$_SESSION['br_form_errors']['br_shipping_zip'] = 'This doesn\'t look like a valid US zip code. Try again or contact us for help placing your order';
 							$validation_errors[] = "The shipping zip code you entered doesn't appear to be valid.";
@@ -1136,17 +1141,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 
 					// US-specific validation for shipping
-					if ($_POST['br_billing_country'] == 'US') 
+					if ($data['br_billing_country'] == 'US') 
 					{
 						// Handle billing phone validity
-						if (! preg_match( "/^(?:1(?:[. -])?)?(?:\((?=\d{3}\)))?([2-9]\d{2})(?:(?<=\(\d{3})\))? ?(?:(?<=\d{3})[.-])?([2-9]\d{2})[. -]?(\d{4})(?: (?i:ext)\.? ?(\d{1,5}))?$/", $_POST['br_billing_phone'] ))
+						if (! preg_match( "/^(?:1(?:[. -])?)?(?:\((?=\d{3}\)))?([2-9]\d{2})(?:(?<=\(\d{3})\))? ?(?:(?<=\d{3})[.-])?([2-9]\d{2})[. -]?(\d{4})(?: (?i:ext)\.? ?(\d{1,5}))?$/", $data['br_billing_phone'] ))
 						{
 							$_SESSION['br_form_errors']['br_billing_phone'] = 'This doesn\'t look like a valid phone number. Try again or contact us for help placing your order';
 							$validation_errors[] = "The billing phone number you entered doesn't appear to be valid.";
 						}
 
 						// Handle billing zip validity
-						if (! preg_match("/^([0-9]{5})(-[0-9]{4})?$/", $_POST['br_billing_zip'])) 
+						if (! preg_match("/^([0-9]{5})(-[0-9]{4})?$/", $data['br_billing_zip'])) 
 						{
 							$_SESSION['br_form_errors']['br_billing_zip'] = 'This doesn\'t look like a valid US zip code. Try again or contact us for help placing your order';
 							$validation_errors[] = "The billing zip code you entered doesn't appear to be valid.";
@@ -1166,13 +1171,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 						exit();
 
 				}
-
-				// End TB Patch
-				// ----------------------------------------------------------------------------------
-				// ----------------------------------------------------------------------------------
-				// ----------------------------------------------------------------------------------
-
-
 
 			// Shipping Rate
 				// We have a problem
@@ -1217,7 +1215,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$email 		= $mem[0]["email"];
 						$member_id 	= $mem[0]["member_id"];
 				}else{
-					// No matching email. Create order
+					// No matching email. Create customer
 						$email = $data["email"];
 						$group_id = $this->_config["store"][$this->site_id]["register_group"];
 						$password = strtolower(substr(md5(time()),0,8));
@@ -1227,11 +1225,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 											"lname" => $data["br_lname"],
 											"email" => $data["email"],
 											"password" => $password,
-											"username" => $data["username"]
+											"username" => $data["email"] 
 										);
 						// Call the member_member_register hook 
 							$edata = $this->EE->extensions->call('member_member_register', $eml[0], $member_id);
 							if ($this->EE->extensions->end_script === TRUE) return;
+
 						// Send the email notice						
 							$this->_send_email('customer-account-new', $eml);
 				}

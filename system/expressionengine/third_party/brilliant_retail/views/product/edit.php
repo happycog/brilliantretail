@@ -71,19 +71,18 @@
 					?>
 
 							<div class="b2r_clearboth"><!-- --></div>
-			    			<div id="footer_buttons">
-								 <?php 
+			    			<div id="header_buttons">
+								<?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
+								<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
+								<?php 
 									if($products[0]["product_id"] != 0){ 
 								?>
-										<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
 										<?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?>
+										<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
 								<?php
 									}
 								?>
-								<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
-								<?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
-								<p class="b2r_cancel"><a href="<?=$base_url.'&method=product'?>"><?= lang('br_cancel'); ?></a></p>
-						    	<div class="b2r_clearboth"><!-- --></div>
+								<div class="b2r_clearboth"><!-- --></div>
 							</div>
 							<p>&nbsp;</p>
 					</div> <!-- b2r_dashboard --> 
@@ -117,6 +116,11 @@
 				return false;
 			}
 		});
-		$('.mainTable tr:odd').addClass('odd');
+		stripe_table();
 	});
+	function stripe_table(){
+		$('.mainTable tr').removeClass('even').removeClass('odd');
+		$('.mainTable tr:even').addClass('even');
+		$('.mainTable tr:odd').addClass('odd');
+	}
 </script>

@@ -151,9 +151,6 @@
 </table>
 <script type="text/javascript">
 	$(function(){
-
-		$('#product_detail_tbl tr:even').addClass('even');
-
 		<?php
 			if($hidden["product_id"] == 0){
 		?>

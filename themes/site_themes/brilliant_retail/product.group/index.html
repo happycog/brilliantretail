@@ -107,14 +107,24 @@
         
             <div id="details">
                     {price_html}
-                    <label>Qty:</label>
-                    {quantity_select}
+                    {if {type_id} != 6}
+                    	<label>Qty:</label>
+                    	{quantity_select}
+					{if:else}
+						<input type="hidden" name="quantity" value="1" />
+					{/if}
 					<div class="clearboth"><!-- --></div>
                     {!-- Insert Product Specific Selectors !--}
                     	{subscription}
-                    		<label>Volume Discount</label>
-                    		{subscription_select}<br />
-                    		<div class="clearboth"><!-- --></div>		
+                    		<div>
+                    			<b>Renews Every:</b> {length} {renewal}
+                    		</div>
+                    		<div>
+                    			<b>Trial Price:</b> ${trial_price}
+                    		</div>
+                    		<div>
+                    			<b>Trial Occurances:</b> {trial_occur}
+                    		</div>
                     	{/subscription}
                     	{configurable}
                     		<label>{configurable_label}</label>

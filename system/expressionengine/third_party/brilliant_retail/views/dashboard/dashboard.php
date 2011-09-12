@@ -75,7 +75,7 @@
 							                    		<a href="'.$base_url.'&method=order_detail&order_id='.$order["order_id"].'">'.$order["order_id"].'</a>
 							                    	</p>
 							                        <p class="b2r_name">
-							                        	'.$order["br_fname"].' '.$order["br_lname"].'
+							                        	'.$order["customer"].'
 							                        </p>
 							                        <p class="b2r_amt">
 							                        	'.$currency_marker.$order["total"].'

@@ -23,7 +23,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-$cp_pad_table_template["table_open"] = '<table id="order_tbl" cellpadding="0" cellspacing="0" class="mainTable">';
+$cp_pad_table_template["table_open"] = '<table id="order_tbl" cellpadding="0" cellspacing="0" class="mainTable" style="clear:both;">';
 	
 $this->table->set_template($cp_pad_table_template); 
 
@@ -48,24 +48,13 @@ $this->table->set_heading(
 			'data' => lang('br_order_status'),
 			'style' => 'width:60px'
 		)
-		#,array(
-		#'data' => '<input type="checkbox" id="toggle_check" />', 
-		#'style' => 'text-align:center',
-		#'width' => '5%')
+	/*
+		,array(
+    		'data' => '<input type="checkbox" id="toggle_check" />', 
+			'style' => 'text-align:center',
+			'width' => '5%')
+	*/
 );
-
-foreach($order_collection as $order){
-	$this->table->add_row(
-		array(
-			'<a href="'.$base_url.'&method=order_detail&order_id='.$order["order_id"].'">'.$order["order_id"].'</a>', 
-			date('n/d/y',$order["created"]),
-			$order["br_fname"].' '.$order["br_lname"].' (<a href="'.BASE.'&C=myaccount&id='.$order["member_id"].'">'.$order["username"].'</a>)',
-			$order["total"],
-			$status[$order["status_id"]]
-			#,array('data' => '<input type="checkbox" name="batch['.$order["order_id"].']" />', 'style' => 'text-align:center')
-		)
-	);
-}	
 $content = $this->table->generate();
 ?>
 <div id="b2retail">
@@ -109,18 +98,31 @@ $content = $this->table->generate();
 <script type="text/javascript">
 	$(function(){
 		var oTable = $('#order_tbl').dataTable({
-										"bStateSave": true,
-										"aoColumns": [
-														null, 
-														null,
-														null,
-														null,
-														{ "bSortable": false }
-													]
-									});
+													"iDisplayLength": 25, 
+													"aoColumns": [
+																		null,
+																		null,
+																		null,
+																		null,
+																		{ "bSortable": false }
+																	], 
+													"bProcessing": true,
+													"bServerSide": true,
+													"sAjaxSource": "<?=str_replace("&amp;","&",$ajax_url)?>", 
+													"fnDrawCallback": function() {
+														$('#toggle_check').click(function(){
+															if(this.checked){
+																$('input[type=checkbox]').attr('checked','checked');
+															}else{
+																$('input[type=checkbox]').each(function() {  
+																	this.checked = false;  
+																});  
+															}
+														});
+													}
+												});
 		
 		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#order_tbl_filter input');
-		$('<div style="clear:both"></div>').insertAfter('#order_tbl_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false
