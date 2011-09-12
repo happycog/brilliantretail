@@ -1,0 +1,8 @@
+.DS_Store
+admin.php
+index.php
+images/*
+media/cache/*
+media/import/*
+themes/third_party/brilliant_retail/script/ckeditor/plugins/pgrfilemanager/PGRThumb/cache/* 
+system/third_party/local/*
