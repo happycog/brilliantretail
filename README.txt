@@ -13,40 +13,28 @@ http://getsatisfaction.com/brilliantretail
 # CHANGE LOG # 
 
 1.0.3.5
-* Added confirm_email name to checkout template for server side validation
+* IN PROGRESS - Added category_menu style parameter (default nested)
+* IN PROGRESS - Added category_menu level parameter to adjust the parent category level (default 1)
+* IN PROGRESS - Added category_menu depth parameter to adjust the depth of the nested ul list (default 3)
+* IN PROGRESS - Added donation product type
+* IN PROGRESS - Added Subscription product type
+* IN PROGRESS - Added cron system for scheduling processes 
+* IN PROGRESS - Added custom member fields to register form 
+* IN PROGRESS - Added custom member fields to checkout process
+
+* IMPORTANT: Moved cp_theme/brilliant_retail directory to third_party/brilliant_retail 
+* IMPORTANT: Moved css and js files from _assets (parsed) to new js and css folders in media directory
+* Added member based pricing
+* Added member based sale pricing
+* Added "Feeds" section to admin and product new/edit form
 * Added a forth level of category navigation [#0000092]
 * Added ajax filter to admin product overview [#0000096]
 * Added ajax filter to admin customer overview [#0000090]
 * Added ajax filter to admin order overview [#0000091]
 * Added captcha to member register form [#0000089]
-* Fixed a typo in the delete category language entry [#0000082]
-* Updated local code directory outside of the brilliant_retail package. [#0000093]
-* Updated all language keys with a "br_" prefix to avoid namespace collisions [#0000083]
-* Updated customer_model get_customers method to include order history total [#0000090]  
-* Updated datatables jQuery script to 1.8.1
-* IN PROGRESS - Added category_menu style parameter (default nested)
-* IN PROGRESS - Added category_menu level parameter to adjust the parent category level (default 1)
-* IN PROGRESS - Added category_menu depth parameter to adjust the depth of the nested ul list (default 3)
-
-1.0.3.4
+* Added confirm_email name to checkout template for server side validation
 * Added additional member_id database index to order table. 
-* IN PROGRESS - Added donation product type
-
-1.0.3.3
-* IN PROGRESS - Added Subscription product type
-* IN PROGRESS - Added cron system for scheduling processes 
-
-1.0.3.2
-* Added member based pricing
 * Added product_count variable to catalog results tag pair 
-* Added member based sale pricing
-* IN PROGRESS - Added custom member fields to register form 
-* IN PROGRESS - Added custom member fields to checkout process
-
-1.0.3.1
-* IMPORTANT: Moved cp_theme/brilliant_retail directory to third_party/brilliant_retail 
-* IMPORTANT: Moved css and js files from _assets (parsed) to new js and css folders in media directory
-* Added "Feeds" section to admin and product new/edit form
 * Added feed tag to pull product data associated to each feed
 * Added server side error handling to checkout form (Thanks Tristan Blease)
 * Added method to save and repopulate checkout form inputs after a server side validation error (Thanks Tristan Blease)
@@ -69,6 +57,12 @@ http://getsatisfaction.com/brilliantretail
 * Fixed password update function to utilize new Authorization library [#0000073]
 * Fixed zip code error in Rates Matrix shipping method [#0000076]
 * Fixed an issue with the return parameter from PayPal
+* Fixed a typo in the delete category language entry [#0000082]
+* Updated admin theme. 
+* Updated local code directory outside of the brilliant_retail package. [#0000093]
+* Updated all language keys with a "br_" prefix to avoid namespace collisions [#0000083]
+* Updated customer_model get_customers method to include order history total [#0000090]  
+* Updated datatables jQuery script to 1.8.1
 * Updated customer_register to use the BR member group setting 
 * Updated Tax rate to accept up to 4 decimal values
 * Updated Report > General Sales Report to display discount prior to total
