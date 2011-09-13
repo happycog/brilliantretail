@@ -79,6 +79,7 @@ class Brilliant_retail_upd {
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'process_ipn')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'retrieve_password')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'pull_feed')";
+			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'wishlist_process')";
 
 		## ----------------------------
 		##  Records of exp_member_fields
@@ -4377,18 +4378,17 @@ class Brilliant_retail_upd {
 ##  Table structure for exp_br_wishlist
 ## ----------------------------
 
+	$sql[] = "DROP TABLE IF EXISTS exp_br_wishlist;";
 	$sql[] = "CREATE TABLE exp_br_wishlist (
-				  wishlist_id int(11) NOT NULL AUTO_INCREMENT,
-				  member_id int(11) NOT NULL DEFAULT '0',
-				  session_id varchar(100) NOT NULL,
-				  is_public int(11) NOT NULL DEFAULT '0',
-				  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				  updated timestamp NULL DEFAULT NULL,
-				  status int(11) NOT NULL DEFAULT '0',
-				  ip varchar(100) NOT NULL,
-				  PRIMARY KEY (wishlist_id),
-				  KEY index_wishlist (member_id,session_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8";
+					wishlist_id int(11) NOT NULL AUTO_INCREMENT,
+					member_id int(11) NOT NULL DEFAULT '0',
+					is_public int(11) NOT NULL DEFAULT '0',
+					created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					product_id int(11) NOT NULL,
+					notes text,
+					PRIMARY KEY (wishlist_id),
+					KEY index_wishlist (member_id)
+				) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 				
 		foreach ($sql as $query)
 		{

@@ -24,4 +24,20 @@
 /************************************************************/
 
 class Wishist_model extends CI_Model {
+
+	public function wishlist_get($member_id){
+		$this->db->from('br_wishlist')
+				->where('member_id',$member_id);
+		$query = $this->get();	
+		return $query->result_array();
+	}
+
+	public function wishlist_add(){
+	
+	}
+
+	public function wishlist_remove(){
+	
+	}
+
 }

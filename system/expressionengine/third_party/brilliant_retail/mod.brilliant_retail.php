@@ -323,21 +323,25 @@ class Brilliant_retail extends Brilliant_retail_core{
 									'result_filter_set' => ''
 								);
 				
-			if(count($category[0]["products"]) == 0){
-				$no_result = '';
-				$key = 'no_results';
-				preg_match("^".LD.$key.RD."(.*?)".LD."/".$key.RD."^s",$this->EE->TMPL->tagdata, $matches);
-				if(isset($matches[1])){
-					$no_result = trim($matches[1]);
+			// Filter the results
+				if(count($category[0]["products"]) != 0)
+					$vars = $this->_filter_results($vars,$key,true);
+			
+			// If there are no product
+				if(count($category[0]["products"]) == 0 || !isset($vars[0]["results"])){
+					$no_result = '';
+					$key = 'no_results';
+					preg_match("^".LD.$key.RD."(.*?)".LD."/".$key.RD."^s",$this->EE->TMPL->tagdata, $matches);
+					if(isset($matches[1])){
+						$no_result = trim($matches[1]);
+					}
+					$vars[0]['no_results'][0] = array(0 => $no_result);
+					$vars[0]['result_paginate'][0] = array();
+					$vars[0]['result_paginate_bottom'][0] = array();
+					$vars[0]['result_filter_set'][0] = array();
+					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
+					return $output;
 				}
-				$vars[0]['no_results'][0] = array(0 => $no_result);
-				$vars[0]['result_paginate'][0] = array();
-				$vars[0]['result_paginate_bottom'][0] = array();
-				$vars[0]['result_filter_set'][0] = array();
-				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
-				return $output;
-			}
-			$vars = $this->_filter_results($vars,$key,true);
 			
 			foreach($vars[0]['results'] as $rst){
 				$tmp = $this->_get_product($rst["product_id"]);
@@ -787,14 +791,21 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 			}
 			
-			function wishlist_add_link(){
-				$output = '';
+			function wishlist_add(){
+				$product_id = ($this->EE->TMPL->fetch_param('product_id')) ? ($this->EE->TMPL->fetch_param('product_id')) : "#product_id_reqired" ;
+				$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
+				$output = $action.AMP.'action=add'.AMP.'product_id='.$product_id;
 				return $output;
 			}
 			
-			function wishlist_remove_link(){
-				$output = '';
+			function wishlist_remove(){
+				$output = 'remove it from the wishlist';
 				return $output;
+			}
+			
+			function wishlist_process(){
+				$action = $this->EE->input->get('action',TRUE);
+				echo $member_id = $this->EE->session->userdata["member_id"];
 			}
 			
 	/* CHECKOUT */

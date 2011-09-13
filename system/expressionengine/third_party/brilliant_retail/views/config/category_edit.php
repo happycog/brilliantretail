@@ -36,43 +36,8 @@
 	
 
 <div id="b2r_page" class="b2r_category">
-   <table id="admin_header" cellpadding="0" cellspacing="0">
-    	<tr>
-			<td>
-				<?php
-					echo '	<select id="select_config">';
-        			foreach($submenu as $key => $val){
-            			$sel = ($key == $sub_selected) ? 'selected="selected"' : '' ; 
-            			echo '	<option value="'.$key.'" '.$sel.'>'.lang($key).'</option>'; 
-            		}
-            		echo '	</select>
-                			<script type="text/javascript">
-                				$(function(){
-                					$(\'#select_config\').change(function(){
-										window.location = \''.$base_url.'&&method=\'+$(this).val();
-                					});
-                				});	
-                			</script>';
-				?>
-				<h3><?=lang('br_categories')?></h3>
-				<div class="b2r_clearboth"><!-- --></div>
-    			<div id="header_buttons">
-				    <?php
-				    	#form_submit(array('name' => 'submit', 'value' => lang('br_save_continue'), 'class'=>'submit'))
-				    ?>
-					<?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
-					<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'delete'))?>
-					<p class="b2r_cancel"><a href="<?=$base_url.'&method=config_category'?>"><?= lang('br_cancel'); ?></a></p>
-			    	<div class="b2r_clearboth"><!-- --></div>
-			    </div>
-    		</td>
-		</tr>
-    </table>
-	
-	<div class="b2r_clearboth"><!-- --></div>
 
-
-<table id="category_update_tbl" class="mainTable" style="margin-top:0;">
+<table id="category_update_tbl" cellpadding="0" cellspacing="0" class="mainTable" style="margin-top:0;">
 	<thead>
 		<tr class="odd">
 			<th colspan="2">
@@ -151,7 +116,7 @@
 
 <div class="b2r_clearboth"><!-- --></div>
 
-<table id="product_sort_tbl" class="mainTable" style="margin-top:25px;">
+<table id="product_sort_tbl" class="mainTable" cellpadding="0" cellspacing="0" style="margin-top:25px;">
 	<thead>
 		<tr class="odd">
 			<th colspan="2">
@@ -171,8 +136,9 @@
 	</tbody>
 	<tr>
     		<td colspan="2" style="text-align:right">
-    	    	<input type="submit" value="<?=lang('br_save_changes')?>" /><br/>
-    			<br />
+    	    	<input type="submit" class="submit" value="<?=lang('save_changes')?>" /><br/>
+    			<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'delete'))?>
+				<br />
     			* Required Field</td>
     	</tr>
 </table>
