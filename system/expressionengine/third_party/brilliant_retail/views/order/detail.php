@@ -44,15 +44,11 @@
 							<div id="order_member">
                             <?php
                             	echo 	$member_photo. 
-                            			'<h5>'.$order["member"]["br_fname"].' '.$order["member"]["br_lname"].' (<a href="'.$base_url.'&method=customer_detail&member_id='.$order["member_id"].'">'.$order["username"].'</a>)
+                            			'<h5>'.$order["member"]["br_fname"].' '.$order["member"]["br_lname"].'
                             			<br />
 										<span><a href="mailto:'.$order["email"].'">'.$order["email"].'</a></span></h5>';
 							?>
                             </div>
-                            <div class="b2r_icon" id="order_id">
-                            	<img src="<?=$theme?>images/icon_order_sm.png" />
-                        	</div>
-                        	
                         	<div id="order_status_id">
 							    <?php
 									echo form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_update_status&order_id='.$hidden["order_id"],array('method' => 'POST', 'id' => 'statusForm'),$hidden);
@@ -65,7 +61,7 @@
 										echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
 									}
 								?>
-								</select><input type="submit" class="update" value="<?=lang('br_update')?>" />
+								</select><input type="submit" class="update" value="<?=lang('update')?>" />
 								<br />
 								<div style="margin:5px 0">
 									<input type="checkbox" name="notify" style="float:left;" />&nbsp;<?=lang('br_status_notify')?>
@@ -77,7 +73,7 @@
 
 							<h4 id="status_text">
                             	<?=lang('br_order_date')?> : <?=date("n/d/y",$order["created"])?><br />
-                            	<?=lang('br_order_number')?> : <?=$order["order_id"]?> (<a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id=<?=$order["order_id"]?>&print=true" target="_blank"><?=lang('br_print')?></a>)<br />
+                            	<?=lang('br_order_number')?> : <?=$order["order_id"]?> (<a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id=<?=$order["order_id"]?>&print=true" target="_blank"><?=lang('print')?></a>)<br />
                             </h4>
                             <div class="b2r_clearboth"><!-- --></div>
                             
@@ -103,7 +99,7 @@
                             					</tr>
                             				</table></td>
                             			<td width="50%">
-                            				<table width="100%" cellpadding="0" cellspacing="0">
+                            				<table width="100%" class="subTable" cellpadding="0" cellspacing="0">
                             					<tr>
                             						<th>
                             							<?=lang('br_bill_to')?></th>
