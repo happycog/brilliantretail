@@ -43,7 +43,6 @@
 		<tr class="nodrag nodrop">
 			<td><b><?=lang('br_member_group')?></b></td>
 			<td><b><?=lang('br_price')?></b></td>
-			<td><b><?=lang('br_quantity')?></b></td>
 			<td><b><?=lang('br_start_dt')?></b></td>
 			<td><b><?=lang('br_end_dt')?></b></td>
 			<td>&nbsp;</td>
@@ -67,19 +66,14 @@
 		// by default lets not offer the options to the 
 		// first row 
 		
+			$quantity 	= '<input type="hidden" name="price_qty[]" value="1" />';			
 			if($i == 0){
-				$quantity 	= '<input type="hidden" name="price_qty[]" value="1" /><input type="text" value="1" disabled />';			
 				$start_dt 	= '<input type="hidden" name="price_start[]" value="" />&nbsp;';
 				$end_dt 	= '<input type="hidden" name="price_end[]" value="" />&nbsp;';
 				$move 	= '';
 				$remove = '';
 				$class = "nodrag nodrop";
 			}else{
-				$quantity = form_input(array(	'name' => 'price_qty[]', 
-												'class' => '{required:true}',
-												'title' => lang('br_quantity').' - '.lang('br_price').' '.lang('br_is_required'),
-												'value' => $m["qty"]));
-
 				$start = ($m["start_dt"] != '0000-00-00 00:00:00') ? date("m/d/Y",strtotime($m["start_dt"])) : '';
 				$start_dt = form_input(
 									array(	'name' => 'price_start[]', 
@@ -100,6 +94,7 @@
 			
 			echo "	<tr class='".$class."'>
 									<td>
+									".$quantity."
 									".$group."</td>
 									<td>
 										".form_input(
@@ -108,8 +103,6 @@
 													'title' => lang('br_pricing').' - '.lang('br_price').' '.lang('br_is_required'),
 													'value' => $m["price"])
 											)."</td>
-									<td>
-										".$quantity."</td>
 									<td>
 										".$start_dt."</td>
 									<td>
@@ -141,6 +134,7 @@
 					<table>
 						<tr>
 							<td>
+							<input type="hidden" name="price_qty[]" value="1" />
 							'.$group.'</td>
 							<td>
 								'.form_input(
@@ -149,11 +143,6 @@
 											'title' => lang('br_pricing').' - '.lang('br_price').' '.lang('br_is_required'),
 											'value' => '')
 									).'</td>
-							<td>
-								'.form_input(array(	'name' 	=> 'price_qty[]', 
-													'class' => '{required:true}',
-													'title' => lang('br_quantity').' - '.lang('br_price').' '.lang('br_is_required'),
-													'value' => 1)).'</td>
 							<td>
 								'.form_input(array(	'name' 	=> 'price_start[]', 
 													'value' => '', 

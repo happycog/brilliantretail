@@ -30,13 +30,13 @@
 	$sale_price_matrix = '	<table id="sale_price_table" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
 								<thead>
 									<tr>
-										<th colspan="7">
+										<th colspan="6">
 											'.lang('br_sale_price').'</th>
 									</tr>	
 								</thead>
 								<tfoot>
 									<tr class="nodrag no drop">
-										<td colspan="7">
+										<td colspan="6">
 											<span class="button" style="float: right; margin: 0pt;">
 												<a class="submit" href="#" id="sale_price_add_option" style="color:#fff">'.lang('br_add_option').'</a>
 											</span></td>
@@ -46,7 +46,6 @@
 								<tr class="nodrag nodrop" id="sale_header" '.$hide_header.'>
 									<td><strong>'.lang('br_member_group').'</strong></td>
 									<td><strong>'.lang('br_sale_price').'</strong></td>
-									<td><strong>'.lang('br_quantity').'</strong></td>
 									<td><strong>'.lang('br_start_dt').'</strong></td>
 									<td><strong>'.lang('br_end_dt').'</strong></td>
 									<td>&nbsp;</td>
@@ -70,10 +69,7 @@
 		// by default lets not offer the options to the 
 		// first row 
 	
-			$quantity = form_input(array(	'name' => 'sale_price_qty[]', 
-											'class' => '{required:true}',
-											'title' => lang('br_quantity').' - '.lang('br_sale_price').' '.lang('br_is_required'),
-											'value' => $m["qty"]));
+			$quantity = '<input type="hidden" name="sale_price_qty[]" value="1" />';
 
 			$start = ($m["start_dt"] != '0000-00-00 00:00:00') ? date("m/d/Y",strtotime($m["start_dt"])) : '';
 			$start_dt = form_input(
@@ -94,26 +90,25 @@
 		
 			
 		$sale_price_matrix .=	"	<tr class='".$class."'>
-									<td>
-									".$group."</td>
-									<td>
-										".form_input(
-											array(	'name' => 'sale_price[]', 
-													'class' => '{required:true}',
-													'title' => lang('br_pricing').' - '.lang('br_sale_price').' '.lang('br_is_required'),
-													'value' => $m["price"])
-											)."</td>
-									<td>
-										".$quantity."</td>
-									<td>
-										".$start_dt."</td>
-									<td>
-										".$end_dt."</td>
-									<td class='move_sale_price_row'>
-										".$move."</td>
-									<td style=\"text-align:center;\">
-										".$remove."</td>
-								</tr>";
+										<td>
+											".$quantity." 
+											".$group."</td>
+										<td>
+											".form_input(
+												array(	'name' => 'sale_price[]', 
+														'class' => '{required:true}',
+														'title' => lang('br_pricing').' - '.lang('br_sale_price').' '.lang('br_is_required'),
+														'value' => $m["price"])
+												)."</td>
+										<td>
+											".$start_dt."</td>
+										<td>
+											".$end_dt."</td>
+										<td class='move_sale_price_row'>
+											".$move."</td>
+										<td style=\"text-align:center;\">
+											".$remove."</td>
+									</tr>";
 		$i++;
 	}
 	$sale_price_matrix .= '		</tbody>
@@ -136,17 +131,14 @@
 					<table>
 						<tr>
 							<td>
-							'.$group.'</td>
+								<input type="hidden" name="sale_price_qty[]" value="1" />  
+								'.$group.'</td>
 							<td>
 								'.form_input(
 									array(	'name' => 'sale_price[]', 
 											'title' => lang('br_pricing').' - '.lang('br_sale_price').' '.lang('br_is_required'),
 											'value' => '')
 									).'</td>
-							<td>
-								'.form_input(array(	'name' => 'sale_price_qty[]', 
-													'title' => lang('br_quantity').' - '.lang('br_sale_price').' '.lang('br_is_required'),
-													'value' => 1)).'</td>
 							<td>
 								'.form_input(array(	'name' => 'sale_price_start[]', 
 													'value' => '', 
@@ -192,6 +184,10 @@
 
 		$('.remove_sale_price_row').unbind().bind('click',function(){
 			$(this).parent().parent().remove();
+			var size = $('#sale_price_table tbody tr').size();
+			if(size == 1){
+				$('#sale_header').hide();
+			}
 			_sale_price_restripe();
 			return false;
 		});

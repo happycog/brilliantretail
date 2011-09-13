@@ -44,16 +44,16 @@
 						</div>
 						<div class="br_fieldtype_results">
 							<table class="subTable" id="related_selected" cellpadding="0" cellspacing="0" width="100%">
-								<tr>
+								<tr class="nodrag nodrop">
 									<th colspan="4">
 										<?=lang('br_selected_products')?>
 									</th>
 								</tr>
 								<tr class="nodrag nodrop">
 									<td>
-										<?=lang('br_title')?></td>
+										<b><?=lang('br_title')?></b></td>
 									<td>
-										<?=lang('br_type')?></td>
+										<b><?=lang('br_type')?></b></td>
 									<td>&nbsp;</td>
 									<td>&nbsp;</td>
 								</tr>								

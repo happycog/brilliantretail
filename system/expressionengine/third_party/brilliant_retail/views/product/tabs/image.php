@@ -29,7 +29,7 @@
 $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 ?>	
 <table id="imageTable" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
-	<tr>
+	<tr class="nodrag nodrop">
 		<th colspan="7"><?=lang('br_images')?></th>
 	</tr>
 	<tr class="nodrag nodrop">
@@ -43,11 +43,11 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 			</div></td>
 	</tr>
 	<tr id="image_header" class="nodrag nodrop" <?=$hide_header?>>
-		<td width="120"><?=lang('br_image')?></td>
-		<td width="*"><?=lang('br_title')?></td>
-		<td width="65"><?=lang('br_large')?></td>
-		<td width="65"><?=lang('br_thumbnail')?></td>
-		<td width="65"><?=lang('br_exclude')?></td>
+		<td width="120"><b><?=lang('br_image')?></b></td>
+		<td width="*"><b><?=lang('br_title')?></b></td>
+		<td width="65"><b><?=lang('br_large')?></b></td>
+		<td width="65"><b><?=lang('br_thumbnail')?></b></td>
+		<td width="65"><b><?=lang('br_exclude')?></b></td>
 		<td width="10">&nbsp;</td>
 		<td width="30">&nbsp;</td>
 	</tr>
@@ -191,8 +191,9 @@ function _set_image_radio(){
 }
 
 function _restripe_images(){
-	$('#imageTable tr').removeClass('even');
+	$('#imageTable tr').removeClass('even').removeClass('odd');
 	$('#imageTable tr:even').addClass('even');
+	$('#imageTable tr:odd').addClass('odd');
 	$('#imageTable').tableDnD({
 								dragHandle:'move_image_row',
 								onDragClass: 'tDnD_whileDrag',  

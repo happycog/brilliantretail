@@ -1578,12 +1578,12 @@ class Product_model extends CI_Model {
 		// values into an array we can serialize
 			
 			if(isset($opts["cOptions_title"])){
+				$sort = 0;
 				foreach($opts["cOptions_title"] as $key=>$val){
 					if(trim($val) != ''){
 						// setup the array on the sort value 
 						// multiple by 1 to keep things clean 
-							$sort = $opts["cOptions_sort"][$key] * 1;
-						
+							
 						// Main option fields
 							$arr[$sort][$key]["title"] = $val;	
 							$arr[$sort][$key]["type"] = $opts["cOptions_type"][$key];
@@ -1597,7 +1597,7 @@ class Product_model extends CI_Model {
 								foreach($opts["cOptions_opt_title"][$key] as $a => $b){
 									$opt_sort = $opts["cOptions_opt_sort"][$key][$a] * 1;
 									$tmp[$opt_sort][$a]['title'] 	= $b;
-									$tmp[$opt_sort][$a]['type'] 	= $opts["cOptions_opt_type"][$key][$a];
+									$tmp[$opt_sort][$a]['type'] 	= 'fixed'; #$opts["cOptions_opt_type"][$key][$a];
 									$tmp[$opt_sort][$a]['price'] 	= $opts["cOptions_opt_price"][$key][$a];
 									$tmp[$opt_sort][$a]['sort'] 	= $opt_sort;
 								}
@@ -1614,6 +1614,7 @@ class Product_model extends CI_Model {
 							}
 						}
 					}
+					$sort++;
 				}
 			if(isset($arr)){
 				// Sort the options at the 
