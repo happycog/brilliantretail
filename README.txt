@@ -18,7 +18,6 @@ http://getsatisfaction.com/brilliantretail
 * IN PROGRESS - Added category_menu depth parameter to adjust the depth of the nested ul list (default 3)
 * IN PROGRESS - Added donation product type
 * IN PROGRESS - Added Subscription product type
-* IN PROGRESS - Added cron system for scheduling processes 
 * IN PROGRESS - Added custom member fields to register form 
 * IN PROGRESS - Added custom member fields to checkout process
 
