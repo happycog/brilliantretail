@@ -81,7 +81,7 @@ class Report_sales extends Brilliant_retail_report {
 			$discount = 0;
 			$result = array();
 			
-			if(count($orders) == 0){
+			if(count($orders["results"]) == 0){
 				$result = array();
 				$graph = '';
 			}else{

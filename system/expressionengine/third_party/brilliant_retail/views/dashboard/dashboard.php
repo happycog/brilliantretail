@@ -55,7 +55,7 @@
 								        }else{
 								        	echo '<img src="'.$rep["graph"].'" width="100%" alt="'.$rep["title"].'" title="'.$rep["title"].'" />';
 								        }
-								        echo '      </div>
+								        echo '</div>
 								                	<h1>	
 								                		'.$currency_marker.$rep["total"].'</h1>
 									                <h2><a href="'.$rep["link"].'">'.$rep["title"].'</a></h2>
@@ -95,7 +95,7 @@
 										$i=0;
 				            			foreach($reports as $rep){
 				            				$class = ($i == 0) ? 'b2r_active' : '';
-			      							echo '	<li class="'.$class.' db_graph_link {gid:'.$i.'}">
+			      							echo '	<li class="'.$class.' db_graph_link" data-gid="'.$i.'" >
 								                    	<h1>'.$currency_marker.$rep["total"].'</h1>
 								                        <h2>'.$rep["title"].'</h2>
 								                    </li>';
@@ -126,7 +126,7 @@
 	$(function(){
 		$('#db_graph_links .db_graph_link').bind('click',function(){
 			var a = $(this);
-			var b = a.metadata().gid;
+			var b = a.attr('data-gid');
 			
 			$('#db_graph_links .db_graph_link').removeClass('b2r_active');
 			$('#b2r_graph .db_graph').hide();
