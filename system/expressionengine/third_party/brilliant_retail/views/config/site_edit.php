@@ -203,13 +203,21 @@
 <div id="b2r_page" class="b2r_category">
 	
 	<?=$general?>
+
+	<p>&nbsp;</p>
+	
 	<?=$catalog?>
+
+	<p>&nbsp;</p>
+
 	<?=$subscription?>
+
+	<p>&nbsp;</p>
+
 	<?=$seo?>
 	
 	<div id="header_buttons">
 	    <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
-		<p class="b2r_cancel"><a href="<?=$base_url.'&method=config_site'?>"><?= lang('br_cancel'); ?></a></p>
     	<div class="b2r_clearboth"><!-- --></div>
     </div>
 

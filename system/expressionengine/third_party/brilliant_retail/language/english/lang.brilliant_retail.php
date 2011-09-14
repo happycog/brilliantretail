@@ -47,7 +47,8 @@ $lang = array(
 	'br_config' => 'Settings',  
 	'br_config_checkout' => 'Checkout',
 	'br_config_email' => 'Notifications',
-	'br_config_tax' => 'Tax',
+	'br_new_tax' 		=> 'Add Tax',
+	'br_config_tax' 	=> 'Tax',
 	'br_config_permission' => 'Permissions',
 	'br_config_catalog' => 'Catalog',
 	'br_config_import' => 'Import',
@@ -152,6 +153,7 @@ $lang = array(
 	'br_virtual' 		=> 'Service',
 	 
 	// Buttons 
+	'br_clear' => 'Clear',
 	'br_add_product' => 'Add Product', 
 	'br_add_files' => 'Add Files',
 	'br_clear_search' => 'Clear Search', 
@@ -380,9 +382,11 @@ $lang = array(
 	// Categories
 		'br_categories' => 'Categories', 
 		'br_category_settings' => 'Settings',
-		'br_level_0' => 'Main Navigation',
-		'br_level_1' => 'Secondary Navigation',
-		'br_level_2' => 'Tertiary Navigation',
+		'br_level_1' => 'Level 1',
+		'br_level_2' => 'Level 2',
+		'br_level_3' => 'Level 3',
+		'br_level_4' => 'Level 4',
+		'br_template_path' => 'Template&nbsp;Path',
 		'br_add_category' => 'New Category',
 		'br_delete_category' => 'Delete Category',
 		'br_remove_image' => 'Remove Image', 
@@ -445,19 +449,20 @@ $lang = array(
 		
 	// Gateway Methods
 		'br_gateway_methods' => 'Payment Gateways',
-		'br_clear_all' => 'Clear All', 
+		'br_clear_all' 		=> 'Clear All', 
 		
 	// Shipping 
-		'br_shipping' => 'Shipping', 
+		'br_shipping' 		=> 'Shipping', 
 		'br_shipping_methods' => 'Shipping Methods', 
-		'br_country' => 'Country',
-		'br_zip_code' => 'Zip Code',
-		'br_from_price' => 'From Price',
-		'br_to_price' => 'To Price',
-		'br_from_weight' => 'From Weight',
-		'br_to_weight' => 'To Weight',
-		'br_add_row' => 'Add Row', 
-		'br_rates_matrix' => 'Rates Matrix',
+		'br_country' 		=> 'Country',
+		'br_zip_code' 		=> 'Zip Code',
+		'br_from_price' 	=> 'From Price',
+		'br_to_price' 		=> 'To Price',
+		'br_from_weight'	=> 'From Weight',
+		'br_to_weight' 		=> 'To Weight',
+		'br_add_row' 		=> 'Add Row', 
+		'br_label' 			=> 'Label', 
+		'rates_matrix' 		=> 'Rates Matrix',
 	
 	// Site 
 		'br_site_name' => 'Site Name',
@@ -499,6 +504,7 @@ $lang = array(
 	// Tax Settings 
 		'br_state' => 'State',
 		'br_rate' => 'Rate', 
+		'br_tax_zipcode_instructions' => '* Separate multiple zip codes with a pipe (i.e. 90049|90025|95219)',
 		'br_tax_settings' => 'Tax Settings',
 		'br_zone' => 'Country',		
 		'br_all_zones' => '* All Countries', 

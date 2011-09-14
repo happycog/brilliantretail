@@ -249,7 +249,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 							'code' 		=> 'x_test_request',
 							'type' 		=> 'dropdown', 
 							'options' 	=> 'TRUE:True|FALSE:False (Transactions are Live)',
-							'descr'		=> 'Test mode requires an authorize.net developer account', 
+							'descr'		=> '',
 							'value' 	=> 'TRUE',
 							'sort' 		=> 4
 							);	

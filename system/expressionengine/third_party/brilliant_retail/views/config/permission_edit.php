@@ -27,12 +27,13 @@
 
 	$this->table->set_template($cp_pad_table_template);
 	
-	$this->table->set_heading(array('data' => $store[0]["site_label"],"colspan" => 2));
+	$this->table->set_heading(array('data' => $group,"colspan" => 2));
 
 	$cell_1 = 	lang('br_permission');
-	$permissions = '<a href="#" id="permission_select_all">'.lang('br_select_all').'</a> | <a href="#" id="permission_clear_all">'.lang('br_clear_all').'</a>
+	$permissions = '<a href="#" id="permission_select_all">'.lang('select_all').'</a> | <a href="#" id="permission_clear_all">'.lang('br_clear_all').'</a>
 					<hr />
 					'.$permissions;
+					
     $this->table->add_row(array($cell_1,$permissions));
     
 	$content = $this->table->generate();
@@ -41,41 +42,11 @@
 	echo form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_permission_update',array('method' => 'POST', 'id' => 'storeForm'),$hidden);
 ?>
 <div id="b2r_page" class="b2r_category">
-   <table id="admin_header" cellpadding="0" cellspacing="0">
-    	<tr>
-			<td>
-				<?php
-					echo '	<select id="select_config">';
-        			foreach($submenu as $key => $val){
-            			$sel = ($key == $sub_selected) ? 'selected="selected"' : '' ; 
-            			echo '	<option value="'.$key.'" '.$sel.'>'.lang($key).'</option>'; 
-            		}
-            		echo '	</select>
-                			<script type="text/javascript">
-                				$(function(){
-                					$(\'#select_config\').change(function(){
-										window.location = \''.$base_url.'&&method=\'+$(this).val();
-                					});
-                				});	
-                			</script>';
-				?>
-				<h3><?=lang('br_permission')?>
-				</h3>
-				<p id="b2r_numprod"><span><b><?=$group?></b></span></p>
-				<div class="b2r_clearboth"><!-- --></div>
-    			<div id="header_buttons">
-				    <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
-					<p class="b2r_cancel"><a href="<?=$base_url.'&method=config_site'?>"><?= lang('br_cancel'); ?></a></p>
-			    	<div class="b2r_clearboth"><!-- --></div>
-			    </div>
-    		</td>
-		</tr>
-    </table>
-
-	<div class="b2r_clearboth"><!-- --></div>
-
 	<?=$content?>
-
+	<div id="header_buttons">
+	    <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
+    	<div class="b2r_clearboth"><!-- --></div>
+    </div>
 </div>
 </form>
 <script type="text/javascript">
@@ -83,7 +54,6 @@
 		$('.permmision_checkbox').change(function(){
 			if($(this).is(':checked')){
 				var a = $(this).val().split('|');
-				alert(a[1]);
 			}
 		});
 		$('#permission_select_all').click(function(){

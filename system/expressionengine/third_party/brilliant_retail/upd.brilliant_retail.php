@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.3.4';
+	public $version	= '1.0.3.5';
 	
 	function Brilliant_retail_upd()
 	{
@@ -4067,6 +4067,7 @@ class Brilliant_retail_upd {
   title varchar(50) NOT NULL,
   zone_id int(11) NOT NULL,
   state_id int(11) NOT NULL,
+  zipcode text NULL, 
   rate float(10,4) NOT NULL,
   sort int(11) NOT NULL,
   PRIMARY KEY (tax_id)
@@ -4075,7 +4076,7 @@ class Brilliant_retail_upd {
 	## ----------------------------
 	##  Records of exp_br_tax
 	## ----------------------------
-		$sql[] = "INSERT INTO exp_br_tax VALUES ('1','1','CA Sales Tax', '1', '62', '9.50', '1')";
+		$sql[] = "INSERT INTO exp_br_tax VALUES ('1','1','CA Sales Tax', '1', '2754','','8.75', '1')";
 		
 	## ----------------------------
 	##  Table structure for exp_br_zone

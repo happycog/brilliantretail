@@ -72,7 +72,7 @@
 		</tr>
 		<tr class="odd">
         	<td>
-        		<?=lang('br_detail')?> *</td>
+        		<?=lang('br_details')?> *</td>
         	<td>
 	        	<textarea name="detail" id="detail" class="ckeditor"><?=$category["detail"]?></textarea></td>
 	    </tr>
@@ -134,14 +134,11 @@
 	    </tr>
 	<?php } ?>
 	</tbody>
-	<tr>
-    		<td colspan="2" style="text-align:right">
-    	    	<input type="submit" class="submit" value="<?=lang('save_changes')?>" /><br/>
-    			<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'delete'))?>
-				<br />
-    			* Required Field</td>
-    	</tr>
 </table>
+<div id="header_buttons">
+	<input type="submit" class="submit" value="<?=lang('save_changes')?>" />
+	<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
+</div>
 </div>
 </form>
 <script type="text/javascript">

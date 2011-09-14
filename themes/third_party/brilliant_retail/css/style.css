@@ -1835,7 +1835,8 @@ li.tree_selected {
 	color: #0581A7;
 }
 input#delete {
-	color: #0581A7;
+	color: #FFF;
+	background: #2A3940;
 	padding: 5px 9px;
 }
 .download_button {

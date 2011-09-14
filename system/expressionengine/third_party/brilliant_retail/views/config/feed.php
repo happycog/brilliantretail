@@ -26,7 +26,7 @@
 if( count($feeds) > 0 )
 {
 
-  $cp_pad_table_template["table_open"] = '<table id="feeds_tbl" class="mainTable">';
+  $cp_pad_table_template["table_open"] = '<table id="feeds_tbl" class="mainTable" cellspacing="0" cellpadding="0">';
 	
   $this->table->set_template($cp_pad_table_template);
   $this->table->set_heading(
@@ -57,34 +57,6 @@ if( count($feeds) > 0 )
   $feed_table = $this->table->generate();
 }
 ?>
-
-<div id="b2r_page" class="b2r_category">
-  <table id="admin_header" cellpadding="0" cellspacing="0">
-    <tr>
-      <td>
-        <?php
-        echo '	<select id="select_config">';
-        foreach($submenu as $key => $val){
-          $sel = ($key == $sub_selected) ? 'selected="selected"' : '' ; 
-          echo '	<option value="'.$key.'" '.$sel.'>'.lang($key).'</option>'; 
-        }
-        echo '	</select>
-        <script type="text/javascript">
-          $(function(){
-            $(\'#select_config\').change(function(){
-              window.location = \''.$base_url.'&&method=\'+$(this).val();
-            });
-          });	
-        </script>';
-        ?>
-        <h3><?=lang('br_config_feeds')?></h3>
-        <p id="b2r_numprod"><span><b><?= count($feeds);?></b></span></p>
-        <div class="b2r_clearboth"><!-- --></div>
-        <p class="b2r_addprod"><a href="<?=$base_url.AMP?>method=config_feed_edit"><?=lang('br_add')?></a></p>
-      </td>
-    </tr>
-  </table>
-
 <?php
 if ( isset($feed_table) && $feed_table != '' )
 {
@@ -103,8 +75,7 @@ $(function(){
 	var oTable = $('#feeds_tbl').dataTable({
     "bStateSave": true
   });
-  $('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#attributeTable_filter input');
-  $('<div style="clear:both"></div>').insertAfter('#attributeTable_filter');
+  $('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#feeds_tbl_filter input');
   $('#clear').click(function(){
     oTable.fnFilterClear();
     return false

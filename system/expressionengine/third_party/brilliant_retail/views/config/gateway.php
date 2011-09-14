@@ -31,11 +31,11 @@
 	    		<th>
 	    			<?=lang('br_title')?></th>
 	   			<th>
-					<?=lang('br_description')?></th>
+					<?=lang('br_descr')?></th>
 				<th>
 					<?=lang('version')?></th>
 				<th>
-					<?=lang('br_action')?></th>
+					<?=lang('action')?></th>
 	    	</tr>
 		</thead>
     	<tbody>
@@ -48,7 +48,7 @@
 						$title 	= '<a href="'.$base_url.AMP.'method=config_gateway_edit&config_id='.$m["config_id"].'&code='.$m["code"].'" class="'.$enabled.'">'.$m["title"].'</a>';	
 					}else{
 						$class 	= 'not_installed';
-						$link 	= '<a href="'.$base_url.AMP.'method=config_gateway_install&type='.$m["type"].'&code='.$m["code"].'" class="install">'.lang('br_install').'</a>';
+						$link 	= '<a href="'.$base_url.AMP.'method=config_gateway_install&type='.$m["type"].'&code='.$m["code"].'" class="install">'.lang('install').'</a>';
 						$title 	= $m["title"];	
 					}
 					
@@ -71,7 +71,7 @@
 <script type="text/javascript">
 	$(function(){
 		$('#gatewayTable').tablesorter({
-			headers: {0: {sorter: false}},
+			headers: {},
         	textExtraction: "complex",			
 			widgets: ["zebra"]
 		});

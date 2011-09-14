@@ -21,3 +21,5 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+// Add performance index to the order table
+	$sql[] = "ALTER TABLE exp_br_tax ADD COLUMN zipcode text NULL AFTER state_id;";

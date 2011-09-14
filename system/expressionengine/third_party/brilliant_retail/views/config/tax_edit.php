@@ -25,47 +25,13 @@
 ?>
 <?=form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_update', array('method' => 'POST', 'id' => 'promoForm','encrypt' => 'multipart/form-data'),$hidden)?>
 <div id="b2r_page" class="b2r_category">
-   <table id="admin_header" cellpadding="0" cellspacing="0">
-    	<tr>
-			<td>
-				<?php
-					echo '	<select id="select_config">';
-        			foreach($submenu as $key => $val){
-            			$sel = ($key == $sub_selected) ? 'selected="selected"' : '' ; 
-            			echo '	<option value="'.$key.'" '.$sel.'>'.lang($key).'</option>'; 
-            		}
-            		echo '	</select>
-                			<script type="text/javascript">
-                				$(function(){
-                					$(\'#select_config\').change(function(){
-										window.location = \''.$base_url.'&&method=\'+$(this).val();
-                					});
-                				});	
-                			</script>';
-				?>
-				<h3><?=lang('br_attributes')?></h3>
-				<div class="b2r_clearboth"><!-- --></div>
-    			<div id="header_buttons">
-				    <?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
-					<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
-					<?php 
-						if($tax["tax_id"] != 0){
-					?>
-							<?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?>
-							<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'delete'))?>
-					<?php
-						}
-					?>
-					<p class="b2r_cancel"><a href="<?=$base_url.'&method=config_tax'?>"><?= lang('br_cancel'); ?></a></p>
-			    	<div class="b2r_clearboth"><!-- --></div>
-			    </div>
-    		</td>
-		</tr>
-    </table>
-
-	<div class="b2r_clearboth"><!-- --></div>
-
-	<table class="mainTable" style="clear:both">
+	<table id="taxTable" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
+    	<thead>
+    		<tr>
+    			<th colspan="2">
+    				<?=lang('br_tax_settings')?></th>
+    		</tr>
+    	</thead>
     	<tbody>
 			<tr>
 				<td>
@@ -111,6 +77,13 @@
 			</tr>
 			<tr>
 				<td>
+					<?=lang('br_zip_code')?></td>
+				<td>
+					<textarea name="zipcode"><?=$tax["zipcode"]?></textarea><br />
+					<em><?=lang('br_tax_zipcode_instructions')?></em></td>
+			</tr>
+			<tr>
+				<td>
 					<?=lang('br_tax_rate').' *'?></td>
 				<td>
 					<input 	type="text" 
@@ -121,15 +94,27 @@
 			</tr>
 		</tbody>
     </table>
-    	
+	<div id="header_buttons">
+	    <?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
+		<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
+		<?php 
+			if($tax["tax_id"] != 0){
+		?>
+				<?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?>
+				<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
+		<?php
+			}
+		?>
+    	<div class="b2r_clearboth"><!-- --></div>
+    </div>
 	<div class="b2r_clearboth"><!-- --></div>
 </div>
 </form>                     
 
-
-
 <script type="text/javascript">
 	$(function(){
+		$('#taxTable tr:even').addClass('even');
+		$('#taxTable tr:odd').addClass('odd');
 		$('#delete').bind('click',function(){
 			if(confirm('<?=lang('br_confirm_delete_tax')?>')){
 				return true;

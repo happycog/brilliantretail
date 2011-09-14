@@ -31,43 +31,17 @@
 					array(	'config_id' => $config_id));
 ?>
 <div id="b2r_page" class="b2r_category">
-   <table id="admin_header" cellpadding="0" cellspacing="0">
-    	<tr>
-			<td>
-				<?php
-					echo '	<select id="select_config">';
-        			foreach($submenu as $key => $val){
-            			$sel = ($key == $sub_selected) ? 'selected="selected"' : '' ; 
-            			echo '	<option value="'.$key.'" '.$sel.'>'.lang($key).'</option>'; 
-            		}
-            		echo '	</select>
-                			<script type="text/javascript">
-                				$(function(){
-                					$(\'#select_config\').change(function(){
-										window.location = \''.$base_url.'&&method=\'+$(this).val();
-                					});
-                				});	
-                			</script>';
-				?>
-				<h3><?=lang('br_gateway_methods')?></h3>
-				<p id="b2r_numprod"><span><b><?=$title?></b></span></p>
-				<div class="b2r_clearboth"><!-- --></div>
-    			<div id="header_buttons">
-				    <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
-					<p class="b2r_cancel"><a href="<?=$base_url.'&method=config_gateway'?>"><?= lang('br_cancel'); ?></a></p>
-			    	<div class="b2r_clearboth"><!-- --></div>
-			    </div>
-    		</td>
-		</tr>
-    </table>
-
-    <div class="b2r_clearboth"><!-- --></div>
-    
-	<table id="gateway_tbl" class="mainTable" style="clear:both">
+	<table id="gateway_tbl" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
+    	<thead>
+    		<tr>
+    			<th colspan="2">
+    				<?=$title?></th>
+    		</tr>
+    	</thead>
     	<tbody>
 	    	<tr class="odd">
 	        	<td class="cell_1">
-	        		<?=lang('br_label')?></td>
+	        		<?=lang('label')?></td>
 	        	<td>
 	            	<input type="text" class="{required:true}" title="<?=lang('br_label')?> is required" value="<?=$label?>" name="label"></td>
 	    	</tr>
@@ -115,6 +89,10 @@
 	    	?>
 		</tbody>
     </table>
+	<div id="header_buttons">
+	    <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
+		<div class="b2r_clearboth"><!-- --></div>
+    </div>
 </div>
 </form>                     
 <script type="text/javascript">

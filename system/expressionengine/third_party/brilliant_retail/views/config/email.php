@@ -24,33 +24,7 @@
 /************************************************************/
 ?>
 <div id="b2r_page" class="b2r_category">
-    <table id="admin_header" cellpadding="0" cellspacing="0">
-    	<tr>
-			<td>
-				<?php
-					echo '	<select id="select_config">';
-        			foreach($submenu as $key => $val){
-            			$sel = ($key == $sub_selected) ? 'selected="selected"' : '' ; 
-            			echo '	<option value="'.$key.'" '.$sel.'>'.lang($key).'</option>'; 
-            		}
-            		echo '	</select>
-                			<script type="text/javascript">
-                				$(function(){
-                					$(\'#select_config\').change(function(){
-										window.location = \''.$base_url.'&&method=\'+$(this).val();
-                					});
-                				});	
-                			</script>';
-				?>
-				<h3><?=lang('br_notifications')?></h3>
-				<div class="b2r_clearboth"><!-- --></div>
-				</td>
-		</tr>
-    </table>
-
-    <div class="b2r_clearboth"><!-- --></div>
-    
-	<table id="emailTable" class="mainTable" style="clear:both">
+	<table id="emailTable" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
     	<thead>
 	    	<tr>
 	    		<th>
@@ -80,7 +54,6 @@
 													"bStateSave": true
 												});
 		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#emailTable_filter input');
-		$('<div style="clear:both"></div>').insertAfter('#emailTable_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

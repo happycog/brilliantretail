@@ -44,10 +44,10 @@
     <table class="mainTable" id="category_tbl" cellpadding="0" cellspacing="0">
     	<tbody>
 	    	<tr>
-	    		<th>Level 1</th>
-	    		<th>Level 2</th>
-	    		<th>Level 3</th>
-	    		<th>Level 4</th>
+	    		<th><?=lang('br_level_1')?></th>
+	    		<th><?=lang('br_level_2')?></th>
+	    		<th><?=lang('br_level_3')?></th>
+	    		<th><?=lang('br_level_4')?></th>
 	    	</tr>
 	    	<tr>
 	        	<?php
@@ -67,7 +67,7 @@
 												$state = ($val["enabled"] == 0 ) ? 'disabled' : '';
 												echo '	<li id="cat_'.$val["category_id"].'" class="cat_'.$val["parent_id"].' '.$state.'">
 															<img src="'.$theme.'/images/icon_move.png" class="cat_handle"><span>'.$val["title"].'</span>
-															<div class="cat_action"><a href="'.str_replace("&amp;","&",BASE).'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='.$val["category_id"].'">edit</a>&nbsp;|&nbsp;<a href="#" class="cat_cancel">cancel</a></div>
+															<div class="cat_action"><a href="'.str_replace("&amp;","&",BASE).'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='.$val["category_id"].'">'.lang('edit').'</a></div>
 														</li>';
 											}
 										}
@@ -190,10 +190,6 @@
 				return false;
 			});
 		});
-		$('.cat_cancel').unbind().bind('click',function(){
-			$(this).parent().hide();
-			return false;
-		});
 	}
 	
 	function _save_new_cat(){
@@ -206,7 +202,7 @@
 										beforeSubmit:  _block_ui,
 										success: function(data){
 								        	$('<li id="cat_'+data+'" class="cat_'+$('#parent_id').val()+'"><img src="<?=$theme?>images/icon_move.png" class="cat_handle"><span>'+cat_nm+'</span>'+
-								        		'<div class="cat_action"><a href="<?=str_replace("&amp;","&",BASE)?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='+data+'">edit</a>&nbsp;|&nbsp;<a href="#" class="cat_cancel">cancel</a></div></li>').insertAfter(where);
+								        		'<div class="cat_action"><a href="<?=str_replace("&amp;","&",BASE)?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='+data+'"><?=lang('edit')?></a></div></li>').insertAfter(where);
 								        	$.unblockUI();
 								        	_bind_cat_sort();
 											_bind_cat_click();

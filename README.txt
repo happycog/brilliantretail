@@ -45,6 +45,7 @@ http://getsatisfaction.com/brilliantretail
 * Added random parameter to BrillantRetail FieldType
 * Added image_total to product tag
 * Added image_count to product internal image tag
+* Added zip code to tax calculation [#0000098]
 * Fixed customer_order tag to include tax, shipping and discounts in total tag
 * Fixed customer orders in admin include tax, shipping and discounts in total tag
 * Fixed dashboard recent order totals to include include tax, shipping and discounts

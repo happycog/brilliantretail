@@ -60,7 +60,7 @@ class Shipping_rates_matrix extends Brilliant_retail_shipping {
 					}
 				// [2] To Zip / Postal 
 					if($val[2] != ''){
-						$a = explode("|",strtoupper($val[1]));
+						$a = explode("|",strtoupper($val[2]));
 						$zip = strtoupper($data["to_zip"]);
 						if(!in_array($zip,$a)){
 							$is_good = FALSE;

@@ -47,11 +47,25 @@ class Tax_model extends CI_Model {
 			$this->db->from('br_tax');
 			$query = $this->db->get();
 			
+			$rate = 0;
+
 			if($query->num_rows() == 0){
-				return 0;
+				return $rate;
+			}else{
+				foreach($query->result_array() as $rst){
+					// Do we have zip code restrictions?
+					if($rst["zipcode"] != ''){
+						$a = explode("|",$rst["zipcode"]);
+						if(in_array(trim($zip),$a)){
+							$rate = $rst["rate"];
+						}
+					}else{
+						$rate = $rst["rate"];
+					}	
+				}
 			}
-			$rst = $query->result_array();
-			return $rst[0]["rate"];
+			return $rate;
+			
 	}
 	
 	function get_tax_by_id($tax_id){
@@ -65,7 +79,7 @@ class Tax_model extends CI_Model {
 		return $tax;
 	}
 	function list_taxes(){
-		$this->db->select('t.tax_id,t.title,t.rate,z.title as zone,s.title as state');
+		$this->db->select('t.tax_id,t.title,t.zipcode,t.rate,z.title as zone,s.title as state');
 		$this->db->from('br_tax t');
 		$this->db->join('br_zone z', 'z.zone_id = t.zone_id','left');
 		$this->db->join('br_state s', 't.state_id = s.state_id','left');

@@ -30,7 +30,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version		= '1.0.3.4'; 
+		public $version		= '1.0.3.5'; 
 		public $vars 		= array();
 		public $site_id 	= '';
 		
@@ -53,7 +53,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											'config_attributeset_update','config_category_update',
 											'config_email_update','config_gateway_update','config_permission_update',
 											'config_shipping_update','config_site_update','config_tax_update',
-											
+											"order_ajax",
+											"customer_ajax",
+											"product_ajax",
+											"index_products",
 											"order_detail",
 											"customer_orders",
 											"product_edit", 
@@ -61,7 +64,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											"promo_new",
 											"promo_edit",
 											"report_detail",
-											"config_feeds", # Not Ready for prime time quite yet
 											"config_feeds_edit",
 											"config_attribute_create",
 											"config_attribute_edit",
@@ -78,8 +80,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											"config_shipping_edit",
 											"config_shipping_remove",
 											"config_tax_new",
-											"config_tax_edit");
-		
+											"config_tax_edit",
+											"subscription_update",
+											"subscription_detail");
 	/**
 	 * Constructor
 	 *
@@ -1444,122 +1447,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->EE->load->view('config/index', $this->vars, TRUE);
 		}
 		
-		function config_feeds()
-		{
-			$this->vars['cp_page_title'] = lang('br_config_feeds');
-			
-			$this->vars["selected"]     = 'config';
-			$this->vars["sub_selected"] = 'config_feeds';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"]         = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"]      = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-			$this->vars["feeds"]        = $this->EE->feed_model->get_feeds();
-			$this->vars['feed_aid']     = $this->EE->core_model->get_aid('Brilliant_retail','pull_feed');
-			$this->vars["content"]      = $this->EE->load->view('config/feed', $this->vars, TRUE);
-			
-			return $this->EE->load->view('config/index', $this->vars, TRUE);
-		}
-		
-		function config_feed_edit()
-		{		  
-		  $feed_data = array(
-        'feed_title'  => '',
-        'feed_code'   => '',
-        'feed_id'     => '',
-		  );
-			$feed_id    = $this->EE->input->get('feed_id');
-			if ( $feed_id != '' )
-			{
-			  $feed_data  = $this->EE->feed_model->get_feeds($feed_id); 
-			}
-			
-  		// Load Libraries & Helpers
-  		$this->EE->load->library( array('form_validation') );
-  	  
-  		// Configure Form Validation
-  	  $rules  = array(
-        array(
-          'field'   => 'feed_title',
-          'label'   => lang( 'feed_title' ),
-          'rules'   => 'required'
-        ),
-        array(
-          'field'   => 'feed_code',
-          'label'   => lang( 'feed_code' ),
-          'rules'   => 'required|alpha_dash' . ($this->EE->input->post('feed_id') == '' ? '|callback__feed_code_exists' : '')
-        )
-      );
-  	  $this->EE->form_validation->set_rules( $rules )->set_error_delimiters('<div class="notice">', '</div>'); 
-			$this->EE->form_validation->set_message('_feed_code_exists', lang('br_feed_code_exists'));
-      
-      // Get Feed Data
-      $feed_data = array(
-        'feed_title'  => $this->EE->input->post('feed_title') != '' ? $this->EE->input->post('feed_title') : $feed_data['feed_title'],
-        'feed_code'   => $this->EE->input->post('feed_code') != '' ? $this->EE->input->post('feed_code') : $feed_data['feed_code'],
-        'feed_id'     => $this->EE->input->post('feed_id') != '' ? $this->EE->input->post('feed_id') : $feed_data['feed_id'],
-      );
-		  
-		  // Form Validation
-		  if ( $this->EE->input->post('submit') )
-		  {
-  		  if ( $this->EE->form_validation->run() )
-  		  {
-  		    // Create or Update Feed
-		      $feed_id = $this->EE->feed_model->update_feed($feed_data);
-		      
-  		    if ( $this->EE->input->post('feed_id') != '' )
-  		    {
-  				  br_set( 'message', lang('br_feed_update_success') );
-  		    }
-  		    else
-  		    {
-  				  br_set( 'message', lang('br_feed_create_success') ); 
-  		    }
-		      
-  				// Redirect User
-  				if( $this->EE->input->post('submit') == 'Save' )
-  				{
-  				  $this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
-  				}
-  				else
-  				{
-  				  $this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feed_edit' . AMP . 'feed_id=' . $feed_id ); 
-  				}
-  		  }
-  		  else
-  		  {
-  				br_set( 'message', lang('br_feed_update_failure') );
-  		  } 
-		  }
-		  
-		  // Delete Feed
-  		if( $this->EE->input->post('delete') ){
-  			$this->EE->feed_model->delete_feed($this->EE->input->post('feed_id'));
-  			remove_from_cache('config');
-  			br_set('message',lang('br_feed_delete_success'));
-  			$this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
-  		}
-			
-			// Prepare Interface
-			$this->vars['feed']         = $feed_data;
-			$this->vars['categories']   = $this->EE->product_model->get_all_categories();
-			$this->vars["selected"]     = 'config';
-			$this->vars["sub_selected"] = 'config_feeds';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"]         = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"]      = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-			$this->vars['products']     = $this->EE->product_model->get_products_by_feed($feed_id);
-			$this->vars["content"]      = $this->EE->load->view('config/feed_edit', $this->vars, TRUE);
-			
-			return $this->EE->load->view('config/index', $this->vars, TRUE);
-		}
-		
-		function _feed_code_exists( $code )
-		{
-		  $feeds = $this->EE->feed_model->get_feed_by_code( $code );
-		  return (count( $feeds ) == 0 ? TRUE : FALSE);
-		}
-		
 		function config_attribute()
 		{
 			$this->vars['cp_page_title'] = lang('br_config_attribute');
@@ -1997,6 +1884,125 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 		
+		function config_feeds()
+		{
+			$this->vars['cp_page_title'] = lang('br_config_feeds');
+			
+			$this->vars["selected"]     = 'config';
+			$this->vars["sub_selected"] = 'config_feeds';
+			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+			$this->vars["help"]         = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+			$this->vars["br_menu"]      = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+			$this->vars["feeds"]        = $this->EE->feed_model->get_feeds();
+			$this->vars['feed_aid']     = $this->EE->core_model->get_aid('Brilliant_retail','pull_feed');
+			$this->vars["content"]      = $this->EE->load->view('config/feed', $this->vars, TRUE);
+			
+			return $this->EE->load->view('config/index', $this->vars, TRUE);
+		}
+		
+		function config_feeds_edit()
+		{		  
+  			// Load Libraries & Helpers
+  				$this->EE->load->library( array('form_validation') );
+
+			$feed_data = array(
+								'feed_title'  => '',
+								'feed_code'   => '',
+								'feed_id'     => '',
+		 						);
+
+			$feed_id    = $this->EE->input->get('feed_id');
+			
+			if ( $feed_id != '' ){
+				$feed_data  = $this->EE->feed_model->get_feeds($feed_id); 
+			}
+			
+  	  
+	  		// Configure Form Validation
+		  	  $rules  = array(
+		        array(
+		          'field'   => 'feed_title',
+		          'label'   => lang( 'feed_title' ),
+		          'rules'   => 'required'
+		        ),
+		        array(
+		          'field'   => 'feed_code',
+		          'label'   => lang( 'feed_code' ),
+		          'rules'   => 'required|alpha_dash' . ($this->EE->input->post('feed_id') == '' ? '|callback__feed_code_exists' : '')
+		        )
+		      );
+  	  		
+  	  		$this->EE->form_validation->set_rules( $rules )->set_error_delimiters('<div class="notice">', '</div>'); 
+			$this->EE->form_validation->set_message('_feed_code_exists', lang('br_feed_code_exists'));
+      
+	      // Get Feed Data
+	      $feed_data = array(
+	        'feed_title'  => $this->EE->input->post('feed_title') != '' ? $this->EE->input->post('feed_title') : $feed_data['feed_title'],
+	        'feed_code'   => $this->EE->input->post('feed_code') != '' ? $this->EE->input->post('feed_code') : $feed_data['feed_code'],
+	        'feed_id'     => $this->EE->input->post('feed_id') != '' ? $this->EE->input->post('feed_id') : $feed_data['feed_id'],
+	      );
+		  
+		  // Form Validation
+		  if ( $this->EE->input->post('submit') )
+		  {
+  		  if ( $this->EE->form_validation->run() )
+  		  {
+  		    // Create or Update Feed
+		      $feed_id = $this->EE->feed_model->update_feed($feed_data);
+		      
+  		    if ( $this->EE->input->post('feed_id') != '' )
+  		    {
+  				  br_set( 'message', lang('br_feed_update_success') );
+  		    }
+  		    else
+  		    {
+  				  br_set( 'message', lang('br_feed_create_success') ); 
+  		    }
+		      
+  				// Redirect User
+  				if( $this->EE->input->post('submit') == 'Save' )
+  				{
+  				  $this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
+  				}
+  				else
+  				{
+  				  $this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds_edit' . AMP . 'feed_id=' . $feed_id ); 
+  				}
+  		  }
+  		  else
+  		  {
+  				br_set( 'message', lang('br_feed_update_failure') );
+  		  } 
+		  }
+		  
+		  // Delete Feed
+  		if( $this->EE->input->post('delete') ){
+  			$this->EE->feed_model->delete_feed($this->EE->input->post('feed_id'));
+  			remove_from_cache('config');
+  			br_set('message',lang('br_feed_delete_success'));
+  			$this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
+  		}
+			
+			// Prepare Interface
+			$this->vars['feed']         = $feed_data;
+			$this->vars['categories']   = $this->EE->product_model->get_all_categories();
+			$this->vars["selected"]     = 'config';
+			$this->vars["sub_selected"] = 'config_feeds';
+			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+			$this->vars["help"]         = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+			$this->vars["br_menu"]      = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+			$this->vars['products']     = $this->EE->product_model->get_products_by_feed($feed_id);
+			$this->vars["content"]      = $this->EE->load->view('config/feed_edit', $this->vars, TRUE);
+			
+			return $this->EE->load->view('config/index', $this->vars, TRUE);
+		}
+		
+		function _feed_code_exists( $code )
+		{
+		  $feeds = $this->EE->feed_model->get_feed_by_code( $code );
+		  return (count( $feeds ) == 0 ? TRUE : FALSE);
+		}
+
 		function config_gateway()
 		{
 			
@@ -2483,6 +2489,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{ 
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_tax';
+			
+			$this->EE->cp->set_right_nav(array('br_new_tax' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_new'));
+			
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2509,11 +2518,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["states"] = $this->EE->tax_model->get_state();
 				$this->vars["zones"] = $this->EE->tax_model->get_zone();
 				$this->vars["tax"] = array(
-												'tax_id' => 0,
-												'title' => '',
-												'zone_id' => '',
-												'state_id' => '',
-												'rate' => '10.00'
+												'tax_id' 	=> 0,
+												'title' 	=> '',
+												'zone_id' 	=> '',
+												'state_id' 	=> '',
+												'zipcode' 	=> '',
+												'rate' 		=> '10.00'
 											);
 				
 			$this->vars["content"] = $this->EE->load->view('config/tax_edit', $this->vars, TRUE);	
@@ -2712,7 +2722,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							}
 						}
 					$tree .= '	<li class="'.$class.' level_'.$level.'">
-									<input type="checkbox" name="permissions[]" class="permmision_checkbox" value="'.$this->module.'|'.$m.'" '.$chk.' />&nbsp;'.lang($m).'
+									<input type="checkbox" name="permissions[]" class="permmision_checkbox" value="'.$this->module.'|'.$m.'" '.$chk.' />&nbsp;'.lang('br_'.$m).'
 								</li>';
 				}
 			}

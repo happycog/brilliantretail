@@ -717,7 +717,7 @@ class Brilliant_retail_core {
 		function _producttype_table($attribute_id,$title,$label,$required,$val,$opts = ''){
 			// Create the table
 				$str = "<a href='#' id='add_row_".$attribute_id."'>".lang('br_add_row')."</a><br />
-						<table id='table_".$attribute_id."' class=\"ft_table\">
+						<table id='table_".$attribute_id."' cellpadding='0' cellspacing='0' class=\"ft_table\">
 							<thead>
 								<tr>
 									<th>&nbsp;</th>";
@@ -725,7 +725,7 @@ class Brilliant_retail_core {
 			// Insert the header rows
 				$theads = explode("|",$opts);
 				foreach($theads as $head){
-					$str .= "<th>".lang($head)."</th>";
+					$str .= "<th>".lang('br_'.$head)."</th>";
 				}		
 			
 			$str .= "				<th>&nbsp;</th>

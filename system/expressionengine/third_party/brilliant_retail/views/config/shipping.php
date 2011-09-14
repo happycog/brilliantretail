@@ -24,33 +24,7 @@
 /************************************************************/
 ?>
 <div id="b2r_page" class="b2r_category">
-    <table id="admin_header" cellpadding="0" cellspacing="0">
-    	<tr>
-			<td>
-				<?php
-					echo '	<select id="select_config">';
-        			foreach($submenu as $key => $val){
-            			$sel = ($key == $sub_selected) ? 'selected="selected"' : '' ; 
-            			echo '	<option value="'.$key.'" '.$sel.'>'.lang($key).'</option>'; 
-            		}
-            		echo '	</select>
-                			<script type="text/javascript">
-                				$(function(){
-                					$(\'#select_config\').change(function(){
-										window.location = \''.$base_url.'&&method=\'+$(this).val();
-                					});
-                				});	
-                			</script>';
-				?>
-				<h3><?=lang('br_shipping_methods')?></h3>
-				<div class="b2r_clearboth"><!-- --></div>
-    		</td>
-		</tr>
-    </table>
-
-    <div class="b2r_clearboth"><!-- --></div>
-    
-	<table id="shippingTable" class="mainTable" style="clear:both">
+	<table id="shippingTable" class="mainTable" cellspacing="0" cellspacing="0" style="clear:both">
     	<thead>
 	    	<tr>
 	    		<th>	
@@ -58,11 +32,11 @@
 	    		<th>
 	    			<?=lang('br_title')?></th>
 	   			<th>
-					<?=lang('br_description')?></th>
+					<?=lang('br_descr')?></th>
 				<th>
 					<?=lang('version')?></th>
 				<th>
-					<?=lang('br_action')?></th>
+					<?=lang('action')?></th>
 	    	</tr>
 		</thead>
     	<tbody>
@@ -84,7 +58,7 @@
 					}else{
 						$enabled = 'status_off' ;
 						$class 	= 'not_installed';
-						$link 	= '<a href="'.$base_url.AMP.'method=config_shipping_install&type='.$m["type"].'&code='.$m["code"].'" class="install">'.lang('br_install').'</a>';
+						$link 	= '<a href="'.$base_url.AMP.'method=config_shipping_install&type='.$m["type"].'&code='.$m["code"].'" class="install">'.lang('install').'</a>';
 						$title 	= $m["title"];	
 					}
 					

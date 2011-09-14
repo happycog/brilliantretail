@@ -24,34 +24,7 @@
 /************************************************************/
 ?>
 <div id="b2r_page" class="b2r_category">
-    <table id="admin_header" cellpadding="0" cellspacing="0">
-    	<tr>
-			<td>
-				<?php
-					echo '	<select id="select_config">';
-        			foreach($submenu as $key => $val){
-            			$sel = ($key == $sub_selected) ? 'selected="selected"' : '' ; 
-            			echo '	<option value="'.$key.'" '.$sel.'>'.lang($key).'</option>'; 
-            		}
-            		echo '	</select>
-                			<script type="text/javascript">
-                				$(function(){
-                					$(\'#select_config\').change(function(){
-										window.location = \''.$base_url.'&&method=\'+$(this).val();
-                					});
-                				});	
-                			</script>';
-				?>
-				<h3><?=lang('br_tax_settings')?></h3>
-				<div class="b2r_clearboth"><!-- --></div>
-    			<p class="b2r_addprod"><a href="<?=$base_url.AMP?>method=config_tax_new"><?=lang('br_add')?></a></p>
-				</td>
-		</tr>
-    </table>
-
-	<div class="b2r_clearboth"><!-- --></div>
-
-	<table id="taxTable" class="mainTable" style="clear:both">
+	<table id="taxTable" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
     	<thead>
 	    	<tr>
 	    		<th>
@@ -60,6 +33,8 @@
 					<?=lang('br_zone')?></th>
 				<th>
 					<?=lang('br_state')?></th>
+				<th>
+					<?=lang('br_zip_code')?></th>
 				<th>
 					<?=lang('br_rate')?></th>
 	    	</tr>
@@ -73,10 +48,12 @@
 					echo '	<tr>
 					        	<td class="cell_1">
 					        		<a href="'.$base_url.'&method=config_tax_edit&tax_id='.$t["tax_id"].'">'.$t["title"].'</td>
-					        	<td class="cell_2">
+					        	<td>
 					        		'.$zone.'</td>
 					        	<td>
 					        		'.$state.'</td>
+					        	<td>
+					        		'.$t["zipcode"].'</td>
 					        	<td>
 					        		'.$t["rate"].'%</td>
 					    	</tr>';
