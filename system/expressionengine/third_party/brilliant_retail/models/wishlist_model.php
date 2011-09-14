@@ -23,21 +23,29 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-class Wishist_model extends CI_Model {
-
+class Wishlist_model extends CI_Model {
+	
 	public function wishlist_get($member_id){
 		$this->db->from('br_wishlist')
 				->where('member_id',$member_id);
-		$query = $this->get();	
+		$query = $this->db->get();	
 		return $query->result_array();
 	}
-
-	public function wishlist_add(){
-	
+	public function wishlist_add($product_id,$member_id){
+		$data = array(
+						'product_id' => $product_id,
+						'member_id' => $member_id 
+						);
+		$this->db->insert('br_wishlist',$data);
+		return true;
 	}
 
-	public function wishlist_remove(){
-	
+	public function wishlist_remove($product_id,$member_id){
+		$data = array(
+						'product_id' => $product_id,
+						'member_id' => $member_id 
+						);
+		$this->db->delete('br_wishlist',$data);
+		return true;
 	}
-
 }

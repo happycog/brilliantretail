@@ -1,0 +1,91 @@
+{!--
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		Brilliant2.com 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/* 	@since		Version 1.0.0 Beta							*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
+!--}
+
+{if logged_out}
+{redirect='customer/login'}
+{/if}
+
+{embed="_assets/header"}
+
+<body>
+
+<!-- Header -->
+<div id="header">
+    <div class="wrapper">
+
+			{embed='_assets/topbar'}    
+        
+        <div id="main_menu">
+            
+            {embed="_assets/menu"}
+		
+        </div> <!-- main_menu -->
+        <div class="clearboth"><!-- --></div>
+    
+    </div>
+</div> <!-- header -->
+<!-- end of Header -->
+
+<!-- Account -->
+<div id="account" class="page">
+	<div class="wrapper">
+    
+    	{embed='customer/_sidebar'}
+
+    	<div id="subject">
+			
+			{exp:brilliant_retail:show_message}
+			
+            <h4 id="wishlist_heading">Wishlist</h4>
+
+			    <table id="wishlist" cellspacing="0">
+	            	<thead>
+	                	<tr>
+	                    	<th class="col1">Image</th>
+	                    	<th class="col2">Product</th>
+	                    	<th class="col3">Public</th>
+	                    	<th class="col4">Remove</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+		                {exp:brilliant_retail:wishlist}
+							{no_results}			
+								<tr>
+									<td colspan="4">There are no items in your wishlist</td>
+								</tr>
+							{/no_results}			
+						{/exp:brilliant_retail:wishlist}
+					</tbody>
+				</table>
+				            
+        </div> <!-- subject -->
+        <div class="clearboth"><!-- --></div>
+    </div>
+</div> 
+<!-- account -->
+<!-- end of Account Page -->
+
+{embed="_assets/footer"}

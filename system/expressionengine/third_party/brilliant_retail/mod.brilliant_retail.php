@@ -777,10 +777,19 @@ class Brilliant_retail extends Brilliant_retail_core{
 		 *
 		 */
 			
-			function wishlist($public_id=''){
-				$output = '';
-				$count = 1;
-				if($count == 0){
+			function wishlist(){
+				// Load the wishlist model
+					$this->EE->load->model('wishlist_model');
+				
+				// 
+					$output = "";
+				
+				// 
+					$member_id = $this->EE->session->userdata["member_id"];
+
+					$wishlist = $this->EE->wishlist_model->wishlist_get($member_id);
+
+				if(count($wishlist) == 0){
 					$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
 					preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
 					if(isset($matches[1])){
@@ -788,7 +797,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}else{
 						return '';
 					}
+				}else{
+					foreach($wishlist as $p){
+						$output .= 'asdf';
+					}
 				}
+				return $output;
 			}
 			
 			function wishlist_add(){
@@ -799,13 +813,40 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}
 			
 			function wishlist_remove(){
-				$output = 'remove it from the wishlist';
+				$product_id = ($this->EE->TMPL->fetch_param('product_id')) ? ($this->EE->TMPL->fetch_param('product_id')) : "#product_id_reqired" ;
+				$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
+				$output = $action.AMP.'action=remove'.AMP.'product_id='.$product_id;
 				return $output;
 			}
 			
 			function wishlist_process(){
-				$action = $this->EE->input->get('action',TRUE);
-				echo $member_id = $this->EE->session->userdata["member_id"];
+	
+				// Load the wishlist model
+					$this->EE->load->model('wishlist_model');
+			
+				// What are we doing
+					$action = strtolower($this->EE->input->get('action',TRUE));
+					$product_id = strtolower($this->EE->input->get('product_id',TRUE));
+					
+				// Who are we?
+					$member_id = $this->EE->session->userdata["member_id"];
+					if($member_id == 0){
+						$_SESSION["br_alert"] = lang('br_wishlist_login');
+						$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"].'/login'));
+					}
+				
+				if($action == 'add'){
+					// Add it to the wishlist
+						$this->EE->wishlist_model->wishlist_add($product_id,$member_id);
+						$_SESSION["br_message"] = lang('br_wishlist_add');
+				}elseif($action == 'remove'){
+					// Add it to the wishlist
+						$this->EE->wishlist_model->wishlist_remove($product_id,$member_id);
+						$_SESSION["br_message"] = lang('br_wishlist_remove');
+				}elseif($action == 'update'){
+					$_SESSION["br_message"] = lang('br_wishlist_update');
+				}
+				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 			}
 			
 	/* CHECKOUT */

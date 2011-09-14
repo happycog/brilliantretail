@@ -2256,6 +2256,112 @@ text-align: right;
 	height: 23px;
     cursor: pointer; }
 
+#account #subject table#wishlist {
+	margin: 0;
+	width: 690px;
+}
+
+#account #subject #wishlist_heading {
+	padding: 10px 0 3px;
+	font-size: 14px;
+	color: #666;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+}
+	
+#account #subject table#wishlist th {
+	padding: 2px 5px; 
+	background: #f1f1f1;
+	font-size: 14px;
+	font-weight: bold;
+	color: #999;
+}
+
+#account #subject table#wishlist th small {
+	font-size: 14px;
+	font-weight: normal; }
+
+#account #subject table#wishlist td {
+	padding: 8px 5px;
+	font-size: 14px;
+	color: #666;
+	text-align: left;
+	vertical-align: top;
+	border-collapse: collapse;
+	border-spacing: 0;
+	border-bottom: 1px solid #e2e2e2; 
+}
+
+#account #subject table#wishlist th.col1 {
+	width: 25%; }
+
+#account #subject table#wishlist th.col2 {
+	width: 45%; }
+
+#account #subject table#wishlist th.col3 {
+	width: 15%; }
+
+#account #subject table#wishlist th.col4 {
+	width: 15%; }
+
+
+#account #subject table#wishlist td table {
+	margin: 0;
+	width: 690px;
+	border-collapse: collapse;
+	border-spacing: 0;
+	border-bottom: 1px solid #e2e2e2; }
+
+#account #subject table#wishlist td table th {
+	padding: 5px 0;
+	font-size: 14px;
+	color: #666;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+	background: #ebebeb; }
+
+#account #subject table#wishlist td table td {
+	padding: 5px 0;
+	font-size: 14px;
+	color: #666;
+	text-align: left;
+	vertical-align: top; }
+
+#account #subject table#wishlist td table th.col1b, 
+#account #subject table#wishlist td table td.col1b {
+	padding-left: 14px;
+	width: 15%; }
+
+#account #subject table#wishlist td table th.col2b, 
+#account #subject table#wishlist td table td.col2b {
+	width: 56%; }
+
+#account #subject table#wishlist td table th.col3b, 
+#account #subject table#wishlist td table td.col3b {
+	width: 15%;
+	text-align: center; }
+
+#account #subject table#wishlist td table th.col4b, 
+#account #subject table#wishlist td table td.col4b {
+	width: 10%;
+	text-align: right; }
+
+#account #subject table#wishlist td table th.col5b, 
+#account #subject table#wishlist td table td.col5b {
+	width: 4%; }
+
+#account #subject table#wishlist td table tfoot td {
+	text-align: right;
+	line-height: 1.75em;
+	border-top: 1px solid #e2e2e2;
+	border-bottom: 1px solid #e2e2e2; }
+	
+
+#account #subject table#wishlist a {
+	color: #1165cc; }
+	
 /* end of Account */
 
 
