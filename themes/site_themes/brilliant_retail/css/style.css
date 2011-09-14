@@ -2297,14 +2297,28 @@ text-align: right;
 	width: 25%; }
 
 #account #subject table#wishlist th.col2 {
-	width: 45%; }
+	width: 60%; }
 
 #account #subject table#wishlist th.col3 {
-	width: 15%; }
+	text-align: center;
+	width: 10%; }
+
+#account #subject table#wishlist td.col3,
+#account #subject table#wishlist td.col4 {
+	text-align: center;
+}
 
 #account #subject table#wishlist th.col4 {
-	width: 15%; }
+	text-align: center;
+	width: 5%; }
 
+#account #subject table#wishlist textarea {
+	width: 90%;
+	border: 1px #ccc solid;
+	padding: 5px;
+	color: #666;
+	min-height: 80px;
+}
 
 #account #subject table#wishlist td table {
 	margin: 0;
@@ -2328,6 +2342,26 @@ text-align: right;
 	color: #666;
 	text-align: left;
 	vertical-align: top; }
+
+#account #subject table#wishlist td a.remove{
+	font-size: 10px;
+	background-color: #CCC;
+	color: #333;
+	padding: 3px 4px 1px;
+	width: 10px;
+	text-align: center;
+}
+
+#account #subject table#wishlist tfoot td {
+	text-align: right;
+} 
+
+#account #subject table#wishlist td input.update {
+	border: 1px #ccc solid;
+	background-color: #E7E7E7;
+	padding: 5px 10px 3px;
+	color: #666;
+}
 
 #account #subject table#wishlist td table th.col1b, 
 #account #subject table#wishlist td table td.col1b {

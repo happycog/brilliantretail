@@ -562,6 +562,14 @@ $lang = array(
 		
 		// Order Messages 
 			'br_order_thank_you' 			=> "Thank you for your order",
+			
+		// Wishist Messages 
+			'br_wishlist_add'				=> 'The product has been added to your wishlist.',
+			'br_wishlist_remove'			=> 'The product has been removed from your wishlist.',
+			'br_wishlist_update'			=> 'Your wishlist has been updated.',
+			'br_wishlist_login'				=> 'You must be logged in to add products to your wishlist.',
+			'br_wishlist_duplicate_error'	=> 'The product is already in your wishlist.',
+			
 // End 
 	'' 
 );

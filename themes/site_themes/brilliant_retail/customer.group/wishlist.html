@@ -60,27 +60,53 @@
 			{exp:brilliant_retail:show_message}
 			
             <h4 id="wishlist_heading">Wishlist</h4>
+		    {exp:brilliant_retail:wishlist}
+				
+				{no_results}			
+					<tr>
+						<td colspan="4">There are no items in your wishlist</td>
+					</tr>
+				{/no_results}
 
-			    <table id="wishlist" cellspacing="0">
-	            	<thead>
-	                	<tr>
-	                    	<th class="col1">Image</th>
-	                    	<th class="col2">Product</th>
-	                    	<th class="col3">Public</th>
-	                    	<th class="col4">Remove</th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-		                {exp:brilliant_retail:wishlist}
-							{no_results}			
+				<form action="{update_link}" method="post">
+					<table id="wishlist" cellspacing="0">
+		            	<thead>
+		                	<tr>
+		                    	<th class="col1">Image</th>
+		                    	<th class="col2">Product</th>
+		                    	<th class="col3">Public</th>
+		                    	<th class="col4">Remove</th>
+		                    </tr>
+		                </thead>
+		                <tfoot>
+		                	<tr>
+		                		<td colspan="4" align="right">
+    								<input type="submit" class="update" value="Update" /></td>
+		                	</tr>
+		                </tfoot>
+		                <tbody>
+							{results}
 								<tr>
-									<td colspan="4">There are no items in your wishlist</td>
-								</tr>
-							{/no_results}			
-						{/exp:brilliant_retail:wishlist}
-					</tbody>
-				</table>
-				            
+									<td>
+										<input type="hidden" name="product_id[]" value="{product_id}" />
+										<a href="/product/{url_title}">{exp:brilliant_retail:image src="{image_thumb}" width="144" height="120"}</a></td>
+									<td>
+										<a href="/product/{url_title}">{title}</a><br />
+										<textarea name="notes[{product_id}]">{notes}</textarea></td>
+									<td class="col3">
+										<input 	type="checkbox" 
+												name="is_public[{product_id}]" 
+												{if {is_public}}
+													checked="checked"
+												{/if} /></td>
+									<td class="col4">
+										<a href="{remove_link}" class="remove">X</td>
+								</tr>			
+							{/results}
+						</tbody>
+					</table>
+				</form>
+			{/exp:brilliant_retail:wishlist}
         </div> <!-- subject -->
         <div class="clearboth"><!-- --></div>
     </div>

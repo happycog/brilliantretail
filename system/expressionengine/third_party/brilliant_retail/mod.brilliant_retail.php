@@ -798,17 +798,52 @@ class Brilliant_retail extends Brilliant_retail_core{
 						return '';
 					}
 				}else{
-					foreach($wishlist as $p){
-						$output .= 'asdf';
-					}
+					
+					// Update link
+						$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
+						$link = $action.AMP.'action=update';
+
+					// Get the results
+						$product = array();
+						foreach($wishlist as $prod){
+							$p = $this->_get_product($prod["product_id"]);
+							
+							// Remove Link 
+								$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
+								$remove_link = $action.AMP.'action=remove'.AMP.'product_id='.$prod["product_id"];
+
+							$product[] = array(	
+												'url_title'		=> $p[0]['url'],
+												'product_id' 	=> $p[0]['product_id'],
+												'title' 		=> $p[0]['title'], 
+												'image_thumb'	=> $p[0]["image_thumb"],
+												'is_public'		=> $prod["is_public"],
+												'notes'			=> $prod["notes"],
+												'remove_link'	=> $remove_link   
+											);
+						}	
+						
+						$vars[0] = array(
+										'update_link' 		=> $link,  
+										'total_results' 	=> count($product),
+										'results' 			=> $product,
+										'no_results' 		=> array(),
+										'result_filter_set' => ''
+										);	
+						$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
 				}
 				return $output;
 			}
 			
 			function wishlist_add(){
-				$product_id = ($this->EE->TMPL->fetch_param('product_id')) ? ($this->EE->TMPL->fetch_param('product_id')) : "#product_id_reqired" ;
-				$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
-				$output = $action.AMP.'action=add'.AMP.'product_id='.$product_id;
+				// What is the product id ?
+					$product_id = ($this->EE->TMPL->fetch_param('product_id')) ? ($this->EE->TMPL->fetch_param('product_id')) : "#product_id_reqired" ;
+				
+				// Where we headed after the add?
+					$_SESSION["wishlist_add_return"] = ($this->EE->TMPL->fetch_param('return')) ? $this->EE->TMPL->fetch_param('return') : "" ;
+				
+					$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
+					$output = $action.AMP.'action=add'.AMP.'product_id='.$product_id;
 				return $output;
 			}
 			
@@ -835,18 +870,33 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"].'/login'));
 					}
 				
+				$target = $_SERVER["HTTP_REFERER"];
 				if($action == 'add'){
 					// Add it to the wishlist
-						$this->EE->wishlist_model->wishlist_add($product_id,$member_id);
-						$_SESSION["br_message"] = lang('br_wishlist_add');
+						if(!$this->EE->wishlist_model->wishlist_add($product_id,$member_id)){
+							$_SESSION["br_alert"] = lang('br_wishlist_duplicate_error');
+						}else{
+							$_SESSION["br_message"] = lang('br_wishlist_add');
+						}
+						if($_SESSION["wishlist_add_return"] != ''){
+							$this->EE->functions->redirect($this->EE->functions->create_url($_SESSION["wishlist_add_return"]));
+						}
 				}elseif($action == 'remove'){
 					// Add it to the wishlist
 						$this->EE->wishlist_model->wishlist_remove($product_id,$member_id);
 						$_SESSION["br_message"] = lang('br_wishlist_remove');
 				}elseif($action == 'update'){
+					foreach($_POST["product_id"] as $p){
+						$public = isset($_POST["is_public"][$p]) ? 1 : 0;
+						$data = array(
+										'notes' 	=> strip_tags($_POST["notes"][$p]),
+										'is_public' => $public 
+									);
+						$this->EE->wishlist_model->wishlist_update($p,$member_id,$data);
+					}
 					$_SESSION["br_message"] = lang('br_wishlist_update');
 				}
-				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+				$this->EE->functions->redirect($target);
 			}
 			
 	/* CHECKOUT */

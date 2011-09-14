@@ -32,10 +32,19 @@ class Wishlist_model extends CI_Model {
 		return $query->result_array();
 	}
 	public function wishlist_add($product_id,$member_id){
+		
 		$data = array(
 						'product_id' => $product_id,
 						'member_id' => $member_id 
 						);
+		
+		$this->db->from('br_wishlist')
+					->where('product_id',$product_id)
+					->where('member_id',$member_id); 
+		$qry = $this->db->get();
+		if($qry->num_rows() != 0){
+			return false;
+		}
 		$this->db->insert('br_wishlist',$data);
 		return true;
 	}
@@ -46,6 +55,10 @@ class Wishlist_model extends CI_Model {
 						'member_id' => $member_id 
 						);
 		$this->db->delete('br_wishlist',$data);
+		return true;
+	}
+	public function wishlist_update($product_id,$member_id,$data){
+		$this->db->update('br_wishlist',$data,array('member_id'=>$member_id,'product_id'=>$product_id));
 		return true;
 	}
 }
