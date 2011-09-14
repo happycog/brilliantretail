@@ -53,8 +53,8 @@ $option = 10000;
 			<td><b><?=lang('delete')?></b></td>
 		</tr>	
 <?php
+	$i = 0;
 	if(isset($options)){
-		$i = 0;
 		foreach($options as $opt){
 			echo '	<tr>
 						<td>
@@ -206,6 +206,11 @@ $option = 10000;
 	var option = <?=$option?>;
 	var field = 0;
 	$(function(){
+		<?php
+			if(!isset($options)){
+				echo "$('#option_header').hide();";
+			}
+		?>
 		$('#addoption').bind('click',function(){
 
 													// Clone the template
