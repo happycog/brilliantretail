@@ -961,7 +961,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					
 					// Reindex the products
-					#$this->_index_products();
+					$this->_index_products();
 					br_set('message',lang('br_product_delete_success'));
 					header('location: '.$this->base_url.'&method=product');
 					exit();
@@ -1042,7 +1042,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 							
 			//Reindex product search
-				#$this->_index_products();
+				$this->_index_products();
 			
 			// Clear the meta cache
 				remove_from_cache('meta_info');

@@ -966,7 +966,7 @@ class Brilliant_retail_core {
 		
 		$path = APPPATH.'cache/brilliant_retail/search';
 		$index = Zend_Search_Lucene::open($path);
-		$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr, 'utf-8');
+		$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr.'*', 'utf-8');
 	
 		$hits = $index->find($query);
 		return $hits;
