@@ -575,7 +575,10 @@ $lang = array(
 			'br_wishlist_update'			=> 'Your wishlist has been updated.',
 			'br_wishlist_login'				=> 'You must be logged in to add products to your wishlist.',
 			'br_wishlist_duplicate_error'	=> 'The product is already in your wishlist.',
-			
+		
+		// Price Filters 
+			'br_filter_to' 					=> 'to',
+			'br_filter_under' 				=> 'Under', 	
 // End 
 	'' 
 );

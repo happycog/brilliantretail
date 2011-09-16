@@ -94,32 +94,6 @@ class Brilliant_retail_core {
 			$this->_config["result_per_page"] 	= $this->_config["store"][$this->site_id]["result_per_page"];  # Limit the number of records per search result page
 			$this->_config["result_paginate"] 	= $this->_config["store"][$this->site_id]["result_paginate"]; # Number to list in the pagination links
 			$this->_config["register_group"] 	= $this->_config["store"][$this->site_id]["register_group"]; # Number to list in the pagination links
-			$this->_config["range"] = array(
-												"price_layer_1" => array(
-																			'label' => 'Under '.$this->_config["currency_marker"].'50',
-																			'lower' => 0,
-																			'upper' => 50),
-												"price_layer_2" => array(
-																			'label' => $this->_config["currency_marker"].'50 to '.$this->_config["currency_marker"].'100',
-																			'lower' => 50,
-																			'upper' => 100),
-												"price_layer_3" => array(
-																			'label' => $this->_config["currency_marker"].'100 to '.$this->_config["currency_marker"].'200',
-																			'lower' => 100,
-																			'upper' => 200),
-												"price_layer_4" => array(
-																			'label' => $this->_config["currency_marker"].'200 to '.$this->_config["currency_marker"].'300',
-																			'lower' => 200,
-																			'upper' => 300),
-												"price_layer_5" => array(
-																			'label' => $this->_config["currency_marker"].'300 to '.$this->_config["currency_marker"].'400',
-																			'lower' => 300,
-																			'upper' => 400),
-												"price_layer_6" => array(
-																			'label' => $this->_config["currency_marker"].'400 and up',
-																			'lower' => 400,
-																			'upper' => 1000000000000)
-											);
 
 		// Set the product types 
 			$this->_config['product_type'] = array(
@@ -1133,31 +1107,36 @@ class Brilliant_retail_core {
 		return $output;
 	}
 
-	function _price_range($prices){
-		//Price range algorithm
-		$level[1] = 0;
-		$level[2] = 0;
-		$level[3] = 0;
-		$level[4] = 0;
-		$level[5] = 0;
-		$level[6] = 0;
+	function _price_range($prices,$hash){
+		$max = max($prices);
+		if($max < 10){
+			$power = 5;
+		}elseif($max < 5){
+			$power = 1;
+		}else{
+			$power = 10;
+		}
+		$range = pow($power,(strlen(floor($max))-1));
+		
 		foreach($prices as $p){
-			if($p <= 50.00){
-				$level[1]++;
-			}elseif($p > 50.00 && $p <= 100.00){
-				$level[2]++;
-			}elseif($p > 100.00 && $p <= 200.00){
-				$level[3]++;
-			}elseif($p > 200.00 && $p <= 300.00){
-				$level[4]++;
-			}elseif($p > 300.00 && $p <= 400.00){
-				$level[5]++;
-			}elseif($p > 400.00){
-				$level[6]++;
+			$key = floor($p/$range);
+			if(isset($bucket[$key])){
+				$bucket[$key]++;
+			}else{
+				$bucket[$key] = 1;
 			}
 		}
-		return $level;
+		ksort($bucket);
+		$arr = array(
+						'range' => $range,
+						'bucket' => $bucket
+					);
+		// Set to session variable so its available to filter 
+			$_SESSION[$hash]["price_filter"] = $arr;
+
+		return $arr;
 	}
+	
 	function _layered_navigation($product,$hash,$category_id = 0){
 		$this->EE->load->model('product_model');
 		$url = $this->EE->uri->uri_to_assoc();
@@ -1233,28 +1212,36 @@ class Brilliant_retail_core {
 		// Include the prices unless disabled
 			if(!in_array('price',$disable)){
 				// Set the price ranges
-					if(!isset($_SESSION[$hash]["range"])){
+					#if(!isset($_SESSION[$hash]["range"])){
 						if(isset($prices)){
-							$price = $this->_price_range($prices);
-							$i = 0;
-							$items = array();
-							foreach($price as $key => $val){
-								if($val != 0){
+							$price = $this->_price_range($prices,$hash);
+							#if(count($price["bucket"]) > 1){
+								$i = 0;
+								$items = array();
+								foreach($price["bucket"] as $key => $val){
+									$lower = $this->_config["currency_marker"].floor($this->_currency_round($price["range"]*$key)).' '.lang('br_filter_to');
+									if(($price["range"]*$key) == 0){
+										$lower = lang('br_filter_under');
+									}
+																						
 									$items[$i] = array(
-															"result_layered_title" => $this->_config["range"]['price_layer_'.$key]["label"],
+															"result_layered_title" => 	$lower.
+																						' '.
+																						$this->_config["currency_marker"].
+																						floor($this->_currency_round(($price["range"]*($key+1)))),
 															"result_layered_count" => "(".$val.")",
 															"result_layered_link" => $this->_set_link($hash)."/range/".$key 
 														);
 									$i++;
-								}	
-							}
-				
-							$layered[] = array(
-												'result_layered_label' => 'Price',
-												"result_layered_item" => $items
-											);	
+								}
+					
+								$layered[] = array(
+													'result_layered_label' => 'Price',
+													"result_layered_item" => $items
+												);	
+							#}
 						}
-					}
+					#}
 			}
 
 		// Attributes 
@@ -1533,28 +1520,36 @@ class Brilliant_retail_core {
 		// Filter price range 
 			if(isset($url["range"])){
 				$sel = $url["range"] * 1;
-				if($sel != 0){
-					$_SESSION[$hash]["range"] = $sel;
-				}
+				$_SESSION[$hash]["range"] = $sel;
 			}
 			if(isset($_SESSION[$hash]["range"])){
-				$lower = $this->_config["range"]["price_layer_".$_SESSION[$hash]["range"]]["lower"];
-				$upper = $this->_config["range"]["price_layer_".$_SESSION[$hash]["range"]]["upper"];
+				$lower = $_SESSION[$hash]["range"] * $_SESSION[$hash]["price_filter"]["range"];
+				$upper = ($_SESSION[$hash]["range"] * $_SESSION[$hash]["price_filter"]["range"]) + $_SESSION[$hash]["price_filter"]["range"];
 				$i=0;
 				$tmp = array();
 				foreach($vars[0]["results"] as $r){
 					$amt = $this->_check_product_price($r);
-					if($amt["price"] > $lower && $amt["price"] <= $upper){
+					if($amt["price"] >= $lower && $amt["price"] < $upper){
 						$tmp[$i] = $r;
 						$i++;
 					}
 				}
 				unset($vars[0]["results"]);
 				$vars[0]["results"] = $tmp;
+				
+				if($lower == 0){
+					$lower = lang('br_filter_under');
+				}else{
+					$lower = $this->_config["currency_marker"].$lower.' '.lang('br_filter_to');
+				}
+				
 				$filters[] = array(
-															'filter_set_section' => 'Price',
-															'filter_set_label' => $this->_config["range"]["price_layer_".$_SESSION[$hash]["range"]]["label"],
-															'filter_set_remove' => $this->_set_link($hash).'/remove/range'
+															'filter_set_section' 	=> 'Price',
+															'filter_set_label' 		=> 	$lower.
+																						' '.
+																						$this->_config["currency_marker"].
+																						$this->_currency_round($upper),
+															'filter_set_remove' 	=> $this->_set_link($hash).'/remove/range'
 														);
 			}
 

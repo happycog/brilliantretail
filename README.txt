@@ -33,6 +33,7 @@ http://getsatisfaction.com/brilliantretail
 * Added ajax filter to admin customer overview [#0000090]
 * Added ajax filter to admin order overview [#0000091]
 * Added captcha to member register form [#0000089]
+* Added dynamic buckets to price filtering in category layered tag [#0000107]
 * Added confirm_email name to checkout template for server side validation
 * Added additional member_id database index to order table. 
 * Added product_count variable to catalog results tag pair 
