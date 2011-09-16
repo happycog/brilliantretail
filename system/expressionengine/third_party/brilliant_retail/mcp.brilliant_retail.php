@@ -709,6 +709,18 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					// some defaults for configurable products 
 						$this->vars["config_opts"] = $this->EE->product_model->get_attribute_config();
 						$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
+
+					// some defaults for donations 
+						$this->vars["products"][0]["donation"][0] = array(
+																			'length' => 1,
+																			'period' => 3,
+																			'trial_offer' => 0,
+																			'trial_price' => '',
+																			'trial_period' => 1, 
+																			'trial_occur' => 1,
+																			'group_id' => 0,  
+																			'cancel_group_id' => 0
+																		);
 					// some defaults for subscriptions 
 						$this->vars["products"][0]["subscription"][0] = array(
 																				'length' => 1,

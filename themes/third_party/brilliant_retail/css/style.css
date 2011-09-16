@@ -466,6 +466,16 @@ table.mainTable th.sorting_disabled {
 	cursor: text;
 } 
 
+table.subTable {
+	border-left: 1px solid #D0D7DF; 
+}
+
+table.subTable tr th {
+	border-color: #8FA2AD; 
+	background-image: none;
+	background: #8FA2AD;
+}
+
 table.subTable td {
 	border-width: 0 0 1px 0;
 }
@@ -892,12 +902,6 @@ table#b2r_db_performance_bot td img {
 	cursor: move;
 }
 
-table.subTable tr th {
-	border-color: #8FA2AD; 
-	background-image: none;
-	background: #8FA2AD;
-}
-
 div#error {
 	background:none repeat scroll 0 0 #FFFFFF;
 	padding:15px;
@@ -1033,17 +1037,9 @@ div#error p{
 	border-width: 0 1px 1px;
 }
 
-#download_selected {
-	margin-top: 10px;
-	border: #E4E4E1 solid;
-	border-width: 0 1px 1px;
-}
-#download_selected tr th,
 #bundle_selected tr th {
 	padding: 4px 10px;
 }
-
-#download_selected tr.even td , 
 #bundle_selected tr.even td {
 	background-color: #F7F6F2;
 	padding: 4px 10px;

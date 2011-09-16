@@ -376,7 +376,9 @@ class Brilliant_retail_core {
 			
 			// Donation
 				if($products[0]["type_id"] == 7){
+					$products[0]["donation"][0] = array();				
 				}else{
+					$products[0]["donation"][0] = array();				
 				}
 			
 			// Set default images

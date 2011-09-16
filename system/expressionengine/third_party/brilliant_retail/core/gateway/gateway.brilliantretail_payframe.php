@@ -25,9 +25,9 @@
 
 class Gateway_brilliantretail_hosted extends Brilliant_retail_gateway {
 	// Required variables
-	public $title 	= 'BrilliantRetail Hosted';
+	public $title 	= 'BrilliantRetail PayFrame';
 	public $label 	= 'Credit Card Payment (BrilliantRetail)';
-	public $descr 	= 'Accept credit cards securely with the BrilliantRetail PCI Compliant hosted gateway solution powered by PayLeap.';
+	public $descr 	= 'Accept payments on your website.',
 	public $enabled = true;
 	public $version = 1.0;
 }

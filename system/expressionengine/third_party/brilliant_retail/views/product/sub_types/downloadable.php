@@ -27,7 +27,7 @@
 	<div id="showDownloadProgress"><img src="<?=$theme?>images/loader.gif" /><span id="showPercent"></span></div>
 	<span id="spanDownloadPlaceholder"></span></span>
 	<input type="hidden" name="require_download" title="<?=lang('br_details').' - '.lang('br_download_file_required').' '.lang('br_is_required')?>" id="sub_type_req_4"  value="1" class="{required:true} sub_type_req" />
-	<table id="download_selected" width="100%" cellpadding="0" cellspacing="0">
+	<table id="download_selected" class="subTable" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<th><?=lang('br_title')?></th>
 			<th><?=lang('br_file_name')?></th>
@@ -118,7 +118,7 @@
 			button_placeholder_id : "spanDownloadPlaceholder",
 			button_width: 70,
 			button_height: 25,
-			button_text : '<span class="download_button"><?=lang('br_upload')?></span>',
+			button_text : '<span class="download_button"><?=lang('upload')?></span>',
 			button_text_style : '.download_button { font-family: Helvetica, Arial, sans-serif; font-size: 14pt; color: #ffffff }',
 			button_text_top_padding: 5,
 			button_text_left_padding: 10,
