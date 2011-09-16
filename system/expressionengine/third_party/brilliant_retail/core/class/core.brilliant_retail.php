@@ -374,6 +374,11 @@ class Brilliant_retail_core {
 					$products[0]["subscription"][0] = array();				
 				}
 			
+			// Donation
+				if($products[0]["type_id"] == 7){
+				}else{
+				}
+			
 			// Set default images
 			 	if($products[0]["image_large"] == ''){
 			 		$products[0]["image_large"] = 'products/noimage.jpg';
