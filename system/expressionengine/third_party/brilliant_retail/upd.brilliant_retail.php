@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.3.5';
+	public $version	= '1.0.3.6';
 	
 	function Brilliant_retail_upd()
 	{
@@ -566,10 +566,7 @@ class Brilliant_retail_upd {
 					period int(11) NOT NULL,
 					start_dt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 					end_dt timestamp NULL DEFAULT NULL,
-					trial_offer int(11) NOT NULL DEFAULT '0',
 					trial_price decimal(10,2) NOT NULL DEFAULT '0.00',
-					trial_length int(11) NOT NULL DEFAULT '0',
-					trial_period int(11) NOT NULL DEFAULT '0',
 					trial_occur int(11) NOT NULL DEFAULT '0',
 					renewal_price decimal(10,2) NOT NULL,
 					next_renewal timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -965,19 +962,6 @@ class Brilliant_retail_upd {
   cancel_group_id int(11) NOT NULL,
   PRIMARY KEY (subscription_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-
-## ----------------------------
-##  Table structure for exp_br_product_subscription_price
-## ----------------------------
-	$sql[] = "	DROP TABLE IF EXISTS exp_br_product_subscription_price";
-	$sql[] = "	CREATE TABLE exp_br_product_subscription_price (
-					subscription_price_id int(11) unsigned NOT NULL AUTO_INCREMENT,
-					subscription_id int(11) NOT NULL,
-					periods int(11) NOT NULL,
-					discount decimal(10,2) NOT NULL,
-					PRIMARY KEY (subscription_price_id),
-					KEY subscription (subscription_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Table structure for exp_br_promo
@@ -4439,7 +4423,6 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_payment;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_ship;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_subscription;";
-			$sql[] = "DROP TABLE IF EXISTS exp_br_product_subscription_price;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_attributes;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_bundle;";

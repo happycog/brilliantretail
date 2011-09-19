@@ -22,13 +22,19 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+include_once('assets/authorize/shared/AuthorizeNetRequest.php');
+include_once('assets/authorize/shared/AuthorizeNetTypes.php');
+include_once('assets/authorize/shared/AuthorizeNetXMLResponse.php');
+include_once('assets/authorize/shared/AuthorizeNetResponse.php');
+include_once('assets/authorize/AuthorizeNetARB.php');
 
-class Gateway_authorize extends Brilliant_retail_gateway {
+class Gateway_authorize_arb extends Brilliant_retail_gateway {
 	// Required variables
-		public $title 	= 'Authorize.net';
+		public $title 	= 'Authorize.net ARB';
 		public $label 	= 'Credit Card Payment (Authorize.net)';
 		public $descr 	= 'Accept credit cards directly from your site with an Authorize.net payment gateway account using the AIM method.';
 		public $enabled = true;
+		public $subscription_enabled = 1;
 		public $version = '1.0';
 		
 	// Some internal variables
@@ -73,7 +79,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 							'x_currency_code' 	=> $this->_config["currency"],
 							'x_tran_key'		=> $config["x_tran_key"],
 							'x_test_request'	=> $config['x_test_request'],
-							'x_email_customer' 	=> $config["x_email_customer"], 
+							'x_email_customer' 	=> $email, 
 							'x_version'			=> '3.1',
 							'x_delim_data'		=> 'TRUE',
 							'x_delim_char'		=> '|',
@@ -117,20 +123,96 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 				$post_string = rtrim( $post_string, "&" );
 			
 			// Process 
-				$url = 'https://secure.authorize.net/gateway/transact.dll';
+				$url = 'https://test.authorize.net/gateway/transact.dll';
 				$ch = curl_init($url);
 				curl_setopt($ch, CURLOPT_HEADER, 0);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 				curl_setopt($ch, CURLOPT_POSTFIELDS,$post_string);
 				$response = urldecode(curl_exec($ch));
-				
+
 				$resp = explode("|",$response);
 				if($resp[0] != 1){
 					$trans = array(
 										'error' => $resp[3]
 									);
 				}else{
+				
+					//Check for subscriptions 
+						$sub = array();
+						foreach($data["cart"]["items"] as $item){
+							if($item["type_id"] == 6){
+								define("AUTHORIZENET_API_LOGIN_ID", $config["x_login"]);
+								define("AUTHORIZENET_TRANSACTION_KEY", $config["x_tran_key"]);
+								
+								$unit = ($item["subscription"]["period"] == 1) ? 'days' : 'months';
+								
+								// Set the start date
+									$start_dt = date('Y-n-d',strtotime('+'.$item["subscription"]["length"].' '.$unit));
+								
+								// Check if there is a trial subscription 
+									$trial_occur = "";
+									$trial_price = "";
+									if($item["subscription"]["trial_period"] == 1){
+										// reduce the trial occurrences by one since we 
+										// already gave them the discount on the first 
+										// payment
+											$occur = $item["subscription"]["trial_occur"]-1;
+											if($occur >= 1){
+												$trial_occur = $occur;
+												$trial_price = $item["subscription"]["trial_price"];
+											}
+									}
+								
+								$subscription = new AuthorizeNet_Subscription;
+						        $subscription->name 					= $item["title"];
+						        $subscription->intervalLength 			= $item["subscription"]["length"];
+						        $subscription->intervalUnit 			= $unit;
+						        $subscription->startDate 				= $start_dt;
+						        $subscription->totalOccurrences 		= 9999;
+						        $subscription->trialOccurrences 		= $trial_occur;
+						        $subscription->amount 					= $item["subscription"]["price"];
+						        $subscription->trialAmount 				= $trial_price;
+						        $subscription->creditCardCardNumber 	= $data["autho_cc_num"];
+						        $subscription->creditCardExpirationDate = $data["autho_cc_year"].'-'.$data["autho_cc_month"];
+						        $subscription->creditCardCardCode 		= $data["autho_cc_code"];
+						        $subscription->orderInvoiceNumber 		= "";
+						        $subscription->orderDescription 		= "";
+						        $subscription->customerId 				= $member_id;
+						        $subscription->customerEmail 			= $email;
+						        $subscription->customerPhoneNumber 		= $data["br_billing_phone"];
+						        $subscription->billToFirstName 			= $data["br_billing_fname"];
+						        $subscription->billToLastName 			= $data["br_billing_lname"];
+						        $subscription->billToCompany 			= $data["br_billing_company"];
+						        $subscription->billToAddress 			= $data["br_billing_address1"].' '.$data["br_billing_address2"];
+						        $subscription->billToCity 				= $data["br_billing_city"];
+						        $subscription->billToState 				= $data["br_billing_state"];
+						        $subscription->billToZip 				= $data["br_billing_zip"];
+						        $subscription->billToCountry 			= $data["br_billing_country"];
+						        $subscription->shipToFirstName 			= $data["br_shipping_fname"];
+						        $subscription->shipToLastName 			= $data["br_shipping_lname"];
+						        $subscription->shipToCompany 			= $data["br_shipping_company"];
+						        $subscription->shipToAddress 			= $data["br_shipping_address1"].' '.$data["br_shipping_address2"];
+						        $subscription->shipToCity 				= $data["br_shipping_city"];
+						        $subscription->shipToState 				= $data["br_shipping_state"];
+						        $subscription->shipToZip 				= $data["br_shipping_zip"];
+						        $subscription->shipToCountry 			= $data["br_shipping_country"];
+						        
+						        $refId = "ref" . time();
+
+						        // Create the request and send it.
+						        	$request = new AuthorizeNetARB;
+						        	$request->setRefId($refId);
+						        	$response = $request->createSubscription($subscription);
+
+							        $item["subscription"]["ref_id"] = (string) $response->xml->refId;
+									$item["subscription"]["result"] = (string) $response->xml->messages->resultCode;
+									$item["subscription"]["message"] = (string) $response->xml->messages->message->text;
+									$item["subscription"]["txn_id"] = (string) $response->xml->messages->message->subscriptionId;
+									
+									$sub[] = $item;
+							}
+						}
 					// Set the transaction details into 
 					// a serialized array for posting to
 					// the order
@@ -151,7 +233,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 											'amount' => $data["order_total"],
 											'details' => serialize($details), 
 											'approval' => $resp[4],
-											'subscription' => $subscription  
+											'subscription' => $sub  
 										);
 				}
 				return $trans;
@@ -258,46 +340,4 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 	function remove($config_id){
 		return true;		
 	}
-	
-	/* AUTHORIZE.NET HELPER FUNCTION */
-	
-		//function to send xml request via curl
-			function _send_request_via_curl($content,$config){
-				// Subscription keys 
-					$host = ($config['x_test_request'] == true) ? "apitest.authorize.net" : "api.authorize.net";
-					$path = "/xml/v1/request.api";
-
-				$posturl = "https://" . $host . $path;
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $posturl);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
-				curl_setopt($ch, CURLOPT_HEADER, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-				$response = curl_exec($ch);
-				return $response;
-			}
-
-		//function to parse Authorize.net response
-			function _parse_return($content){
-				$refId = $this->_substring_between($content,'<refId>','</refId>');
-				$resultCode = $this->_substring_between($content,'<resultCode>','</resultCode>');
-				$code = $this->_substring_between($content,'<code>','</code>');
-				$text = $this->_substring_between($content,'<text>','</text>');
-				$subscriptionId = $this->_substring_between($content,'<subscriptionId>','</subscriptionId>');
-				return array ($refId, $resultCode, $code, $text, $subscriptionId);
-			}
-		
-		//helper function for parsing response
-			function _substring_between($haystack,$start,$end){
-				if (strpos($haystack,$start) === false || strpos($haystack,$end) === false){
-					return false;
-				}else{
-					$start_position = strpos($haystack,$start)+strlen($start);
-					$end_position = strpos($haystack,$end);
-					return substr($haystack,$start_position,$end_position-$start_position);
-				}
-			}
 }

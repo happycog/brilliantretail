@@ -60,8 +60,37 @@
 			{exp:brilliant_retail:show_message}
 			
             <h4 id="orders_heading">Subscriptions</h4>
-
-            
+			{!--
+				<table id="orders" cellspacing="0">
+	            	<thead>
+	                	<tr>
+	                    	<th>Order</th>
+	                    	<th>Subscription Id</th>
+	                    	<th></th>
+	                    	<th></th>
+	                    	<th></th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                	{exp:brilliant_retail:customer_subscriptions}
+							{subscriptions}
+								<tr>
+			                    	<td class="col1">
+			                        	{order_id}</td>
+			                    	<td class="col2">
+			                        	{order_subscription_id}</td>
+			                        <td class="col3">
+			                        	{title}</td>
+			                        <td class="col4">
+			                        	-</td>
+			                        <td class="col5">
+			                        	-</td>
+			                    </tr>
+		                    {/subscriptions}
+	                    {/exp:brilliant_retail:customer_subscriptions}
+	                </tbody>
+	            </table> <!-- subscriptions -->
+			!--}            
         </div> <!-- subject -->
         <div class="clearboth"><!-- --></div>
     </div>

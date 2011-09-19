@@ -102,8 +102,8 @@ class Brilliant_retail_core {
 														3 => lang('br_configurable'),
 														7 => lang('br_donation'),
 														4 => lang('br_downloadable'),
-														5 => lang('br_virtual'),  
-														6 => lang('br_subscription') 
+														5 => lang('br_virtual')
+														#,6 => lang('br_subscription') 
 													);
 										
 												
@@ -366,8 +366,7 @@ class Brilliant_retail_core {
 				if($products[0]["type_id"] == 6){
 					$periods = array(
 										1=>strtolower(lang('br_days')),
-										2=>strtolower(lang('br_weeks')),
-										3=>strtolower(lang('br_months')) 
+										2=>strtolower(lang('br_months')) 
 									);
 					$products[0]["subscription"][0]["renewal"] = $periods[$products[0]["subscription"][0]["period"]];
 				}else{
@@ -2166,9 +2165,9 @@ class Brilliant_retail_core {
 				$this->EE->load->library('template'); 
 				
 			// Set some default variables
-				$vars[0]["media"] = rtrim($this->_config["media_url"],'/');
-				$vars[0]["site_name"] = $this->EE->config->item('site_name');
-				$vars[0]["site_url"] = rtrim($this->EE->config->item('site_url'),'/').'/'.rtrim($this->EE->config->item('site_index'));
+				$vars[0]["media"] 			= rtrim($this->_config["media_url"],'/');
+				$vars[0]["site_name"] 		= $this->EE->config->item('site_name');
+				$vars[0]["site_url"] 		= rtrim($this->EE->config->item('site_url'),'/').'/'.rtrim($this->EE->config->item('site_index'));
 				$vars[0]["currency_marker"] = $this->_config["currency_marker"];
 				
 			// Get the email 			
@@ -2193,7 +2192,9 @@ class Brilliant_retail_core {
 				}
 				$this->EE->email->subject($subject);
 				$this->EE->email->message($output);
-				$this->EE->email->Send();
+				if($this->EE->email->Send()){
+					return true;
+				}
 		}
 		
 	/**

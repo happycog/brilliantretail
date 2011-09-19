@@ -115,3 +115,10 @@ font-size: 12px;
 #order_notes td.order_note {
 	border-bottom: 1px #DDD solid;
 }
+#order_table .subscription_options {
+	padding-left: 15px;
+}	
+#order_table .subscription_options label {
+	margin-top: 5px;
+	display: block;
+}

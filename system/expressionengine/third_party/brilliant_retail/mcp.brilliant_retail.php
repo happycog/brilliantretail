@@ -7,7 +7,6 @@
 /* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
-/* 	@since		Version 1.0.0 Beta							*/
 /*															*/
 /************************************************************/
 /* NOTICE													*/
@@ -30,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version		= '1.0.3.5'; 
+		public $version		= '1.0.3.7'; 
 		public $vars 		= array();
 		public $site_id 	= '';
 		
@@ -53,125 +52,97 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											'config_attributeset_update','config_category_update',
 											'config_email_update','config_gateway_update','config_permission_update',
 											'config_shipping_update','config_site_update','config_tax_update',
-											"order_ajax",
-											"customer_ajax",
-											"product_ajax",
-											"index_products",
-											"order_detail",
-											"customer_orders",
-											"product_edit", 
-											"product_new",
-											"promo_new",
-											"promo_edit",
-											"report_detail",
-											"config_feeds_edit",
-											"config_attribute_create",
-											"config_attribute_edit",
-											"config_attributeset_create",
-											"config_attributeset_edit",
-											"config_attributeset_delete",
-											"config_category_edit",
-											"config_email_edit",
-											"config_gateway_install",
-											"config_gateway_edit",
-											"config_gateway_remove",
-											"config_permission_edit",
-											"config_shipping_install",
-											"config_shipping_edit",
-											"config_shipping_remove",
-											"config_tax_new",
-											"config_tax_edit",
-											"subscription_update",
-											"subscription_detail");
-	/**
-	 * Constructor
-	 *
-	 */	
+											"order_ajax","customer_ajax","product_ajax","index_products","order_detail",
+											"customer_orders","product_edit", "product_new","promo_new","promo_edit",
+											"report_detail","config_feeds_edit","config_attribute_create","config_attribute_edit",
+											"config_attributeset_create","config_attributeset_edit","config_attributeset_delete",
+											"config_category_edit","config_email_edit","config_gateway_install",
+											"config_gateway_edit","config_gateway_remove","config_permission_edit",
+											"config_shipping_install","config_shipping_edit","config_shipping_remove",
+											"config_tax_new","config_tax_edit","subscription_ajax","subscription_update","subscription_detail");
+
 	function __construct($switch = TRUE,$extended = FALSE)
 	{
-				parent::__construct();
-				
-				$this->vars["media_dir"] = $this->_config["media_dir"];
-				$this->vars["media_url"] = $this->_config["media_url"];
-				$this->vars["site_url"] = $this->EE->config->item('site_url');
-				$this->vars["site_id"] = $this->site_id;
-				
-				// Load the access model for the control panel
-					$this->EE->load->model('access_model');
+		parent::__construct();
+		$this->vars["media_dir"] = $this->_config["media_dir"];
+		$this->vars["media_url"] = $this->_config["media_url"];
+		$this->vars["site_url"] = $this->EE->config->item('site_url');
+		$this->vars["site_id"] = $this->site_id;
+
+		// Load the access model for the control panel
+			$this->EE->load->model('access_model');
 						
-				// Security for our filemanager integration
-					$_SESSION["filemanager"] = true;
+		// Security for our filemanager integration
+			$_SESSION["filemanager"] = true;
 				
 			if($switch == TRUE){
 					
-						$this->module = $this->EE->input->get("module",true);
-						$this->method = ($this->EE->input->get("method",true)) ? ($this->EE->input->get("method",true)) : "index" ;
-			
-						$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module='.$this->module;
-						$this->vars["base_url"] = $this->base_url;
-
-					// Do an admin access check 
-						$access = $this->_check_admin_access($this->method);
-					
-	## IMPORTANT ADD HOOK HERE 
-						
-					// Generate the menu
-						$this->_create_admin_menu();
-
-					// Put in some messaging
-						$this->vars['message'] = ''; 	// Container for BR system messages
-						$this->vars['alert'] = '';		// Container for BR system alerts 
+				$this->module = $this->EE->input->get("module",true);
+				$this->method = ($this->EE->input->get("method",true)) ? ($this->EE->input->get("method",true)) : "index" ;
 	
-						$message = br_get('message');
+				$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module='.$this->module;
+				$this->vars["base_url"] = $this->base_url;
+
+				// Do an admin access check 
+					$access = $this->_check_admin_access($this->method);
+					
+## IMPORTANT ADD HOOK HERE 
+						
+				// Generate the menu
+					$this->_create_admin_menu();
+
+				// System ALERT / MESSAGE
+					$this->vars['message'] = ''; 
+					$this->vars['alert'] = '';
+					
+					$message = br_get('message');
 						if($message){
 							$this->vars['message'] = br_get('message');	
 							br_unset('message');
 						}
-						
-						$alert = br_get('alert');
+					$alert = br_get('alert');
 						if($alert){
 							$this->vars['alert'] = br_get('alert');	
 							br_unset('alert');
 						}
+				// BrilliantRetail Version Number
+					$this->vars['version'] = $this->version;
 
-					// BrilliantRetail Version Number
-						$this->vars['version'] = $this->version;
-	
-					// Product Types
-						$this->vars['product_type'] = $this->_config['product_type'];	
-					
-					// Breadcrumb title
-						$this->vars['cp_page_title'] = 'BrilliantRetail';
+				// Product Types
+					$this->vars['product_type'] = $this->_config['product_type'];	
+				
+				// Set a default breadcrumb title
+					$this->vars['cp_page_title'] = 'BrilliantRetail';
 									
-					// Current Site ID
-						$this->site_id = $this->EE->config->item('site_id');				
-						$this->vars['site_id'] = $this->site_id;
+				// Current Site ID
+					$this->site_id = $this->EE->config->item('site_id');				
+					$this->vars['site_id'] = $this->site_id;
 
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/ckeditor/ckeditor.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.tableDnD.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/ckeditor/ckeditor.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.tableDnD.js').'"></script>');
 
-						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css').'" />');
+					$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css').'" />');
 						
-						$this->vars['theme'] = $this->_theme();	
+				// Set our admin theme 	
+					$this->vars['theme'] = $this->_theme();	
 						
-						$this->vars["site_name"] 	= $this->EE->config->item('site_name');
-						$this->vars["br_header"] 	= $this->EE->load->view('_assets/_header', $this->vars, TRUE);
-						$this->vars["br_logo"] 		= $this->EE->load->view('_assets/_logo', $this->vars, TRUE);
-						$this->vars["br_footer"] 	= $this->EE->load->view('_assets/_footer', $this->vars, TRUE);
-					
-					// Set the acton url for uploading 
-					// images in the product detail tab
-					 	// Have to set the upload path based on the control panel 
-					 	// url so we don't have crossdomain issus
+					$this->vars["site_name"] 	= $this->EE->config->item('site_name');
+					$this->vars["br_header"] 	= ''; #Depreciated
+					$this->vars["br_logo"] 		= $this->EE->load->view('_assets/_logo', $this->vars, TRUE);
+					$this->vars["br_footer"] 	= $this->EE->load->view('_assets/_footer', $this->vars, TRUE);
+				
+					// Set the acton url for uploading images in the product detail tab
+					// Have to set the upload path based on the control panel 
+					// url so we don't have crossdomain issus
 				 		$this->vars['image_upload'] = $this->_theme('upload/image.php');
 				 		$this->vars['download_upload'] = $this->_theme('upload/file.php');
 						$_SESSION["media_dir"] = $this->vars["media_dir"];
@@ -185,66 +156,60 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	 *
 	 * @return method	Dashboard
 	 */	
-	function index()
-	{
-		return $this->dashboard();
-	}
+		function index()
+		{
+			return $this->dashboard();
+		}
 
 	/**
 	 * Dashboard 
 	 *
 	 */	
-	function dashboard() 
-	{
-		$this->vars['cp_page_title'] = lang('br_dashboard');
+		function dashboard()
+		{
+			$this->vars['cp_page_title'] = lang('br_dashboard');
 
-		$dir = rtrim(dirname(__FILE__),'/').'/core/report/report.sales.php';
-		include_once($dir);
-		
-		$report = new Report_sales();
-		$db_reports = array('today','week','month','quarter','year');
-		foreach($db_reports as $rep){
-			$report->date_range = $rep;
-			$data = $report->get_report();
-			$total = $data["footer"][6];
-			
-			$this->vars["reports"][] = array(	
-											'title' => lang('br_sales_for').' '.lang($rep),
-											'total' => $total,
-											'link' => '#',  
-											'graph' => $data["graph"] 
-											); 
-		}
-		
-		// List orders on the bottom
-		$orders = $this->EE->order_model->get_order_collection('','',6);
-		$i = 0;
-		foreach($orders["results"] as $s){
-			$orders["results"][$i]["total"] = $this->_currency_round($orders["results"][$i]["total"]);
-			$i++;
-		}
-		$this->vars['order_collection'] = $orders["results"];
-		
-		$this->vars["selected"] = 'dashboard';
-		$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-		$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-		$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+			$this->vars["selected"] = 'dashboard';
+			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
-		$this->vars["stat"] = array(
-										'orders' => '',
-										'products' => '',
-										'customers' => '',
-										'promotions' => '',
-										'reports' => '',
-										'settings' => ''
-									); 
-		return $this->EE->load->view('dashboard/dashboard', $this->vars, TRUE);
+			// Get the sales report
+				$dir = rtrim(dirname(__FILE__),'/').'/core/report/report.sales.php';
+				include_once($dir);
+		
+				$report = new Report_sales();
+				
+				// We want to run the sales report 5 times 
+					$db_reports = array('today','week','month','quarter','year');
+					foreach($db_reports as $rep){
+						$report->date_range = $rep;
+						$data = $report->get_report();
+						$total = $data["footer"][6];
+						
+						$this->vars["reports"][] = array(	
+														'title' => lang('br_sales_for').' '.lang($rep),
+														'total' => $total,
+														'link' => '#',  
+														'graph' => $data["graph"] 
+														); 
+					}
+		
+			// List up to 6 orders on the bottom
+				$orders = $this->EE->order_model->get_order_collection('','',6);
+				$i = 0;
+				foreach($orders["results"] as $s){
+					$orders["results"][$i]["total"] = $this->_currency_round($orders["results"][$i]["total"]);
+					$i++;
+				}
+				$this->vars['order_collection'] = $orders["results"];
+				return $this->EE->load->view('dashboard/dashboard', $this->vars, TRUE);
 	}
 
 	/************************/
 	/* Order Tab		 	*/
 	/************************/
-	
+
 		function order()
 		{
 			$this->vars['cp_page_title'] = lang('br_order');
@@ -253,92 +218,94 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 			
-			// 
+			// ajax url to get order_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
 			
 			return $this->EE->load->view('order/order', $this->vars, TRUE);	
 		}
 		
-		function order_ajax(){
-			$status = $this->_config["status"];	
-			$orders = $this->EE->
-							order_model->
-							get_order_collection('',
-												'',
-												$_GET["iDisplayLength"],
-												$_GET["sSearch"], 
-												$_GET["iDisplayStart"],
-												$_GET["iSortCol_0"],
-												$_GET["sSortDir_0"]);
+		function order_ajax()
+		{
+			// Get the order collection
+				$orders = $this->EE->order_model->get_order_collection('','',$_GET["iDisplayLength"],$_GET["sSearch"],$_GET["iDisplayStart"],$_GET["iSortCol_0"],$_GET["sSortDir_0"]);
 			
-			$order = array();
+			// Individual order container
+				$order = array();
 			
-			foreach ($orders["results"] as $row){
-				// Build the member array
-					$order[] = array('	<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$row["order_id"].'">'.$row["order_id"].'</a>', 
-										date('n/d/y',$row["created"]),
-										'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
-										$row["total"],
-										$status[$row["status_id"]],
-										array('data' => '<input type="checkbox" name="batch['.$row["order_id"].']" />', 'style' => 'text-align:center')
-								);
-			}
-			// Build the response array
+			// Build the row array 
+				foreach ($orders["results"] as $row){
+						$order[] = array('	<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$row["order_id"].'">'.$row["order_id"].'</a>', 
+											date('n/d/y',$row["created"]),
+											'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
+											$row["total"],
+											 $this->_config["status"][$row["status_id"]],
+											array('data' => '<input type="checkbox" name="batch['.$row["order_id"].']" />', 'style' => 'text-align:center')
+									);
+				}
+			
+			// Response array to json encode
 				$output = array(
 					"sEcho" => $_GET["sEcho"],
 					"iTotalRecords" => $orders["total"],
 					"iTotalDisplayRecords" => $orders["displayTotal"],
 					"aaData" => $order  
 				);
-			// Return the json data 
+			
+			// Return the json data with a success header and exit
 				@header("HTTP/1.1 200 OK");
 				echo json_encode($output);
 				exit();
 		}
 		
-		
-		
 		function order_detail()
 		{
-			$this->vars['cp_page_title'] = lang('br_order');
-			$order_id = $this->EE->input->get("order_id");
-			$print = $this->EE->input->get("print",true);
-			$this->vars["status"] = $this->_config["status"];			
-			$this->vars['order'] = $this->EE->order_model->get_order($order_id);
+			// Parameters
+				$order_id = $this->EE->input->get("order_id");
+				$print = $this->EE->input->get("print",true);
 			
-			if($this->vars['order']['photo_filename'] != ''){
-				$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['photo_filename'].'" />';
-			}else{
-				$this->vars['member_photo'] = '<img src="/media/images/profile-pic.jpg" />';
-			}
-			$this->vars["selected"] = 'order';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-
-			$this->vars["items"] = '';
-
-			$this->vars["hidden"] = array(
-											'order_id' => $order_id
-										);
-			if($print == 'true'){
-				$this->vars["site_name"] = $this->EE->config->item('site_name');
-				$this->vars["company"] = $this->_config["store"][$this->site_id];
-				$this->vars["print_css"] = $this->_theme('css/print.css');
-				$view = $this->EE->load->view('order/print', $this->vars, TRUE);	
-				echo $view;
-				exit();
-			}else{
-				return $this->EE->load->view('order/detail', $this->vars, TRUE);	
-			}
+			// Page title
+				$this->vars['cp_page_title'] = lang('br_order_detail');
+				$this->vars["selected"] = 'order';
+				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+			
+			// Order Information
+				$this->vars["status"] = $this->_config["status"];			
+				$this->vars['order'] = $this->EE->order_model->get_order($order_id);
+			
+				// Do we have a user photo?
+					if($this->vars['order']['photo_filename'] != ''){
+						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['photo_filename'].'" />';
+					}else{
+						$this->vars['member_photo'] = '<img src="'.$this->_config["media_url"].'images/profile-pic.jpg" />';
+					}
+				// Pass the order id
+					$this->vars["hidden"] = array(
+													'order_id' => $order_id
+												);
+												
+			// If we are just showing a print view then we need to display 
+			// the print view with a success header and exit
+				if($print == 'true'){
+					$this->vars["site_name"] = $this->EE->config->item('site_name');
+					$this->vars["company"] = $this->_config["store"][$this->site_id];
+					$this->vars["print_css"] = $this->_theme('css/print.css');
+					$view = $this->EE->load->view('order/print', $this->vars, TRUE);	
+					@header("HTTP/1.1 200 OK");
+					echo $view;
+					exit();
+				}else{
+					return $this->EE->load->view('order/detail', $this->vars, TRUE);	
+				}
 		}
 		
 		function order_update_status()
 		{
-			foreach($_POST as $key => $val){
-				$data[$key] = $this->EE->input->post($key);
-			}
-
+			// Get the parameters 
+				foreach($_POST as $key => $val){
+					$data[$key] = $this->EE->input->post($key);
+				}
 			// Is the notify flag set?
 				$notify = false;
 				if(isset($data["notify"])){
@@ -347,7 +314,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			
 			// Update the order status		
-									
+				
 				// Hook before we update the order
 					if($this->EE->extensions->active_hook('br_order_update_before') === TRUE){
 						$data = $this->EE->extensions->call('br_order_update_before', $data); 
@@ -362,23 +329,22 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 				$tmp = $this->EE->order_model->get_order($data["order_id"]);
 			
-			// 
-			if($notify == true){
-				$eml[0]["email"] = $tmp["member"]["email"];
-				$eml[0]["order_id"] = $data["order_id"];
-				$eml[0]["order_status"] = $this->_config["status"][$data["status_id"]];
-				
-				foreach($tmp["member"] as $key => $val){
-					if(substr($key,0,3) == 'br_'){
-						$eml[0][str_replace("br_","",$key)] = $val;
+			// Do we notify the user?
+				if($notify == true){
+					$eml[0]["email"] = $tmp["member"]["email"];
+					$eml[0]["order_id"] = $data["order_id"];
+					$eml[0]["order_status"] = $this->_config["status"][$data["status_id"]];
+					foreach($tmp["member"] as $key => $val){
+						if(substr($key,0,3) == 'br_'){
+							$eml[0][str_replace("br_","",$key)] = $val;
+						}
 					}
+					$this->_send_email('customer-order-status', $eml);
 				}
-				$this->_send_email('customer-order-status', $eml);
-			}
-				
-			br_set('message',lang('br_order_status_success'));
-			$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
-			exit();
+			// Set the message and relocate	
+				br_set('message',lang('br_order_status_success'));
+				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+				exit();
 		}
 		
 		function order_add_note()
@@ -386,8 +352,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			foreach($_POST as $key => $val){
 				$data[$key] = $this->EE->input->post($key);
 			}
-			
-			
+
 			if(isset($_FILES)){
 				$attachment = $this->vars["media_dir"].'attachments';
 				if(!file_exists($attachment)){
@@ -402,42 +367,45 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			}
 			
-			// 
-			
 			// Get Order Details
-			$tmp = $this->EE->order_model->get_order($data["order_id"]);
+				$tmp = $this->EE->order_model->get_order($data["order_id"]);
 			// Did we specify User Notification?
-			$notify = false;
+				$notify = false;
 				if(isset($data["order_note_notify"])){
 					$notify = true;
 					unset($data["order_note_notify"]);
 				}
+			// lets notify
+				if($notify == true){
+					$eml[0]["email"] 		= $tmp["member"]["email"];
+					$eml[0]["order_id"] 	= $data["order_id"];
+					$eml[0]["order_note"] 	= $data["order_note"];
+					$eml[0]["fname"] 		= $tmp["member"]["br_fname"];
+					$this->_send_email('customer-order-note', $eml);
+				}
+				unset($data["order_note_notify"]);
 			
-			if($notify == true){
-				$eml[0]["email"] 	= $tmp["member"]["email"];
-				$eml[0]["order_id"] = $data["order_id"];
-				$eml[0]["order_note"] = $data["order_note"];
-				$eml[0]["fname"] 	= $tmp["member"]["br_fname"];
-				$this->_send_email('customer-order-note', $eml);
-			}
-			
-			unset($data["order_note_notify"]);
-			$data["member_id"] = $this->EE->session->userdata["member_id"];
-			$data["created"] = time();
-			$this->EE->order_model->create_order_note($data);
-			br_set('message',lang('br_order_add_note_success'));
-			header('location: '.$this->base_url.'&method=order_detail&order_id='.$data["order_id"]);
-			exit();
+			// Create the note
+				$data["member_id"] = $this->EE->session->userdata["member_id"];
+				$data["created"] = time();
+				$this->EE->order_model->create_order_note($data);
+			// Message and relocate
+				br_set('message',lang('br_order_add_note_success'));
+				header('location: '.$this->base_url.'&method=order_detail&order_id='.$data["order_id"]);
+				exit();
 		}
 		
 		function order_remove_note()
 		{
-			$order_id = $_GET["order_id"]; 
-			$order_note_id = $_GET["note_id"]; 
-			$this->EE->order_model->remove_order_note($order_note_id);
-			br_set('message',lang('br_order_remove_note_success'));
-			header('location: '.$this->base_url.'&method=order_detail&order_id='.$order_id);
-			exit();
+			// Get the parameters 
+				$order_id 		= $this->EE->input->get('order_id'); 
+				$order_note_id 	= $this->EE->input->get('note_id');
+			// Remove it 
+				$this->EE->order_model->remove_order_note($order_note_id);
+			// Message and redirect
+				br_set('message',lang('br_order_remove_note_success'));
+				header('location: '.$this->base_url.'&method=order_detail&order_id='.$order_id);
+				exit();
 		}
 		
 	/************************/
@@ -446,43 +414,27 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	
 		function customer()
 		{
-			
 			$this->vars['cp_page_title'] = lang('br_customer');
-
 			$this->vars["selected"] = 'customer';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
-			$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=customer_ajax';
+			// ajax url to get customer_collection from data tables
+				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=customer_ajax';
 			
 			return $this->EE->load->view('customer/customer', $this->vars, TRUE);	
-
 		}
 		
-		/**
-		* Control panel customer live filter
-		*
-		* @access	public
-		* @param	get 
-		* @return	json 
-		*/	
-			function customer_ajax(){
-				
-				$members = $this->EE->
-								customer_model->
-								get_customers('',
-											$_GET["iDisplayLength"],
-											$_GET["iDisplayStart"],
-											$_GET["sSearch"], 
-											$_GET["iSortCol_0"],
-											$_GET["sSortDir_0"]);
-				
+		function customer_ajax()
+		{
+			// Member Collection	
+				$members = $this->EE->customer_model->get_customers('',$_GET["iDisplayLength"],$_GET["iDisplayStart"],$_GET["sSearch"],$_GET["iSortCol_0"],$_GET["sSortDir_0"]);
+			
+			// Container for member rows
 				$member = array();
-				
 				foreach ($members["results"] as $row){
-					// Build the member array
-						$member[] = array(	'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
+					$member[] = array(	'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
 										'<a href="mailto:'.$row["email"].'">'.$row["email"].'</a>',
 										date("n/d/Y",$row["join_date"]), 
 										$row["group_title"],
@@ -490,129 +442,113 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 										'<a href="'.BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=customer_orders&memberid='.$row["member_id"].'">'.lang('view').'</a>'
 									);
 				}
-				// Build the response array
-					$output = array(
-						"sEcho" => $_GET["sEcho"],
-						"iTotalRecords" => $members["total"],
-						"iTotalDisplayRecords" => $members["displayTotal"],
-						"aaData" => $member  
-					);
-				// Return the json data 
-					@header("HTTP/1.1 200 OK");
-					echo json_encode($output);
-					exit();
-			}
+			// Build the response array
+				$output = array(
+									"sEcho" => $_GET["sEcho"],
+									"iTotalRecords" => $members["total"],
+									"iTotalDisplayRecords" => $members["displayTotal"],
+									"aaData" => $member  
+								);
+			// Return the json data 
+				@header("HTTP/1.1 200 OK");
+				echo json_encode($output);
+				exit();
+		}
 		
 		function customer_orders()
 		{
+			// Parameters
+				$member_id = $this->EE->input->get('memberid');
+
 			$this->vars['cp_page_title'] = lang('br_customer_orders');
-			
 			$this->vars["selected"] = 'customer';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-			$this->vars["status"] = $this->_config["status"];
 			
-			// Get the orders
-			
-			$query = $this->EE->order_model->get_order_by_member($_GET['memberid']);
-			
-			if(count($query)==0)
-			{
-				$this->vars['order_collection']=array();
-				$this->vars['member_info']='Customer';
-			}
-			else
-			{
-				$this->vars['member_info']=$query[0]['member']['br_fname'] . ' ' . $query[0]['member']['br_lname'];
-			}
-			
-			$line_items='';
-			
-			foreach ($query as $row){
-				foreach($row['items'] as $item){
-					$line_items .= $item['quantity'].' x '.$item['title'].' (SKU: '.$item['sku'].')<br />';
-				}
+			// Get the order collection
+				$query = $this->EE->order_model->get_order_by_member($member_id);
 				
-				$this->vars['order_collection'][] = array(
-													'order_id' => $row["order_id"],
-													'created' 		=> $row['created'],
-													'line_items' 	=> $line_items,
-													'total' 	=> $this->_currency_round($row["base"]+$row["shipping"]+$row["tax"]-$row["discount"]),
-													'status_id'	=> $row["status_id"] 
-												);
-				$line_items='';
-			}
+				if(count($query)==0){
+					$this->vars['order_collection']=array();
+					$this->vars['member_info']='Customer';
+				}else{
+					$this->vars['member_info'] = $query[0]['member']['br_fname'].' '.$query[0]['member']['br_lname'];
+				}
+			
+				foreach ($query as $row){
+					$line_items='';
+					foreach($row['items'] as $item){
+						$line_items .= $item['quantity'].' x '.$item['title'].' (SKU: '.$item['sku'].')<br />';
+					}
+				
+					$this->vars['order_collection'][] = array(
+																'order_id' 		=> $row["order_id"],
+																'created' 		=> $row['created'],
+																'line_items' 	=> $line_items,
+																'total' 		=> $this->_currency_round($row["base"]+$row["shipping"]+$row["tax"]-$row["discount"]),
+																'status'		=> $this->_config["status"][$row["status_id"]] 
+															);
+				}
 			
 			return $this->EE->load->view('customer/customer_orders', $this->vars, TRUE);	
-
 		}	 
+
 	/************************/
 	/* Product Tab		 	*/
 	/************************/
 	
 		function product()
 		{
-			// Generate the list of products based 
-			// on the search terms provided. 
-			
-			$_SESSION["catid"] = (isset($_GET["cat_id"])) ? $_GET["cat_id"] : "";
+			// Set the parameters 
+				$_SESSION["catid"] = (isset($_GET["cat_id"])) ? $_GET["cat_id"] : "";
 
-			// Get the products 
-			$this->vars['categories'] = $this->EE->product_model->get_all_categories();
-			$this->vars['catid'] = $_SESSION["catid"];
+			// Get the categories 
+				$this->vars['categories'] = $this->EE->product_model->get_all_categories();
+				$this->vars['catid'] = $_SESSION["catid"];
 			
-			$this->vars['cp_page_title'] = lang('br_products');
+				$this->vars['cp_page_title'] = lang('br_products');
+				$this->vars["selected"] = 'product';
+				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+
+			// Add the create product button
+				$this->EE->cp->set_right_nav(array(
+					'br_new_product' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_new'
+				));
 			
-			$this->EE->cp->set_right_nav(array(
-				'br_new_product' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_new'
-			));
-			
-			$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_ajax';
-			
-			
-			$this->vars["selected"] = 'product';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-			
+			// Add the ajax url
+				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_ajax';
+		
 			return $this->EE->load->view('product/product', $this->vars, TRUE);	
 		}
 
-		function product_ajax(){
+		function product_ajax()
+		{
+			// Pass in the db prefix for advanced sql statements
+				$prefix = $this->EE->db->dbprefix;
 			
-			$prefix = $this->EE->db->dbprefix;
-
-			$products = $this->EE
-								->product_model
-								->get_product_collection(	
-															$_GET["sSearch"],
-															$_GET["iDisplayLength"],
-															$_GET["iDisplayStart"],
-															$_GET["iSortCol_0"],
-															$_GET["sSortDir_0"],
-															$_SESSION["catid"], 
-															$prefix 
-														);
+			// Get product collection 
+				$products = $this->EE->product_model->get_product_collection($_GET["sSearch"],$_GET["iDisplayLength"],$_GET["iDisplayStart"],$_GET["iSortCol_0"],$_GET["sSortDir_0"],$_SESSION["catid"],$prefix);
 			
-			$row = array();
-			$i = 0;
-			foreach($products["results"] as $p){
-				$enabled = ($p['enabled'] == 1) ? 'status_on' : 'status_off' ;
-				$row[] = array(	'<img src="'.$this->_theme('images/icon_'.$enabled.'.png').'" />',
-								'<a href="'.$this->vars["base_url"].'&method=product_edit&product_id='.$p['product_id'].'">'.$p['title'].'</a>',
-								$p['quantity'],
-								$this->vars["product_type"][$p['type_id']],
-								'<input type="checkbox" name="batch['.$p['product_id'].']" style="text-align:center" />');
-			}
-			
-			$output = array(
-							"sEcho" => $_GET["sEcho"],
-							"iTotalRecords" => $products["total"],
-							"iTotalDisplayRecords" => $products["displayTotal"],
-							"aaData" => $row 
-						);
-
+			// setup the return array 
+				$row = array();
+				$i = 0;
+				foreach($products["results"] as $p){
+					$enabled = ($p['enabled'] == 1) ? 'status_on' : 'status_off' ;
+					$row[] = array(	'<img src="'.$this->_theme('images/icon_'.$enabled.'.png').'" />',
+									'<a href="'.$this->vars["base_url"].'&method=product_edit&product_id='.$p['product_id'].'">'.$p['title'].'</a>',
+									$p['quantity'],
+									$this->vars["product_type"][$p['type_id']],
+									'<input type="checkbox" name="batch['.$p['product_id'].']" style="text-align:center" />');
+				}
+				$output = array(
+								"sEcho" => $_GET["sEcho"],
+								"iTotalRecords" => $products["total"],
+								"iTotalDisplayRecords" => $products["displayTotal"],
+								"aaData" => $row 
+							);
 			// Return the json data 
 				@header("HTTP/1.1 200 OK");
 				echo json_encode($output);
@@ -665,8 +601,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 				$this->_index_products();
 			}
-			header('location: '.$this->base_url.'&method=product');
-			exit();
+			$this->EE->functions->redirect($this->base_url.'&method=product');
 		}
 		
 		function product_new()
@@ -775,12 +710,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["tab_feed"] = $this->EE->load->view('product/tabs/feed', $this->vars, TRUE);
 
 			return $this->EE->load->view('product/edit', $this->vars, TRUE);	
-			
 		}
 		
-	
 		function product_edit()
 		{
+			$this->vars['cp_page_title'] = lang('br_products');
 			$this->vars["selected"] = 'product';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -1102,33 +1036,75 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/************************/
 	/* Subscriptions	 	*/
 	/************************/
+	/*
+		NOT QUITE READY FOR PRIME TIME
+		
 			function subscription()
 			{ 
-				// Generate the list of products based 
-				// on the search terms provided. 
-				
 				// Get the products 
-				$this->EE->load->model('subscription_model');
-				$this->vars['subscriptions'] = $this->EE->subscription_model->get_subscriptions();
 				$this->vars["selected"] = 'subscriptions';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-	
+				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=subscription_ajax';
 				return $this->EE->load->view('subscription/subscription', $this->vars, TRUE);	
+			}
+
+			function subscription_ajax(){
+				$this->EE->load->model('subscription_model');
+				
+				$prefix = $this->EE->db->dbprefix;
+	
+				$subscriptions = $this->EE
+									->subscription_model
+									->get_subscription_collection(	
+																$_GET["sSearch"],
+																$_GET["iDisplayLength"],
+																$_GET["iDisplayStart"],
+																$_GET["iSortCol_0"],
+																$_GET["sSortDir_0"],
+																$prefix 
+															);
+				$arr = array();
+				$i = 0;
+				foreach($subscriptions["results"] as $row){
+					$units = ($row["period"] == 1) ? lang('br_days') : lang('br_months');
+					$arr[] = array(	'<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=subscription_detail&order_subscription_id='.$row["order_subscription_id"].'">'.$row["order_subscription_id"].'</a>', 
+									'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
+									date('n/d/y',strtotime($row["created"])),
+									lang('br_every').' '.$row["length"].' '.$units, 
+									date('n/d/y',strtotime($row["next_renewal"])),
+									$this->_currency_round($row["renewal_price"]),
+									$row["status_id"]
+								);
+				}
+				
+				$output = array(
+								"sEcho" => $_GET["sEcho"],
+								"iTotalRecords" => $subscriptions["total"],
+								"iTotalDisplayRecords" => $subscriptions["displayTotal"],
+								"aaData" => $arr 
+							);
+	
+				// Return the json data 
+					@header("HTTP/1.1 200 OK");
+					echo json_encode($output);
+					exit();
+	
 			}
 	
 			function subscription_detail(){ 
 				// Get the subscription
 					$subscription_id = $_GET["subscription_id"];
 					$this->EE->load->model('subscription_model');
-					$this->vars['subscriptions'] = $this->EE->subscription_model->get_subscriptions($subscription_id);
+					$this->vars['subscriptions'] = $this->EE->subscription_model->get_subscription($subscription_id);
 			}
 	
 			function subscription_update(){ 
 			
 			}
-		
+	*/
+	
 	/************************/
 	/* Promotions Tab	 	*/
 	/************************/
@@ -1381,9 +1357,16 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function report_detail()
 		{
 
-			$this->EE->cp->add_js_script( array(
-												'ui' => 'datepicker' 
-												));
+			// Set the header/breadcrumb 
+				$this->vars['cp_page_title'] = lang('br_report');
+				$this->vars["selected"] = 'report';
+				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+
+			// Add the data picker js
+				$this->EE->cp->add_js_script(array('ui' => 'datepicker'));
+			
 			$list = array();
 			// Get the core reports
 				$dir = rtrim(dirname(__FILE__),'/').'/core/report';
@@ -1429,11 +1412,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			foreach($this->vars["detail"]["input"] as $in){
 				$this->vars["input"] .= $this->_build_report_input($in);
 			}
-				
-			$this->vars["selected"] = 'report';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 			if(isset($_POST["export"]) && $_POST["export"] == 1){
 				$this->_build_report_csv($this->vars["detail"]);
 				return;
@@ -1483,7 +1461,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_attribute_update()
 		{
 			$continue = false;
-			
+
 			// Check for duplicate
 				if(isset($_POST["duplicate"])){
 					$_POST["attribute_id"] = 0;
@@ -1557,6 +1535,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_attribute_edit()
 		{
 			$attribute_id = $this->EE->input->get('attribute_id');
+			$this->vars['cp_page_title'] = lang('br_config_attribute');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_by_id($attribute_id);
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_attribute';
@@ -1572,6 +1551,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_attributeset()
 		{
+			$this->vars['cp_page_title'] = lang('br_config_attributeset');
+
 			$this->vars["attributes"] = (array)$this->EE->product_model->get_attribute_sets();
 			
 				$this->EE->cp->set_right_nav(array(
@@ -1591,6 +1572,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_attributeset_create()
 		{
+			$this->vars['cp_page_title'] = lang('br_config_attributeset');
+
 			$attribute_set_id = 0;
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_set_list($attribute_set_id);
 			$attribute_set = $this->EE->product_model->get_attribute_sets($attribute_set_id);
@@ -1611,6 +1594,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_attributeset_edit()
 		{
+			$this->vars['cp_page_title'] = lang('br_config_attributeset');
+
 			$attribute_set_id = $this->EE->input->get('attribute_set_id');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_set_list($attribute_set_id);
 			$attribute_set = $this->EE->product_model->get_attribute_sets($attribute_set_id);
@@ -1650,6 +1635,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_category()
 		{
 			// Set the selected menu
+			$this->vars['cp_page_title'] = lang('br_config_category');
+
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_category';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
@@ -1676,6 +1663,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_category_edit()
 		{
+			$this->vars['cp_page_title'] = lang('br_config_category');
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_category';
 			$cat = $this->EE->product_model->get_category($this->EE->input->get('cat_id'));
@@ -1804,24 +1792,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 
-		/*
-			function config_catalog()
-			{
-				// Set the selected menu
-				$this->vars["selected"] = 'config';
-				$this->vars["sub_selected"] = 'config_catalog';
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-				$this->vars["content"] = $this->EE->load->view('config/catalog', $this->vars, TRUE);
-				return $this->EE->load->view('config/index', $this->vars, TRUE);
-			}
-		*/
-
 		function config_email()
 		{
 			// Check available templates against 
 			// templates in the DB for the site id
+				
+				$this->vars['cp_page_title'] = lang('br_config_email');
 				
 				$path = PATH_THIRD.'brilliant_retail/core/notifications';
 				$files = read_dir_files($path);
@@ -1868,6 +1844,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_email_edit()
 		{
+			$list = $this->EE->email_model->get_emails_by_site_id($this->site_id);
 			$email_id = $this->EE->input->get('email_id');
 			$this->vars["email"] = $this->EE->email_model->get_email_by_id($email_id);
 			$this->vars["selected"] = 'config';
@@ -1914,6 +1891,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_feeds_edit()
 		{		  
+			$this->vars['cp_page_title'] = lang('br_config_feeds');
+
   			// Load Libraries & Helpers
   				$this->EE->load->library( array('form_validation') );
 
@@ -1931,82 +1910,72 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
   	  
 	  		// Configure Form Validation
-		  	  $rules  = array(
-		        array(
-		          'field'   => 'feed_title',
-		          'label'   => lang( 'feed_title' ),
-		          'rules'   => 'required'
-		        ),
-		        array(
-		          'field'   => 'feed_code',
-		          'label'   => lang( 'feed_code' ),
-		          'rules'   => 'required|alpha_dash' . ($this->EE->input->post('feed_id') == '' ? '|callback__feed_code_exists' : '')
-		        )
-		      );
+		  	 	$rules  = array(
+		        	array(
+		         			'field'   => 'feed_title',
+		          			'label'   => lang( 'feed_title' ),
+		          			'rules'   => 'required'
+		        	),
+		        	array(
+		          			'field'   => 'feed_code',
+		          			'label'   => lang( 'feed_code' ),
+		          			'rules'   => 'required|alpha_dash' . ($this->EE->input->post('feed_id') == '' ? '|callback__feed_code_exists' : '')
+		        	)
+		     	);
   	  		
-  	  		$this->EE->form_validation->set_rules( $rules )->set_error_delimiters('<div class="notice">', '</div>'); 
-			$this->EE->form_validation->set_message('_feed_code_exists', lang('br_feed_code_exists'));
+  	  			$this->EE->form_validation->set_rules( $rules )->set_error_delimiters('<div class="notice">', '</div>'); 
+				$this->EE->form_validation->set_message('_feed_code_exists', lang('br_feed_code_exists'));
       
 	      // Get Feed Data
-	      $feed_data = array(
-	        'feed_title'  => $this->EE->input->post('feed_title') != '' ? $this->EE->input->post('feed_title') : $feed_data['feed_title'],
-	        'feed_code'   => $this->EE->input->post('feed_code') != '' ? $this->EE->input->post('feed_code') : $feed_data['feed_code'],
-	        'feed_id'     => $this->EE->input->post('feed_id') != '' ? $this->EE->input->post('feed_id') : $feed_data['feed_id'],
-	      );
+	      	$feed_data = array(
+		        'feed_title'  => $this->EE->input->post('feed_title') != '' ? $this->EE->input->post('feed_title') : $feed_data['feed_title'],
+		        'feed_code'   => $this->EE->input->post('feed_code') != '' ? $this->EE->input->post('feed_code') : $feed_data['feed_code'],
+		        'feed_id'     => $this->EE->input->post('feed_id') != '' ? $this->EE->input->post('feed_id') : $feed_data['feed_id'],
+	      	);
 		  
 		  // Form Validation
-		  if ( $this->EE->input->post('submit') )
-		  {
-  		  if ( $this->EE->form_validation->run() )
-  		  {
-  		    // Create or Update Feed
-		      $feed_id = $this->EE->feed_model->update_feed($feed_data);
-		      
-  		    if ( $this->EE->input->post('feed_id') != '' )
-  		    {
-  				  br_set( 'message', lang('br_feed_update_success') );
-  		    }
-  		    else
-  		    {
-  				  br_set( 'message', lang('br_feed_create_success') ); 
-  		    }
+		  	if($this->EE->input->post('submit')){
+  		  		if($this->EE->form_validation->run()){
+  		    		// Create or Update Feed
+		      		$feed_id = $this->EE->feed_model->update_feed($feed_data);
+		    		
+		    		if ( $this->EE->input->post('feed_id') != '' ){
+  				  		br_set( 'message', lang('br_feed_update_success') );
+  		    		}else{
+  				  		br_set( 'message', lang('br_feed_create_success') ); 
+  		   			}
 		      
   				// Redirect User
-  				if( $this->EE->input->post('submit') == 'Save' )
-  				{
-  				  $this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
-  				}
-  				else
-  				{
-  				  $this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds_edit' . AMP . 'feed_id=' . $feed_id ); 
-  				}
-  		  }
-  		  else
-  		  {
-  				br_set( 'message', lang('br_feed_update_failure') );
-  		  } 
-		  }
+  					if( $this->EE->input->post('submit') == 'Save' ){
+  				  		$this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
+  					}else{
+  				  		$this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds_edit' . AMP . 'feed_id=' . $feed_id ); 
+  					}
+  		  		}else{
+  					br_set( 'message', lang('br_feed_update_failure') );
+  		  		} 
+			}
 		  
-		  // Delete Feed
-  		if( $this->EE->input->post('delete') ){
-  			$this->EE->feed_model->delete_feed($this->EE->input->post('feed_id'));
-  			remove_from_cache('config');
-  			br_set('message',lang('br_feed_delete_success'));
-  			$this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
-  		}
+		// Delete Feed
+  			if( $this->EE->input->post('delete') ){
+  				$this->EE->feed_model->delete_feed($this->EE->input->post('feed_id'));
+  				remove_from_cache('config');
+  				br_set('message',lang('br_feed_delete_success'));
+  				$this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
+  			}
 			
 			// Prepare Interface
-			$this->vars['feed']         = $feed_data;
-			$this->vars['categories']   = $this->EE->product_model->get_all_categories();
-			$this->vars["selected"]     = 'config';
-			$this->vars["sub_selected"] = 'config_feeds';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"]         = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"]      = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-			$this->vars['products']     = $this->EE->product_model->get_products_by_feed($feed_id);
-			$this->vars["content"]      = $this->EE->load->view('config/feed_edit', $this->vars, TRUE);
-			
-			return $this->EE->load->view('config/index', $this->vars, TRUE);
+				$this->vars['feed']         = $feed_data;
+				$this->vars['categories']   = $this->EE->product_model->get_all_categories();
+				$this->vars["selected"]     = 'config';
+				$this->vars["sub_selected"] = 'config_feeds';
+				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+				$this->vars["help"]         = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+				$this->vars["br_menu"]      = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+				$this->vars['products']     = $this->EE->product_model->get_products_by_feed($feed_id);
+				$this->vars["content"]      = $this->EE->load->view('config/feed_edit', $this->vars, TRUE);
+				
+				return $this->EE->load->view('config/index', $this->vars, TRUE);
 		}
 		
 		function _feed_code_exists( $code )
@@ -2017,7 +1986,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_gateway()
 		{
-			
 			// Set the selected menu
 				$this->vars['cp_page_title'] = lang('br_config_gateway');
 				$this->vars["selected"] = 'config';
@@ -2026,9 +1994,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
-
 			// Load the content
-				
 				$files = read_system_files('gateway');		
 				$gateway = array();
 				
@@ -2183,8 +2149,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_permission()
 		{
+			$this->vars['cp_page_title'] = lang('br_config_permission');
+			
 			$this->vars["groups"] = $this->EE->access_model->get_member_groups();
-
+				
 			// Set the selected menu
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_permission';
@@ -2197,6 +2165,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_permission_edit()
 		{
+			$this->vars['cp_page_title'] = lang('br_config_permission');
 			$group_id = $this->EE->input->get("group_id",true);
 			$this->vars["permissions"] = $this->_admin_permission_tree($group_id);
 			$this->vars["group"] = $this->EE->access_model->get_group_title($group_id);
@@ -2435,6 +2404,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_site()
 		{
+			$this->vars['cp_page_title'] = lang('br_config_site');
+			
 			// Load the accordion ui plugin
 			$this->EE->cp->add_js_script( array(
 									'ui' => 'accordion' 
@@ -2499,6 +2470,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_tax()
 		{ 
+			$this->vars['cp_page_title'] = lang('br_config_tax');
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_tax';
 			
@@ -2512,8 +2484,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->EE->load->view('config/index', $this->vars, TRUE);
 		}
 
-		function config_tax_new()
-		{
+		function config_tax_new(){
+		
+			$this->vars['cp_page_title'] = lang('br_config_tax');
+
 			// GET THE TAX ID 
 				$tax_id = 0;
 
@@ -2543,19 +2517,23 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->EE->load->view('config/index', $this->vars, TRUE);
 		}
 
-		function config_tax_edit()
-		{
+		function config_tax_edit(){
+		
+			$this->vars['cp_page_title'] = lang('br_config_tax');
+
 			// GET THE TAX ID 
-				$tax_id = ($_GET["tax_id"]) * 1;
+				$tax_id = (int) $_GET["tax_id"];
+			
 			// Load Menu			
 				$this->vars["selected"] = 'config';
 				$this->vars["sub_selected"] = 'config_tax';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
 			// 
 				$this->vars["hidden"] = array('tax_id' => $tax_id);
+
 			// Get the tax info 				
 				$this->vars["states"] = $this->EE->tax_model->get_state();
 				$this->vars["zones"] = $this->EE->tax_model->get_zone();

@@ -13,39 +13,33 @@
 	/*												*/
 	/************************************************/
 	
-	$cp_pad_table_template["table_open"] = '<table id="productTable" cellpadding="0" cellspacing="0" class="mainTable">';
+	$cp_pad_table_template["table_open"] = '<table id="subscriptionTable" cellpadding="0" cellspacing="0" class="mainTable" style="clear:both;">';
 	
 	$this->table->set_template($cp_pad_table_template);
 
 	$this->table->set_heading(
 							array(
-						    		'data' => '', 
+						    		'data' => lang('br_subscrition_id'),
 						    		'width' => '5%'),
 						    array(
-						    		'data' => lang('br_title'), 
+						    		'data' => lang('br_order_customer'), 
 						    		'width' => '*'), 
-							array(
-						    		'data' => lang('br_price'), 
-						    		'width' => '20%'),
 						    array(
-						    		'data' => lang('br_qty'), 
+						    		'data' => lang('br_order_date'), 
+						    		'width' => '15%'), 
+						    array(
+						    		'data' => lang('br_length'), 
+						    		'width' => '15%'), 
+						    array(
+						    		'data' => lang('br_next_renewal'), 
+						    		'width' => '15%'), 
+						    array(
+						    		'data' => lang('br_price'), 
 									'width' => '15%'),
 						   	array(
 						    		'data' => lang('br_type'), 
-									'width' => '15%')
+									'width' => '15%') 
 						   );
-	
-	foreach($subscriptions as $p){
-		$enabled = ($p['enabled'] == 1) ? 'status_on' : 'status_off' ;
-		$this->table->add_row(
-								'<img src="'.$theme.'images/icon_'.$enabled.'.png" />', 
-								'<a href="'.$base_url.'&method=product_edit&product_id='.$p['product_id'].'">'.$p['title'].'</a>',
-								number_format($p['price'],2),
-								$p['quantity'],
-								$product_type[$p['type_id']]
-							);
-	}
-	
 	$content = $this->table->generate();
 ?>
 <div id="b2retail">
@@ -57,7 +51,7 @@
     	<?=$br_menu?>
         
         <div id="b2r_main">
-        
+
             <?=$br_logo?>
             
             <div id="b2r_panel">
@@ -67,9 +61,10 @@
                 	<div id="b2r_settings">
                 
 						<div id="b2r_page" class="b2r_category">
-
-	                       	<?=$content?>
-                        	
+                            <?=form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=subscription_batch',array('method' => 'POST', 'id' => 'subscriptionForm'))?>
+                            	<div class="b2r_clearboth"><!-- --></div>
+	                            <?=$content?>
+							</form>
                         	<div class="b2r_clearboth"><!-- --></div>
                         
                     </div> <!-- b2r_dashboard --> 
@@ -89,14 +84,41 @@
 
 <script type="text/javascript">
 	$(function(){
-		var oTable = $('#productTable').dataTable({
-													"bStateSave": true
-												});
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#productTable_filter input');
-		$('<div style="clear:both"></div>').insertAfter('#productTable_filter');
+		var oTable = $('#subscriptionTable').dataTable({
+													"iDisplayLength": 25, 
+													"aoColumns": [
+																		null,
+																		null,
+																		null,
+																		null,
+																		null,
+																		null,
+																		null 
+																	], 
+													"bProcessing": true,
+													"bServerSide": true,
+													"sAjaxSource": "<?=str_replace("&amp;","&",$ajax_url)?>", 
+													"fnDrawCallback": function() {
+														$('#toggle_check').click(function(){
+															if(this.checked){
+																$('input[type=checkbox]').attr('checked','checked');
+															}else{
+																$('input[type=checkbox]').each(function() {  
+																	this.checked = false;  
+																});  
+															}
+														});
+													}
+													
+													});
+		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#subscriptionTable_filter input');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false
 									});
+		
+		$('#filter').change(function(){
+			location.href="<?=$base_url;?>&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=subscription&cat_id="+$("#filter").val();
+		})
 	});
 </script>

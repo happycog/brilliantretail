@@ -1,4 +1,4 @@
-{!--
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -7,7 +7,6 @@
 /* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
-/* 	@since		Version 1.0.0 Beta							*/
 /*															*/
 /************************************************************/
 /* NOTICE													*/
@@ -22,17 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-!--}
-<div id="sidebar">
-	<h1>Account</h1>
-    <ul id="submenu">
-    	<li {if '{segment_2}' == ''}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer'}">Overview</a></li>
-        <li {if '{segment_2}' == 'profile'}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer/profile'}">Profile</a></li>
-        <li {if '{segment_2}' == 'orders' || '{segment_2}' == 'order_detail'}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer/orders'}">Orders</a></li>
-        <li {if '{segment_2}' == 'downloads'}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer/downloads'}">Downloads</a></li>
-  	   	{!--
-  	   		<li {if '{segment_2}' == 'subscriptions'}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer/subscriptions'}">Subscriptions</a></li>
-    	!--}
-    	<li {if '{segment_2}' == 'wishlist'}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer/wishlist'}">Wishlist</a></li>
-    </ul>
-</div> <!-- sidebar -->
+
+	$sql[] = "ALTER TABLE exp_br_order_subscription DROP COLUMN trial_offer";
+	$sql[] = "ALTER TABLE exp_br_order_subscription DROP COLUMN trial_length";
+	$sql[] = "ALTER TABLE exp_br_order_subscription DROP COLUMN	trial_period";

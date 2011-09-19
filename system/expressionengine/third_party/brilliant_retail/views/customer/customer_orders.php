@@ -42,7 +42,7 @@ foreach($order_collection as $order){
 						date('n/d/y',$order["created"]),
 						$order['line_items'],
 						$order["total"],
-						$status[$order["status_id"]]			
+						$order["status"]
 					);
 	$total_value += $order["total"];
 }

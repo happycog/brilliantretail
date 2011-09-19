@@ -44,7 +44,7 @@
                 
 						<div id="b2r_page" class="b2r_category">
 
-                        	<table id="customer_tbl" cellpadding="0" cellspacing="0" class="mainTable">
+                        	<table id="customer_tbl" cellpadding="0" cellspacing="0" class="mainTable" style="clear:both">
 								<thead>
 									<tr>
 										<th style="width:100px"><?=lang('br_customer_username')?></th>

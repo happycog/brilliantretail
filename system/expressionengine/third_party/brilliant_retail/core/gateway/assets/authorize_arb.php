@@ -67,7 +67,8 @@ class AuthnetARB
 
         $subdomain = ($this->test) ? 'apitest' : 'api';
         $this->url = 'https://' . $subdomain . '.authorize.net/xml/v1/request.api';
-
+		exit();
+		
         $this->params['interval_length']  = 1;
         $this->params['interval_unit']    = 'months';
         $this->params['startDate']        = date("Y-m-d", strtotime("+ 1 month"));

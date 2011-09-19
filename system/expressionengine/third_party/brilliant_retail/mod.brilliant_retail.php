@@ -583,8 +583,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$subscription = $product[0]["subscription"][0];
 					$periods = array(
 										1=>strtolower(lang('br_days')),
-										2=>strtolower(lang('br_weeks')),
-										3=>strtolower(lang('br_months')) 
+										2=>strtolower(lang('br_months')) 
 									);
 					$options .= '<div class="subscription_options">';
 					
@@ -1428,41 +1427,34 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// If the order has subscriptions 
 				if(isset($data["payment"]["subscription"])){
 					if(count($data["payment"]["subscription"]) >= 1){
+						
 						// load model 
 							$this->EE->load->model('subscription_model');
 	
 						// create subscription for each record
 							
 							foreach($data["payment"]["subscription"] as $item){
-								// Get all the product information
-									$subProduct = $this->EE->product_model->get_products($item["product_id"]);
+								
 								// Build the input array
-									
-									$unit = ($item["subscription"]["periods"] == 1) ? 'days' : 'months';
+									$unit = ($item["subscription"]["period"] == 1) ? 'days' : 'months';
 									$startDate = date('Y-m-d g:i:s',strtotime("+".$item["subscription"]["length"]." ".$unit));
-									
 									$order_subscription = array(
-																"order_id" 	=> $order_id,
-																"subscription_id" => $subProduct[0]["subscription"][0]["subscription_id"],
-																"code" 		=> $item[4],
-																"status_id" => 1,
-																"product_id" => $item["product_id"],
-																"group_id" => $subProduct[0]["subscription"][0]["group_id"],
-																"cancel_group_id" => $subProduct[0]["subscription"][0]["cancel_group_id"],
-																"length" =>  $item["subscription"]["length"],
-																"period" => $item["subscription"]["periods"],
-																"start_dt" => date('Y-m-d g:i:s'),
-																"end_dt" => "",
-																"trial_offer" => 0,
-																"trial_price" => 0,
-																"trial_length" => 0,
-																"trial_period" => 0,
-																"trial_occur" => 0,
-																"renewal_price" => $item["subtotal"],
-																"next_renewal" => $startDate,
-																"created" => date('Y-m-d g:i:s') 
+																"order_id" 			=> $order_id,
+																"subscription_id" 	=> $item["subscription"]["subscription_id"],
+																"status_id" 		=> 1,
+																"product_id" 		=> $item["product_id"],
+																"group_id" 			=> $item["subscription"]["group_id"],
+																"cancel_group_id" 	=> $item["subscription"]["cancel_group_id"],
+																"length" 			=> $item["subscription"]["length"],
+																"period" 			=> $item["subscription"]["period"],
+																"start_dt" 			=> date('Y-m-d g:i:s'),
+																"trial_price" 		=> $item["subscription"]["trial_price"],
+																"trial_occur" 		=> $item["subscription"]["trial_occur"],
+																"renewal_price" 	=> $item["subscription"]["price"],
+																"next_renewal" 		=> $startDate,
+																"created" 			=> date('Y-m-d g:i:s') 
 															);
-															
+
 								// Insert the records into the order_subscription table
 									$this->EE->subscription_model->create_subscription($order_subscription);
 	
@@ -2346,6 +2338,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Update Count
 		}
 
+		function customer_subscriptions(){
+			
+			$this->EE->load->model('subscription_model');
+			$member_id = $this->EE->session->userdata["member_id"];
+			$subs = $this->EE->subscription_model->get_subscription_by_member($member_id);
+			
+			$vars[0] = array('subscriptions' => $subs);
+			
+			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
+			return $output;
+		}
+
 	/* END CUSTOMER */
 
 		function promo_check_code($inputCode='')
@@ -2432,7 +2436,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$discount = true;
 						// Check category list
 							if(isset($cats)){
-										
 							}
 						// Check against product list			
 							if(isset($prods)){

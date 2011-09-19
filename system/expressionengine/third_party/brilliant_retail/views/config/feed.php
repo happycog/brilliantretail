@@ -47,7 +47,7 @@ if( count($feeds) > 0 )
   foreach($feeds as $f){
   	$this->table->add_row(
   	  array(
-  		  '<a href="'.$base_url.'&method=config_feed_edit&feed_id='.$f['feed_id'].'">'.$f['feed_title'].'</a>',
+  		  '<a href="'.$base_url.'&method=config_feeds_edit&feed_id='.$f['feed_id'].'">'.$f['feed_title'].'</a>',
   			$f['feed_code'],
   			$f['feed_product_count'],							
   		)
@@ -65,7 +65,7 @@ if ( isset($feed_table) && $feed_table != '' )
 else
 {
 ?>
-<p>No product feeds were found. To create your first product feed, <a href="<?= $base_url . AMP . 'method=config_feed_edit' ?>">click here</a>.
+<p>No product feeds were found. To create your first product feed, <a href="<?= $base_url . AMP . 'method=config_feeds_edit' ?>">click here</a>.
 <?php
 }
 ?>

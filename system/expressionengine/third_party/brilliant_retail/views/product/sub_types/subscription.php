@@ -40,8 +40,7 @@ $subscription = $products[0]["subscription"][0];
 						<?php
 							$periods = array(
 											1=>lang('br_days'),
-											2=>lang('br_weeks'),
-											3=>lang('br_months')
+											2=>lang('br_months')
 										);
 							foreach($periods as $key => $val){
 								$sel = ($subscription["period"] == $key) ? 'selected="selected"' : '' ;
