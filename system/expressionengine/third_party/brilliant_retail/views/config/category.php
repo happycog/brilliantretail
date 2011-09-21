@@ -34,6 +34,13 @@
     <input type="hidden" id="new_title" name="title" value="" />
     
 <div id="b2r_page" class="b2r_category">
+   
+    <table id="admin_header" cellpadding="0" cellspacing="0">
+    	<tr>
+			<td>
+    			<p class="b2r_addprod" style="display:none"><a href="#"><img src="<?=$theme?>images/icon_move.png" /></a></p></td>
+		</tr>
+    </table>
     <table class="mainTable" id="category_tbl" cellpadding="0" cellspacing="0">
     	<tbody>
 	    	<tr>
@@ -117,6 +124,7 @@
 				if (this === ui.item.parent()[0]) {
 					var ul_id = ui.item.parent().attr('id');
 					var cat_id = ui.item.parent().attr('level');
+					
 					$('#order').val($('#'+ul_id).sortable('serialize'));
 					$('#action').val('order');
 					$('#add_cat').ajaxSubmit();
