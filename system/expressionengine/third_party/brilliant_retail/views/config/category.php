@@ -151,8 +151,6 @@
 					// deselect current and above
 						for(i=level;i<=3;i++){
 							$('li','#level_'+i).removeClass('tree_selected');
-							$('.cat_action','#level_'+i).hide();
-
 						}
 					
 					// Hide categories above
@@ -165,7 +163,6 @@
 					
 					// Add selection class
 						a.addClass('tree_selected');
-						$(this).find('.cat_action').show();
 					
 					// Show cats and create button
 						$('.cat_'+cat_id+',.add_item','#level_'+next).show();

@@ -466,6 +466,17 @@ table.mainTable th.sorting_disabled {
 	cursor: text;
 } 
 
+table.mainTable th.sorting_asc {
+    background:         transparent url('../images/table_sort_desc.gif') bottom right norepeat;
+    border-left:        1px solid #C60047;
+
+}
+table.mainTable th.sorting_desc {
+    background:         transparent url('../images/table_sort_asc.gif') bottom right norepeat;
+    border-left:        1px solid #C60047;
+
+}
+
 table.subTable {
 	border-left: 1px solid #D0D7DF; 
 }
