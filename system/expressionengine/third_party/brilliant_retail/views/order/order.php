@@ -100,11 +100,11 @@ $content = $this->table->generate();
 		var oTable = $('#order_tbl').dataTable({
 													"iDisplayLength": 25, 
 													"aoColumns": [
+																		{ "asSorting": [ "desc", "asc" ] }, 
 																		null,
 																		null,
 																		null,
-																		null,
-																		{ "bSortable": false }
+																		null
 																	], 
 													"bProcessing": true,
 													"bServerSide": true,

@@ -12,15 +12,7 @@ http://getsatisfaction.com/brilliantretail
 
 # CHANGE LOG # 
 
-1.0.3.5
-* IN PROGRESS - Added category_menu style parameter (default nested)
-* IN PROGRESS - Added category_menu level parameter to adjust the parent category level (default 1)
-* IN PROGRESS - Added category_menu depth parameter to adjust the depth of the nested ul list (default 3)
-* IN PROGRESS - Added donation product type
-* IN PROGRESS - Added Subscription product type
-* IN PROGRESS - Added custom member fields to register form 
-* IN PROGRESS - Added custom member fields to checkout process
-
+1.0.4.0
 * IMPORTANT: Moved cp_theme/brilliant_retail directory to third_party/brilliant_retail 
 * IMPORTANT: Moved css and js files from _assets (parsed) to new js and css folders in media directory
 * Added member based pricing
@@ -32,6 +24,7 @@ http://getsatisfaction.com/brilliantretail
 * Added ajax filter to admin product overview [#0000096]
 * Added ajax filter to admin customer overview [#0000090]
 * Added ajax filter to admin order overview [#0000091]
+* Added a wildcard operator to the end of the search term to better match partials [#0000102] 
 * Added captcha to member register form [#0000089]
 * Added dynamic buckets to price filtering in category layered tag [#0000107]
 * Added confirm_email name to checkout template for server side validation
@@ -61,7 +54,10 @@ http://getsatisfaction.com/brilliantretail
 * Fixed zip code error in Rates Matrix shipping method [#0000076]
 * Fixed an issue with the return parameter from PayPal
 * Fixed a typo in the delete category language entry [#0000082]
+* Fixed currency format issue with option price adjustments
 * Updated admin theme. 
+* Updated order status codes with color styles [#0000100]
+* Updated the default order status in the admin to default display order ID desc [#0000108] 
 * Updated local code directory outside of the brilliant_retail package. [#0000093]
 * Updated all language keys with a "br_" prefix to avoid namespace collisions [#0000083]
 * Updated customer_model get_customers method to include order history total [#0000090]  

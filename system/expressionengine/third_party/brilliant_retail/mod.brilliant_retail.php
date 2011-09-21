@@ -625,7 +625,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									$dir = '-';
 									$amt["price"] = $this->_currency_round(($amt["price"] - abs($price)));
 								}
-								$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].abs($price).')<br />';
+								$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($price)).')<br />';
 							}	
 							$tmp .= $product[0]["options"][$a[2]]["opts"][$val]["title"] . $adjust;
 						}else{

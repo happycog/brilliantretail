@@ -1296,6 +1296,19 @@ table.edit_form td:first-child {
 	width:125px;
 }
 
+table#promoTableEdit div.search {
+	text-align: right;
+	padding: 0 4px 4px 0;
+}
+
+table#promoTableEdit table#product_results td {
+	border-width: 0 0 1px 0;
+}
+
+table#promoTableEdit #product_search {
+	width:70%;
+}
+
 table.b2r_product_tbl tr.even td {
 	background: #EBF0F2; }
 
@@ -1813,8 +1826,7 @@ li.tree_selected {
 }	
 
 .cat_action {
-	display: none;
-	margin-top: 7px;
+	float: right;
 }
 #mainContent .pageContents .cat_action a {
 	color: #1F2B33;
@@ -1952,9 +1964,6 @@ input#delete {
 
 	#order_table td{
 		vertical-align: top;
-		border: 1px #ccc solid;
-		background:#F7F6F2;
-		border-spacing: 0;
 	}
 
 	input.update {
@@ -1995,12 +2004,18 @@ input#delete {
 		width:100px;
 	}
 	
+	#order_table table {
+		background: #F4F6F6;
+		border: 1px #8FA2AD solid;
+	}
+	
 	#order_table table th{
-		padding: 5px 10px;
-		background-color: #ECF2F6;
-		color: #6B7F86;
+		color: #fff;
+		padding: 9px 8px 10px 8px;
 		text-align: left;
-		border-bottom: 1px #CCC solid;
+		border-color: #8FA2AD; 
+		background-image: none;
+		background: #8FA2AD;
 	}
 	#order_table table td{
 		border-spacing: 0;
@@ -2015,8 +2030,7 @@ input#delete {
 	}
 
 	#order_table table tr.odd td {
-		background-color: #fff;
-		border-bottom:1px #ccc solid;
+		background-color: #EBF0F2;
 	}
 
 	#status_text {
@@ -2041,12 +2055,11 @@ input#delete {
 	}          
 
 	#order_note_form {
-		border: 1px #CCC solid;
-		background:#fff;
+		background:#EBF0F2;
 	}
 	
 	#order_note_form table td {
-		background:#fff;
+		background:#EBF0F2;
 	}
 	#order_notes td.order_note {
 		border-bottom: 1px #DDD solid;
@@ -2058,7 +2071,14 @@ input#delete {
 		margin-top: 5px;
 		display: block;
 	}
-	
+
+	span.order_status_0 { color: #990000; }
+	span.order_status_1 { color: #009900; }
+	span.order_status_2 { color: #CD6E00; }
+	span.order_status_3 { color: #CD6E00; }
+	span.order_status_4 { color: #CD6E00; }
+	span.order_status_5 { }
+
 /* End Orders */
 
 /* Dashboard 2 */

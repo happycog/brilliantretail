@@ -90,7 +90,7 @@ class Gateway_brilliantretail extends Brilliant_retail_gateway {
 		}else{
 				$details = array(
 							"Method" => "PayLeap",
-							"Approval Code" => $responseArray['reference']
+							"Approval Code" => $responseArray['PNRef']
 						);
 
 		// Return the trans details 

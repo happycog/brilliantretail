@@ -81,7 +81,7 @@
                             	<table id="order_table" width="100%" cellpadding="0" cellspacing="15">
                             		<tr>
                             			<td width="50%">
-                            				<table width="100%" cellpadding="0" cellspacing="0">
+                            				<table width="100%" class="subOrder" cellpadding="0" cellspacing="0">
                             					<tr>
                             						<th>
                             							<?=lang('br_ship_to')?></th>
@@ -99,7 +99,7 @@
                             					</tr>
                             				</table></td>
                             			<td width="50%">
-                            				<table width="100%" class="subTable" cellpadding="0" cellspacing="0">
+                            				<table width="100%" class="subOrder" cellpadding="0" cellspacing="0">
                             					<tr>
                             						<th>
                             							<?=lang('br_bill_to')?></th>
@@ -156,18 +156,18 @@
 												?>
 
 												<tr>
-													<th colspan="3" style="text-align:right">
-														<?=lang('br_subtotal')?> :<br />
-														<?=lang('br_discount')?> :<br />
-														<?=lang('br_shipping')?> :<br />
-														<?=lang('br_tax')?> :<br />
-														<?=lang('br_total')?> :</th>
-													<th>
+													<td colspan="3" style="text-align:right">
+														<b><?=lang('br_subtotal')?> :</b><br />
+														<b><?=lang('br_discount')?> :</b><br />
+														<b><?=lang('br_shipping')?> :</b><br />
+														<b><?=lang('br_tax')?> :</b><br />
+														<b><?=lang('br_total')?> :</b></td>
+													<td>
 														<?=$currency_marker?><?=$order["base"]?><br />
 														<?=$currency_marker?><?=$order["discount"]?><br />
 														<?=$currency_marker?><?=$order["shipping"]?><br />
 			                            				<?=$currency_marker?><?=$order["tax"]?><br />
-			                            				<?=$currency_marker?><?=number_format(($order["total"]+$order["tax"]+$order["shipping"]),2)?></th>
+			                            				<?=$currency_marker?><?=number_format(($order["total"]+$order["tax"]+$order["shipping"]),2)?></td>
 												</tr>
                             				</table></td>
                             		</tr>
@@ -222,24 +222,24 @@
                             							<?php
                             								echo form_open_multipart('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_add_note',array('method' => 'POST', 'id' => 'noteForm'),$hidden);
 														?>
-                            							<table width="100%"> 
+                            							<table width="100%" cellpadding="0" cellspacing="0"> 
                             								<tr>
                             									<td>
-                            										<?=lang('br_order_note')?></td>
+                            										<b><?=lang('br_order_note')?></b></td>
                             									<td>
 																		<textarea name="order_note"></textarea>
                             									</td>
                             								</tr>
                             								<tr>
                             									<td>
-                            										<?=lang('br_order_note_file')?></td>
+                            										<b><?=lang('br_order_note_file')?></b></td>
                             									<td>
 																		<input type="file" name="order_note_file" />
                             									</td>
                             								</tr>
                             								<tr>
                             									<td>
-                            										<?=lang('br_note_notify')?></td>
+                            										<b><?=lang('br_note_notify')?></b></td>
                             									<td>
 																	<input type="checkbox" name="order_note_notify" />
 																</td>
@@ -261,20 +261,23 @@
                             						<td>
                             							<table width="100%" id="order_notes" cellspacing="0">
                             					<?php
+                            						$i = 0;
                             						foreach($order["notes"] as $n){ 
                             							if(isset($n["order_note"])){
+	                            							$class = ($i % 2 == 0) ? 'even' : 'odd';
 	                            							$note = $n["order_note"];
 	                            							if($n["filenm"] != ''){
 	                            								$note .= '<br /><a href="/media/attachments/'.$n["filenm"].'" target="_blank">'.lang('br_attachment').'</a>';
 	                            							}
-	                            							echo '	<tr>
-	                            										<td class="order_note">
+	                            							echo '	<tr class="'.$class.'">
+	                            										<td width="20%">
 	                            											'.date('n/d/y g:i:s a',$n["created"]).'</td>
-	                            										<td class="order_note">
+	                            										<td width="*">
 	                            											'.$note.'</td>
-	                            										<td class="order_note">
+	                            										<td width="10%">
 	                            											<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'">'.lang('delete').'</a></td>
 	                            									</tr>';
+	                            							$i++;
 														}
                             						}
                             					?>

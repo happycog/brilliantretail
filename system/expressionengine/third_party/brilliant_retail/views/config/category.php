@@ -34,11 +34,11 @@
     <input type="hidden" id="new_title" name="title" value="" />
     
 <div id="b2r_page" class="b2r_category">
+   
     <table id="admin_header" cellpadding="0" cellspacing="0">
     	<tr>
 			<td>
-    			<p class="b2r_addprod" style="display:none"><a href="#"><?=lang('br_edit')?></a></p>
-				</td>
+    			<p class="b2r_addprod" style="display:none"><a href="#"><img src="<?=$theme?>images/icon_move.png" /></a></p></td>
 		</tr>
     </table>
     <table class="mainTable" id="category_tbl" cellpadding="0" cellspacing="0">
@@ -66,8 +66,9 @@
 											foreach($key as $val){
 												$state = ($val["enabled"] == 0 ) ? 'disabled' : '';
 												echo '	<li id="cat_'.$val["category_id"].'" class="cat_'.$val["parent_id"].' '.$state.'">
-															<img src="'.$theme.'/images/icon_move.png" class="cat_handle"><span>'.$val["title"].'</span>
-															<div class="cat_action"><a href="'.str_replace("&amp;","&",BASE).'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='.$val["category_id"].'">'.lang('edit').'</a></div>
+															<img src="'.$theme.'images/icon_move.png" class="cat_handle">
+															<div class="cat_action"><a href="'.str_replace("&amp;","&",BASE).'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='.$val["category_id"].'"><img src="'.$theme.'images/icon_edit.png" /></a></div>
+															<span>'.$val["title"].'</span>
 														</li>';
 											}
 										}
@@ -119,7 +120,6 @@
 			axis: 'y',
 			placeholder: 'ui-state-active',
 			handle: '.cat_handle', 
-			/* distance: 10, REMOVED causing issues in Safari and Chrome */
 			update: function(event, ui){
 				if (this === ui.item.parent()[0]) {
 					var ul_id = ui.item.parent().attr('id');
@@ -201,8 +201,7 @@
 		$('#add_cat').ajaxSubmit({
 										beforeSubmit:  _block_ui,
 										success: function(data){
-								        	$('<li id="cat_'+data+'" class="cat_'+$('#parent_id').val()+'"><img src="<?=$theme?>images/icon_move.png" class="cat_handle"><span>'+cat_nm+'</span>'+
-								        		'<div class="cat_action"><a href="<?=str_replace("&amp;","&",BASE)?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='+data+'"><?=lang('edit')?></a></div></li>').insertAfter(where);
+								        	$('<li id="cat_'+data+'" class="cat_'+$('#parent_id').val()+'"><img src="<?=$theme?>images/icon_move.png" class="cat_handle"><div class="cat_action"><a href="<?=str_replace("&amp;","&",BASE)?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='+data+'"><img src="<?=$theme?>images/icon_edit.png" /></a></div><span>'+cat_nm+'</span></li>').insertAfter(where);
 								        	$.unblockUI();
 								        	_bind_cat_sort();
 											_bind_cat_click();

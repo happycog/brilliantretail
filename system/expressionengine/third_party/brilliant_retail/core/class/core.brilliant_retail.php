@@ -439,7 +439,7 @@ class Brilliant_retail_core {
 								$val = '';
 								if($o["price"] != 0){
 									$dir = ($o["price"] > 0) ? '+' : '-';
-									$val = ' ('.$dir.' '.$this->_config["currency_marker"].abs($o["price"]).')';
+									$val = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($o["price"])).')';
 								}	
 								$options[] = $j.':'.$o["title"].$val;
 								$j++;

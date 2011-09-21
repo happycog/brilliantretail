@@ -2854,6 +2854,11 @@ text-align: right;
 	background: url(../images/bg_btn02.jpg) 0 0 repeat-x;
 	border: 1px solid #ccc; }
 
+#product .right #details .wishlist {
+	padding-top: 15px;
+	font-size: 12px;
+}
+
 #product .right #details .inpbtn {
 	background: transparent;
 	color: #0066CC;

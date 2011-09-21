@@ -234,11 +234,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// Build the row array 
 				foreach ($orders["results"] as $row){
+						$status = $this->_config["status"][$row["status_id"]];
 						$order[] = array('	<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$row["order_id"].'">'.$row["order_id"].'</a>', 
 											date('n/d/y',$row["created"]),
 											'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
 											$row["total"],
-											 $this->_config["status"][$row["status_id"]],
+											'<span class="order_status_'.$row["status_id"].'">'.$status.'</span>'
+											,
 											array('data' => '<input type="checkbox" name="batch['.$row["order_id"].']" />', 'style' => 'text-align:center')
 									);
 				}

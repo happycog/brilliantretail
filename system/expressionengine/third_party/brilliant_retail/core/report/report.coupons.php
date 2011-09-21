@@ -65,7 +65,7 @@ class Report_coupons extends Brilliant_retail_report {
 
 		// Header row 
 			
-			$header = array(lang('order_id'),lang('date'),lang('base'),lang('tax'),lang('shipping'),lang('total'),lang('discount'),lang('coupon'));
+			$header = array(lang('br_order_id'),lang('br_date'),lang('br_base'),lang('br_tax'),lang('br_shipping'),lang('br_total'),lang('br_discount'),lang('br_coupon'));
 	
 		// Results array 	
 			$base = 0;

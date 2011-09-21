@@ -72,7 +72,7 @@ class Report_low_stock extends Brilliant_retail_report {
 		//print_r($products);
 		//exit;
 
-		$header = array(lang('order_id'),lang('product_title'),lang('sku'),lang('qty'));
+		$header = array(lang('br_order_id'),lang('br_product_title'),lang('br_sku'),lang('br_qty'));
 		
 		// Results array 	
 			$result = array();

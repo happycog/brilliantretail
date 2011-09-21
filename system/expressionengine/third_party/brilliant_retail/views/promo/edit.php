@@ -177,7 +177,7 @@
 						<br />
 						<div id="product_opts" style="border:1px #ccc solid;background:#fff;padding: 15px;margin-top:10px;<?=$showProd?>">
 							<div class="search">
-								<?=lang('br_search')?>
+								<?=lang('search')?>
 								<input type="text" id="product_search">
 							</div>
 							<h4><?=lang('br_add_products')?></h4>
@@ -254,12 +254,11 @@
 											if($promo[0]["promo_id"] != 0){
 										?>
 												<?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?>
-												<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'delete'))?>
+												<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
 										<?php
 											}
 										?>
-										<p class="b2r_cancel"><a href="<?=$base_url.'&method=promo'?>"><?= lang('br_cancel'); ?></a></p>
-								    	<div class="b2r_clearboth"><!-- --></div>
+										<div class="b2r_clearboth"><!-- --></div>
 								    </div>
 
 								

@@ -66,7 +66,7 @@ class Report_sales extends Brilliant_retail_report {
 		// Header row 
 			
 			$header = array(lang('br_order_id'),
-							lang('date'),
+							lang('br_date'),
 							lang('br_base'),
 							lang('br_tax'),
 							lang('br_shipping'),

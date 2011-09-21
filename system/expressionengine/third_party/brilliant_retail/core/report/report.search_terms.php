@@ -64,7 +64,7 @@ class Report_search_terms extends Brilliant_retail_report {
 		
 		// Header row 
 			
-		$header = array(lang('customer_email'),lang('search_phrase'),lang('products_found'),lang('search_created'));
+		$header = array(lang('br_customer_email'),lang('br_search_phrase'),lang('br_products_found'),lang('br_search_created'));
 	
 		// Results array 	
 			$base = 0;
