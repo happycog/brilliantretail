@@ -1268,6 +1268,20 @@ table.b2r_product_tbl th.sorting_desc {
 	background: url(../images/arrow_sort_desc.png) repeat-x 2px 50% #ECF2F6;
 }
 
+
+table.mainTable th.sorting_asc {
+    background:         transparent url('../images/table_sort_desc.gif') bottom right no-repeat;
+    border-left:        1px solid #C60047;
+
+}
+
+table.mainTable th.sorting_desc {
+    background:         transparent url('../images/table_sort_asc.gif') bottom right no-repeat;
+    border-left:        1px solid #C60047;
+
+}
+
+
 table.b2r_product_tbl td {
 	margin: 0;
 	padding: 12px 8px;
