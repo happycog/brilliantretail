@@ -3,11 +3,10 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		Brilliant2.com 								*/
-/* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
+/*	@Author		David Dexter 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
-/* 	@since		Version 1.0.0 Beta							*/
 /*															*/
 /************************************************************/
 /* NOTICE													*/
@@ -22,11 +21,12 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-	echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_update',
-					array(	'method' 	=> 'POST', 
-							'id' 		=> 'add_cat',
-							'class' 	=> '', 
-							'encrypt' 	=> 'multipart/form-data'));
+
+echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_update',
+				array(	'method' 	=> 'POST', 
+						'id' 		=> 'add_cat',
+						'class' 	=> '', 
+						'encrypt' 	=> 'multipart/form-data'));
 ?>
     <input type="hidden" id="action" name="action" value="create" />
     <input type="hidden" id="order" name="order" />

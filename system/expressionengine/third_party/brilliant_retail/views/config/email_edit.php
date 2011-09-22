@@ -3,11 +3,10 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		Brilliant2.com 								*/
-/* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
+/*	@Author		David Dexter 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
-/* 	@since		Version 1.0.0 Beta							*/
 /*															*/
 /************************************************************/
 /* NOTICE													*/
@@ -22,14 +21,13 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-?>
-<?php
-	echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_email_update',
-					array(	'method' 	=> 'POST', 
-							'id' 		=> 'email_edit',
-							'class' 	=> 'b2r_category', 
-							'encrypt' 	=> 'multipart/form-data'),
-					array(	'email_id' => $email["email_id"]));
+
+echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_email_update',
+				array(	'method' 	=> 'POST', 
+						'id' 		=> 'email_edit',
+						'class' 	=> 'b2r_category', 
+						'encrypt' 	=> 'multipart/form-data'),
+				array(	'email_id' => $email["email_id"]));
 ?>
 <div id="b2r_page" class="b2r_category">
 	<table id="attribute_tbl" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">

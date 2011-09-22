@@ -8,11 +8,10 @@ session_start($sid);
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		Brilliant2.com 								*/
+/*	@Author		David Dexter 								*/
 /* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
-/* 	@since		Version 1.0.2.4 							*/
 /*															*/
 /************************************************************/
 /* NOTICE													*/

@@ -9,11 +9,10 @@ session_start();
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		Brilliant2.com 								*/
-/* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
+/*	@Author		David Dexter 								*/
+/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
-/* 	@since		Version 1.0.0 Beta							*/
 /*															*/
 /************************************************************/
 /* NOTICE													*/
@@ -39,7 +38,6 @@ class Brilliant_retail_core {
 	
 	public $_config = array();
 	public $iste_id = '';
-	
 	private $cat_tree 	= 0;
 	private $cat = array();
 	private $cat_count = 0;
@@ -1137,9 +1135,6 @@ class Brilliant_retail_core {
 						'range' => $range,
 						'bucket' => $bucket
 					);
-		// Set to session variable so its available to filter 
-			$_SESSION[$hash]["price_filter"] = $arr;
-
 		return $arr;
 	}
 	
@@ -1218,7 +1213,7 @@ class Brilliant_retail_core {
 		// Include the prices unless disabled
 			if(!in_array('price',$disable)){
 				// Set the price ranges
-					#if(!isset($_SESSION[$hash]["range"])){
+					if(!isset($_SESSION[$hash]["range"])){
 						if(isset($prices)){
 							$price = $this->_price_range($prices,$hash);
 							#if(count($price["bucket"]) > 1){
@@ -1247,7 +1242,7 @@ class Brilliant_retail_core {
 												);	
 							#}
 						}
-					#}
+					}
 			}
 
 		// Attributes 
@@ -1529,8 +1524,14 @@ class Brilliant_retail_core {
 				$_SESSION[$hash]["range"] = $sel;
 			}
 			if(isset($_SESSION[$hash]["range"])){
-				$lower = $_SESSION[$hash]["range"] * $_SESSION[$hash]["price_filter"]["range"];
-				$upper = ($_SESSION[$hash]["range"] * $_SESSION[$hash]["price_filter"]["range"]) + $_SESSION[$hash]["price_filter"]["range"];
+				foreach($vars[0]["results"] as $p){
+					$amt = $this->_check_product_price($p);
+					$prices[] = $amt["price"];
+				}				
+				$price = $this->_price_range($prices,$hash);
+
+				$lower = $_SESSION[$hash]["range"] * $price["range"];
+				$upper = ($_SESSION[$hash]["range"] * $price["range"]) + $price["range"];
 				$i=0;
 				$tmp = array();
 				foreach($vars[0]["results"] as $r){
