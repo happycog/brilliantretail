@@ -107,6 +107,7 @@ hr {
 }
 
 #b2r_top #b2r_status p#b2r_status_alert {
+	float: left;
 	margin: 0;
 	padding: 0 15px 0 0;
 	min-width: 200px;
@@ -114,7 +115,7 @@ hr {
 	font-size: 15px;
 	color: #FF0000;
 	line-height: 31px;
-	background: url(../images/map01.gif) 0 0 no-repeat; 
+	background: url(../images/map01.gif) 0 0 no-repeat;
 }
 
 
@@ -954,8 +955,7 @@ div#error p{
 .add_btn, 
 #configurableCreate, 
 #optionSelect, 
-#optionCancel,
-#report_submit {
+#optionCancel {
 	cursor: pointer;
 	text-align:center;
 	background:url("../images/bg_btn.png") repeat-x scroll 0 0 transparent;
@@ -983,9 +983,24 @@ div#error p{
 	width:400px;
 	background-color: #F7F6F2; 
 	margin: 10px 0;
-	padding: 20px;
+	padding: 10px 20px 15px;
 	border:1px solid #E4E4E1;
 }
+#b2r_settings .b2r_category table td 
+#report_inputs label {
+	display: block;
+	margin: 5px 0;
+}
+#b2r_settings .b2r_category table td 
+#report_inputs .datepicker {
+	width: 25%;
+}
+
+#b2r_settings .b2r_category table td 
+#report_inputs #report_submit {
+	margin-top: 10px;
+}
+
 #report_range {
 	color:#37444D;
 	float:left;

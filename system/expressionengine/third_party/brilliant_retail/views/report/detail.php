@@ -74,7 +74,7 @@
 										<div class="b2r_clearboth"><!-- --></div>
                             			<div id="report_inputs">
 											<?=$input?>
-											<input type="submit" id="report_submit" name="submit" value="<?=lang('submit')?>" />
+											<input type="submit" class="submit" id="report_submit" name="submit" value="<?=lang('submit')?>" />
 											<div class="b2r_clearboth"><!-- --></div>
 										</div></td>
 								</tr>

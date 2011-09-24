@@ -41,7 +41,7 @@ class Report_customer_downloads extends Brilliant_retail_report {
 		//		category - a category tree field 
 		// 		member_group - a member group drop down field
 		
-		$input[] = array('date','Select Date','date_range');
+		$input[] = array('date','br_select_date','date_range');
 
 		// If there are values in the post array 
 		// we can use them
@@ -63,7 +63,7 @@ class Report_customer_downloads extends Brilliant_retail_report {
 
 		// Header row 
 			
-			$header = array(lang('order_id'),lang('customer_email'),lang('date'),lang('download_count'));
+			$header = array(lang('br_order_id'),lang('br_customer_email'),lang('br_date'),lang('br_download_count'));
 	
 		// Results array 	
 			$base = 0;

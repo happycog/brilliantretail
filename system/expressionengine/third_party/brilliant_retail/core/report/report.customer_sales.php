@@ -62,7 +62,7 @@ class Report_customer_sales extends Brilliant_retail_report {
 		$orders =  $this->EE->order_model->get_order_collection($range["start"],$range["end"]);
 		// Header row 
 			
-			$header = array(lang('order_id'),lang('customer_email'),lang('date'),lang('base'),lang('tax'),lang('shipping'),lang('discount'),lang('total'));
+			$header = array(lang('br_order_id'),lang('br_customer_email'),lang('br_date'),lang('br_base'),lang('br_tax'),lang('br_shipping'),lang('br_discount'),lang('br_total'));
 	
 		// Results array 	
 			$base = 0;
@@ -121,7 +121,7 @@ class Report_customer_sales extends Brilliant_retail_report {
 
 		$footer = array(
 							'',
-							strtoupper(lang('order_totals')),
+							strtoupper(lang('br_order_totals')),
 							'',
 							$this->_currency_round($base),
 							$this->_currency_round($tax),

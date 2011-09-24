@@ -2832,7 +2832,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				// Do we hide the custom date fields?
 					$class = ($range != 'custom') ? 'nodisplay' : '';
 				
-				$str .= '	<label>'.$in[1].'</label><br />
+				$str .= '	<label>'.lang($in[1]).'</label>
 							<select name="'.$in[2].'" id="'.$in[2].'">';
 							
 					// Check for a selection in the post (i.e. $range) 
@@ -2841,7 +2841,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					
 					foreach($options as $opt){
 						$sel = ($opt == $range) ? 'selected' : '' ;
-						$str .= '<option value="'.$opt.'" '.$sel.'>'.lang($opt).'</option>';
+						$str .= '<option value="'.$opt.'" '.$sel.'>'.lang('br_'.$opt).'</option>';
 					}
 
 				$str .= '	</select>
