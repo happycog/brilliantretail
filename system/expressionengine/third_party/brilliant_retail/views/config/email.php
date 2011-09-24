@@ -37,7 +37,7 @@
 		    	foreach($emails as $e){
 					echo '	<tr>
 					        	<td>
-					        		<a href="'.$base_url.AMP.'method=config_email_edit&email_id='.$e["email_id"].'">'.lang($e["title"]).'</a></td>
+					        		<a href="'.$base_url.AMP.'method=config_email_edit&email_id='.$e["email_id"].'">'.lang('br_'.$e["title"]).'</a></td>
 					        	<td>
 					        		'.$e["version"].'</td>
 					    	</tr>';

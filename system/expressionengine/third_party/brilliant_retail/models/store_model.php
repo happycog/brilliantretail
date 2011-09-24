@@ -25,14 +25,19 @@
 class Store_model extends CI_Model {
 
 	function get_store_list(){
-		$this->db->from('sites');
-		$this->db->join('br_store', 'br_store.site_id = sites.site_id');
-		$query = $this->db->get();
-		$row = array();
-		$i=0;
-		foreach($query->result_array() as $row){
-			$site[$i] = $row;
-			$i++;
+		if (isset($this->session->cache['get_store_list'])){
+			$site = $this->session->cache['get_store_list'];
+		}else{
+			$this->db->from('sites');
+			$this->db->join('br_store', 'br_store.site_id = sites.site_id');
+			$query = $this->db->get();
+			$row = array();
+			$i=0;
+			foreach($query->result_array() as $row){
+				$site[$i] = $row;
+				$i++;
+			}
+			$this->session->cache['get_store_list'] = $site;
 		}
 		return $site;
 	}
@@ -54,11 +59,17 @@ class Store_model extends CI_Model {
 	}
 	
 	function get_store_by_id($site_id){
-		$this->db->from('sites');
-		$this->db->join('br_store', 'br_store.site_id = sites.site_id');
-		$this->db->where('br_store.site_id',$site_id);
-		$query = $this->db->get();
-		$site = $query->result_array();
+		if (isset($this->session->cache['get_store_by_id'][$site_id])){
+			$site = $this->session->cache['get_store_by_id'][$site_id];
+		}else{
+			$this->db->from('sites');
+			$this->db->join('br_store', 'br_store.site_id = sites.site_id');
+			$this->db->where('br_store.site_id',$site_id);
+			$query = $this->db->get();
+			$site = $query->result_array();
+
+			$this->session->cache['get_store_by_id'][$site_id] = $site;
+		}
 		return $site;
 	}
 	

@@ -60,7 +60,6 @@ class Report_customer_sales extends Brilliant_retail_report {
 		
 		$this->EE->load->model('order_model');
 		$orders =  $this->EE->order_model->get_order_collection($range["start"],$range["end"]);
-
 		// Header row 
 			
 			$header = array(lang('order_id'),lang('customer_email'),lang('date'),lang('base'),lang('tax'),lang('shipping'),lang('discount'),lang('total'));
@@ -73,7 +72,7 @@ class Report_customer_sales extends Brilliant_retail_report {
 			$discount = 0;
 			$result = array();
 			
-			if(count($orders) == 0){
+			if(count($orders["results"]) == 0){
 				$result = array();
 				$graph = '';
 			}else{
@@ -81,13 +80,13 @@ class Report_customer_sales extends Brilliant_retail_report {
 				$graph = "";
 			}
 		
-			foreach($orders as $row){
+			foreach($orders["results"] as $row){
 				// only add orders if they are not canceled
 				if($row["status_id"] >= 1){
 					$row_total = ($row["total"] + $row["tax"] + $row["shipping"]);
 					$result[] = array(
 										$row['order_id'],
-										"<strong>".$row["email"]."</strong>",
+										"<strong>".$row["customer"]."</strong>",
 										date("m/d/Y",$row["created"]),
 										$this->_currency_round($row["base"]),
 										$this->_currency_round($row["tax"]),

@@ -196,7 +196,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 		
 			// List up to 6 orders on the bottom
-				$orders = $this->EE->order_model->get_order_collection('','',6);
+				$orders = $this->EE->order_model->get_order_collection('','',6,'',0,0,'desc');
 				$i = 0;
 				foreach($orders["results"] as $s){
 					$orders["results"][$i]["total"] = $this->_currency_round($orders["results"][$i]["total"]);

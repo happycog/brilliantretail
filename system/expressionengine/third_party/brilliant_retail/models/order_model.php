@@ -97,16 +97,22 @@ class Order_model extends CI_Model {
 		return $order;
 	}
 	function get_order_collection($start_date='',$end_date='',$limit=0,$search='',$offset=0,$sort=0,$dir='',$prefix='exp_'){
-				// Get a simple count of all products
-			$sql = "SELECT 
-						count(order_id) as cnt 
-					FROM 
-						".$prefix."br_order 
-					WHERE 
-						status_id >= 0";
-			$query = $this->db->query($sql);
-			$rst = $query->result_array();
-			$total = $rst[0]["cnt"];
+		
+		// 
+			if (isset($this->session->cache['get_order_collection'])){
+				$total = $this->session->cache['get_order_collection'];
+			}else{
+				$sql = "SELECT 
+							count(order_id) as cnt 
+						FROM 
+							".$prefix."br_order 
+						WHERE 
+							status_id >= 0";
+				$query = $this->db->query($sql);
+				$rst = $query->result_array();
+				$total = $rst[0]["cnt"];
+				$this->session->cache['get_order_collection'] = $total;
+			}
 		
 		
 			// Get the field_id for br_fname
