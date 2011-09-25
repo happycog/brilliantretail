@@ -1879,6 +1879,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$this->vars['cp_page_title'] = lang('br_config_feeds');
 			
+			$this->EE->cp->set_right_nav(array(
+				'br_new_config_feeds' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_feeds_edit'
+			));	
+			
 			$this->vars["selected"]     = 'config';
 			$this->vars["sub_selected"] = 'config_feeds';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();

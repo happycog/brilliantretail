@@ -27,6 +27,7 @@ http://getsatisfaction.com/brilliantretail
 * Added a wildcard operator to the end of the search term to better match partials [#0000102] 
 * Added captcha to member register form [#0000089]
 * Added dynamic buckets to price filtering in category layered tag [#0000107]
+* Added member_member_register hook to registration and checkout [#0000110]
 * Added confirm_email name to checkout template for server side validation
 * Added additional member_id database index to order table. 
 * Added product_count variable to catalog results tag pair 
@@ -43,7 +44,8 @@ http://getsatisfaction.com/brilliantretail
 * Fixed customer_order tag to include tax, shipping and discounts in total tag
 * Fixed customer orders in admin include tax, shipping and discounts in total tag
 * Fixed dashboard recent order totals to include include tax, shipping and discounts
-* Fixed dashboard sales report when order totals are equal to zero
+* Fixed dashboard sales report when order totals are equal to zero.
+* Fixed issue with product category sorting being reset after saving product edits [#0000109]
 * Fixed issue with attr:code tags when value was not present in EE 2.2 [#0000071]
 * Fixed base path issue with BrilliantRetail FieldType. Now uses config->item() value 
 * Fixed bug in show_js parameter for checkout_form and customer_profile tags
@@ -57,6 +59,7 @@ http://getsatisfaction.com/brilliantretail
 * Fixed currency format issue with option price adjustments
 * Updated admin theme. 
 * Updated order status codes with color styles [#0000100]
+* Updated the customer order detail theme with notes attachment code [#0000088]
 * Updated the default order status in the admin to default display order ID desc [#0000108] 
 * Updated local code directory outside of the brilliant_retail package. [#0000093]
 * Updated all language keys with a "br_" prefix to avoid namespace collisions [#0000083]

@@ -188,7 +188,10 @@
 									<td width="25%">
 										{order_created format="%n/%d/%y %g:%i:%s %a"}</td>
 									<td width="75%">
-										{order_note}</td>
+										{order_note}<br />
+										{if '{filenm}' != ''}
+											<a href="/media/attachments/{filenm}" target="_blank">{filenm}</a>
+										{/if}</td>
 								</tr>
 							{/notes}
         				</table></td> 

@@ -72,7 +72,7 @@
                     {
                       $hidden['feed_id'] = $feed['feed_id'];
                     }
-                  	echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_feed_edit',
+                  	echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_feeds_edit',
           					  array(	
           					    'method'  => 'POST', 
                     		'id' 		  => 'feed_edit',
@@ -89,7 +89,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
+					<tr class="odd">
 						<td class="cell_1" width="10%"><?=lang('br_title')?> *</td>
 						<td class="cell_2">
 							<?= form_input('feed_title', set_value( 'feed_title', isset($feed['feed_title']) ? $feed['feed_title'] : ''), 'class="{required:true}"') ?>
@@ -110,7 +110,7 @@
 					<?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
 					<?php 
 						if(isset($feed['feed_id']) && $feed['feed_id'] != ''){
-							form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'delete'));
+							echo form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'));
 						}
 					?>
 					<div class="b2r_clearboth"><!-- --></div>

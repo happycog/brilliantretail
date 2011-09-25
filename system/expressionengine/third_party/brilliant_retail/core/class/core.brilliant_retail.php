@@ -100,8 +100,8 @@ class Brilliant_retail_core {
 														3 => lang('br_configurable'),
 														7 => lang('br_donation'),
 														4 => lang('br_downloadable'),
-														5 => lang('br_virtual')
-														#,6 => lang('br_subscription') 
+														5 => lang('br_virtual'), 
+														6 => lang('br_subscription') 
 													);
 										
 												

@@ -722,17 +722,29 @@ class Product_model extends CI_Model {
 				}
 					
 			// Update Categories
-				$this->db->delete('br_product_category', array(	'site_id' => $this->config->item('site_id'),
-																'product_id' => $product_id)); 
-				foreach($category as $c){
-					$data = array(	
-						'site_id' => $this->config->item('site_id'),
-						'category_id' => $c, 
-						'product_id' => $product_id
-					);
-					$this->db->insert('br_product_category',$data);
-				}
-			
+				// Need to get the current order before deleting so we maintain order
+					$this->db->from('br_product_category')->where('product_id',$product_id);
+					$query = $this->db->get();
+					$cats = array();
+					foreach ($query->result_array() as $row){
+						$cats[$row["category_id"]] = $row["sort_order"];
+					}
+
+				// Remove the current entries
+					$this->db->delete('br_product_category', array(	'site_id' => $this->config->item('site_id'),
+																	'product_id' => $product_id)); 
+				// Put them all in
+					foreach($category as $c){
+						$sort = isset($cats[$c]) ? $cats[$c] : 0;  
+						$data = array(	
+							'site_id' 		=> $this->config->item('site_id'),
+							'category_id' 	=> $c, 
+							'product_id' 	=> $product_id,
+							'sort_order' 	=> $sort
+						);
+						$this->db->insert('br_product_category',$data);
+					}
+				
 			// If its a bundle
 				if(isset($bundle)){
 					$this->db->delete('br_product_bundle', array('parent_id' => $product_id)); 
