@@ -3,7 +3,7 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		Brilliant2.com 								*/
+/*	@Author		David Dexter 								*/
 /* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
@@ -22,5 +22,17 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-// Clean up subscription_price table if it is still in existence
-	$sql[] = "DROP TABLE IF EXISTS exp_br_product_subscription_price";
+// Clean up the product_subscription table
+	$sql[] = "ALTER TABLE exp_br_product_subscription DROP COLUMN trial_offer";
+	$sql[] = "ALTER TABLE exp_br_product_subscription DROP COLUMN trial_length";
+	$sql[] = "ALTER TABLE exp_br_product_subscription DROP COLUMN trial_period";
+	
+// Create the associated donation product table
+	$sql[] = "DROP TABLE IF EXISTS exp_br_product_donation";
+	$sql[] = "CREATE TABLE exp_br_product_donation (
+					donation_id int(11) NOT NULL AUTO_INCREMENT,
+					product_id int(11) NOT NULL,
+					allow_recurring int(11) NOT NULL DEFAULT '0',
+					min_donation float NOT NULL DEFAULT '10',
+					PRIMARY KEY (donation_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";

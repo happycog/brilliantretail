@@ -252,7 +252,7 @@ $lang = array(
 			'br_trial_offer' 	=> 'Offer Trial',
 			'br_trial_price' 	=> 'Trial Price',
 			'br_trial_length' 	=> 'Trial Length',
-			'br_trial_occur' 	=> 'Trial Occurences',
+			'br_trial_occur' 	=> 'Trial Occurrences',
 			'br_length'			=> 'Length', 
 			'br_periods'		=> 'Periods', 
 			'br_percent_discount' => 'Percentage Discount', 
@@ -262,6 +262,12 @@ $lang = array(
 			'br_cancel_subscription' => 'Cancel After',
 			'br_cancel_group' => 'Cancel To Group',
 		
+		// Donations 
+			'br_donation_opt_title' 		=> 'Donation Options',
+			'br_min_donation' 				=> 'Minimum Donation',
+			'br_allow_recurring'			=> 'Allow Recurring',
+			'br_donation_instructions'		=> '* Automatically creates a subscription',
+			
 		// Download 
 			'br_download_file_required' => 'A downloadable file',
 	

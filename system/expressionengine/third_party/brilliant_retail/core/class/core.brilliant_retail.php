@@ -98,12 +98,17 @@ class Brilliant_retail_core {
 														1 => lang('br_basic'),
 														2 => lang('br_bundle'),
 														3 => lang('br_configurable'),
-														7 => lang('br_donation'),
 														4 => lang('br_downloadable'),
 														5 => lang('br_virtual'), 
-														6 => lang('br_subscription') 
 													);
-										
+
+			// Add some additional $this->_config["donation_enabled"]=>
+				if($this->_config["store"][$this->site_id]["subscription_enabled"] == 1){
+					$this->_config['product_type'][6] = lang('br_subscription');
+				}
+				if($this->_config["store"][$this->site_id]["donation_enabled"] == 1){
+					$this->_config['product_type'][7] = lang('br_donation');
+				}
 												
 		// Check the license
 			$lic = $this->_config["store"][$this->site_id]["license"];
@@ -135,6 +140,7 @@ class Brilliant_retail_core {
 		// can use in all of our view files
 			$this->vars["currency_marker"] = $this->_config["currency_marker"];
 	}
+	
 	
 	// Check if there is enough inventory in stock for the item
 	// thats in the cart - just in case it's been sold/removed.

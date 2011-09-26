@@ -314,8 +314,7 @@ class Order_model extends CI_Model {
 		}
 		return $products;
 	}
-	
-	
+
 	function get_order_by_member($member_id,$order_id=''){
 		$orders = array();
 		$this->db->from('br_order')
@@ -472,5 +471,4 @@ class Order_model extends CI_Model {
 		$row[0]["order_id"] = $item["order_id"];
 		return $row[0];
 	}
-	
 }

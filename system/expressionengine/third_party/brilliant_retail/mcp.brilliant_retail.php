@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version		= '1.0.3.7'; 
+		public $version		= '1.0.3.8 RC'; 
 		public $vars 		= array();
 		public $site_id 	= '';
 		
@@ -608,6 +608,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_new()
 		{
+			// Is there a gateway available to support subscriptions?
+				$this->vars["can_subscribe"] = $this->_can_subscribe();
 			
 			$this->EE->cp->add_js_script( array(
 												'ui' => 'accordion,datepicker' 
@@ -716,6 +718,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_edit()
 		{
+			// Is there a gateway available to support subscriptions?
+				$this->vars["can_subscribe"] = $this->_can_subscribe();
+			
 			$this->vars['cp_page_title'] = lang('br_products');
 			$this->vars["selected"] = 'product';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
@@ -2924,5 +2929,19 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 												
 			$str .= '			</thead><tbody>'.$values.'</tbody></table>';
 			return $str;
+		}
+		
+		function _can_subscribe(){
+			$can_subscribe = FALSE;
+			foreach($this->_config["gateway"][$this->site_id] as $gateway){
+				if($gateway["enabled"] == 1){
+					$str = 'Gateway_'.$gateway["code"];
+					$tmp = new $str();
+					if($tmp->subscription_enabled == 1){
+						$can_subscribe = TRUE;
+					}
+				}
+			}
+			return $can_subscribe;
 		}
 }

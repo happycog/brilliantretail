@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.3.6';
+	public $version	= '1.0.3.8';
 	
 	function Brilliant_retail_upd()
 	{
@@ -787,6 +787,18 @@ class Brilliant_retail_upd {
 				('407', '10103429', '200', 'fixed', '0.00', 'a:2:{i:19;s:5:\"White\";i:21;s:5:\"Large\";}', '2509', '2010-11-05 17:34:31');";
 
 ## ----------------------------
+##  Table structure for exp_br_product_donation
+## ----------------------------
+	$sql[] = "DROP TABLE IF EXISTS exp_br_product_donation";
+	$sql[] = "CREATE TABLE exp_br_product_donation (
+					donation_id int(11) NOT NULL AUTO_INCREMENT,
+					product_id int(11) NOT NULL,
+					allow_recurring int(11) NOT NULL DEFAULT '0',
+					min_donation float NOT NULL DEFAULT '10',
+					PRIMARY KEY (donation_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+
+## ----------------------------
 ##  Table structure for exp_br_product_download
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_product_download;";
@@ -954,10 +966,7 @@ class Brilliant_retail_upd {
   length int(11) NOT NULL DEFAULT '30',
   period int(11) NOT NULL,
   group_id int(11) NOT NULL DEFAULT '0',
-  trial_offer int(11) DEFAULT '0',
   trial_price decimal(10,2) DEFAULT NULL,
-  trial_length int(11) DEFAULT NULL,
-  trial_period int(11) NOT NULL DEFAULT '1',
   trial_occur int(11) NOT NULL DEFAULT '1',
   cancel_group_id int(11) NOT NULL,
   PRIMARY KEY (subscription_id)

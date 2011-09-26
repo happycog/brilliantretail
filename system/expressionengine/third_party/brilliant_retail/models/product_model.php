@@ -766,7 +766,10 @@ class Product_model extends CI_Model {
 						$this->db->insert('br_product_configurable',$config);
 					}
 				}
+			
+			// If its a donation product 
 				
+			
 			// If its a downloadable product 
 				if(isset($download)){
 					$this->db->insert('br_product_download',$download);

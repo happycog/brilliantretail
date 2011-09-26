@@ -1178,10 +1178,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 					foreach($data as $key => $val)
 						$_SESSION['br_form_post_data'][$key] = $this->EE->input->post($key);
 
-
 					// ---------------------------------------------------
 					// Handle required fields
-					
 
 					$missing_fields = array();
 
@@ -1195,12 +1193,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if (count($missing_fields))
 						throw new Exception(lang('br_the_following_fields_are_required')." ".implode(', ', $missing_fields));
 
-
-
-
 					// ---------------------------------------------------
 					// Well-formedness checks
-
 
 					$validation_errors = array();
 
@@ -1237,25 +1231,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 							$_SESSION['br_form_errors']['br_shipping_zip'] = 'This doesn\'t look like a valid US zip code. Try again or contact us for help placing your order';
 							$validation_errors[] = "The shipping zip code you entered doesn't appear to be valid.";
 						}
-					}
-
-					// US-specific validation for shipping
-					if ($data['br_billing_country'] == 'US') 
-					{
-						// Handle billing phone validity
-						if (! preg_match( "/^(?:1(?:[. -])?)?(?:\((?=\d{3}\)))?([2-9]\d{2})(?:(?<=\(\d{3})\))? ?(?:(?<=\d{3})[.-])?([2-9]\d{2})[. -]?(\d{4})(?: (?i:ext)\.? ?(\d{1,5}))?$/", $data['br_billing_phone'] ))
-						{
-							$_SESSION['br_form_errors']['br_billing_phone'] = 'This doesn\'t look like a valid phone number. Try again or contact us for help placing your order';
-							$validation_errors[] = "The billing phone number you entered doesn't appear to be valid.";
-						}
-
-						// Handle billing zip validity
-						if (! preg_match("/^([0-9]{5})(-[0-9]{4})?$/", $data['br_billing_zip'])) 
-						{
-							$_SESSION['br_form_errors']['br_billing_zip'] = 'This doesn\'t look like a valid US zip code. Try again or contact us for help placing your order';
-							$validation_errors[] = "The billing zip code you entered doesn't appear to be valid.";
-						}
-
 					}
 
 					if (count($validation_errors))
@@ -1494,11 +1469,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 										"shipping_country" 	=> $data["br_shipping_country"] 
 									);
 					$this->EE->order_model->create_order_address($address[0]);
-				
-				// Do a little check against the users account. 
-				// If they don't have values then lest update them. 
-				
-					
+
 				// Add the payment info to the database now that we have
 				// have an order_id for the item. 
 					$payment[0] = array(
@@ -1534,20 +1505,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 											'options' => $items["options"],
 										);
 						$this->EE->order_model->create_order_item($item);
+						
 						// If its a downloadable then add the link
-						if($items["type_id"] == 4){
-							// Get the file info 
-								$dl = $this->EE->order_model->_get_download_file($item);
-								// Generate a uuid as the license key...
-								$dl["license"] = uuid();
-								unset($dl["title"]);
-								unset($dl["filenm_orig"]);
-								unset($dl["filenm"]);
-								unset($dl["created"]);
-								
-							// Insert into the db 
-								$this->EE->order_model->create_order_download($dl);
-						}
+							
+							if($items["type_id"] == 4){
+								// Get the file info 
+									$dl = $this->EE->order_model->_get_download_file($item);
+									// Generate a uuid as the license key...
+									$dl["license"] = uuid();
+									unset($dl["title"]);
+									unset($dl["filenm_orig"]);
+									unset($dl["filenm"]);
+									unset($dl["created"]);
+									
+								// Insert into the db 
+									$this->EE->order_model->create_order_download($dl);
+							}
 						
 						// Only reduce inventory on direct sales
 							if($order["status_id"] >= 1){
