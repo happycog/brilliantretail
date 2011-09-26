@@ -975,8 +975,10 @@ class Product_model extends CI_Model {
 			$related = array();
 			$i = 0;
 			foreach ($query->result_array() as $row){
-				$related[$i] =  $this->get_product_basic($row["product_id"]);
-				$i++;
+				if($r=$this->get_product_basic($row["product_id"])){
+					$related[$i] = $r;
+					$i++;
+				}
 			}
 			$this->session->cache['get_product_related'][$product_id] = $related;		
 		}

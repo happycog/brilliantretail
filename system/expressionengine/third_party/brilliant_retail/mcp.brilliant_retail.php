@@ -1043,8 +1043,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/************************/
 	/* Subscriptions	 	*/
 	/************************/
-	/*
-		NOT QUITE READY FOR PRIME TIME
 		
 			function subscription()
 			{ 
@@ -1110,7 +1108,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			function subscription_update(){ 
 			
 			}
-	*/
 	
 	/************************/
 	/* Promotions Tab	 	*/
