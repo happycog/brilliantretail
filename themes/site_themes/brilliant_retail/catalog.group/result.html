@@ -48,12 +48,12 @@
 <div id="catalog" class="page">
 	<div class="wrapper">
 	
-{exp:br:results}
+{exp:brilliant_retail:results}
     
-    <p id="crumbs"><a href="{exp:br:path src=''}">Home</a> &nbsp;&gt;&nbsp; Search Results 
+    <p id="crumbs"><a href="{exp:brilliant_retail:path src=''}">Home</a> &nbsp;&gt;&nbsp; Search Results 
     {result_filter_set}
 	    &nbsp;&gt;&nbsp;
-	    <b>{filter_set_section}:</b> {filter_set_label}&nbsp;<a href="{exp:br:path src='{filter_set_remove}'}" class="remove_filter">X</a>
+	    <b>{filter_set_section}:</b> {filter_set_label}&nbsp;<a href="{exp:brilliant_retail:path src='{filter_set_remove}'}" class="remove_filter">X</a>
     {/result_filter_set}</p>
     
     {no_results}
@@ -68,14 +68,14 @@
 
         <div id="sidebar">
             <h3>Shop by</h3>
-            {exp:br:results_layered}
+            {exp:brilliant_retail:results_layered}
             	<h4>{result_layered_label}:</h4>
             	<ul class="shopby">
             		{result_layered_item}
-            			<li><a href="{exp:br:path src='{result_layered_link}'}">{result_layered_title} {result_layered_count}</a></li>
+            			<li><a href="{exp:brilliant_retail:path src='{result_layered_link}'}">{result_layered_title} {result_layered_count}</a></li>
             		{/result_layered_item}
             	</ul>
-            {/exp:br:results_layered}
+            {/exp:brilliant_retail:results_layered}
         </div> <!-- sidebar -->
         
         
@@ -85,31 +85,31 @@
             	{result_paginate}
             		{if '{show_paginate}' == 'yes'}
 	            		{result_range} of {total_results} Items | 
-	            		{back} <a href="{exp:br:path src='{link_back}'}">&laquo;</a> {/back}
+	            		{back} <a href="{exp:brilliant_retail:path src='{link_back}'}">&laquo;</a> {/back}
 	            	{if:else}
 	            		{total_results} Items | 
 					{/if}
 						
 						{pages}
-							<a href="{exp:br:path src='{link_page}'}" {if '{link_active}' == 'yes'}class="active"{/if}>{page_number}</a>
+							<a href="{exp:brilliant_retail:path src='{link_page}'}" {if '{link_active}' == 'yes'}class="active"{/if}>{page_number}</a>
 						{/pages}
             		
             		{if '{show_paginate}' == 'yes'}
-	            		{next}<a href="{exp:br:path src='{link_next}'}">&raquo;</a> {/next}| 
-						<a href="{exp:br:path src='{link_show_all}'}">Show All</a> 
+	            		{next}<a href="{exp:brilliant_retail:path src='{link_next}'}">&raquo;</a> {/next}| 
+						<a href="{exp:brilliant_retail:path src='{link_show_all}'}">Show All</a> 
 					{/if}
             	{/result_paginate}
             </p>
             <p class="sort">
             	<b>View:</b>  
-            	<a href="{exp:br:path src='{link_grid}'}" {if '{mode}' == 'grid'}class="active"{/if}>Grid</a> | 
-            	<a href="{exp:br:path src='{link_list}'}" {if '{mode}' == 'list'}class="active"{/if}>List</a>
+            	<a href="{exp:brilliant_retail:path src='{link_grid}'}" {if '{mode}' == 'grid'}class="active"{/if}>Grid</a> | 
+            	<a href="{exp:brilliant_retail:path src='{link_list}'}" {if '{mode}' == 'list'}class="active"{/if}>List</a>
             	&nbsp;
             	&nbsp;
             	<b>Sort by: </b> 
-            	<a href="{exp:br:path src='{link_sort_relevance}'}" {if '{sort_selected}' == 'relevance'}class="active"{/if}>Relevance</a> | 
-            	<a href="{exp:br:path src='{link_sort_price}'}" {if '{sort_selected}' == 'price'}class="active"{/if}>Price</a> | 
-            	<a href="{exp:br:path src='{link_sort_name}'}" {if '{sort_selected}' == 'name'}class="active"{/if}>Name</a>
+            	<a href="{exp:brilliant_retail:path src='{link_sort_relevance}'}" {if '{sort_selected}' == 'relevance'}class="active"{/if}>Relevance</a> | 
+            	<a href="{exp:brilliant_retail:path src='{link_sort_price}'}" {if '{sort_selected}' == 'price'}class="active"{/if}>Price</a> | 
+            	<a href="{exp:brilliant_retail:path src='{link_sort_name}'}" {if '{sort_selected}' == 'name'}class="active"{/if}>Name</a>
             </p>
             <div class="clearboth"><!-- --></div>
 
@@ -121,21 +121,21 @@
 							!--}
 							{if '{mode}' == 'grid'}
 		                   		<li>
-			                    	<a href="{exp:br:path src='product/{url}'}"><img class="overlay" src="{theme}/images/0.gif" alt="" /></a>
+			                    	<a href="{exp:brilliant_retail:path src='product/{url}'}"><img class="overlay" src="{theme}/images/0.gif" alt="" /></a>
 			                        <div>
-			                        	<a href="{exp:br:path src='product/{url}'}" style="height:200">{exp:br:image src="{image_thumb}" width="175" height="210"}</a>
+			                        	<a href="{exp:brilliant_retail:path src='product/{url}'}" style="height:200">{exp:brilliant_retail:image src="{image_thumb}" width="175" height="210"}</a>
 			                        </div>
-			                        <p class="title"><a href="{exp:br:path src='product/{url}'}">{exp:snippet total="60"}{title}{/exp:snippet}</a></p>
+			                        <p class="title"><a href="{exp:brilliant_retail:path src='product/{url}'}">{exp:snippet total="60"}{title}{/exp:snippet}</a></p>
 			                        {price_html}
 			                    </li>
 		                	{if:else}
 								<li>
 			                    	<div class="pic">
-			                    		<a href="{exp:br:path src='product/{url}'}">{exp:br:image src="{image_thumb}" width="75" height="90"}</a></div>
+			                    		<a href="{exp:brilliant_retail:path src='product/{url}'}">{exp:brilliant_retail:image src="{image_thumb}" width="75" height="90"}</a></div>
 			                        <div class="desc">
-			                        	<h5><a href="{exp:br:path src='product/{url}'}">{title}</a></h5>
+			                        	<h5><a href="{exp:brilliant_retail:path src='product/{url}'}">{title}</a></h5>
 			                            <p>{exp:snippet total="200"}{detail}{/exp:snippet}</p>
-			                            <p><a href="{exp:br:path src='product/{url}'}">+Add to cart</a></p>
+			                            <p><a href="{exp:brilliant_retail:path src='product/{url}'}">+Add to cart</a></p>
 			                        </div>
 			                        <div class="price">{price_html}</div>
 			                        <div class="clearboth"><!-- --></div>
@@ -150,36 +150,36 @@
             	{result_paginate_bottom}
             		{if '{show_paginate}' == 'yes'}
 	            		{result_range} of {total_results} Items | 
-	            		{back}<a href="{exp:br:path src='{link_back}'}">&laquo;</a> {/back}
+	            		{back}<a href="{exp:brilliant_retail:path src='{link_back}'}">&laquo;</a> {/back}
 	            	{if:else}
 	            		{total_results} Items | 
 					{/if}
 						
-						{pages}<a href="{exp:br:path src='{link_page}'}" {if '{link_active}' == 'yes'}class="active"{/if}>{page_number}</a>&nbsp;{/pages}
+						{pages}<a href="{exp:brilliant_retail:path src='{link_page}'}" {if '{link_active}' == 'yes'}class="active"{/if}>{page_number}</a>&nbsp;{/pages}
             		
             		{if '{show_paginate}' == 'yes'}
-	            		{next}<a href="{exp:br:path src='{link_next}'}">&raquo;</a> {/next}| 
-						<a href="{exp:br:path src='{link_show_all}'}">Show All</a> 
+	            		{next}<a href="{exp:brilliant_retail:path src='{link_next}'}">&raquo;</a> {/next}| 
+						<a href="{exp:brilliant_retail:path src='{link_show_all}'}">Show All</a> 
 					{/if}
             	{/result_paginate_bottom} 
             </p>
             <p class="sort">
             	<b>View:</b>  
-            	<a href="{exp:br:path src='{link_grid}'}" {if '{mode}' == 'grid'}class="active"{/if}>Grid</a> | 
-            	<a href="{exp:br:path src='{link_list}'}" {if '{mode}' == 'list'}class="active"{/if}>List</a>
+            	<a href="{exp:brilliant_retail:path src='{link_grid}'}" {if '{mode}' == 'grid'}class="active"{/if}>Grid</a> | 
+            	<a href="{exp:brilliant_retail:path src='{link_list}'}" {if '{mode}' == 'list'}class="active"{/if}>List</a>
             	&nbsp;
             	&nbsp;
             	<b>Sort by: </b> 
-            	<a href="{exp:br:path src='{link_sort_relevance}'}" {if '{sort_selected}' == 'relevance'}class="active"{/if}>Relevance</a> | 
-            	<a href="{exp:br:path src='{link_sort_price}'}" {if '{sort_selected}' == 'price'}class="active"{/if}>Price</a> | 
-            	<a href="{exp:br:path src='{link_sort_name}'}" {if '{sort_selected}' == 'name'}class="active"{/if}>Name</a>
+            	<a href="{exp:brilliant_retail:path src='{link_sort_relevance}'}" {if '{sort_selected}' == 'relevance'}class="active"{/if}>Relevance</a> | 
+            	<a href="{exp:brilliant_retail:path src='{link_sort_price}'}" {if '{sort_selected}' == 'price'}class="active"{/if}>Price</a> | 
+            	<a href="{exp:brilliant_retail:path src='{link_sort_name}'}" {if '{sort_selected}' == 'name'}class="active"{/if}>Name</a>
             </p>
             <div class="clearboth"><!-- --></div>
         
         </div> <!-- subject -->        
         <div class="clearboth"><!-- --></div>        
 
-{/exp:br:results}
+{/exp:brilliant_retail:results}
         
     </div>
 </div> <!-- catalog -->

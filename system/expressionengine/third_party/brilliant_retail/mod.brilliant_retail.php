@@ -2073,8 +2073,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 	// Update customer password
 		function customer_pw_update()
 		{
-			// Load the Auth module
-				$this->EE->load->library('Auth');
 			// Validate that we got everything
 				if(	(!isset($_POST["password"]) || trim($_POST["password"]) == '') ||
 					(!isset($_POST["new_password"]) || trim($_POST["new_password"]) == '') || 
@@ -2082,23 +2080,40 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$_SESSION["br_alert"] = lang('br_password_fields_required');
 					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 				}
-
-			$current_password = $this->EE->functions->hash(stripslashes($this->EE->input->post('password',TRUE)));
 			
+				if(APP_VER < 2.2){
+					# Validate password pre EE v.2.2
+						$current_password = $this->EE->functions->hash(stripslashes($this->EE->input->post('password',TRUE)));
+						$data['password'] = $this->EE->functions->hash(stripslashes($this->EE->input->post('new_password',TRUE)));
 			
-			$member_id = $this->EE->session->userdata('member_id');
-			$current_password = $this->EE->input->post('password',TRUE);
-			
-			// Validate the current email
-				$validate = $this->EE->auth->authenticate_id($member_id,$current_password);
-				if(!$validate){
-					$_SESSION["br_alert"] = lang('br_password_current_invalid');
-					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+						$sql = $this->EE->db->update_string('exp_members',$data,"member_id = '".$this->EE->session->userdata('member_id')."' and password = '".$current_password."'");
+						$this->EE->db->query($sql);
+						if($this->EE->db->affected_rows() == 1){
+							$_SESSION["br_message"] = lang('br_password_update_success');
+							$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+						}else{
+							$_SESSION["br_alert"] = lang('br_password_current_invalid');
+							$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);					
+						}	
 				}else{
-					$rows = $this->EE->auth->update_password($member_id, $this->EE->input->post('new_password',TRUE));
-					$_SESSION["br_message"] = lang('br_password_update_success');
-					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
-				}		
+					# Validate password post EE v.2.2
+						// Load the Auth module
+							$this->EE->load->library('Auth');
+	
+							$member_id = $this->EE->session->userdata('member_id');
+							$current_password = $this->EE->input->post('password',TRUE);
+						
+						// Validate the current email
+							$validate = $this->EE->auth->authenticate_id($member_id,$current_password);
+							if(!$validate){
+								$_SESSION["br_alert"] = lang('br_password_current_invalid');
+								$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+							}else{
+								$rows = $this->EE->auth->update_password($member_id, $this->EE->input->post('new_password',TRUE));
+								$_SESSION["br_message"] = lang('br_password_update_success');
+								$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+							}	
+				}
 		}
 			
 		function customer_profile()
