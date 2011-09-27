@@ -799,7 +799,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					// Update link
 						$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
 						$link = $action.AMP.'action=update';
-
+						
 					// Get the results
 						$product = array();
 						foreach($wishlist as $prod){
@@ -821,6 +821,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}	
 						
 						$vars[0] = array(
+										'share_hash'		=> base64_encode($this->EE->session->userdata["member_id"]), 
 										'update_link' 		=> $link,  
 										'total_results' 	=> count($product),
 										'results' 			=> $product,
@@ -895,6 +896,42 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				$this->EE->functions->redirect($target);
 			}
+			
+			public function wishlist_public()
+			{
+				// Load the wishlist model
+					$this->EE->load->model('wishlist_model');
+
+				// Hash is required
+					$member_id = base64_decode($this->EE->TMPL->fetch_param('hash'));
+					$wishlist = $this->EE->wishlist_model->wishlist_get($member_id,TRUE);
+					
+					if(count($wishlist) == 0){
+						$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
+						preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
+						if(isset($matches[1])){
+							return trim($matches[1]);
+						}else{
+							return '';
+						}
+					}
+					
+					foreach($wishlist as $prod){
+						$p = $this->_get_product($prod["product_id"]);
+						$p[0]['notes']	= $prod["notes"];
+						$product[] = $p[0];
+					}
+
+					$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
+					$vars[0] = array(	'no_results' 	=> array(),
+										'results' 		=> $product,
+										'form_open' 	=> '<form action="'.$action.'" method="POST">',
+										'form_close' 	=> '</form>');
+										
+					
+				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
+				return $output;				
+			} 
 			
 	/* CHECKOUT */
 

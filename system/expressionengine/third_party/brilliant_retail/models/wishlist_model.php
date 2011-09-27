@@ -24,9 +24,14 @@
 
 class Wishlist_model extends CI_Model {
 	
-	public function wishlist_get($member_id){
+	public function wishlist_get($member_id,$public=FALSE){
 		$this->db->from('br_wishlist')
 				->where('member_id',$member_id);
+		
+		if($public == TRUE){
+			$this->db->where('is_public',1);
+		}
+		
 		$query = $this->db->get();	
 		return $query->result_array();
 	}

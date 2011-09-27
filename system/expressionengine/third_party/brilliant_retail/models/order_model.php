@@ -155,9 +155,12 @@ class Order_model extends CI_Model {
 						o.member_id  
 					FROM 
 						".$prefix."br_order o,
-						".$prefix."member_data d  
+						".$prefix."member_data d, 
+						".$prefix."members m  						
 					WHERE 
 						o.member_id = d.member_id 
+					AND 
+						o.member_id = m.member_id 
 					AND 
 						o.site_id = ".$this->config->item('site_id')." 
 					AND 
@@ -173,7 +176,11 @@ class Order_model extends CI_Model {
 			}
 			
 			if($search != ''){
-				$sql .= "AND (	d.".$fl_fname." LIKE '%".$search."%' 
+				$sql .= "AND (	m.email LIKE '%".$search."%' 
+									|| 
+								o.order_id LIKE '%".$search."%' 
+									|| 
+								d.".$fl_fname." LIKE '%".$search."%' 
 									|| 
 								d.".$fl_lname." LIKE '%".$search."%' )";	
 			}

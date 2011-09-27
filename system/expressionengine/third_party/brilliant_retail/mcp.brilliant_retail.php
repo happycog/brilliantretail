@@ -240,8 +240,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
 											$row["total"],
 											'<span class="order_status_'.$row["status_id"].'">'.$status.'</span>'
-											,
-											array('data' => '<input type="checkbox" name="batch['.$row["order_id"].']" />', 'style' => 'text-align:center')
+											#,array('data' => '<input type="checkbox" name="batch['.$row["order_id"].']" />', 'style' => 'text-align:center')
 									);
 				}
 			

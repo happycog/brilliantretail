@@ -59,16 +59,18 @@
 			
 			{exp:brilliant_retail:show_message}
 			
-            <h4 id="wishlist_heading">Wishlist</h4>
-		    {exp:brilliant_retail:wishlist}
+            {exp:brilliant_retail:wishlist}
 				
 				{no_results}			
-					<tr>
-						<td colspan="4">There are no items in your wishlist</td>
-					</tr>
+					<h4 id="wishlist_heading">Wishlist</h4>
+					<div id="wishlist_noresult">There are no items in your wishlist</div>
 				{/no_results}
 
-				<form action="{update_link}" method="post">
+				<h4 id="wishlist_heading">Wishlist</h4>
+		    	<div id="wishlist_share">
+		    		<p>Share your wishlist: <a href="{path='wishlist/{share_hash}'}" target="_blank">{path='wishlist/{share_hash}'}</a></p>
+				</div>
+		    	<form action="{update_link}" method="post">
 					<table id="wishlist" cellspacing="0">
 		            	<thead>
 		                	<tr>

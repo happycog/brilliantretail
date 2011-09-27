@@ -52,7 +52,7 @@ http://getsatisfaction.com/brilliantretail
 * Fixed a bug in read_from_cache method. Now reads exact filesize and closes file handle 
 * Fixed a bug with the XSS filter on product descriptions
 * Fixed drag and drop issue with categories reorder in settings 
-* Fixed password update function to utilize new Authorization library [#0000073]
+* Fixed password update function to utilize new Auth library [#0000073]
 * Fixed zip code error in Rates Matrix shipping method [#0000076]
 * Fixed an issue with the return parameter from PayPal
 * Fixed a typo in the delete category language entry [#0000082]
