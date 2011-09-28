@@ -524,13 +524,21 @@ class Brilliant_retail extends Brilliant_retail_core{
 			foreach($_POST as $key => $val){
 				$data[$key] = $this->EE->input->post($key,TRUE);
 			}
+			
+			if(!isset($data["product_id"])){
+				$_SESSION["br_alert"] = lang('br_product_configuration_required');
+				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+			}
+			
 			// Clean the quantity value 
+				if(!isset($data["quantity"])) $data["quantity"] = 1;
+				
 				$data["quantity"] = round($data["quantity"] * 1);
 				if($data["quantity"] == 0){
 					$data["quantity"] = 1;
 				}
 			
-			$product_id = $this->EE->input->post('product_id',TRUE);
+			$product_id = $data["product_id"];
 			$product = $this->EE->product_model->get_products($data["product_id"]);
 			
 			$amt = $this->_check_product_price($product[0]);

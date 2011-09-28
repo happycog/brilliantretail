@@ -45,8 +45,14 @@
 <!-- General -->
 <div id="general" class="page">
 	<div class="wrapper">
+
     	{exp:brilliant_retail:wishlist_public hash="{segment_2}"}
             <p id="crumbs"><a href="{exp:brilliant_retail:path src='site_index'}">Home</a> &nbsp;&gt;&nbsp; {title}</p>
+
+				{if '{exp:brilliant_retail:message_exists}'}
+					{exp:brilliant_retail:show_message}
+				{/if}
+
             <div id="main">
             	<h1>Wishlist</h1>
 	        		{no_results}
@@ -54,6 +60,7 @@
 	        		{/no_results}
         		{results}
         			{form_open}
+        				<input type="hidden" name="product_id" value="{product_id}" />
         				{title}
         				<input type="submit" value="add to cart" />
         			{form_close}

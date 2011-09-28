@@ -1580,9 +1580,9 @@ class Brilliant_retail_core {
 							unset($vars[0]["results"][$key]);
 						}else{
 							$filters[$code] = array(
-													'filter_set_section' => $attr[$code]["title"],
-													'filter_set_label' => $attr[$code]["label"],
-													'filter_set_remove' => $this->_set_link($hash).'/remove/code/hash/'.$code.'/title/'.urlencode($attr[$code]["label"])
+													'filter_set_section' 	=> $attr[$code]["title"],
+													'filter_set_label' 		=> $attr[$code]["label"],
+													'filter_set_remove' 	=> $this->_set_link($hash).'/remove/code/hash/'.$code.'/title/'.urlencode($attr[$code]["label"])
 												);
 						}
 					}	
@@ -1925,7 +1925,7 @@ class Brilliant_retail_core {
 						}
 						$select = '<select name="configurable_'.$i.'" class="required">'.$opts.'</select>';
 					}else{
-						$select = '<select name="configurable_'.$i.'" class="required"><option>blank</option></select>';
+						$select = '<select name="configurable_'.$i.'" class="required"><option>-</option></select>';
 					}
 				$list[] = '"configurable_'.$i.'"';
 				$config[$i] = array(
