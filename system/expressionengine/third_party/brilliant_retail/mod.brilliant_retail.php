@@ -1922,8 +1922,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 	// Create a register form
 		function register_form()
 		{
-			$hash = md5('register_form'.time().rand(1,1000));
-			$_SESSION["FID"] = $hash;
 			$id = ($this->EE->TMPL->fetch_param('id')) ? ($this->EE->TMPL->fetch_param('id')) : "register_form" ;
 			$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_register'));
 			$tagdata = $this->EE->TMPL->tagdata;
@@ -1948,8 +1946,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 			}
 			
-			
-			$output = form_open($action,array('id' => $id),array('FID' => $hash));
+			$form_details = array('action'	   		=> $action,
+								  'id'             	=> $id,
+								  'secure'         	=> TRUE
+								  );  	
+			$output = $this->EE->functions->form_declaration($form_details);
 			$output .= $tagdata;
 			$output .= form_close();
 			return $output;
@@ -1958,6 +1959,21 @@ class Brilliant_retail extends Brilliant_retail_core{
 	// Register a customer		
 		function customer_register()
 		{
+			// Verify the security hash 
+			// We have to do it ourselves because of a bug in EE 2.2.2 
+				$xid = $this->EE->input->post('XID');
+				$total = $this->EE->db->where('hash', $xid)
+										->where('ip_address', $this->EE->input->ip_address())
+										->where('date > UNIX_TIMESTAMP()-7200')
+										->from('security_hashes')
+										->count_all_results();
+				if ($total == 0){
+					$_SESSION["br_alert"] = lang('br_invalid_form_id');
+					$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"].'/login'));
+				}else{
+					$this->EE->security->delete_xid($xid);
+				}
+
 			$this->EE->load->model('customer_model');	
 
 			// Clean up the post 
@@ -1965,6 +1981,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$data[$key] = trim($this->EE->input->post($key,TRUE));
 				}
 
+			// Check for existing user
+				if($this->EE->customer_model->get_customer_by_email($data["email"])){
+					$_SESSION["br_alert"] = lang('br_customer_exists');
+					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+				}
+			
 			// Make sure we have our required fields			
 				$required_fields = array(
 							'br_fname'           	=> lang('br_fname'), 
@@ -1986,11 +2008,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 					// ---------------------------------------------------
 					// Handle required fields
 					
-
 					$missing_fields = array();
 
 					foreach ($required_fields as $field => $name) 
-					if (! isset($_POST[$field]) || trim($_POST[$field]) == '')
+					if (! isset($data[$field]) || trim($data[$field]) == '')
 					{
 						$_SESSION['br_form_errors'][$field] = lang('br_this_field_is_required');
 						$missing_fields[] = $name;
@@ -2009,37 +2030,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if ($query->row('count')  == 0)
 					{
 						$_SESSION["br_alert"] = lang('captcha_incorrect');
-						unset($_SESSION["FID"]);
 						$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"].'/login'));
 						exit();
 					}
 					$this->EE->db->query("DELETE FROM exp_captcha WHERE (word='".$this->EE->db->escape_str($data['captcha'])."' AND ip_address = '".$this->EE->input->ip_address()."') OR date < UNIX_TIMESTAMP()-7200");
 				}
 
-			// Verify the source 
-				if($_SESSION["FID"] != $data["FID"]){
-					$_SESSION["br_alert"] = lang('br_invalid_form_id');
-					unset($_SESSION["FID"]);
-					$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"].'/login'));
-					exit();
-				}elseif($_POST["confirm_password"] != $_POST["password"]){
-					$_SESSION["br_alert"] = lang('br_passwords_dont_match');
-					unset($_SESSION["FID"]);
-					$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"].'/login'));
-					exit();
-				}else{
-					#	unset($_SESSION["FID"]);
-					unset($data["FID"]);
-				}
-					
-					
-				if($this->EE->customer_model->get_customer_by_email($data["email"])){
-					$_SESSION["br_alert"] = lang('br_customer_exists');
-					unset($_SESSION["FID"]);
-					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
-					exit();
-				}
-				
 				$new['group_id'] 		= $this->_config["store"][$this->site_id]["register_group"];
 				$new['username']		= $data['email'];
 				$new['password']		= $this->EE->functions->hash(stripslashes($data['password']));
@@ -2095,7 +2091,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				$_SESSION["br_message"] = lang('br_sign_up_thankyou');
 				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
-				exit();
 			}
 		
 	// Create password reset form
@@ -2250,7 +2245,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$_SESSION["br_alert"] = lang('br_profile_update_error');
 					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 				}
-				exit();
 		}
 		
 		function customer_orders()
@@ -2334,28 +2328,24 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$member_id = $this->EE->session->userdata["member_id"];
 				if($member_id == 0){
 					$_SESSION["br_alert"] = lang('br_download_unavailable');
-					header('location: /');
-					exit();							
+					$this->EE->functions->redirect($this->EE->functions->create_url(''));
 				}
 				
 				$downloads = $this->EE->order_model->get_downloads_by_member($member_id,$hash);	
 				if(count($downloads) != 1){
 					$_SESSION["br_alert"] = lang('br_download_unavailable');
 					$this->EE->functions->redirect($this->EE->functions->create_url(''));
-					exit();							
 				}
 				// Is the status not right?
 					if($downloads[0]["download_limit"] >= 1){
 						if(($downloads[$i]["download_remaining"] - $downloads[$i]["cnt"]) <= 0){
 							$_SESSION["br_alert"] = lang('br_download_unavailable');
 							$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
-							exit();		
 						}
 					}
 				if($downloads[0]["status_id"] <= 2){
 					$_SESSION["br_alert"] = lang('br_download_unavailable');
 					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
-					exit();					
 				}
 				// Download the file
 					$data = array('cnt' => ($downloads[0]["cnt"] + 1 ));
@@ -2403,7 +2393,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$_SESSION["br_alert"] = lang('br_discount_removed');
 				unset($_SESSION["discount"]);
 				$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
-				exit();
 			}
 			$code = $this->EE->promo_model->get_promo_by_code($inputCode);
 			if($code){
@@ -2420,7 +2409,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				unset($_SESSION["discount"]);
 			}
 			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
-			exit();
 		}
 	
 		function promo_check_items()
@@ -2752,40 +2740,4 @@ class Brilliant_retail extends Brilliant_retail_core{
 					return $this->EE->functions->create_url($src);
 				}
 		}
-		
-		/**
-		 * Cron
-		 * 
-		 * Execute various actions based on their class and method.
-		 * 
-		 * @return null
-		 */
-			  function cron()
-			  {
-				$this->EE->load->model('cron_model');
-				$tasks = $this->EE->cron_model->get_tasks();
-				foreach($tasks as $t){
-					$class = strtolower($t["class"]);
-					if((substr($class, -4) == '_mcp')){
-						$package = substr($class,0,-4);
-						$file = 'mcp.'.substr($class,0,-4).'.php';
-					}else{
-						$package = $class;
-						$file = 'mod.'.$class.'.php';
-					}
-		
-					$package_path = PATH_THIRD.$package.'/'.$file;
-		
-					$this->EE->load->add_package_path($package_path, FALSE);
-					
-					if(!class_exists($t["class"])){
-						include_once($package_path);
-					}
-					$f = new $t["class"](0);
-					$f->$t["method"]();
-					$this->EE->load->remove_package_path($package_path);
-				}
-				@header("HTTP/1.0 200 OK");
-				exit();
-			  }
 }

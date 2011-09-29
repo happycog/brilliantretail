@@ -74,6 +74,8 @@ http://getsatisfaction.com/brilliantretail
 * Updated Authorize.net gateway to remove unnecessary break tags 
 * Updated query session cache to improve database calls and memory usage
 * Updated image tag to use MIME type instead of extension for building cache version
+* Updated register form to use native EE security hash
+* Updated mod file to remove unnecessary exit() after redirect functions
 * Updated Tweetline to the latest version 
 
 1.0.3.0
