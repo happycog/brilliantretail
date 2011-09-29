@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.3.8';
+	public $version	= '1.0.3.9';
 	
 	function Brilliant_retail_upd()
 	{
@@ -4384,6 +4384,19 @@ class Brilliant_retail_upd {
 					KEY index_wishlist (member_id)
 				) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 				
+## ----------------------------
+##  Table structure for exp_br_wishlist_hash
+## ----------------------------
+	$sql[] = "DROP TABLE IF EXISTS exp_br_wishlist_hash;";
+	$sql[] = "CREATE TABLE exp_br_wishlist_hash (
+					wishlist_hash_id int(11) NOT NULL auto_increment,
+					member_id int(11) NOT NULL,
+					hash varchar(255) NOT NULL,
+					PRIMARY KEY  (wishlist_hash_id),
+					UNIQUE KEY member_id (member_id),
+					UNIQUE KEY hash (hash)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+
 		foreach ($sql as $query)
 		{
 			$this->EE->db->query($query);
@@ -4391,7 +4404,6 @@ class Brilliant_retail_upd {
 		
 		return TRUE;
 	}
-
 
 	// --------------------------------------------------------------------
 
@@ -4450,6 +4462,7 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_store;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_tax;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_wishlist;";
+			$sql[] = "DROP TABLE IF EXISTS exp_br_wishlist_hash;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_zone;";
 		
 		foreach ($sql as $query)

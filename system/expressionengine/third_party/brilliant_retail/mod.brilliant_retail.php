@@ -813,11 +813,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 						foreach($wishlist as $prod){
 							$p = $this->_get_product($prod["product_id"]);
 							
-							// Remove Link 
-								$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
-								$remove_link = $action.AMP.'action=remove'.AMP.'product_id='.$prod["product_id"];
+							// Cart Add 
+								$cart_action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
+							// Wishlist Edit
+								$edit_action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
+							// Remove link
+								$remove_link = $edit_action.AMP.'action=remove'.AMP.'product_id='.$prod["product_id"];
 
 							$product[] = array(	
+												'form_open' 	=> '<form action="'.$cart_action.'" method="POST">',
+												'form_close' 	=> '</form>',
 												'url_title'		=> $p[0]['url'],
 												'product_id' 	=> $p[0]['product_id'],
 												'title' 		=> $p[0]['title'], 

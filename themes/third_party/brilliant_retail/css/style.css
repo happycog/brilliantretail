@@ -468,12 +468,12 @@ table.mainTable th.sorting_disabled {
 } 
 
 table.mainTable th.sorting_asc {
-    background:         transparent url('../images/table_sort_desc.gif') bottom right norepeat;
+    background:         transparent url('../images/table_sort_desc.gif') bottom right no-repeat;
     border-left:        1px solid #C60047;
 
 }
 table.mainTable th.sorting_desc {
-    background:         transparent url('../images/table_sort_asc.gif') bottom right norepeat;
+    background:         transparent url('../images/table_sort_asc.gif') bottom right no-repeat;
     border-left:        1px solid #C60047;
 
 }
@@ -910,7 +910,8 @@ table#b2r_db_performance_bot td img {
 .move_price_row,  
 .move_image_row, 
 .move_related_row,
-.move_config_row {
+.move_config_row, 
+.move_option_row {
 	cursor: move;
 }
 

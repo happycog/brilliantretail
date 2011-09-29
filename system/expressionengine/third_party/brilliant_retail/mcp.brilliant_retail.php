@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version		= '1.0.3.8 RC'; 
+		public $version		= '1.0.3.9 RC'; 
 		public $vars 		= array();
 		public $site_id 	= '';
 		
@@ -2641,7 +2641,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		 * Check for access to the admin sections 
 		 */		
 			function _check_admin_access($method){
-	
+				
 				// Get the Group ID
 					$group_id = $this->EE->session->userdata['group_id'];
 	
@@ -2740,9 +2740,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				if(isset($this->group_access["brilliant_retail"]["product"])){
 					$this->vars["menu"]["product"]		= $this->base_url.AMP.'method=product';
 				}
-				if(isset($this->group_access["brilliant_retail"]["subscription"])){
-					$this->vars["menu"]["subscription"] = $this->base_url.AMP.'method=subscription';
+				
+				if($this->_config["store"][$this->site_id]["subscription_enabled"] == 1){
+					if(isset($this->group_access["brilliant_retail"]["subscription"])){
+						$this->vars["menu"]["subscription"] = $this->base_url.AMP.'method=subscription';
+					}
 				}
+				
 				if(isset($this->group_access["brilliant_retail"]["promo"])){
 					$this->vars["menu"]["promo"]	= $this->base_url.AMP.'method=promo';
 				}

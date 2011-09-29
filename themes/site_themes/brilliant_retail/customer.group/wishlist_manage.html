@@ -67,17 +67,27 @@
 				{/no_results}
 
 				<div id="wishlist_share">
-		    		<a href="{path='wishlist/{share_hash}'}" target="_blank">Share your wishlist</a> | <a href="{path='customer/wishlist_manage'}">Manage your wishlist</a>
+		    		<a href="{path='customer/wishlist'}" target="_blank">Back to your wishlist</a>
 		    	</div>
-		    	<h4 id="wishlist_heading">Wishlist</h4>
-		    		<table id="wishlist" cellspacing="0">
+				<h4 id="wishlist_heading">Wishlist</h4>
+		    	<form action="{update_link}" method="post">
+					<table id="wishlist" cellspacing="0">
 		            	<thead>
 		                	<tr>
 		                    	<th class="col1">Image</th>
 		                    	<th class="col2">Product</th>
 		                    	<th class="col3">Public</th>
+		                    	<th class="col4">Remove</th>
 		                    </tr>
 		                </thead>
+		                <tfoot>
+		                	<tr>
+		                		<td colspan="4" align="right">
+    								<div class="btn">
+    									<input type="submit" class="inpbtn" value="Update" />
+    								</div></td>
+		                	</tr>
+		                </tfoot>
 		                <tbody>
 							{results}
 								<tr>
@@ -86,24 +96,20 @@
 										<a href="/product/{url_title}">{exp:brilliant_retail:image src="{image_thumb}" width="144" height="120"}</a></td>
 									<td>
 										<a href="/product/{url_title}">{title}</a><br />
-										{notes}<br />
-										{form_open}
-											<input type="hidden" name="product_id" value="{product_id}" />
-											<div class="btn">
-												<input type="submit" value="add to cart" class="inpbtn" />
-											</div>
-										{form_close}
-										</td>
+										<textarea name="notes[{product_id}]">{notes}</textarea></td>
 									<td class="col3">
-										{if {is_public}}
-											Yes
-										{if:else}
-											No
-										{/if}</td>
+										<input 	type="checkbox" 
+												name="is_public[{product_id}]" 
+												{if {is_public}}
+													checked="checked"
+												{/if} /></td>
+									<td class="col4">
+										<a href="{remove_link}" class="remove">X</td>
 								</tr>			
 							{/results}
 						</tbody>
 					</table>
+				</form>
 			{/exp:brilliant_retail:wishlist}
         </div> <!-- subject -->
         <div class="clearboth"><!-- --></div>

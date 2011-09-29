@@ -32,13 +32,13 @@ $option = 10000;
 <table id="optionTable" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
 	<thead>
 		<tr class="nodrag nodrop">
-			<th colspan="6">
+			<th colspan="5">
 				<?=lang('br_options')?></th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr class="nodrag nodrop">
-			<td colspan="6">
+			<td colspan="5">
 				<span class="button" style="float: right; margin: 0pt;">
 					<a class="submit" href="#" id="addoption" style="color:#fff"><?=lang('br_add_option')?></a>
 				</span></td>
@@ -46,7 +46,6 @@ $option = 10000;
 		<tr class="nodrag nodrop" id="option_header">
 			<td><b><?=lang('br_title')?></b></td>
 			<td><b><?=lang('br_type')?></b></td>
-			<td><b><?=lang('br_required')?></b></td>
 			<td><b><?=lang('br_sort')?></b></td>
 			<td><b><?=lang('delete')?></b></td>
 		</tr>	
@@ -64,7 +63,14 @@ $option = 10000;
 														'dropdown' => lang('br_dropdown')
 													),
 												$opt["type"],
-												'title="type" style="width: 100px" class="dropdown"');
+												'title="type" style="width: 100px" class="dropdown"').'
+							&nbsp;'.lang('br_required').'&nbsp;
+							'.form_dropdown(	
+												'cOptions_required[]', 
+												array(0 => lang('br_no'),1 => lang('br_yes')),
+												$opt["required"],
+												'title="required"' 
+											);
 			
 			$style = ($opt["type"] != 'dropdown') ? 'display:none' : '';
 							
@@ -112,12 +118,6 @@ $option = 10000;
 
 			echo '				</table></td>
 							</div>
-						<td>'.form_dropdown(	
-												'cOptions_required[]', 
-												array(0 => lang('br_no'),1 => lang('br_yes')),
-												$opt["required"],
-												'title="required"' 
-											).'</td>
 						<td class="move_option_row">
 							<img src="'.$theme.'images/icon_move.png" /></td>
 						<td>
@@ -147,6 +147,14 @@ $option = 10000;
 														),
 													'',
 													'title="type" style="width: 100px" class="dropdown"').'
+								&nbsp;'.lang('br_required').'&nbsp;
+								'.form_dropdown(	
+									'cOptions_required[]', 
+									array(0 => lang('br_no'),1 => lang('br_yes')),
+									'',
+									'title="required"' 
+								).'
+
 								<div style="display:none">
 									<table class="dropOptions" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
 										<tr>
@@ -171,12 +179,6 @@ $option = 10000;
 										</tr>
 									</table></td>
 								</div>
-							<td>'.form_dropdown(	
-													'cOptions_required[]', 
-													array(0 => lang('br_no'),1 => lang('br_yes')),
-													'',
-													'title="required"' 
-												).'</td>
 							<td class="move_option_row">
 								<img src="'.$theme.'images/icon_move.png" /></td>
 							<td>
