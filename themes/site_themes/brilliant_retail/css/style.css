@@ -2851,7 +2851,6 @@ text-align: right;
 	background: #fff;
 	border: 1px solid #d6d6d6; }
 
-#wishlist .btn,
 #product .right #details .btn {
 	position: relative;
 	margin: 15px 0 0;
@@ -2870,7 +2869,6 @@ text-align: right;
 	font-size: 12px;
 }
 
-#wishlist .inpbtn,
 #product .right #details .inpbtn {
 	background: transparent;
 	color: #0066CC;
@@ -3333,3 +3331,194 @@ text-align: right;
 }
 
 /* end of Login */
+
+/* Public Wishlist */ 
+#wishlist div#wishlist_left {
+	float: left;
+}
+#wishlist div#wishlist_customer {
+	width: 200px;
+	background: #F1F1F1;
+	margin-top: 33px;	
+	border: 1px #CCC solid;
+	color: #999;
+	min-height: 100px;
+	padding: 20px;
+}
+#wishlist #wishlist_ad {
+	float:	left;
+	width: 	240px;
+	border: 1px #CCC solid;
+	margin-top: 80px;
+}
+#wishlist div#wishlist_customer img {
+	float: left;
+}
+#wishlist div#wishlist_customer div {
+	float: left;
+	margin-left: 10px;
+	width: 110px;
+	font-size: 13px;
+}
+
+#wishlist #subject table {
+	margin: 0;
+}
+
+#wishlist #subject #wishlist_heading {
+	padding: 10px 0 3px;
+	font-size: 14px;
+	color: #666;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+}
+
+#wishlist #subject #wishlist_share {
+	margin-top: 10px;
+	float: right;
+	font-size: 14px;
+}
+
+#wishlist #subject #wishlist_share a {
+	color: #1165CC;
+}
+
+#wishlist #subject table th {
+	padding: 2px 5px; 
+	background: #f1f1f1;
+	font-size: 14px;
+	font-weight: bold;
+	color: #999;
+}
+
+#wishlist #subject table th small {
+	font-size: 14px;
+	font-weight: normal; }
+
+#wishlist #subject table td {
+	padding: 8px 5px;
+	font-size: 14px;
+	color: #666;
+	text-align: left;
+	vertical-align: top;
+	border-collapse: collapse;
+	border-spacing: 0;
+	border-bottom: 1px solid #e2e2e2; 
+}
+
+#wishlist #subject table th.col1 {
+	width: 25%; }
+
+#wishlist #subject table th.col2 {
+	width: 60%; }
+
+#wishlist #subject table th.col3 {
+	text-align: center;
+	width: 10%; }
+
+#wishlist #subject table td.col3,
+#wishlist #subject table td.col4 {
+	text-align: center;
+}
+
+#wishlist #subject table th.col4 {
+	text-align: center;
+	width: 5%; }
+
+#wishlist #subject table textarea {
+	width: 90%;
+	border: 1px #ccc solid;
+	padding: 5px;
+	color: #666;
+	min-height: 80px;
+}
+
+#wishlist #subject table td table {
+	margin: 0;
+	width: 690px;
+	border-collapse: collapse;
+	border-spacing: 0;
+	border-bottom: 1px solid #e2e2e2; }
+
+#wishlist #subject table td table th {
+	padding: 5px 0;
+	font-size: 14px;
+	color: #666;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+	background: #ebebeb; }
+
+#wishlist #subject table td table td {
+	padding: 5px 0;
+	font-size: 14px;
+	color: #666;
+	text-align: left;
+	vertical-align: top; }
+
+#wishlist #subject table td a.remove{
+	font-size: 10px;
+	background-color: #CCC;
+	color: #333;
+	padding: 3px 4px 1px;
+	width: 10px;
+	text-align: center;
+}
+
+#wishlist #subject table tfoot td {
+	text-align: right;
+} 
+
+#wishlist #subject table td input.update {
+	border: 1px #ccc solid;
+	background-color: #E7E7E7;
+	padding: 5px 10px 3px;
+	color: #666;
+}
+
+#wishlist #subject table td table th.col1b, 
+#wishlist #subject table td table td.col1b {
+	padding-left: 14px;
+	width: 15%; }
+
+#wishlist #subject table td table th.col2b, 
+#wishlist #subject table td table td.col2b {
+	width: 85%; }
+
+#wishlist #subject table td table tfoot td {
+	text-align: right;
+	line-height: 1.75em;
+	border-top: 1px solid #e2e2e2;
+	border-bottom: 1px solid #e2e2e2; }
+	
+
+#wishlist #subject table a {
+	color: #1165cc; }
+	
+#wishlist .btn {
+	position: relative;
+	margin: 4px 0;
+	padding: 0;
+	width: 80px;
+	height: 18px;
+	overflow: hidden;
+	font-size: 12px;
+	color: #0066cc;
+	text-align: center;
+	background: url(../images/bg_btn02.jpg) 0 0 repeat-x;
+	border: 1px solid #ccc; }
+
+#wishlist .inpbtn {
+	background: transparent;
+	color: #0066CC;
+	text-align: center;
+	border: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 12px;
+	width: 80px;
+	height: 18px;
+	cursor: pointer; 
+}

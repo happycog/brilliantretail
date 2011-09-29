@@ -18,7 +18,9 @@ http://getsatisfaction.com/brilliantretail
 * Added member based pricing
 * Added member based sale pricing
 * Added wishlist feature
-* Added wishlist template to blank theme
+* Added customer/wishlist template to blank theme
+* Added customer/wishlist_manage template to blank theme
+* Added wishlist/index (public) template to blank theme
 * Added "Feeds" section to admin and product new/edit form
 * Added a forth level of category navigation [#0000092]
 * Added ajax filter to admin product overview [#0000096]

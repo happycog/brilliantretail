@@ -65,4 +65,38 @@ class Wishlist_model extends CI_Model {
 		$this->db->update('br_wishlist',$data,array('member_id'=>$member_id,'product_id'=>$product_id));
 		return true;
 	}
+	
+	public function wishlist_get_hash($member_id){
+		$this->db->where('member_id',$member_id)->from('br_wishlist_hash');
+		$query = $this->db->get();
+		$cnt = $query->num_rows();
+		if($cnt == 0){
+			// need to create a hash for the user
+			$hash = md5(time().rand(100,1000).time()); 
+			$arr = array(
+							'member_id' => $member_id,
+							'hash' 		=> $hash
+						);
+			$this->db->insert('br_wishlist_hash',$arr);	
+		}else{
+			// return the users hash
+			$rst = $query->result_array();
+			$hash = $rst[0]["hash"];
+		}
+		return $hash;
+	}
+	
+	public function wishlist_get_member($hash){
+		$this->db->where('hash',$hash)->from('br_wishlist_hash');
+		$query = $this->db->get();
+		$cnt = $query->num_rows();
+		if($cnt == 0){
+			return 0;
+		}else{
+			// return the users hash
+			$rst = $query->result_array();
+			$member_id = $rst[0]["member_id"];
+		}
+		return $member_id;
+	}
 }

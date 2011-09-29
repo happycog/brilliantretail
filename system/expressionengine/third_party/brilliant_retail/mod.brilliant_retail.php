@@ -834,7 +834,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}	
 						
 						$vars[0] = array(
-										'share_hash'		=> base64_encode($this->EE->session->userdata["member_id"]), 
+										'share_hash'		=> $this->EE->wishlist_model->wishlist_get_hash($this->EE->session->userdata["member_id"]), 
 										'update_link' 		=> $link,  
 										'total_results' 	=> count($product),
 										'results' 			=> $product,
@@ -916,9 +916,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$this->EE->load->model('wishlist_model');
 
 				// Hash is required
-					$member_id = base64_decode($this->EE->TMPL->fetch_param('hash'));
+					$hash = ($this->EE->TMPL->fetch_param('hash')) ? $this->EE->TMPL->fetch_param('hash') : '';
+					$member_id = $this->EE->wishlist_model->wishlist_get_member($hash);
 					$wishlist = $this->EE->wishlist_model->wishlist_get($member_id,TRUE);
-					
+				
 					if(count($wishlist) == 0){
 						$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
 						preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
@@ -936,11 +937,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 
 					$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
+				
+				// Set up the parse array
 					$vars[0] = array(	'no_results' 	=> array(),
 										'results' 		=> $product,
 										'form_open' 	=> '<form action="'.$action.'" method="POST">',
 										'form_close' 	=> '</form>');
-										
+				
+				// Finally get the member info 
+					$member = $this->EE->customer_model->get_customer_profile($member_id);
+					foreach($member as $key => $val){
+						$vars[0][$key] = $val;		
+					}
 					
 				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
 				return $output;				
