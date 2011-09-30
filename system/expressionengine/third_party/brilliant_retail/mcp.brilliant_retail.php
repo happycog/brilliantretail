@@ -435,6 +435,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Container for member rows
 				$member = array();
 				foreach ($members["results"] as $row){
+					if($row["customer"] == ''){
+						$row["customer"] = '('.lang('empty').')';
+					}
 					$member[] = array(	'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
 										'<a href="mailto:'.$row["email"].'">'.$row["email"].'</a>',
 										date("n/d/Y",$row["join_date"]), 

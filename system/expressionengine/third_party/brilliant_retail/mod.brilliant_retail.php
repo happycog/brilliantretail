@@ -828,7 +828,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 												'title' 		=> $p[0]['title'], 
 												'image_thumb'	=> $p[0]["image_thumb"],
 												'is_public'		=> $prod["is_public"],
-												'notes'			=> $prod["notes"],
+												'notes'			=> str_replace("{","&#123;",$prod["notes"]),
 												'remove_link'	=> $remove_link   
 											);
 						}	
