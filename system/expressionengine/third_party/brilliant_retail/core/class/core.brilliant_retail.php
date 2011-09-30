@@ -943,6 +943,8 @@ class Brilliant_retail_core {
 	}
 	
 	function _search_index($queryStr){
+		// Dashes don't play nicely with our wildcard search
+		$queryStr = str_replace("-"," ",$queryStr).'*';
 		ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 		include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 		
@@ -950,7 +952,7 @@ class Brilliant_retail_core {
 		
 		$path = APPPATH.'cache/brilliant_retail/search';
 		$index = Zend_Search_Lucene::open($path);
-		$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr.'*', 'utf-8');
+		$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr, 'utf-8');
 	
 		$hits = $index->find($query);
 		return $hits;
