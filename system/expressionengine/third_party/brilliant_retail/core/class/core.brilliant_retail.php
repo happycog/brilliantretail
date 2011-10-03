@@ -379,7 +379,30 @@ class Brilliant_retail_core {
 			
 			// Donation
 				if($products[0]["type_id"] == 7){
-					$products[0]["donation"][0] = array();				
+					// Setup the radio buttons
+						
+						$group_id = $this->EE->session->userdata["group_id"];
+						$radio = '<ul id="donation_options">';
+						$i = 0;
+						foreach($products[0]["price_matrix"] as $price){
+						 	$selected = ($i == 0) ? 'checked' : '';
+						 	if(	$price["group_id"] == 0 || 
+						 		$price["group_id"] == $group_id){
+						 		$radio .= '	<li><input type="radio" '.$selected.' name="donation_price[]" id="donation_price_'.$i.'" value="'.$price["price"].'"  />
+        										'.$this->_config["currency_marker"].$this->_currency_round($price["price"]).'</li>';
+						 	}
+							$i++;
+						}
+						$radio .= '<li>
+										<input type="radio" name="donation_price[]" id="donation_price_'.$i.'" value="other"  /> '.lang('br_other').' '.$this->_config["currency_marker"].' <input type="text" name="donation_other" id="donation_other" />
+										<em>'.$this->_config["currency_marker"].$this->_currency_round($products[0]["donation"][0]["min_donation"]).' '.lang('br_minimum').'</em>
+									</ul>';
+						
+						$products[0]["donation"][0]['price_options'] = $radio;	
+						
+					// Lets hide the price since it would show the highest one
+						$products[0]["price"] = '';
+						$products[0]["price_html"] = '';
 				}else{
 					$products[0]["donation"][0] = array();				
 				}
@@ -979,13 +1002,13 @@ class Brilliant_retail_core {
 		// see if there are subscriptions in the cart
 			$subscriptions = 0;
 			foreach($cart["items"] as $c){
-				if($c["type_id"] == 6){
+				if(count($c["subscription"]) > 0){
 					$subscriptions = 1;
-				}	
+				}
 			}
 		$i = 0;
+
 		if(isset($this->_config["gateway"][$this->site_id])){ // Check if any gateways are enabled
-		
 			foreach($this->_config["gateway"][$this->site_id] as $gateway){
 				if($gateway["enabled"] == 1){
 					$str = 'Gateway_'.$gateway["code"];
@@ -1022,15 +1045,14 @@ class Brilliant_retail_core {
 							                    	'.$form.'
 							                    </div>
 							               	</div>';
+								$i++;
 							}
 						}
 					}
-					$i++;
 				}
 			}
 		
 		}
-
 		return $output;
 	}
 	
@@ -2131,7 +2153,39 @@ class Brilliant_retail_core {
 			// Return Response
 				return $trans;
 		}
-		
+
+	// Checkout Function to process subscriptions
+		function _process_subscription($data){
+			
+			$this->EE->load->model('order_model');
+			$this->EE->load->model('subscription_model');
+			
+			// Get the gateway code
+				$code = $this->EE->order_model->_get_gateway($data["gateway"]);
+			
+			// Config data for the given code
+				$config = array();
+				if(isset($this->_config["gateway"][$this->site_id][$code]["config_data"])){
+					$config_data = $this->_config["gateway"][$this->site_id][$code]["config_data"]; 
+					foreach($config_data as $c){
+						$config[$c["code"]] = $c["value"];
+					}
+				}
+								
+			// Process Gateway
+				$str = 'Gateway_'.$code;
+				$tmp = new $str();
+				$trans = array();
+				$i = 0;
+				foreach($data["cart"]["items"] as $item){
+					$trans[$i] = $tmp->process_subscription($item,$data,$config);
+					$i++;
+				}
+
+			// Return Response
+				return $trans;
+		}
+
 	/* Get the array information for the help files */
 	
 		function _get_sidebar_help(){

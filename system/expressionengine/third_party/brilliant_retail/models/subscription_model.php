@@ -129,11 +129,6 @@ class Subscription_model extends CI_Model {
 			return $subscriptions;
 	}
 	
-	function create_subscription($data){
-		$this->db->insert('br_order_subscription',$data);
-		return true;
-	}
-	
 	function get_subscription_by_member($member_id,$order_subscription_id=''){
 		$subscription = array();
 		$this->db->from('br_order_subscription s')
@@ -150,4 +145,17 @@ class Subscription_model extends CI_Model {
 		}
 		return $subscriptions;
 	}
+
+	function create_subscription($data){
+		$this->db->insert('br_order_subscription',$data);
+		return true;
+	}
+
+	function update_subscription_status($data){
+		$order_id = $data["order_id"];
+		unset($data["order_id"]);
+		$this->db->where('order_id',$order_id);
+		$this->db->update('br_order_subscription',$data);
+		return true;
+	}	
 }

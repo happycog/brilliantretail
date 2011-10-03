@@ -209,9 +209,14 @@
 
 	<p>&nbsp;</p>
 
+<?php
+if($show_subs == TRUE){
+?>
 	<?=$subscription?>
-
 	<p>&nbsp;</p>
+<?php
+}
+?>
 
 	<?=$seo?>
 	

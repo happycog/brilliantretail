@@ -147,6 +147,10 @@ class Product_model extends CI_Model {
 					$products[$i]["subscription"] = $this->get_product_subscription($row["product_id"]);
 				}
 				
+				if($row["type_id"] == 7){
+					$products[$i]["donation"] = $this->get_product_donation($row["product_id"]);
+				}
+				
 				save_to_cache('product_'.$row["product_id"],serialize($products[$i]));
 				$i++;
 			}
@@ -493,26 +497,23 @@ class Product_model extends CI_Model {
 		
 			// Subscription Products 
 				if($data["type_id"] == '6'){
-					$trial_offer = isset($data["trial_offer"]) ? 1 : 0;
+					
+					$trial_price = '';
+					$trial_occur = '';
+					if(isset($data["trial_offer"])){
+						$trial_price 	= $data["trial_price"];
+						$trial_occur 	= $data["trial_occur"];
+					}
+					
 					$subscription = array(
 											'length' => $data["length"],
 											'period' => $data["period"], 
 											'group_id' => $data["group_id"], 
-											'trial_offer' => $trial_offer,
-											'trial_price' => $data["trial_price"],
-											'trial_occur' => $data["trial_occur"],
+											'trial_price' => $trial_price,
+											'trial_occur' => $trial_occur,
 											'cancel_group_id' => $data["cancel_group_id"]
 										);
-					
-					// check for discount pricing
-						if(isset($data["sub_price_period"])){
-							$sub_price["periods"] = $data["sub_price_period"];
-							$sub_price["discount"] = $data["sub_price_adjust"]; 	
-							unset($data["sub_price_period"]);
-							unset($data["sub_price_adjust"]); 	
-						}
 				}
-				
 				unset($data["length"]);
 				unset($data["period"]);
 				unset($data["group_id"]);
@@ -520,6 +521,17 @@ class Product_model extends CI_Model {
 				unset($data["trial_price"]);
 				unset($data["trial_occur"]);
 				unset($data["cancel_group_id"]);
+
+			// Donation Products 
+				if($data["type_id"] == '7'){
+					$donation = array(
+										'min_donation' 		=> $data["min_donation"],
+										'allow_recurring' 	=> $data["allow_recurring"]
+									);
+				}
+				unset($data["min_donation"]);
+				unset($data["allow_recurring"]);
+				
 	
 			if(isset($data["related"])){
 				$related = $data["related"];
@@ -799,7 +811,14 @@ class Product_model extends CI_Model {
 							}
 						}
 				}
-				
+			
+			// If its a donation
+				if(isset($donation)){
+					$this->db->delete('br_product_donation', array('product_id' => $product_id)); 
+					$donation["product_id"] = $product_id; 
+					$this->db->insert('br_product_donation',$donation);
+				}
+			
 			// Related Products 
 				if(isset($related)){
 					$this->db->delete('br_product_related', array('parent_id' => $product_id)); 
@@ -1039,6 +1058,21 @@ class Product_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->where('product_id',$product_id);
 		$this->db->from('br_product_subscription');		
+		$this->db->limit(1);
+		$query = $this->db->get();
+		$arr = array();
+		$i = 0;
+		foreach ($query->result_array() as $row){
+			$arr[$i] = $row;
+			$i++;
+		}
+		return $arr;
+	}
+	
+	function get_product_donation($product_id){
+		$this->db->select('*');
+		$this->db->where('product_id',$product_id);
+		$this->db->from('br_product_donation');		
 		$this->db->limit(1);
 		$query = $this->db->get();
 		$arr = array();

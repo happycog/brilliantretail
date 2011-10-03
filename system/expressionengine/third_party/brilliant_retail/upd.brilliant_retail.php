@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.3.9';
+	public $version	= '1.0.4.0';
 	
 	function Brilliant_retail_upd()
 	{
@@ -570,6 +570,8 @@ class Brilliant_retail_upd {
 					trial_occur int(11) NOT NULL DEFAULT '0',
 					renewal_price decimal(10,2) NOT NULL,
 					next_renewal timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+					result varchar(255) DEFAULT NULL,
+					message varchar(255) DEFAULT NULL,
 					created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
 				  PRIMARY KEY (order_subscription_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";

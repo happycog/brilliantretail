@@ -3,11 +3,10 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		Brilliant2.com 								*/
+/*	@Author		David Dexter 								*/
 /* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
-/* 	@since		Version 1.0.0 Beta							*/
 /*															*/
 /************************************************************/
 /* NOTICE													*/
@@ -33,6 +32,6 @@
   	   	{!--
   	   		<li {if '{segment_2}' == 'subscriptions'}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer/subscriptions'}">Subscriptions</a></li>
     	!--}
-    	<li {if '{segment_2}' == 'wishlist'}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer/wishlist'}">Wishlist</a></li>
+    	<li {if '{segment_2}' == 'wishlist' OR '{segment_2}' == 'wishlist_manage'}class="active"{/if}><a href="{exp:brilliant_retail:path src='customer/wishlist'}">Wishlist</a></li>
     </ul>
 </div> <!-- sidebar -->

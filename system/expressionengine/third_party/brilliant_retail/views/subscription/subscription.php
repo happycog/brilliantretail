@@ -96,7 +96,7 @@
 		var oTable = $('#subscriptionTable').dataTable({
 													"iDisplayLength": 25, 
 													"aoColumns": [
-																		null,
+																		{ "asSorting": [ "desc", "asc" ] }, 
 																		null,
 																		null,
 																		null,

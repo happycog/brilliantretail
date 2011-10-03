@@ -452,14 +452,6 @@ class Order_model extends CI_Model {
 		return true;
 	}
 	
-	function update_subscription_status($data){
-		$order_id = $data["order_id"];
-		unset($data["order_id"]);
-		$this->db->where('order_id',$order_id);
-		$this->db->update('br_order_subscription',$data);
-		return true;
-	}	
-	
 	function _get_gateway($gid){
 		$this->db->where('md5(config_id)',$gid);
 		$this->db->from('br_config');

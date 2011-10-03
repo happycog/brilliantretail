@@ -50,7 +50,7 @@ $subscription = $products[0]["subscription"][0];
 					<?php
 						$chk = '';
 						$class = 'subscribe_hide subscribe_opt';
-						if($subscription["trial_offer"] == 1){
+						if($subscription["trial_occur"] >= 1){
 							$chk = 'checked="checked"';
 							$class = 'subscribe_opt';
 						}

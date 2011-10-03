@@ -106,8 +106,9 @@ $lang = array(
 
 // Dashboard 
 	
-	'br_sales_report' => 'Sales Report',
-	'br_no_graph_availble' => 'No data available',
+	'br_all_orders' 		=> 'All Orders',
+	'br_sales_report' 		=> 'Sales Report',
+	'br_no_graph_availble' 	=> 'No data available',
 	
 // Orders 
 
@@ -385,7 +386,7 @@ $lang = array(
 	'br_module_remove_success' 	=> 'The selected modules has been removed.',
 	'br_module_install_error'	=> 'Module Installation Error', 
 	'br_config_attribute_instructions'		=> 'Manage product attributes. Dropdown attributes are used to create configurable products.',
-	'br_config_attributeset_instructions'	=> 'Attribute sets allow you to group attributes which can be added to any product.',
+	'br_config_attributeset_instructions'	=> 'Group attributes into sets which can be added to products as custom attributes.',
 	'br_config_category_instructions'		=> 'Manage your catalog category tree.',
 	'br_config_email_instructions'			=> 'Notification templates are used by the system to send a variety of emails to your clients.',
 	'br_config_feeds_instructions'			=> 'Create custom feeds for your products.',
@@ -592,8 +593,8 @@ $lang = array(
 			'br_stock_inventory_exceeded' 			=> "One or more of your items have exceeded the available quantity",
 		
 		// Checkout Messages
-			'br_address_fields_required' 	=> "The following address fields are required:", 
-			'br_select_a_state' 			=> "Select a State",
+			'br_the_following_fields_are_required' 	=> "The following address fields are required:", 
+			'br_select_a_state' 		=> "Select a State",
 			'br_fname' 					=> 'First Name', 
 			'br_lname' 					=> 'Last Name', 
 			'br_billing_fname' 			=> 'Billing First Name', 
@@ -623,6 +624,12 @@ $lang = array(
 		// Price Filters 
 			'br_filter_to' 					=> 'to',
 			'br_filter_under' 				=> 'Under', 	
+		
+		// Misc FE
+			'br_recurring_donation'			=> 'Recurring Donation',
+			'br_every_months'				=> 'Every Month',
+			'br_other' 						=> 'Other',
+			'br_minimum' 					=> 'Min.',
 // End 
 	'' 
 );

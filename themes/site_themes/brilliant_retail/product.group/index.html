@@ -3,11 +3,10 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		Brilliant2.com 								*/
+/*	@Author		David Dexter 								*/
 /* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
-/* 	@since		Version 1.0.0 Beta							*/
 /*															*/
 /************************************************************/
 /* NOTICE													*/
@@ -106,38 +105,75 @@
         
             <div id="details">
                     {price_html}
-                    {if {type_id} != 6}
+                    {if {type_id} != 6 AND {type_id} != 7}
                     	<label>Qty:</label>
                     	{quantity_select}
 					{if:else}
+
 						<input type="hidden" name="quantity" value="1" />
+
 					{/if}
 					<div class="clearboth"><!-- --></div>
                     {!-- Insert Product Specific Selectors !--}
-                    	{subscription}
-                    		<div>
-                    			<b>Renews Every:</b> {length} {renewal}
-                    		</div>
-                    		<div>
-                    			<b>Trial Price:</b> ${trial_price}
-                    		</div>
-                    		<div>
-                    			<b>Trial Occurances:</b> {trial_occur}
-                    		</div>
-                    	{/subscription}
-                    	{configurable}
-                    		<label>{configurable_label}</label>
-                    		{configurable_select}<br />
-                    		<div class="clearboth"><!-- --></div>		
-                    	{/configurable}
-                    	{configurable_js}
-                    	{options}
-                    		<h5>
-                    			{option_label}
-                    		</h5>
-                    		{option_input}
-                    		<div class="clearboth"><!-- --></div>
-                    	{/options}
+                    	
+                    	{!-- Donation Product Type !--}
+	                    	{donation}
+
+								{price_options}
+								
+								{!-- If you have a subscription supported gateway you can setup recurring donations !--}
+
+									{if allow_recurring}
+										<div id="donation_recurring">
+											<input type="checkbox" name="recurring" /> I would like to setup a 
+											recurring donation every month for the amount selected. 
+										</div>
+									{/if}
+
+	                    	{/donation}
+
+						{!-- Subscription Product Type !--}			                    	
+	                    	{subscription}
+
+	                    		<div>
+	                    			<b>Renews Every:</b> {length} {renewal}
+	                    		</div>
+
+								{!-- Did you setup a trial? !--}
+									{if {trial_occur} >= 1}
+										<div>
+											<b>Trial Price:</b> ${trial_price}
+										</div>
+										<div>
+											<b>Trial Occurances:</b> {trial_occur}
+										</div>
+									{/if}
+							
+							{/subscription}
+                    	
+						{!-- Configurable Product Type !--}
+
+	                    	{configurable}
+	                    		
+	                    		<label>{configurable_label}</label>
+	                    		{configurable_select}<br />
+	                    		<div class="clearboth"><!-- --></div>		
+	                    	{/configurable}
+								
+							{!-- Required to set configurable selectors!--}	
+
+		                    	{configurable_js}
+
+                    	{!-- Optional Product Options !--}
+
+	                    	{options}
+	                    		
+	                    		<h5>{option_label}</h5>
+	                    		{option_input}
+	                    		<div class="clearboth"><!-- --></div>
+
+	                    	{/options}
+						
                     {!-- End Insert Product Specific Selectors !--}
                     
                     <div class="btn">
@@ -162,7 +198,6 @@
 	                {attribute}
                 		<h3>{label}</h3>
 	                	<div>{value}</div>
-					
 					{/attribute}
                 </div> <!-- features -->                
             </div> <!-- details -->

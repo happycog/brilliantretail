@@ -28,8 +28,8 @@
 
 	$this->table->set_heading(
 							array(
-						    		'data' => '', 
-						    		'width' => '5%'),
+						    		'data' => lang('status'), 
+						    		'width' => '50px'),
 						    array(
 						    		'data' => lang('br_title'), 
 						    		'width' => '*'), 

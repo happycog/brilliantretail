@@ -26,7 +26,7 @@ include_once('assets/phpPayPal.php');
 class Gateway_paypal_pro extends Brilliant_retail_gateway {
 	public $title 	= 'Paypal Pro';
 	public $label 	= 'Credit Card Payment (PayPal)';
-	public $descr 	= 'Accept credit cards directly from your site with an Authorize.net payment gateway account.';
+	public $descr 	= 'Accept credit cards directly from your site with an PayPal Pro payment gateway account.';
 	public $enabled = true;
 	public $version = .5;
 	

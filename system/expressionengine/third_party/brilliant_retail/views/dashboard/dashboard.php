@@ -84,7 +84,7 @@
 				                	}
 				                ?>
 				                </ul>
-				                <p class="b2r_all"><a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order">all orders &raquo;</a></p>
+				                <p class="b2r_all"><a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order"><?=lang('br_all_orders')?> &raquo;</a></p>
 				            </div> <!-- orders -->
 				            
 				            

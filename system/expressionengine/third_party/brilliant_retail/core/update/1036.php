@@ -22,6 +22,5 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-	$sql[] = "ALTER TABLE exp_br_order_subscription DROP COLUMN trial_offer";
 	$sql[] = "ALTER TABLE exp_br_order_subscription DROP COLUMN trial_length";
 	$sql[] = "ALTER TABLE exp_br_order_subscription DROP COLUMN	trial_period";
