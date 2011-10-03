@@ -1,3 +1,0 @@
-# Subscription Notes 
-
-Add to cart creates a subscription array in the 

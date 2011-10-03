@@ -1,5 +1,0 @@
-# Donation Notes
-
-If recurring is set and allow_recurring is true then a subscription array is added to the cart with the cart_add method. 
-
-core / _payment_options will only return payment methods that allow subscription! 
