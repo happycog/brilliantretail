@@ -1214,26 +1214,30 @@ class Brilliant_retail extends Brilliant_retail_core{
 				foreach($shipping_fields as $f){
 					$data[$f] = '';
 				}
-
+				
 				foreach($_POST as $key => $val){
 					$data[$key] = $this->EE->input->post($key,TRUE);
 				}
-
-				// Minimum required fields
-				$required_fields = array(
-											'br_fname'           	=> lang('br_fname'), 
-											'br_lname'            	=> lang('br_lname'),
-											'email'               	=> lang('br_email'),
-											'br_billing_fname'    	=> lang('br_billing_fname'),
-											'br_billing_lname'    	=> lang('br_billing_lname'),
-											'br_billing_phone'    	=> lang('br_billing_phone'),
-											'br_billing_address1' 	=> lang('br_billing_address1'),
-											'br_billing_city'     	=> lang('br_billing_city'),
-											'br_billing_state'    	=> lang('br_billing_state'),
-											'br_billing_zip'      	=> lang('br_billing_zip'),
-											'br_billing_country'  	=> lang('br_billing_country')
-										);
 				
+				// If we don't have br_fname/lname then try to set them on the billing fname/lname 
+					if($data["br_fname"] == ''){ $data["br_fname"] = $data["br_billing_fname"]; }
+					if($data["br_lname"] == ''){ $data["br_lname"] = $data["br_billing_lname"]; }
+				
+				// Minimum required fields
+					$required_fields = array(
+												'br_fname'           	=> lang('br_fname'), 
+												'br_lname'            	=> lang('br_lname'),
+												'email'               	=> lang('br_email'),
+												'br_billing_fname'    	=> lang('br_billing_fname'),
+												'br_billing_lname'    	=> lang('br_billing_lname'),
+												'br_billing_phone'    	=> lang('br_billing_phone'),
+												'br_billing_address1' 	=> lang('br_billing_address1'),
+												'br_billing_city'     	=> lang('br_billing_city'),
+												'br_billing_state'    	=> lang('br_billing_state'),
+												'br_billing_zip'      	=> lang('br_billing_zip'),
+												'br_billing_country'  	=> lang('br_billing_country')
+											);
+					
 					// If the member is logged in we already have their email so we 
 					// don't need to require it
 						if($member_id != 0) 
@@ -1654,23 +1658,23 @@ class Brilliant_retail extends Brilliant_retail_core{
 						// Send the email! 
 							
 							$vars[0] = array(
-										"fname" => $data["br_fname"],
-										"lname" => $data["br_lname"],
-										"email" => $email, 
-										"address" => $address,
-										"payment" => $payment,
-										"order_id" => $order_id, 
-										"order_num" => $order_id, 
-										'order_note' => $data["instructions"], 
-										"delivery_method" => $_SESSION["shipping"][$data["shipping"]]["method"], 
-										"delivery_label" => $_SESSION["shipping"][$data["shipping"]]["label"], 
-										"items" => $order_items, 
-										"order_subtotal" => $this->_currency_round($data["cart_subtotal"]), 
-										"discount_total" => $this->_currency_round($data["cart_discount"]), 
-										"tax_total" => $this->_currency_round($data["cart_tax"]), 
-										"shipping" 	=> $this->_currency_round($data["cart_shipping"]), 
-										"order_total" => $this->_currency_round($data["order_total"])
-									);
+												"fname" 			=> $data["br_fname"],
+												"lname" 			=> $data["br_lname"],
+												"email" 			=> $email, 
+												"address" 			=> $address,
+												"payment" 			=> $payment,
+												"order_id" 			=> $order_id, 
+												"order_num" 		=> $order_id, 
+												"order_note" 		=> $data["instructions"], 
+												"delivery_method" 	=> $_SESSION["shipping"][$data["shipping"]]["method"], 
+												"delivery_label" 	=> $_SESSION["shipping"][$data["shipping"]]["label"], 
+												"items" 			=> $order_items, 
+												"order_subtotal" 	=> $this->_currency_round($data["cart_subtotal"]), 
+												"discount_total" 	=> $this->_currency_round($data["cart_discount"]), 
+												"tax_total" 		=> $this->_currency_round($data["cart_tax"]), 
+												"shipping" 			=> $this->_currency_round($data["cart_shipping"]), 
+												"order_total" 		=> $this->_currency_round($data["order_total"])
+											);
 		
 							$this->_send_email('customer-order-new', $vars);
 							

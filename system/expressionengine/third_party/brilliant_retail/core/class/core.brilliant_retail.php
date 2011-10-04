@@ -1143,13 +1143,15 @@ class Brilliant_retail_core {
 
 	function _price_range($prices,$hash){
 		$max = max($prices);
+		
+		$power = ($this->EE->config->item('br_filter_power')) ? $this->EE->config->item('br_filter_power') : 10;
+		
 		if($max < 10){
 			$power = 5;
 		}elseif($max < 5){
 			$power = 1;
-		}else{
-			$power = 10;
 		}
+		
 		$range = pow($power,(strlen(floor($max))-1));
 		
 		foreach($prices as $p){
@@ -1913,19 +1915,28 @@ class Brilliant_retail_core {
 						$first[$c["configurable_id"]] = urldecode($attr[0]);
 					}else{
 						// Multiple config array
-						$first[addslashes($attr[0])] = urldecode($attr[0]);
+						$first[$attr[0]] = urldecode($attr[0]);
 						foreach($attr as $a){
 							if($cnt != 0){
 								$row .= "configOpts";
 								for($j=0;$j<$cnt;$j++){
-									$row .= ".forValue('".$attr[$j]."')";
+									// I'm sure this can be done better 
+									// but we need to make sure that a quote 
+									// doesn't break our javascript
+										if(strpos($attr[$j],"'") !== FALSE){
+											$row .= '.forValue("'.$attr[$j].'")';
+										}else{
+											$row .= ".forValue('".$attr[$j]."')";
+										}
 								}
 								if($cnt == (count($attr)-1)){
 									$val = $c["configurable_id"];
 								}else{
 									$val = $a;
 								}
-								$row .= ".addOptionsTextValue('".$a."','".$val."');\n";
+								// Same as above (quotes in javascript)
+									$row .= ".addOptionsTextValue(\"".$a."\",\"".$val."\");\n";
+								
 								$js .= $row;
 							}
 							$cnt++;
@@ -2178,8 +2189,10 @@ class Brilliant_retail_core {
 				$trans = array();
 				$i = 0;
 				foreach($data["cart"]["items"] as $item){
-					$trans[$i] = $tmp->process_subscription($item,$data,$config);
-					$i++;
+					if(count($item["subscription"]) > 0){
+						$trans[$i] = $tmp->process_subscription($item,$data,$config);
+						$i++;
+					}
 				}
 
 			// Return Response

@@ -14,7 +14,7 @@ http://getsatisfaction.com/brilliantretail
 
 1.0.4.0
 * IMPORTANT: Moved cp_theme/brilliant_retail directory to third_party/brilliant_retail 
-* IMPORTANT: Moved css and js files from _assets (parsed) to new js and css folders in media directory
+* IMPORTANT: Moved css and js files from _assets (parsed) to js and css folders in brilliant_retail theme
 * Added member based pricing
 * Added member based sale pricing
 * Added wishlist feature
@@ -22,7 +22,7 @@ http://getsatisfaction.com/brilliantretail
 * Added customer/wishlist_manage template to blank theme
 * Added wishlist/index (public) template to blank theme
 * Added "Feeds" section to admin and product new/edit form
-* Added a forth level of category navigation [#0000092]
+* Added a forth level of category navigation [#0000092] 
 * Added ajax filter to admin product overview [#0000096]
 * Added ajax filter to admin customer overview [#0000090]
 * Added ajax filter to admin order overview [#0000091]
@@ -44,6 +44,7 @@ http://getsatisfaction.com/brilliantretail
 * Added image_count to product internal image tag
 * Added zip code to tax calculation [#0000098]
 * Added better post error handling to cart_add method [#0000111]
+* Added missing order_note New Order email [#0000077]
 * Fixed customer_order tag to include tax, shipping and discounts in total tag
 * Fixed customer orders in admin include tax, shipping and discounts in total tag
 * Fixed dashboard recent order totals to include include tax, shipping and discounts
@@ -60,7 +61,9 @@ http://getsatisfaction.com/brilliantretail
 * Fixed an issue with the return parameter from PayPal
 * Fixed a typo in the delete category language entry [#0000082]
 * Fixed currency format issue with option price adjustments
-* Updated admin theme. 
+* Fixed issue with spaces and special characters in attributes [#0000084]
+* Fixed issue with support for foreign characters in attributes and options [#0000079]
+* Updated admin theme
 * Updated order status codes with color styles [#0000100]
 * Updated the customer order detail theme with notes attachment code [#0000088]
 * Updated the default order status in the admin to default display order ID desc [#0000108] 

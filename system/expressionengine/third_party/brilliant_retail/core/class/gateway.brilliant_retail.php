@@ -120,6 +120,8 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 				
 				$order = $this->EE->order_model->get_order($order["order_id"]);		
 
+				$note = isset($order["notes"][0]["order_note"]) ? $order["notes"][0]["order_note"] : '';
+				
 				$vars[0] = array(
 								"fname" => $order["member"]["br_fname"],
 								"lname" => $order["member"]["br_lname"],
@@ -128,6 +130,7 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 								"payment" => $order["payment"],
 								"order_id" => $order["order_id"], 
 								"order_num" => $order["order_id"], 
+								"order_note" => $note,
 								"delivery_method" => $order["shipment"][0]["method"], 
 								"delivery_label" => $order["shipment"][0]["label"], 
 								"items" => $order["items"], 

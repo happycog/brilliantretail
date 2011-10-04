@@ -129,7 +129,7 @@
                     <label>Telephone *</label>
                     <input 	class="txtinp required" 
                     		name="br_billing_phone" 
-                    		value="{exp:member:custom_profile_data}{br_billing_phone}{/exp:member:custom_profile_data}" 
+                    		value="{if "{exp:brilliant_retail:form_value for='br_billing_phone'}"}{exp:brilliant_retail:form_value for='br_billing_phone'}{if:else}{exp:member:custom_profile_data}{br_billing_phone}{/exp:member:custom_profile_data}{/if}" 
                     		type="text" />
                 </div>
                 <div class="clearboth"><!-- --></div>
@@ -139,13 +139,13 @@
                     <div>
                     	<input 	class="txtinp required" 
                     			name="br_billing_address1" 
-                    			value="{exp:member:custom_profile_data}{br_billing_address1}{/exp:member:custom_profile_data}" 
+                    			value="{if "{exp:brilliant_retail:form_value for='br_billing_address1'}"}{exp:brilliant_retail:form_value for='br_billing_address1'}{if:else}{exp:member:custom_profile_data}{br_billing_address1}{/exp:member:custom_profile_data}{/if}" 
                     			type="text" />
                     </div>
                     <div>
                 	    <input 	class="txtinp" 
                 	    		name="br_billing_address2" 
-                	    		value="{exp:member:custom_profile_data}{br_billing_address2}{/exp:member:custom_profile_data}" 
+                    			value="{if "{exp:brilliant_retail:form_value for='br_billing_address2'}"}{exp:brilliant_retail:form_value for='br_billing_address2'}{if:else}{exp:member:custom_profile_data}{br_billing_address2}{/exp:member:custom_profile_data}{/if}" 
                 	    		type="text" />
                     </div>	
                 </div>
@@ -193,11 +193,15 @@
                 	<h3>Shipping Address</h3>
 	                <div class="name">
 	                    <label>First Name *</label>
-	                    <input class="txtinp required" name="br_shipping_fname" value="{exp:member:custom_profile_data}{br_shipping_fname}{/exp:member:custom_profile_data}" type="text" />
+	                    <input	class="txtinp required" 
+	                    		name="br_shipping_fname" 
+	                    		value="{exp:member:custom_profile_data}{br_shipping_fname}{/exp:member:custom_profile_data}" type="text" />
 	                </div>
 	                <div class="name">
 	                    <label>Last Name *</label>
-	                    <input class="txtinp required" name="br_shipping_lname" value="{exp:member:custom_profile_data}{br_shipping_lname}{/exp:member:custom_profile_data}" type="text" />
+	                    <input 	class="txtinp required" 
+	                    		name="br_shipping_lname" 
+	                    		value="{exp:member:custom_profile_data}{br_shipping_lname}{/exp:member:custom_profile_data}" type="text" />
 	                </div>
 	                <div class="clearboth"><!-- --></div>
 	                

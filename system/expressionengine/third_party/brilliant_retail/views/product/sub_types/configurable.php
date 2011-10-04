@@ -103,13 +103,13 @@
 			var attr = config_attr.split(',');
 			var tmp = '<tr>';
 			for(i=0;i<attr.length;i++){
-				tmp += '<td><input type="hidden" name="config_attr_'+attr[i]+'[]" value="'+escape($('select[name=configurable_'+attr[i]+'] option:selected').text())+'" />'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'</td>';
+				tmp += '<td><input type="hidden" name="config_attr_'+attr[i]+'[]" value="'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'" />'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'</td>';
 			}
 			tmp += 	'<td class="w50"><input type="text" name="config_sku[]" /></td><td class="w50"><input type="text" name="config_qty[]" value="0" /></td><td>'+
 					'<select style="display:none" name="config_adjust_type[]"><option>fixed</option><option>percent</option></select>'+
 					'<input type="text" name="config_adjust[]" style="width:50px" /></td>'+
 					'<td class="move_config_row"><img src="<?=$theme?>images/icon_move.png" /></td>'+
-					'<td class="w50"><a href="#" class="config_item_remove">remove</a></td></tr>';
+					'<td class="w50"><a href="#" class="config_item_remove"><?=lang('delete')?></a></td></tr>';
 			$(tmp).prependTo($('#config_selected tbody'));
 
 			// reset the dnd for the rows

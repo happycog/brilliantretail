@@ -271,7 +271,7 @@ $option = 10000;
 		
 		$('.dropdown').unbind().bind('change',function(){
 														var a = $(this);
-														var b = a.next();
+														var b = a.next().next();
 														var c = a.val();
 														if(c == 'dropdown'){
 															b.show();

@@ -274,7 +274,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Order Information
 				$this->vars["status"] = $this->_config["status"];			
 				$this->vars['order'] = $this->EE->order_model->get_order($order_id);
-			
+				
 				// Do we have a user photo?
 					if($this->vars['order']['photo_filename'] != ''){
 						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['photo_filename'].'" />';
@@ -779,7 +779,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					foreach($tmp as $key => $val){
 						$fields[$key] = $key;	
 						// build the configurable attributes into the row
-							$values .= '<td><input type="hidden" name="config_attr_'.$key.'[]" value="'.urlencode($val).'" />'.urldecode($val).'</td>';
+							$values .= '<td><input type="hidden" name="config_attr_'.$key.'[]" value="'.$val.'" />'.$val.'</td>';
 					}
 					
 					// Basic inputs
