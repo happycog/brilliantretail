@@ -12,7 +12,7 @@ http://getsatisfaction.com/brilliantretail
 
 # CHANGE LOG # 
 
-1.0.4.0
+1.0.4.0 - October 4, 2011
 * IMPORTANT: Moved cp_theme/brilliant_retail directory to third_party/brilliant_retail 
 * IMPORTANT: Moved css and js files from _assets (parsed) to js and css folders in brilliant_retail theme
 * Added member based pricing
