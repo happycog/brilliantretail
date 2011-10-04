@@ -146,6 +146,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				 		$this->vars['image_upload'] = $this->_theme('upload/image.php');
 				 		$this->vars['download_upload'] = $this->_theme('upload/file.php');
 						$_SESSION["media_dir"] = $this->vars["media_dir"];
+						$_SESSION["media_url"] = $this->vars["media_url"];
 			}else{
 				$this->EE->lang->loadfile('brilliant_retail');
 			}	

@@ -24,22 +24,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+if($_SESSION["filemanager"] != true){
+	echo 'You must be logged in to the admin to view the file manager';
+	exit();
+}
+
 //Include your own script with authentication if you wish
 //i.e. include($_SERVER['DOCUMENT_ROOT'].'/_files/application/PGRFileManagerConfig.php');
 
 //real absolute path to root directory (directory you want to use with PGRFileManager) on your server  
 //i.e  PGRFileManagerConfig::$rootPath = '/home/user/htdocs/userfiles'
 //you can check your absoulte path using
-if($_SESSION["filemanager"] != true){
-	echo 'You must be logged in to the admin to view the file manager';
-	exit();
-}
-PGRFileManagerConfig::$rootPath = str_replace('themes/cp_themes/brilliant_retail/script/ckeditor/plugins/pgrfilemanager/myconfig.php','media/images',__FILE__);
+
+PGRFileManagerConfig::$rootPath = $_SESSION["media_dir"];
+
 //url path to root directory
 //this path is using to display images and will be returned to ckeditor with relative path to selected file
 //i.e http://my-super-web-page/gallery
 //i.e /gallery
-PGRFileManagerConfig::$urlPath = '/media/images';
+
+PGRFileManagerConfig::$urlPath = $_SESSION["media_url"];
 
 
 //    !!!How to determine rootPath and urlPath!!!
