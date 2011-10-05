@@ -188,7 +188,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 		}
 
 	/**
-	* Display products related to a specified category_id
+	* Display products related to a specified url_title
+	* 
 	* 
 	* @access	public
 	* @param	int

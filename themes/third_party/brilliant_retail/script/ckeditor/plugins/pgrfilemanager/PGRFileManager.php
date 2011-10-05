@@ -60,14 +60,6 @@ THE SOFTWARE.
   </head>
   <body>
     <div id="container" class="ui-widget ">
-      <?php
-      /*
-      <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
-        <span id="ui-dialog-title-dialog" class="ui-dialog-title">File Manager</span>
-        <a class="ui-dialog-titlebar-close ui-corner-all" href="#"><span class="ui-icon ui-icon-closethick">close</span></a>
-      </div>
-      */
-      ?>
       <div id="buttons">
       	<?php if (isset($_SESSION['PGRFileManagerAuthorized'])):?>
       	<form method="post">
@@ -77,12 +69,6 @@ THE SOFTWARE.
         </form>
         <?php endif;?>
         <button id="btnRefresh">refresh</button>
-        <?php
-        /*
-	        <button id="btnSelectAllFiles" class="ui-state-default ui-corner-all">select all files</button>
-	        <button id="btnUnselectAllFiles" class="ui-state-default ui-corner-all">unselect all files</button>
-		*/
-        ?>
         <select id="fileListType">
             <option value="icons">icons</option>
             <option value="list">list</option>

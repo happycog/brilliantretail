@@ -30,7 +30,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 	public $switch_cnt = 0;
 
 	var $info = array(
-		'name'		=> 'BrilliantRetail',
+		'name'		=> 'BrilliantRetail Products',
 		'version'	=> '1.0.1.1'
 	);
 	
