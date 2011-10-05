@@ -1,4 +1,5 @@
 <?php
+session_start();
 /*
 Copyright (c) 2009 Grzegorz Żydek
 
@@ -105,7 +106,7 @@ class PGRThumb_UrlThumb
         if (!self::$_file) return false;
         
         //generate cached filename
-        $cachedFile = realpath(dirname(__FILE__) . '/../cache') . PGRThumb_Cache::generateFilename(self::$_file, $_SERVER['QUERY_STRING']);
+        $cachedFile = $_SESSION["media_dir"] .'cache'. PGRThumb_Cache::generateFilename(self::$_file, $_SERVER['QUERY_STRING']);
         
         //check if cached file exist
         if (file_exists($cachedFile)) {

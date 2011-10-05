@@ -132,7 +132,7 @@ function getFolders($dir, $relativePath)
     global $depth;   
     
     foreach (scandir($dir) as $elem) {
-        if (($elem === '.') || ($elem === '..')) continue;
+        if (($elem === '.') || ($elem === '..') || ($elem === 'cache') ) continue;
         $dirpath = $dir . '/' . $elem;
         if (is_dir($dirpath)) {
             $folder = array();

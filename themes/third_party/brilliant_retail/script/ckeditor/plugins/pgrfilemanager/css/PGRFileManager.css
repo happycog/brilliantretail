@@ -133,16 +133,15 @@ body{
 
 #uploadPanel
 {
-  /*background: #565556;*/
   border: double #CCC;
   border-width: 3px 0 0;
-  height: 150px;
+  height: 250px;
   overflow: hidden;
 }
 
 #uploadFiles
 {
-  background: #565556 url("../img/icons/uploadFiles.png") center no-repeat;
+  background: url("../img/icons/uploadFiles.png") center no-repeat transparent;
   cursor: pointer;
   height: 30px;
   width: 30px;
@@ -150,7 +149,7 @@ body{
 
 #removeFiles
 {
-  background: #565556 url("../img/icons/removeFiles.png") center no-repeat;
+  background: url("../img/icons/removeFiles.png") center no-repeat transparent;
   cursor: pointer;
   height: 30px;
   width: 30px;
@@ -271,6 +270,8 @@ ui-}
 /*contect menu*/
 .contextMenu
 {
+	border: 1px #CCC solid;
+	background-color: white;
   display: none;
   font-size: 11px;
   list-style: none;
@@ -282,8 +283,7 @@ ui-}
 }
 .contextMenu li
 {
-  padding-left: 17px;
-  padding-right: 8px;
+	padding: 2px 8px 2px 17px;
 }
 .contextMenu li a
 {
