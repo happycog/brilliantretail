@@ -5,15 +5,14 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 CKEDITOR.editorConfig = function( config )
 {
-	config.removePlugins = 'scayt';
-	config.extraPlugins = 'products';
+	config.removePlugins 	= 'scayt';
     
     config.toolbar = 'MyToolbar';
     config.resize_enabled = false;
     config.height = '100px';
     config.toolbar_MyToolbar =
     [
-        ['Source','Cut','Copy','Paste','PasteText','PasteFromWord'],
+        ['Paste','PasteText','PasteFromWord'],
 	    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
 	    ['Bold','Italic','Underline'], 
 	    ['Strike','-','Subscript','Superscript'],
@@ -23,7 +22,8 @@ CKEDITOR.editorConfig = function( config )
 	    ['Image','Link','Unlink','Anchor'],
 	    '/',
 	    ['Format','Font','FontSize'],
-	    ['TextColor','BGColor'] 
+	    ['TextColor','BGColor'],
+	    ['Source'] 
 	];
 };
 

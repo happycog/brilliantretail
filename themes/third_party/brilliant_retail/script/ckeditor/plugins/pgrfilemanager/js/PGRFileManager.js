@@ -139,12 +139,12 @@ function PGRFileManager(options)
 				debug: false,
 
 				// Button settings
-				button_image_url: "img/uploadButton.gif",
+				button_image_url: "img/add_files.png",
 				button_width: "110",
 				button_height: "30",
 				button_placeholder_id: "fileInput",
-				button_text: '<span class="theFont">' + _("FILES") + '</span>',
-				button_text_style: ".theFont { font-family: arial; font-size: 16; font-weight:bold; color: #FFFFFF; text-align:center}",
+				button_text: '<span class="theFont">' + _("Add Files") + '</span>',
+				button_text_style: ".theFont { font-family: arial; font-size: 16px; color: #5F6C74; font-weight:bold; text-align:center}",
 				button_text_top_padding: 3,				
 				// The event handler functions
 				file_queue_error_handler :  function(file_object, error_code, message) {alert(file_object.name + " - " + message)},
