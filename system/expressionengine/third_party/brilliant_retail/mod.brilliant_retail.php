@@ -70,7 +70,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 	* @param	void
 	* @return	string
 	*/
-	
+		
 		function meta()
 		{
 			// Start out with our defaults
@@ -1299,6 +1299,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 					// Handle email validity
 					if($member_id == 0){
+						$this->EE->load->library('email_validation');
 						if (isset($data['confirm_email']) && $data['email'] != $data['confirm_email'])
 						{
 							$_SESSION['br_form_errors']['email'] = 'The email confirmation you entered doesn\'t match the email you entered';
@@ -1306,7 +1307,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 							$validation_errors[] = "The email confirmation you entered doesn't match the email you entered.";
 						}
 	
-						if (preg_match( "/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])*(\.([a-z0-9])([-a-z0-9_-])([a-z0-9])+)*$/i", $data['email'] ) == 0)
+						if (!$this->EE->email_validation->check_email_address(trim($data['email'])))
 						{
 							$_SESSION['br_form_errors']['email'] = 'This doesn\'t look like a valid email. Try again or contact us for help placing your order';
 							$validation_errors[] = "The email you entered doesn't appear to be valid.";
