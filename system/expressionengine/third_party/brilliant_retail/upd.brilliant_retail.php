@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.4.0';
+	public $version	= '1.0.4.1';
 	
 	function Brilliant_retail_upd()
 	{
@@ -986,6 +986,8 @@ class Brilliant_retail_upd {
   start_dt timestamp NULL DEFAULT NULL,
   end_dt timestamp NULL DEFAULT NULL,
   code_type varchar(10) NOT NULL DEFAULT 'fixed',
+  discount_type varchar(50) DEFAULT 'item',
+  max_discount decimal(10,2) DEFAULT 0,
   amount decimal(10,2) NOT NULL DEFAULT '0.00',
   enabled int(11) NOT NULL DEFAULT '0',
   descr varchar(200) NOT NULL,

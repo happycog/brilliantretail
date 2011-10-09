@@ -98,6 +98,21 @@
 		</tr>
 		<tr>
 			<td>
+				<?=lang('br_discount_type')?></td>
+			<td>
+				<select name="discount_type" id="discount_type">
+					<?php
+						$opt = array('item' => lang('br_item'), 'cart' => lang('br_cart'));
+						$sel = $promo[0]["discount_type"];
+						foreach($opt as $key => $val){
+							$selected = ($sel == $key) ? 'selected' : '';
+							echo '<option value="'.$key.'" '.$selected.'>'.$val.'</option>';
+						}
+					?>
+				</select></td>
+		</tr>
+		<tr>
+			<td>
 				<?=lang('br_code_type')?></td>
 			<td>
 				<select name="code_type">
@@ -118,8 +133,32 @@
 				<input 	type="text" 
 						name="amount"
 						value="<?=$promo[0]["amount"]?>" 
-						title="<?=lang('br_amount')?>" /></td>
+						title="<?=lang('br_amount')?>" style="width:100px;" /></td>
 		</tr>
+		<?php
+		/*
+			<tr>
+				<td>
+					<?=lang('br_max_discount')?></td>
+				<td>
+					<input 	type="text" 
+							name="min_subtotal"
+							value="<?=$promo[0]["min_subtotal"]?>"
+							title="<?=lang('br_min_subtotal')?>" style="width:100px;" /></td>
+							
+			</tr>
+			<tr>
+				<td>
+					<?=lang('br_min_subtotal')?></td>
+				<td>
+					<input 	type="text" 
+							name="min_subtotal"
+							value="<?=$promo[0]["min_subtotal"]?>"
+							title="<?=lang('br_min_subtotal')?>" style="width:100px;" /></td>
+							
+			</tr>
+		*/
+		?>
 		<tr>
 			<td>
 				<?=lang('br_start_dt')?></td>
@@ -128,7 +167,7 @@
 						name="start_dt"
 						value="<?=$start?>" 
 						class="datepicker" 
-						title="<?=lang('br_start_dt')?>" /></td>
+						title="<?=lang('br_start_dt')?>" style="width:100px;" /></td>
 		</tr>
 		<tr>
 			<td>
@@ -138,9 +177,19 @@
 						name="end_dt"
 						value="<?=$end?>" 
 						class="datepicker" 
-						title="<?=lang('br_end_dt')?>" /></td>
+						title="<?=lang('br_end_dt')?>" style="width:100px;" /></td>
 		</tr>
 		<tr>
+			<td>
+				<?=lang('br_uses_per')?></td>
+			<td>
+				<input 	type="text" 
+						name="uses_per"
+						value="<?=$promo[0]["uses_per"]?>"
+						title="<?=lang('br_user_per')?>" style="width:100px;" /></td>
+						
+		</tr>
+		<tr class="opt_items">
 			<td>
 				<?=lang('br_categories')?></td>
 			<td>
@@ -159,7 +208,7 @@
 							<?=$categories?>
 						</div></td>
 		</tr>
-		<tr>
+		<tr class="opt_items">
 			<td>
 				<?=lang('br_products')?></td>
 			<td>
@@ -210,28 +259,8 @@
 						</div></td>
 						
 		</tr>
-		<tr>
-			<td>
-				<?=lang('br_uses_per')?></td>
-			<td>
-				<input 	type="text" 
-						name="uses_per"
-						value="<?=$promo[0]["uses_per"]?>"
-						title="<?=lang('br_user_per')?>" style="width:100px;" /></td>
-						
-		</tr>
-		<?php
+<?php
 		/*
-		<tr>
-			<td>
-				<?=lang('br_min_subtotal')?></td>
-			<td>
-				<input 	type="text" 
-						name="min_subtotal"
-						value="<?=$promo[0]["min_subtotal"]?>"
-						title="<?=lang('br_min_subtotal')?>" style="width:100px;" /></td>
-						
-		</tr>
 		<tr>
 			<td>
 				<?=lang('br_min_quantity')?></td>
@@ -293,6 +322,20 @@
 		
 		$('#promoTableEdit tr:odd').addClass('odd');
 		$('#promoTableEdit tr:even').addClass('even');
+		
+		$('#discount_type').bind('change',function(){
+			if($(this).val() == 'item'){
+				$('.opt_items').show();
+			}else{
+				$('.opt_items').hide();
+			}
+		});
+		
+		<?php
+			if($promo[0]["discount_type"] == 'cart'){
+				echo "$('.opt_items').hide();";
+			}
+		?>
 		
 		$('#category_list').bind('click',function(){
 			$('#category_opts').slideToggle();

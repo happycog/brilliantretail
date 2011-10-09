@@ -23,7 +23,7 @@ THE SOFTWARE.
 */
 
 /*jquery thame*/
-#container { position: relative; padding: .2em; width: 300px; }
+#container { position: relative; padding: .2em; width: 300px; font-size: 12px; font-family: Arial; }
 #container .ui-dialog-titlebar { padding: .5em .3em .3em 1em; position: relative;  }
 #container .ui-dialog-title { float: left; margin: .1em 0 .2em; } 
 #container .ui-dialog-titlebar-close { position: absolute; right: .3em; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }

@@ -144,7 +144,7 @@ function PGRFileManager(options)
 				button_height: "30",
 				button_placeholder_id: "fileInput",
 				button_text: '<span class="theFont">' + _("Add Files") + '</span>',
-				button_text_style: ".theFont { font-family: arial; font-size: 16px; color: #5F6C74; font-weight:bold; text-align:center}",
+				button_text_style: ".theFont { font-family: Arial; font-size: 16px; color: #5F6C74; font-weight:bold; text-align:center}",
 				button_text_top_padding: 3,				
 				// The event handler functions
 				file_queue_error_handler :  function(file_object, error_code, message) {alert(file_object.name + " - " + message)},
@@ -780,6 +780,16 @@ function PGRFileManager(options)
 	    	alert(_("Can't rename root dir"));
 	    	return;
 	    }	 
+	    
+	    if(dir.attr('dirname') == 'images'){
+	    	alert(_("Can't rename images directory"));
+	    	return;
+	    }
+	    
+	    if(dir.attr('dirname') == 'products'){
+	    	alert(_("Can't rename products directory"));
+	    	return;
+	    }
 	    
 	    var buttons = new Object();
 	    buttons[_('Ok')] = function() {

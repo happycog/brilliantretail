@@ -136,7 +136,8 @@ function getFolders($dir, $relativePath)
         	($elem === '.') || 
         	($elem === '..') || 
         	($elem === 'attachments') || 
-        	($elem === 'download') || 
+        	($elem === 'file') || 
+        	($elem === 'import') || 
         	($elem === 'download') || 
         	($elem === 'cache') ) continue;
         $dirpath = $dir . '/' . $elem;

@@ -37,7 +37,7 @@ THE SOFTWARE.
   <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <title>File Manager</title>
-  <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.1.custom.css" />
+  <link rel="stylesheet" type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" />
   <link rel="stylesheet" type="text/css" href="css/jquery.treeview.css" />
   <link rel="stylesheet" type="text/css" href="css/fancybox/jquery.fancybox.css" />
   <link rel="stylesheet" type="text/css" href="css/PGRFileManager.css" />

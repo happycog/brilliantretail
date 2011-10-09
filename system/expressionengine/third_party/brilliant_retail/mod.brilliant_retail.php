@@ -1628,16 +1628,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 							}
 						
 						// Setup the items array for the notification email
-							$order_items[$i] = $item;
-			               	$order_items[$i]["title"] = $items["title"];
-							$order_items[$i]["url_title"] = $items["url_title"]; 
-			               	$order_items[$i]["sku"] = $items["sku"];
+							$order_items[$i] 				= $item;
+			               	$order_items[$i]["title"] 		= $items["title"];
+							$order_items[$i]["url_title"] 	= $items["url_title"]; 
+			               	$order_items[$i]["sku"] 		= $items["sku"];
 			               	$order_items[$i]["image_large"] = $items["image_large"];
 			               	$order_items[$i]["image_thumb"] = str_replace('products/','products/thumb/',$items["image_thumb"]);
-			               	$order_items[$i]["price_html"] = $items["price_html"];
-			               	$order_items[$i]["price"] = $this->_currency_round($items["price"]);
-			               	$order_items[$i]["options"] = $items["options"];
-			               	$order_items[$i]["subtotal"] = $this->_currency_round(($items["price"]*$items["quantity"]));
+			               	$order_items[$i]["price_html"] 	= $items["price_html"];
+			               	$order_items[$i]["price"] 		= $this->_currency_round($items["price"]);
+			               	$order_items[$i]["options"] 	= $items["options"];
+			               	$order_items[$i]["subtotal"] 	= $this->_currency_round(($items["price"]*$items["quantity"]));
 			               	$i++;
 					}
 					
@@ -2481,11 +2481,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($_SESSION["discount"]["min_quantity"] > $cnt){
 					$initial = false;
 				}
-	
-			// Uses per client
-				if($_SESSION["discount"]["uses_per"] != 0){
-				}
-			
+
 			// Is there a category restriction		
 				if($_SESSION["discount"]["category_list"] != ''){
 					$c = json_decode($_SESSION["discount"]["category_list"]);
@@ -2502,34 +2498,36 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 				}
 			
-			// Check the items in the cart
-				foreach($cart["items"] as $key => $val){
-					if($initial == true){
-						$discount = true;
-						// Check category list
-							if(isset($cats)){
-							}
-						// Check against product list			
-							if(isset($prods)){
-								if(!isset($prods[$val["product_id"]])){
-									$discount = false;
+			// For item based discounts check the items in the cart
+				if($_SESSION["discount"]["discount_type"] == 'item'){
+					foreach($cart["items"] as $key => $val){
+						if($initial == true){
+							$discount = true;
+							// Check category list
+								if(isset($cats)){
 								}
-							}
-					}else{
-						$discount = false;	
+							// Check against product list			
+								if(isset($prods)){
+									if(!isset($prods[$val["product_id"]])){
+										$discount = false;
+									}
+								}
+						}else{
+							$discount = false;	
+						}
+						if($discount == true){
+							$cart["items"][$key]["discount"] = $this->_discount_amount($cart["items"][$key]["price"]);
+						}else{
+							$cart["items"][$key]["discount"] = 0;
+						}
+						$content = serialize($cart["items"][$key]);
+						$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
+										'session_id' => session_id(), 
+										'content' => $content,
+										'updated' => date("Y-n-d G:i:s"));
+						$this->EE->product_model->cart_update($data,$key);
 					}
-					if($discount == true){
-						$cart["items"][$key]["discount"] = $this->_discount_amount($cart["items"][$key]["price"]);
-					}else{
-						$cart["items"][$key]["discount"] = 0;
-					}
-					$content = serialize($cart["items"][$key]);
-					$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
-									'session_id' => session_id(), 
-									'content' => $content,
-									'updated' => date("Y-n-d G:i:s"));
-					$this->EE->product_model->cart_update($data,$key);
-				}
+				}	
 		}
 	
 		function promo_form()

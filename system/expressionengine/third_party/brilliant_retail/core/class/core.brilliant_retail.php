@@ -2133,8 +2133,21 @@ class Brilliant_retail_core {
 				if(!isset($cart["items"])){
 					return 0;
 				}
-			foreach($cart["items"] as $item){
-				$discount += ($item["discount"] * $item["quantity"]);
+			if($_SESSION["discount"]["discount_type"] == 'item'){
+				foreach($cart["items"] as $item){
+					$discount += ($item["discount"] * $item["quantity"]);
+				}
+			}else{
+				// The discount is based on the cart total
+					if($_SESSION["discount"]["code_type"] == 'percent'){
+						$subtotal = 0;
+						foreach($cart["items"] as $val){
+							$subtotal += ($val["quantity"] * $val["price"]);
+						}
+						$discount = $subtotal * ($_SESSION["discount"]["amount"] / 100);
+					}else{
+						$discount = $_SESSION["discount"]["amount"];
+					}
 			}
 			return $this->_currency_round($discount);
 		}
@@ -2280,7 +2293,6 @@ class Brilliant_retail_core {
 	* @param	int
 	* @return	true or false
 	*/	
-
 		function _check_attribute_filterable($attr_id){
 			$attr = $this->EE->product_model->get_attribute_by_id($attr_id);
 			if($attr["filterable"] == 1){
