@@ -58,7 +58,7 @@
 			
 			{exp:brilliant_retail:show_message}
 			
-            <h4 id="subscription_heading">Subscriptions</h4>
+            <h4 id="subscription_heading">Subscription History</h4>
 				<table id="subscription" cellspacing="0">
 	            	<thead>
 	                	<tr>
@@ -77,12 +77,11 @@
 	                    </tr>
 	                </thead>
 	                <tbody>
-	                	{exp:brilliant_retail:customer_subscriptions}
+	                	{exp:brilliant_retail:customer_subscriptions_history subscription_order_id="{segment_3}"}
 							{subscriptions}
 								<tr>
 			                    	<td class="col1">
-			                        	{title}<br />
-			                        	Order #: <a href="{path='customer/order_detail/{order_id}'}">{order_id}</a></td>
+			                        	{title}</td>
 			                    	<td class="col2">
 			                        	{if {trial_occur} != 0}
 			                        		{currency_marker}{trial_price}<br />
@@ -95,12 +94,12 @@
 			                        <td class="col4">
 										{next_renewal format='%n/%d/%Y'}</td>
 			                        <td class="col5">
-			                        	<a href="{path='customer/subscriptions_history/{order_subscription_id}'}">view</a></td>
+			                        	<a href="#">view</a></td>
 			                        <td class="col6">
-			                        	<a href="{path='customer/subscriptions_edit/{order_subscription_id}'}">edit</a></td>
+			                        	<a href="#">edit</a></td>
 			                    </tr>
 		                    {/subscriptions}
-	                    {/exp:brilliant_retail:customer_subscriptions}
+	                    {/exp:brilliant_retail:customer_subscriptions_history}
 	                </tbody>
 	            </table> <!-- subscriptions -->
         </div> <!-- subject -->

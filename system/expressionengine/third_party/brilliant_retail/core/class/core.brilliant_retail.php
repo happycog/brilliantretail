@@ -393,9 +393,9 @@ class Brilliant_retail_core {
 						 	}
 							$i++;
 						}
-						$radio .= '<li>
-										<input type="radio" name="donation_price[]" id="donation_price_'.$i.'" value="other"  /> '.lang('br_other').' '.$this->_config["currency_marker"].' <input type="text" name="donation_other" id="donation_other" />
-										<em>'.$this->_config["currency_marker"].$this->_currency_round($products[0]["donation"][0]["min_donation"]).' '.lang('br_minimum').'</em>
+						$radio .= '		<li>
+											<input type="radio" name="donation_price[]" id="donation_price_'.$i.'" value="other"  /> '.lang('br_other').' '.$this->_config["currency_marker"].' <input type="text" name="donation_other" class="number" id="donation_other" />
+											<em>'.$this->_config["currency_marker"].$this->_currency_round($products[0]["donation"][0]["min_donation"]).' '.lang('br_minimum').'</em></li>
 									</ul>';
 						
 						$products[0]["donation"][0]['price_options'] = $radio;	
@@ -650,7 +650,6 @@ class Brilliant_retail_core {
 			}
 			return $this->cats;
 		}
-	
 	
 		function _producttype_text($attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
@@ -995,7 +994,7 @@ class Brilliant_retail_core {
 		return $newterm;
 	}
 	
-	function _payment_options($osc_enabled = true){
+	function _payment_options($osc_enabled = true,$tax=0,$shipping=0){
 		$output = '';
 		$this->EE->load->model('product_model'); 
 		$cart = $this->EE->product_model->cart_get();
@@ -1012,9 +1011,8 @@ class Brilliant_retail_core {
 			foreach($this->_config["gateway"][$this->site_id] as $gateway){
 				if($gateway["enabled"] == 1){
 					$str = 'Gateway_'.$gateway["code"];
-					$tmp = new $str();
-					
-					$total = $this->_get_cart_total();
+					$total = $this->_get_cart_total() + $tax + $shipping;
+					$tmp = new $str($total);
 					$proceed = TRUE;
 					if($total == 0){
 						if($tmp->zero_checkout != TRUE){
@@ -1041,9 +1039,7 @@ class Brilliant_retail_core {
 												<label>
 							                    <input type="radio" name="gateway" value="'.md5($gateway["config_id"]).'" class="gateway required" id="gateway_'.$i.'" '.$sel.' />
 							                    '.$gateway["label"].'</label>
-							                    <div class="payment_form">
-							                    	'.$form.'
-							                    </div>
+							                    <div class="payment_form">'.trim($form).'</div>
 							               	</div>';
 								$i++;
 							}
@@ -1058,24 +1054,26 @@ class Brilliant_retail_core {
 	
 	function _payment_buttons(){
 		$output = '';
-		if(!isset($cart["items"]) || count($cart["items"]) == 0) return $output;
-
 		$this->EE->load->model('product_model'); 
 		$cart = $this->EE->product_model->cart_get();
-			$subscriptions = 0;
-			foreach($cart["items"] as $c){
-				if($c["type_id"] == 6){
-					$subscriptions = 1;
-				}	
-			}
+		if(!isset($cart["items"]) || count($cart["items"]) == 0) return $output;
+		
+		$subscriptions = 0;
+		foreach($cart["items"] as $c){
+			if($c["type_id"] == 6){
+				$subscriptions = 1;
+			}	
+		}
 		$i = 0;
+		
+		$total = $this->_get_cart_total();
 		
 		if(isset($this->_config["gateway"][$this->site_id])){ // Check if any gateways are enabled
 			foreach($this->_config["gateway"][$this->site_id] as $gateway){
 				
 				if($gateway["enabled"] == 1){
 					$str = 'Gateway_'.$gateway["code"];
-					$tmp = new $str();
+					$tmp = new $str($total);
 					// Check if the gateway supports 
 					// subscription checkouts 
 						
@@ -2130,7 +2128,7 @@ class Brilliant_retail_core {
 			$cart = $this->EE->product_model->cart_get();
 			$discount = 0;
 			// Cart is empty
-				if(!isset($cart["items"])){
+				if(!isset($cart["items"]) || !isset($_SESSION["discount"])){
 					return 0;
 				}
 			if($_SESSION["discount"]["discount_type"] == 'item'){
@@ -2138,15 +2136,18 @@ class Brilliant_retail_core {
 					$discount += ($item["discount"] * $item["quantity"]);
 				}
 			}else{
+				$subtotal = 0;
 				// The discount is based on the cart total
+					foreach($cart["items"] as $val){
+						$subtotal += ($val["quantity"] * $val["price"]);
+					}
 					if($_SESSION["discount"]["code_type"] == 'percent'){
-						$subtotal = 0;
-						foreach($cart["items"] as $val){
-							$subtotal += ($val["quantity"] * $val["price"]);
-						}
 						$discount = $subtotal * ($_SESSION["discount"]["amount"] / 100);
 					}else{
 						$discount = $_SESSION["discount"]["amount"];
+						if($discount > $subtotal){
+							$discount = $subtotal;
+						}
 					}
 			}
 			return $this->_currency_round($discount);

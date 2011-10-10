@@ -46,7 +46,7 @@
 						    		'data' => lang('br_price'), 
 									'width' => '15%'),
 						   	array(
-						    		'data' => lang('br_type'), 
+						    		'data' => lang('br_subscription_status'), 
 									'width' => '15%') 
 						   );
 	$content = $this->table->generate();

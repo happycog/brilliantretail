@@ -113,13 +113,13 @@
 
       		$fields = array("low_stock","result_limit","result_per_page","result_paginate");
 			foreach($fields as $f){
-				$this->table->add_row(array(lang($f),
+				$this->table->add_row(array(lang('br_'.$f),
 								form_input(
 											array(	'name' => $f, 
 													'id' => $f,
 													'value' => $store[0][$f],
 													'class' => '{required:true}',
-													'title' => lang($f))
+													'title' => lang('br_'.$f))
 											)
 								)
 						);
@@ -146,19 +146,21 @@
 												$store[0]["subscription_enabled"]))
 							);
 
-      		$fields = array('first_notice','second_notice','third_notice','cancel_subscription');
-			foreach($fields as $f){
-				$this->table->add_row(array(lang($f),
-								form_input(
-											array(	'name' => $f, 
-													'id' => $f,
-													'value' => $store[0][$f],
-													'class' => '{required:true}',
-													'title' => lang($f))
-											)
-								)
-						);
-			}
+      		/*
+	      		$fields = array('first_notice','second_notice','third_notice','cancel_subscription');
+				foreach($fields as $f){
+					$this->table->add_row(array(lang($f),
+									form_input(
+												array(	'name' => $f, 
+														'id' => $f,
+														'value' => $store[0][$f],
+														'class' => '{required:true}',
+														'title' => lang($f))
+												)
+									)
+							);
+				}
+			*/
 				
 			$subscription = $this->table->generate();
 			$this->table->clear();

@@ -38,7 +38,17 @@
     		</tr>
     	</thead>
     	<tbody>
-	    	<tr class="odd">
+    		<?php
+    			if($instructions != ''){
+    		?>
+					<tr>
+		    			<td colspan="2" style="line-height: 18px;font-weight:bold;padding:15px;" valign="top">
+		    				<?=$instructions?></td>
+		    		</tr>
+			<?php	    		
+    			}
+    		?>
+    		<tr>
 	        	<td class="cell_1">
 	        		<?=lang('label')?></td>
 	        	<td>
@@ -62,18 +72,17 @@
 	            		<option value="0" <?=$no?>><?=lang('br_no')?></option>
 	            	</select></td>
 	    	</tr>
-	    	<tr class="odd">
+	    	<tr>
 	        	<td class="cell_1">
 	        		<?=lang('br_sort')?></td>
 	        	<td>
 	            	<input type="text" class="{required:true,digit:true}" title="<?=lang('br_sort')?> is required" value="<?=$sort?>" name="sort"></td>
 	    	</tr>
 	    	<?php
-		    	$i=0;
+		    	$i=1;
 		    	foreach($fields as $f){
-					$class = ($i % 2 == 0) ? 'odd' : '' ;
 					$req = ($f["required"] == 1) ? ' * ' : '' ;
-					echo '	<tr class="'.$class.'">
+					echo '	<tr>
 					        	<td class="cell_1">
 					        		'.$f["label"].$req.'</td>
 					        	<td>
@@ -97,5 +106,6 @@
 <script type="text/javascript">
 	$(function(){
 		$('#gateway_edit').validate();
+		$('#gateway_tbl tr:odd').addClass('odd');
 	});
 </script>

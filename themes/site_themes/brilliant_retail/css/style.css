@@ -2405,6 +2405,81 @@ text-align: right;
 
 #account #subject table#wishlist a {
 	color: #1165cc; }
+
+#account #subject #subscription_heading {
+	padding: 10px 0 3px;
+	font-size: 14px;
+	color: #666;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+}
+
+#account #subject table#subscription {
+	margin: 0;
+	width: 690px;
+}
+
+#account #subject #subscriptions_heading {
+	padding: 10px 0 3px;
+	font-size: 14px;
+	color: #666;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+}
+	
+#account #subject table#subscription th {
+	padding: 2px 5px; 
+	background: #f1f1f1;
+	font-size: 14px;
+	font-weight: bold;
+	color: #999;
+}
+
+#account #subject table#subscription th small {
+	font-size: 14px;
+	font-weight: normal; }
+
+#account #subject table#subscription td {
+	padding: 8px 5px;
+	font-size: 14px;
+	color: #666;
+	text-align: left;
+	vertical-align: top;
+	border-collapse: collapse;
+	border-spacing: 0;
+	border-bottom: 1px solid #e2e2e2; 
+}
+
+#account #subject table#subscription th.col1,
+#account #subject table#subscription td.col1 {
+	width: 35%; }
+
+#account #subject table#subscription th.col2,
+#account #subject table#subscription td.col2 {
+	width: 15%; }
+
+#account #subject table#subscription th.col3,
+#account #subject table#subscription td.col3 {
+	width: 15%; }
+
+#account #subject table#subscription th.col4,
+#account #subject table#subscription td.col4 {
+	width: 15%; }
+
+#account #subject table#subscription th.col5,
+#account #subject table#subscription td.col5 {
+	width: 10%; }
+
+#account #subject table#subscription th.col6,
+#account #subject table#subscription td.col6 {
+	width: 10%;
+	text-align: center;
+}
+
+#account #subject table#subscription a {
+	color: #1165cc; }
 	
 /* end of Account */
 

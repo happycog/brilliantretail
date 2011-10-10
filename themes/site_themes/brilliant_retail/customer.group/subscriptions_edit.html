@@ -58,49 +58,29 @@
 			
 			{exp:brilliant_retail:show_message}
 			
-            <h4 id="subscription_heading">Subscriptions</h4>
+            <h4 id="subscription_heading">Subscription</h4>
 				<table id="subscription" cellspacing="0">
 	            	<thead>
 	                	<tr>
-	                    	<th class="col1">
-	                    		Subscription</th>
-	                    	<th class="col2">
-	                    		Trial</th>
-	                    	<th class="col3">
-	                    		Price</th>
-	                    	<th class="col4">
-	                    		Next Renewal</th>
-	                    	<th class="col5">
-	                    		History</th>
-	                    	<th class="col6">
-	                    		Action</th>
+	                    	<th colspan="2">
+	                    		Payment Method</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
-	                	{exp:brilliant_retail:customer_subscriptions}
-							{subscriptions}
-								<tr>
-			                    	<td class="col1">
-			                        	{title}<br />
-			                        	Order #: <a href="{path='customer/order_detail/{order_id}'}">{order_id}</a></td>
-			                    	<td class="col2">
-			                        	{if {trial_occur} != 0}
-			                        		{currency_marker}{trial_price}<br />
-			                        		{trial_occur} Remaining
-			                        	{if:else}
-			                        		- 
-			                        	{/if}</td>
-			                        <td class="col3">
-										{currency_marker}{renewal_price}</td>
-			                        <td class="col4">
-										{next_renewal format='%n/%d/%Y'}</td>
-			                        <td class="col5">
-			                        	<a href="{path='customer/subscriptions_history/{order_subscription_id}'}">view</a></td>
-			                        <td class="col6">
-			                        	<a href="{path='customer/subscriptions_edit/{order_subscription_id}'}">edit</a></td>
-			                    </tr>
-		                    {/subscriptions}
-	                    {/exp:brilliant_retail:customer_subscriptions}
+	                	{exp:brilliant_retail:customer_subscriptions_edit}
+							<tr>
+								<td style="width:200px">
+									Last Four Digits</td>
+								<td>
+									{cc_last_four}</td>
+							</tr>
+							<tr>
+								<td>
+									Expiration Date</td>
+								<td>
+									{cc_month} / {cc_year}</td>
+							</tr>
+	                    {/exp:brilliant_retail:customer_subscriptions_edit}
 	                </tbody>
 	            </table> <!-- subscriptions -->
         </div> <!-- subject -->

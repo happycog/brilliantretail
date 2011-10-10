@@ -617,16 +617,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 			// Donations 
 			if($product[0]["type_id"] == 7){
+
 				if($data["donation_price"][0] == 'other'){
-					$price = $data["donation_other"];
+					$price = $data["donation_other"]*1;
+					if($price < $product[0]["donation"][0]["min_donation"]){
+						$price = $product[0]["donation"][0]["min_donation"];
+					}
 				}else{
 					$price = $data["donation_price"][0];
 				}
+				$price = $this->_currency_round($price);
 				$amt["base"]  = $price;
 				$amt["price"] = $price;
-				$amt["label"] = $price;
+				$amt["label"] = '<p class="price">'.$price.'</p>';
 
-		
 				// Are we going to setup a recurring profile?
 				if($product[0]["donation"][0]["allow_recurring"] == 1){
 					if(isset($data["recurring"])){
@@ -1051,7 +1055,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$vars[0] = array (
 									'shipping_action' 	=> $shipping_action, 
 									'total_action' 		=> $total_action, 
-									'payment_options' 	=> $this->_payment_options(),
+									'payment_options' 	=> '<div id="payment_container">&nbsp;</div>',
 									'form_open'			=> form_open($action,array('id' => 'checkoutform'),array('SID' => $shippable)) 
 								);
 				
@@ -1069,8 +1073,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 											
 											$('#checkoutform').validate({'ignore' : ':hidden'}); 
 											
-											$('.payment_form:eq(0)').slideDown();
-											
+											_bind_payment_options();
+											 
 											$('#ship_same_address').bind('click',function(){
 												var a = $(this);
 												var b = $('#shipping_address');
@@ -1079,12 +1083,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 												}else{
 													b.slideDown();
 												}
-											});
-											
-											$('.gateway').bind('click',function(){
-												$('.payment_form:visible').slideUp();
-												var a = $(this).parent().parent();
-												$('.payment_form',a).slideDown();
 											});
 											
 											$('#br_billing_zip,#br_shipping_zip,#br_billing_country,#br_shipping_country,#br_billing_state,#br_shipping_state').bind('change',function(){
@@ -1143,6 +1141,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 									
 										});
 									
+										function _bind_payment_options(){
+											var first = $('.payment_form:eq(0)');
+											if(first.html() != ''){
+												first.show();
+											}
+											
+											$('.gateway').unbind().bind('click',function(){
+												$('.payment_form:visible').hide();
+												var a = $(this).parent().parent();
+												var b = $('.payment_form',a);
+												if(b.html() != ''){
+													b.show();
+												} 
+											});
+										}
+										
 										function _get_shipping_quote(zip,country,state){
 											var url = '".$shipping_action."';
 											var params = {	
@@ -1186,6 +1200,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 															var data = $.parseJSON(returndata);
 															$('#tax_container').html(data[0].tax);
 															$('#shipping_container').html(data[0].shipping);
+															$('#payment_container').html(data[0].payment);
+															_bind_payment_options();
 															$('#total_container').html(data[0].total);
 															$('#checkout_btn').show();						
 														});
@@ -1206,8 +1222,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$this->EE->load->model('customer_model');
 			$this->EE->load->model('order_model');	
 
-			$member_id = $this->EE->session->userdata["member_id"];
-			$email = $this->EE->session->userdata["email"];
+			// For order email 
+				$has_donation 		= FALSE;
+				$has_item 			= FALSE;
+				$has_subscription 	= FALSE;
+				
+			// Some Defaults
+				$member_id = $this->EE->session->userdata["member_id"];
+				$email = $this->EE->session->userdata["email"];
+			
 			
 			// Create the default container for all shipping fields 
 			// in case the form ommits one of the required fields 
@@ -1506,16 +1529,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// If the order has subscriptions 
 				// load model 
 					$this->EE->load->model('subscription_model');
-					
 					foreach($subs as $s){
+						$has_subscription = TRUE;
 						// Build the input array
 							$unit = ($s["period"] == 1) ? 'days' : 'months';
 							$startDate = date('Y-m-d g:i:s',strtotime("+".$s["length"]." ".$unit));
+							$status = ($s["subscription_id"] == 0) ? 2 : 1; 
 							$order_subscription = array(
 														"order_id" 			=> $order_id,
 														"subscription_id" 	=> $s["subscription_id"],
 														"code" 				=> $s["code"],
-														"status_id" 		=> 1,
+														"status_id" 		=> $status,
+														"cc_last_four"		=> substr($s["cc_last_four"],-4,4), 
+														"cc_month"			=> $s["cc_month"],
+														"cc_year"			=> $s["cc_year"],
 														"product_id" 		=> $s["product_id"],
 														"group_id" 			=> $s["group_id"],
 														"cancel_group_id" 	=> $s["cancel_group_id"],
@@ -1584,6 +1611,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Add items to order
 					$i = 0;
 					foreach($data["cart"]["items"] as $items){
+						
+						if($items["type_id"] == 6)
+						{
+							$has_subscription = TRUE;
+						}
+						elseif($items["type_id"] == 7)
+						{
+							$has_donation = TRUE;
+						}
+						else
+						{
+							$has_item = TRUE;
+						}
+
 						$item = array(
 											'order_id' => $order_id, 
 											'product_id' => $items["product_id"],
@@ -1675,7 +1716,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 												"discount_total" 	=> $this->_currency_round($data["cart_discount"]), 
 												"tax_total" 		=> $this->_currency_round($data["cart_tax"]), 
 												"shipping" 			=> $this->_currency_round($data["cart_shipping"]), 
-												"order_total" 		=> $this->_currency_round($data["order_total"])
+												"order_total" 		=> $this->_currency_round($data["order_total"]),
+												"has_item"			=> $has_item, 
+												"has_subscription" 	=> $has_subscription,
+												"has_donation"		=> $has_donation
 											);
 		
 							$this->_send_email('customer-order-new', $vars);
@@ -1797,12 +1841,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Calculate Shipping 			
 				$hash = $this->EE->input->post("shipping",TRUE);
 				$rate = $_SESSION["shipping"][$hash]["rate"];
-				$shipping_rate = ($rate > 0) ? $this->_config["currency_marker"].$this->_currency_round($rate) : $this->_currency_round(0) ;
+				$shipping = ($rate > 0) ? $rate : 0;
+				$shipping_rate = $this->_config["currency_marker"].$this->_currency_round($shipping);
 			// Calculate Total 
 				$sub_total = $this->cart_subtotal();
 				$discount = $this->_get_cart_discount();
 				$total_rate = $this->_config["currency_marker"].$this->_currency_round(($tax + $rate + $sub_total - $discount));
-			echo '[{"tax":"'.$tax_rate.'","shipping":"'.$shipping_rate.'","total":"'.$total_rate.'"}]';
+			
+			$arr = array(	"tax" 		=> $tax_rate,
+							"shipping" 	=> $shipping_rate,
+							"total" 	=> $total_rate,
+							"payment"	=> $this->_payment_options(true,$tax,$shipping));
+			echo "[".json_encode($arr)."]";
 			exit();
 		}
 		
@@ -1810,7 +1860,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 			function form_error() 
 			{
-				
 				$field = $this->EE->TMPL->fetch_param('for');
 				$return = $this->EE->TMPL->fetch_param('return');
 				
@@ -2408,8 +2457,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$data = file_get_contents($this->_config["media_dir"].'download/'.$downloads[0]["filenm"]); // Read the file's contents
 					$name = $downloads[0]["filenm_orig"];
 					force_download($name, $data);
-					
-			// Update Count
 		}
 
 		function customer_subscriptions(){
@@ -2417,13 +2464,53 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$this->EE->load->model('subscription_model');
 			$member_id = $this->EE->session->userdata["member_id"];
 			$subs = $this->EE->subscription_model->get_subscription_by_member($member_id);
-			
-			$vars[0] = array('subscriptions' => $subs);
+
+			$vars[0] = array('currency_marker'=>$this->_config["currency_marker"],'subscriptions' => $subs);
 			
 			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
 			return $output;
 		}
-
+		
+		function customer_subscriptions_history(){
+			$this->EE->load->model('subscription_model');
+			
+			$sub_id = ($this->EE->TMPL->fetch_param('subscription_order_id')) ? $this->EE->TMPL->fetch_param('subscription_order_id') : 0;
+			$member_id = $this->EE->session->userdata["member_id"];
+			// Get the match sub
+				$subs = $this->EE->subscription_model->get_subscription_by_member($member_id,$sub_id);
+				if(count($subs) != 1){
+					return '';
+				}
+			
+			// Now get all orders that match
+				$subscription_id = $subs[0]["subscription_id"];
+				
+			$vars[0] = array('currency_marker'=>$this->_config["currency_marker"],'subscriptions' => $subs);
+			
+			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
+			return $output;
+		}
+		
+		function customer_subscriptions_edit(){
+			$this->EE->load->model('subscription_model');
+			$sub_id = ($this->EE->TMPL->fetch_param('subscription_order_id')) ? $this->EE->TMPL->fetch_param('subscription_order_id') : 0;
+			$member_id = $this->EE->session->userdata["member_id"];
+			$subs = $this->EE->subscription_model->get_subscription_by_member($member_id,$sub_id);
+			
+			$vars[0] = $subs[0];
+			
+			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
+			return $output;
+		}
+		
+		function subscription_update(){
+		
+		}
+		
+		function subscription_cancel(){
+		
+		}
+		
 	/* END CUSTOMER */
 
 		function promo_check_code($inputCode='')

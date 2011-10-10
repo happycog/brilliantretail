@@ -30,12 +30,14 @@ include_once('assets/authorize/AuthorizeNetARB.php');
 
 class Gateway_authorize_arb extends Brilliant_retail_gateway {
 	// Required variables
-		public $title 	= 'Authorize.net ARB';
-		public $label 	= 'Credit Card Payment (Authorize.net)';
-		public $descr 	= 'Accept credit cards directly from your site with an Authorize.net payment gateway account using the AIM method.';
-		public $enabled = true;
-		public $subscription_enabled = 1;
-		public $version = '1.0';
+		public $title 					= 'Authorize.net ARB';
+		public $label 					= 'Credit Card Payment (Authorize.net)';
+		public $descr 					= 'Accept credit cards directly from your site with an Authorize.net payment gateway account using the AIM/ARB method.';
+		public $instructions			= 'Authorize ARB gateway uses the AIM and ARB method to create one time and recurring billing statements.';
+		public $enabled 				= true;
+		public $ipn_enabled 			= true;
+		public $subscription_enabled 	= 1;
+		public $version 				= '1.0';
 		
 	// Some internal variables
 		protected $nice_keys = array (
@@ -211,7 +213,7 @@ class Gateway_authorize_arb extends Brilliant_retail_gateway {
 	function process_subscription($item,$data,$config){
 		//Check for subscriptions 
 			$sub = array();
-			
+
 			if(!defined('AUTHORIZENET_API_LOGIN_ID')){
 				define("AUTHORIZENET_API_LOGIN_ID", $config["x_login"]);
 				define("AUTHORIZENET_TRANSACTION_KEY", $config["x_tran_key"]);
@@ -238,7 +240,7 @@ class Gateway_authorize_arb extends Brilliant_retail_gateway {
 					// payment
 						$occur = $item["subscription"]["trial_occur"]-1;
 						if($occur >= 1){
-							$renewal_price = $item["subscription"]["trial_price"]; 
+							#$renewal_price = $item["subscription"]["trial_price"]; 
 							$trial_occur = $occur;
 							$trial_price = $item["subscription"]["trial_price"];
 						}
@@ -295,11 +297,18 @@ class Gateway_authorize_arb extends Brilliant_retail_gateway {
 					$item["subscription"]["trial_price"]		= $trial_price;
 					$item["subscription"]["next_renewal"]		= $start_dt;
 					
+					$item["subscription"]["cc_last_four"]		= substr($data["autho_cc_num"],-4,4);
+					$item["subscription"]["cc_month"]			= $data["autho_cc_month"];
+					$item["subscription"]["cc_year"]			= $data["autho_cc_year"];
+
 		return $item["subscription"];
 	}
 	
-	
-		// Install the gateway
+	function update_subscription($data,$config){
+					
+	}
+
+	// Install the gateway
 		function install($config_id){
 			$data = array();
 			$data[] = array(

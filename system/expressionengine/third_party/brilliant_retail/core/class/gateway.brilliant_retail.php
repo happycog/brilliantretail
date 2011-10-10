@@ -24,19 +24,24 @@
 
 class Brilliant_retail_gateway extends Brilliant_retail_core{
 
+	public $instructions 			= true;
 	public $osc_enabled 			= true;
 	public $subscription_enabled 	= false;
 	public $cart_button 			= false;
 	public $ipn_enabled 			= false;
 	public $ipn_url					= '';
 	public $zero_checkout 			= false;
+	public $cart_total 				= 0;
 	
-	function __construct(){
+	function __construct($total=''){
 		parent::__construct();
 		$this->EE =& get_instance();
 
 		$this->EE->load->helper('gateway');
-
+		
+		// Set the cart totol to a public variable 
+			$this->cart_total = $total;
+		
 		// url for ipn callback
 			if(isset($_SESSION["ipn_url"])){
 				$this->ipn_url = $_SESSION["ipn_url"];

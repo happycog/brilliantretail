@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.4.1';
+	public $version	= '1.0.4.3';
 	
 	function Brilliant_retail_upd()
 	{
@@ -77,10 +77,12 @@ class Brilliant_retail_upd {
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'customer_download_file')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'gateway_ipn')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'process_ipn')";
-			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'retrieve_password')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'pull_feed')";
+			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'retrieve_password')";
+			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'subscription_update')";
+			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'subscription_cancel')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'wishlist_process')";
-
+			
 		## ----------------------------
 		##  Records of exp_member_fields
 		## ----------------------------
@@ -558,6 +560,9 @@ class Brilliant_retail_upd {
 					order_id int(11) NOT NULL,
 					subscription_id int(11) NOT NULL,
 					code varchar(100) DEFAULT NULL,
+					cc_last_four varchar(50),
+					cc_month varchar(50),
+					cc_year varchar(50),
 					status_id int(11) NOT NULL DEFAULT '0',
 					product_id int(11) NOT NULL,
 					group_id int(11) NOT NULL,
@@ -1002,9 +1007,9 @@ class Brilliant_retail_upd {
 ## ----------------------------
 ##  Records of exp_br_promo
 ## ----------------------------
-	$sql[] = "INSERT INTO exp_br_promo VALUES ('21', '1', 'Default Save 20% All Products', '20', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', '20.00', '1', 'All customers save 20% on all products in all categories. ', '', '', '1.00', '1', '0'), 
-				('22', '1', 'Default Save 10% on SLR Camera', '10', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', '10.00', '1', 'All customers save 10% on Capture RX20 Digital SLR', '[\"70\"]', '[\"2516\"]', '1.00', '1', '0'), 
-				('23', '1', 'Jacket Discount', '25JACK', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', '25.00', '1', '25% off jackets', '[\"64\"]', '[\"2511\"]', '1.00', '1', '0');";
+	$sql[] = "INSERT INTO exp_br_promo VALUES ('21', '1', 'Default Save 20% All Products', '20', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', 'item', 0, '20.00', '1', 'All customers save 20% on all products in all categories. ', '', '', '1.00', '1', '0'), 
+				('22', '1', 'Default Save 10% on SLR Camera', '10', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', 'item', 0, '10.00', '1', 'All customers save 10% on Capture RX20 Digital SLR', '[\"70\"]', '[\"2516\"]', '1.00', '1', '0'), 
+				('23', '1', 'Jacket Discount', '25JACK', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', 'item', 0, '25.00', '1', '25% off jackets', '[\"64\"]', '[\"2511\"]', '1.00', '1', '0');";
 
 ## ----------------------------
 ##  Table structure for exp_br_search

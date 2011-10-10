@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -22,47 +22,6 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-class Gateway_no_payment extends Brilliant_retail_gateway {
-	public $title 	= 'No Payment Required';
-	public $label 	= 'No Payment Required';
-	public $descr 	= 'Allow users to mail in payment after the purchase.';
-	public $enabled = true;
-	public $version = .5;
-	public $zero_checkout = true;
-
-	function form(){
-		if($this->cart_total != 0){
-			return false;
-		}
-	}
-	
-	function process($data){
-		$id =  md5(time()); 
-		$details = array(
-							"Method" => "No Payment Required",
-							"Transaction ID" => $id 
-						);
-										
-		$trans = array(
-							'status' => 3, 
-							'amount' => 0,
-							'transaction_id' =>$id, 
-							'payment_card' => 'Mail In', 
-							'payment_type' => 'Mail In', 
-							'details' => serialize($details), 
-							'approval' => '' 
-						);
-		return $trans;
-	}
-	
-	function install(){
-		return true;
-	}
-	function remove(){
-		
-	}
-	function update($current = '',$config_id = ''){
-		return true;
-	}
-
-}
+// Add additional settings to promotions
+	$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'subscription_update')";
+	$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'subscription_cancel')";

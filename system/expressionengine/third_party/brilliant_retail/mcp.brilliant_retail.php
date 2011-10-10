@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version		= '1.0.4.1'; 
+		public $version		= '1.0.4.3'; 
 		public $vars 		= array();
 		public $site_id 	= '';
 		
@@ -1070,13 +1070,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$i = 0;
 				foreach($subscriptions["results"] as $row){
 					$units = ($row["period"] == 1) ? lang('br_days') : lang('br_months');
-					$arr[] = array(	'<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=subscription_detail&order_subscription_id='.$row["order_subscription_id"].'">'.$row["order_subscription_id"].'</a>', 
+					$sub_id = '<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=subscription_detail&order_subscription_id='.$row["order_subscription_id"].'">'.$row["order_subscription_id"].'</a>';
+					$sub_id = $row["order_subscription_id"];
+					$arr[] = array(	$sub_id, 
 									'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
 									date('n/d/y',strtotime($row["created"])),
 									lang('br_every').' '.$row["length"].' '.$units, 
 									date('n/d/y',strtotime($row["next_renewal"])),
 									$this->_currency_round($row["renewal_price"]),
-									$row["status_id"]
+									lang('br_subscription_status_'.$row["status_id"])
 								);
 				}
 				
@@ -1109,6 +1111,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 	
 			function subscription_update(){ 
+			
+			}
+	
+			function subscription_cancel(){ 
 			
 			}
 	
@@ -2090,10 +2096,26 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["selected"] = 'config';
 				$this->vars["sub_selected"] = 'config_gateway';
 				
-				$code = $_GET["code"];
-
+				$code 		= $_GET["code"];
+				$config_id	= $_GET["config_id"];
+				
+				$str = 'Gateway_'.$code;
+				$class = new $str();
+				$ipn_url = $class->ipn_url;
+				
+				$this->vars["instructions"] = $class->instructions;
+				
 				$fields = array();
-
+				// Providee the IPN Url if IPN is enabled in the gateway
+					if($class->ipn_enabled){
+						$fields[] = array(
+											'label' 	=> lang('br_ipn_url'),
+											'input' 	=> $ipn_url.$config_id,
+											'descr' 	=> "",
+											'required' 	=> "required"
+										);
+					}
+				
 				if(isset($this->_config["gateway"][$this->site_id][$code]["config_data"])){
 					foreach($this->_config["gateway"][$this->site_id][$code]["config_data"] as $f){
 						// Use our input functions
@@ -2116,13 +2138,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											);
 					}
 				}
-			
-			$this->vars["config_id"] = $this->_config["gateway"][$this->site_id][$code]["config_id"];
-			$this->vars["title"] 	= $this->_config["gateway"][$this->site_id][$code]["title"];
-			$this->vars["label"] 	= $this->_config["gateway"][$this->site_id][$code]["label"];
-			$this->vars["sort"] 	= $this->_config["gateway"][$this->site_id][$code]["sort"];
-			$this->vars["enabled"] 	= $this->_config["gateway"][$this->site_id][$code]["enabled"];
-			$this->vars["fields"] 	= $fields;
+							
+			$this->vars["config_id"] 	= $this->_config["gateway"][$this->site_id][$code]["config_id"];
+			$this->vars["title"] 		= $this->_config["gateway"][$this->site_id][$code]["title"];
+			$this->vars["label"] 		= $this->_config["gateway"][$this->site_id][$code]["label"];
+			$this->vars["sort"] 		= $this->_config["gateway"][$this->site_id][$code]["sort"];
+			$this->vars["enabled"] 		= $this->_config["gateway"][$this->site_id][$code]["enabled"];
+			$this->vars["fields"] 		= $fields;
 
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -2428,10 +2450,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 			
-			$this->vars["show_subs"] = FALSE;
-			if($this->_config["store"][$this->site_id]["subscription_enabled"] == 1){
-				$this->vars["show_subs"] = TRUE;
-			}
+			$this->vars["show_subs"] = TRUE;
 			
 			$this->vars["hidden"] = array(
 											'site_id' => $this->site_id 

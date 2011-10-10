@@ -130,7 +130,7 @@ class Subscription_model extends CI_Model {
 	}
 	
 	function get_subscription_by_member($member_id,$order_subscription_id=''){
-		$subscription = array();
+		$subscriptions = array();
 		$this->db->from('br_order_subscription s')
 				->order_by('s.created','desc')
 				->join('br_order o','o.order_id=s.order_id') 
@@ -141,6 +141,8 @@ class Subscription_model extends CI_Model {
 		$query = $this->db->get();
 		foreach ($query->result_array() as $row){
 			$s = $this->get_subscription($row["order_subscription_id"]);
+			// reformat time so it plays nicer with EE formation
+			$s[0]["next_renewal"] = date("U",strtotime($s[0]["next_renewal"]));
 			$subscriptions[] = $s[0];
 		}
 		return $subscriptions;
