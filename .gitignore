@@ -9,4 +9,5 @@ media/file/*
 media/products/*
 media/attachments/*
 themes/third_party/brilliant_retail/script/ckeditor/plugins/pgrfilemanager/PGRThumb/cache/* 
-system/third_party/_local/*
+themes/site_themes/brilliant_retail/_test.group/*
+_local/*
