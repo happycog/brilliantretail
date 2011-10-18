@@ -1180,13 +1180,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 											$('#checkout_btn').hide();
 											$('#tax_container,#shipping_container,#total_container').html(' - ');
 											if(ship_to.is(':checked')){
-												var zip = $('#br_billing_zip').val();
-												var country = $('#br_billing_country').val();
-												var state = $('#br_billing_state').val();
+												var zip 		= $('#br_billing_zip').val();
+												var country 	= $('#br_billing_country').val();
+												var state 		= $('#br_billing_state').val();
+												var address1 	= $('#br_billing_address1').val();
+												var address2 	= $('#br_billing_address2').val();
 											}else{
-												var zip = $('#br_shipping_zip').val();
-												var country = $('#br_shipping_country').val();
-												var state = $('#br_shipping_state').val();
+												var zip 		= $('#br_shipping_zip').val();
+												var country 	= $('#br_shipping_country').val();
+												var state 		= $('#br_shipping_state').val();
+												var address1 	= $('#br_shipping_address1').val();
+												var address2	= $('#br_shipping_address2').val();
 											}
 											
 											$.post(	url,	
@@ -1194,6 +1198,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 															'zip':zip,
 															'county':country,
 															'state':state,
+															'address1':address1,
+															'address2':address2,
 															'shipping':$('input.shipping:checked').val()
 														},
 														function(returndata){
@@ -1626,22 +1632,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}
 
 						$item = array(
-											'order_id' => $order_id, 
-											'product_id' => $items["product_id"],
-											'configurable_id' => $items["configurable_id"],  
-											'base' 	=> $this->_currency_round($items["base"]),
-											'price' => $this->_currency_round($items["price"]),
-											'cost' 	=> $this->_currency_round($items["cost"]), 
-											'discount' => $this->_currency_round($items["discount"]),
-											'quantity' => $items["quantity"],
-											'status' => 1,
-											'title' => $items["title"],
-											'taxable' => $items["taxable"],
-											'weight' => $items["weight"],
-											'shippable' => $items["shippable"],
-											'url' => $items["url_title"],
-											'sku' => $items["sku"],
-											'options' => $items["options"],
+											'order_id' 			=> $order_id, 
+											'product_id' 		=> $items["product_id"],
+											'configurable_id' 	=> $items["configurable_id"],  
+											'base' 				=> $this->_currency_round($items["base"]),
+											'price' 			=> $this->_currency_round($items["price"]),
+											'cost' 				=> $this->_currency_round($items["cost"]), 
+											'discount' 			=> $this->_currency_round($items["discount"]),
+											'quantity' 			=> $items["quantity"],
+											'status' 			=> 1,
+											'title' 			=> $items["title"],
+											'taxable' 			=> $items["taxable"],
+											'weight' 			=> $items["weight"],
+											'shippable' 		=> $items["shippable"],
+											'url' 				=> $items["url_title"],
+											'sku' 				=> $items["sku"],
+											'options' 			=> $items["options"],
 										);
 						$this->EE->order_model->create_order_item($item);
 						
@@ -2667,7 +2673,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 					$count = $this->_config["result_limit"];
 				}
-				
 				$vars[0] = array(
 								'search_hash' => $hash, 
 								'search_term' => $term,
@@ -2710,6 +2715,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 							$no_result = false;
 						}
 				}
+				
 			// Do the output
 				if($no_result == true){
 					$key = 'no_results';
@@ -2717,6 +2723,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$result[0] = array(0 => trim($matches[1]));
 					$output = $this->EE->TMPL->parse_variables($matches[1], $vars); 
 				}else{
+					$tmp = array();
+					foreach($vars[0]["results"] as $v){
+						$p = $this->_get_product($v["product_id"]);
+						$tmp[] = $p[0];
+					}
+					unset($vars[0]["results"]);
+					$vars[0]["results"] = $tmp;
 					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
 				}		
 			

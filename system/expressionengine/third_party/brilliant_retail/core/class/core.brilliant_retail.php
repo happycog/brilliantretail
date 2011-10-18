@@ -346,15 +346,15 @@ class Brilliant_retail_core {
 				if(isset($products[0]["categories"][0])){
 					$cat = $this->EE->product_model->get_category($products[0]["categories"][0]); 
 					if(isset($cat[0])){
-						$products[0]["category_title"] = $cat[0]["title"];
-						$products[0]["category_url"] = $cat[0]["url_title"];
+						$products[0]["category_title"] 	= $cat[0]["title"];
+						$products[0]["category_url"] 	= $cat[0]["url_title"];
 					}
 				}
 
 			// Build the price html
 				$amt = $this->_check_product_price($products[0]);
 				$products[0]["price"] = $amt["label"];
-				$products[0]["price_html"] = $amt["label"];
+				$products[0]["price_html"] = $amt["price_html"];
 			
 			// Configurable product selectors
 				if($products[0]["type_id"] == 3){
@@ -1795,11 +1795,13 @@ class Brilliant_retail_core {
 			 foreach($p["price_matrix"] as $price){
 			 	if(	$price["group_id"] == 0 || 
 			 		$price["group_id"] == $group_id){
+
 			 		$amt = array(
-							'on_sale' => FALSE, 
-							'label' => '<p class="price">'.$this->_config["currency_marker"].$price["price"].'</p>',  
-							'base' => $price["price"],
-							'price' => $price["price"] 
+							'on_sale' 		=> FALSE, 
+							'label' 		=> $price["price"],
+							'base' 			=> $price["price"],
+							'price' 		=> $price["price"],
+							'price_html'	=> '<p class="price">'.$this->_config["currency_marker"].$price["price"].'</p>'  							
 						);
 			 	}
 			 }
@@ -1818,10 +1820,12 @@ class Brilliant_retail_core {
 			 	if(($valid == 1) && ($sale["group_id"] == 0 || $sale["group_id"] == $group_id) && ($amt["price"] > $sale["price"]))
 			 	{
 			 		$amt = array(
-							'on_sale' => TRUE, 
-							'label' => '<p class="price"><span class="original">'.$this->_config["currency_marker"].$amt["price"].'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>',  
-							'base' => $amt["price"], 
-							'price' => $sale["price"] 
+							'on_sale' 		=> TRUE, 
+							'base' 			=> $amt["price"], 
+							'label'			=> $sale["price"],
+							'price' 		=> $sale["price"],
+							'price_html' 	=> '<p class="price"><span class="original">'.$this->_config["currency_marker"].$amt["price"].'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>',  
+							'sale_price' 	=> $sale["price"]
 						);
 				}
 			}
@@ -2077,12 +2081,26 @@ class Brilliant_retail_core {
 	}
 	
 	// Get Cart Tax & Total 
-		function _get_cart_tax($country,$state,$zip){
+		function _get_cart_tax($country,$state,$zip,$address1='',$address2=''){
 			$this->EE->load->model('product_model');
 			$cart = $this->EE->product_model->cart_get();
+			
 			$this->EE->load->model('tax_model');
 			$rate = $this->EE->tax_model->get_tax($country,$state,$zip);
 			
+			// Add extension hook to manipulate emails before they are sent out
+			if($this->EE->extensions->active_hook('br_cart_tax_rate') === TRUE){
+				$data = array(
+									"cart" 		=> $cart,
+									"country"	=> $country,
+									"state"		=> $state, 
+									"zip"		=> $zip,
+									"address1"	=> $address1,
+									"address2"	=> $address2 
+								);
+				$rate = $this->EE->extensions->call('br_cart_tax_rate', $data); 
+			}
+
 			$taxable = 0;
 			foreach($cart["items"] as $item){
 				if($item["taxable"] == 1){
