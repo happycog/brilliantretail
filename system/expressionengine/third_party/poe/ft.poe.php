@@ -36,8 +36,6 @@ class Poe_ft extends EE_Fieldtype {
 	function Poe_ft()
 	{
 		parent::EE_Fieldtype();
-		$BR = new Brilliant_retail_mcp();
-		$this->theme = base_url().'themes/third_party/brilliant_retail';
 	}
 	
 	// --------------------------------------------------------------------
@@ -52,11 +50,13 @@ class Poe_ft extends EE_Fieldtype {
 	 */
 	function display_field($data)
 	{
+		_set_theme();
 		return '<textarea name="'.$this->field_name.'" class="ckeditor">'.$data.'</textarea>';
 	}
 
 	function display_cell($data)
 	{
+		_set_theme();
 		return '<textarea name="'.$this->cell_name.'" class="ckeditor">'.$data.'</textarea>';
 	}
 	
@@ -78,5 +78,12 @@ class Poe_ft extends EE_Fieldtype {
 	function save($data)
 	{
 		return $data;
+	}
+	
+	private function _set_theme(){
+		if($this->theme == ''){
+			$BR = new Brilliant_retail_mcp();
+			$this->theme = base_url().'themes/third_party/brilliant_retail';
+		}
 	}
 }

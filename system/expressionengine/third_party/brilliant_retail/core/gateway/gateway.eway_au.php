@@ -76,7 +76,7 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
 	
 	function sendTransactionToEway($xmlRequest,$test) {
 		
-		$EWAY_LIVE_AU = 'https://www.eway.com.au/gateway/payment.asp';
+		$EWAY_LIVE_AU = 'https://www.eway.com.au/gateway/xmlpayment.asp';
 		$EWAY_TEST_AU = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
 		
 		if ($test=="TRUE")

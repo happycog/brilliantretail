@@ -89,7 +89,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 							</div>
 							<div id="product_result_'.$this->field_name.'" class="result_div">
 								<table id="product_results_'.$this->field_name.'" width="100%" cellpadding="0" cellspacing="0">
-									<tr><td colspan="4">'.lang('ft_product_search').'</td></tr>
+									<tr><td colspan="4">'.lang('br_ft_product_search').'</td></tr>
 								</table>
 							</div>
 						</div>

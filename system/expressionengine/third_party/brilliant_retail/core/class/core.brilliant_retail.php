@@ -353,8 +353,8 @@ class Brilliant_retail_core {
 
 			// Build the price html
 				$amt = $this->_check_product_price($products[0]);
-				$products[0]["price"] = $amt["label"];
-				$products[0]["price_html"] = $amt["price_html"];
+				$products[0]["price"] 		= $amt["label"];
+				$products[0]["price_html"] 	= $amt["price_html"];
 			
 			// Configurable product selectors
 				if($products[0]["type_id"] == 3){
@@ -965,8 +965,11 @@ class Brilliant_retail_core {
 	}
 	
 	function _search_index($queryStr){
-		// Dashes don't play nicely with our wildcard search
-		$queryStr = str_replace("-"," ",$queryStr).'*';
+		// Need at least 3 characters for wildcard searches 
+		if(strlen($queryStr) >= 3){
+			// Dashes don't play nicely with our wildcard search
+			$queryStr = str_replace("-"," ",$queryStr).'*';
+		}
 		ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 		include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 		
