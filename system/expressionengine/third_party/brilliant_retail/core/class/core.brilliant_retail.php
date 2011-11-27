@@ -456,9 +456,9 @@ class Brilliant_retail_core {
 					$option_list = array();
 					foreach($products[0]["options"] as $opt){
 						if($opt["type"] == 'text'){
-							$option = $this->_producttype_text('option_'.$i,$opt["title"],$opt["title"],$opt["required"],'','');
+							$option = $this->_producttype_text($products[0]["product_id"],'option_'.$i,$opt["title"],$opt["title"],$opt["required"],'','');
 						}elseif($opt["type"] == 'textarea'){
-							$option = $this->_producttype_textarea('option_'.$i,$opt["title"],$opt["title"],$opt["required"],'','');
+							$option = $this->_producttype_textarea($products[0]["product_id"],'option_'.$i,$opt["title"],$opt["title"],$opt["required"],'','');
 						}elseif($opt["type"] == 'dropdown'){
 							$options = array();
 							$j = 0;
@@ -472,7 +472,7 @@ class Brilliant_retail_core {
 								$j++;
 							}
 							$list = join("|",$options);
-							$option = $this->_producttype_dropdown('option_'.$i,$opt["title"],$opt["title"],$opt["required"],'',$list);
+							$option = $this->_producttype_dropdown($products[0]["product_id"],'option_'.$i,$opt["title"],$opt["title"],$opt["required"],'',$list);
 						}
 						$option_list[] = array( 
 												'option_label' => $opt["title"],
@@ -497,7 +497,7 @@ class Brilliant_retail_core {
 				$this->attr_single = array();
 				
 			// Create a quantity selector 
-				$products[0]["quantity_select"] = '	<select id="product_quantity" name="quantity">
+				$products[0]["quantity_select"] = '	<select id="product_quantity" name="'.$products[0]["product_id"].'_quantity">
 								                  		<option value="1">1</option>
 								                  		<option value="2">2</option>
 								                  		<option value="3">3</option>
@@ -514,7 +514,7 @@ class Brilliant_retail_core {
 		// Build a list of the product attributes for the 
 		// supplied product type
 
-			function _product_attrs($set_id,$product_id = ''){
+			function _product_attrs($set_id,$product_id = 0){
 				$attributes = array();
 				if($set_id == 0){
 					return $attributes;
@@ -522,8 +522,8 @@ class Brilliant_retail_core {
 				// Get the attributes
 					$this->EE->load->model('product_model');
 					$attrs = $this->EE->product_model->get_attributes($set_id,$product_id);
- 	
-				// Cycle through and build the input 
+ 				
+ 				// Cycle through and build the input 
 				// based on the helpper funtions for 
 				// each available attr type. 
 				
@@ -533,7 +533,8 @@ class Brilliant_retail_core {
 						foreach($a as $key => $val){
 							if($key == 'fieldtype'){
 								$f = '_producttype_'.$val;
-								$attributes[$i]['input'] = $this->$f(	$attrs[$i]["attribute_id"],
+								$attributes[$i]['input'] = $this->$f(	$product_id,
+																		$attrs[$i]["attribute_id"],
 																		$attrs[$i]["code"],
 																		$attrs[$i]["title"],
 																		$attrs[$i]["required"],
@@ -651,20 +652,20 @@ class Brilliant_retail_core {
 			return $this->cats;
 		}
 	
-		function _producttype_text($attribute_id,$title,$label,$required,$val,$opts = ''){
+		function _producttype_text($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
-			return '<input name="cAttribute_'.$attribute_id.'" value="'.$val.'" title="'.$input_title.'" type="text" class="'.$class.'" />';
+			return '<input name="'.$product_id.'_cAttribute_'.$attribute_id.'" value="'.$val.'" title="'.$input_title.'" type="text" class="'.$class.'" />';
 		}
 		
-		function _producttype_password($attribute_id,$title,$label,$required,$val,$opts = ''){
+		function _producttype_password($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			$val = ($val != '') ? '************************' : '' ;
 			return '<input name="cAttributePW_'.$attribute_id.'" value="'.$val.'" title="'.$input_title.'" type="password" class="'.$class.' cleartext" />';
 		}
 		
-		function _producttype_file($attribute_id,$title,$label,$required,$val,$opts = ''){
+		function _producttype_file($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
@@ -683,18 +684,18 @@ class Brilliant_retail_core {
 							 </div>';
 				}
 			}
-			return 	'	<input name="cAttribute_'.$attribute_id.'" id="cAttribute_'.$attribute_id.'" value=\''.$val.'\' type="hidden" />
-						<label>'.lang('br_title').': </label><br /><input name="cAttribute_'.$attribute_id.'_title" value="'.$title.'" type="text" class="'.$class.'" style="width:50%" />
+			return 	'	<input name="'.$product_id.'_cAttribute_'.$attribute_id.'" id="cAttribute_'.$attribute_id.'" value=\''.$val.'\' type="hidden" />
+						<label>'.lang('br_title').': </label><br /><input name="'.$product_id.'_cAttribute_'.$attribute_id.'_title" value="'.$title.'" type="text" class="'.$class.'" style="width:50%" />
 						<br /><br />'.$link.'
-						<label>'.lang('br_file').': </label><br /><input name="cAttribute_'.$attribute_id.'_file" type="file" class="'.$class.'" />';
+						<label>'.lang('br_file').': </label><br /><input name="'.$product_id.'_cAttribute_'.$attribute_id.'_file" type="file" class="'.$class.'" />';
 		}
 		
-		function _producttype_textarea($attribute_id,$title,$label,$required,$val,$opts = ''){
+		function _producttype_textarea($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
-			return '<textarea name="cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'.$val.'</textarea>';
+			return '<textarea name="'.$product_id.'_cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'.$val.'</textarea>';
 		}
-		function _producttype_dropdown($attribute_id,$title,$label,$required,$val,$opts = ''){
+		function _producttype_dropdown($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
@@ -715,12 +716,12 @@ class Brilliant_retail_core {
 					$options .= '<option '.$sel.'>'.$opt.'</option>';
 				}
 			}
-			$sel = 	'<select name="cAttribute_'.$attribute_id.'" id="cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'
+			$sel = 	'<select name="'.$product_id.'_cAttribute_'.$attribute_id.'" id="cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'
 						.$options.
 					'</select>';
 			return $sel;
 		}
-		function _producttype_table($attribute_id,$title,$label,$required,$val,$opts = ''){
+		function _producttype_table($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			// Create the table
 				$str = "<a href='#' id='add_row_".$attribute_id."'>".lang('br_add_row')."</a><br />
 						<table id='table_".$attribute_id."' cellpadding='0' cellspacing='0' class=\"ft_table\">
@@ -793,7 +794,7 @@ class Brilliant_retail_core {
 			return $str;
 		}
 		
-		function _producttype_multiselect($attribute_id,$title,$label,$required,$val,$opts = ''){
+		function _producttype_multiselect($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
@@ -816,14 +817,14 @@ class Brilliant_retail_core {
 					$options .= '<option '.$sel.'>'.$opt.'</option>';
 				}
 			}
-			$sel = 	'<select size="8" multiple="multiple" style="min-width:200px;" name="cAttribute_'.$attribute_id.'[]" id="cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'
+			$sel = 	'<select size="8" multiple="multiple" style="min-width:200px;" name="'.$product_id.'_cAttribute_'.$attribute_id.'[]" id="cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'
 						.$options.
 					'</select>';
 			return $sel;
 		}
 
 		
-		function _producttype_checkbox($attribute_id,$title,$label,$required,$val,$opts = ''){
+		function _producttype_checkbox($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$options = '';
 			if(strpos($opts,"|") !== false){
 				$a = explode("|",$opts);
@@ -841,7 +842,7 @@ class Brilliant_retail_core {
 			foreach($a as $opt){
 				$b = explode(":",$opt);
 				$chk = (isset($sel[$b[0]])) ? 'checked="checked"' : '' ;
-				$options .= '<input type="checkbox" name="cAttribute_'.$attribute_id.'[]" value="'.$b[0].'" '.$chk.' /> '.$b[1].'<br />';
+				$options .= '<input type="checkbox" name="'.$product_id.'_cAttribute_'.$attribute_id.'[]" value="'.$b[0].'" '.$chk.' /> '.$b[1].'<br />';
 			}
 			return $options;
 		}
@@ -949,6 +950,9 @@ class Brilliant_retail_core {
 	}
 	
 	function _validate_promo_code($code){
+
+		if($code["enabled"] == 0){ return false; }		
+		
 		if($code["uses_per"] > 0){
 			$cnt = $this->EE->promo_model->get_promo_use_count($code["code"]);
 			if($cnt >= $code["uses_per"]){
@@ -962,6 +966,7 @@ class Brilliant_retail_core {
 			return false;
 		}
 		return true;
+	
 	}
 	
 	function _search_index($queryStr){
@@ -989,9 +994,9 @@ class Brilliant_retail_core {
 		$parts = explode(" ",$term);
 		$newterm = '';
 		foreach($parts as $p){
-			if(strlen($p) >= 3){
+			#if(strlen($p) >= 3){
 				$newterm .= $p.' ';
-			}
+			#}
 		}
 		$newterm = trim($newterm);
 		return $newterm;
@@ -1963,11 +1968,11 @@ class Brilliant_retail_core {
 						foreach($first as $key => $val){
 							$opts .= '<option value="'.$key.'">'.$val.'</option>'; 
 						}
-						$select = '<select name="configurable_'.$i.'" class="required">'.$opts.'</select>';
+						$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" class="required">'.$opts.'</select>';
 					}else{
-						$select = '<select name="configurable_'.$i.'" class="required"><option>-</option></select>';
+						$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" class="required"><option>-</option></select>';
 					}
-				$list[] = '"configurable_'.$i.'"';
+				$list[] = '"'.$p["product_id"].'_configurable_'.$i.'"';
 				$config[$i] = array(
 									'configurable_label' => $a['title'],
 									'configurable_select' => $select 
@@ -2141,7 +2146,7 @@ class Brilliant_retail_core {
 				return $this->_currency_round($total);
 			}
 		}		
-		
+
 	// Get Cart Discount 
 	
 		function _get_cart_discount(){
@@ -2149,27 +2154,26 @@ class Brilliant_retail_core {
 			$cart = $this->EE->product_model->cart_get();
 			$discount = 0;
 			// Cart is empty
-				if(!isset($cart["items"]) || !isset($_SESSION["discount"])){
+				if(!isset($cart["items"])){
 					return 0;
 				}
-			if($_SESSION["discount"]["discount_type"] == 'item'){
-				foreach($cart["items"] as $item){
-					$discount += ($item["discount"] * $item["quantity"]);
-				}
-			}else{
-				$subtotal = 0;
-				// The discount is based on the cart total
-					foreach($cart["items"] as $val){
-						$subtotal += ($val["quantity"] * $val["price"]);
+			if(isset($_SESSION["discount"])){
+				if($_SESSION["discount"]["discount_type"] == 'item'){
+					foreach($cart["items"] as $item){
+						$discount += ($item["discount"] * $item["quantity"]);
 					}
-					if($_SESSION["discount"]["code_type"] == 'percent'){
-						$discount = $subtotal * ($_SESSION["discount"]["amount"] / 100);
-					}else{
-						$discount = $_SESSION["discount"]["amount"];
-						if($discount > $subtotal){
-							$discount = $subtotal;
+				}else{
+					// The discount is based on the cart total
+						if($_SESSION["discount"]["code_type"] == 'percent'){
+							$subtotal = 0;
+							foreach($cart["items"] as $val){
+								$subtotal += ($val["quantity"] * $val["price"]);
+							}
+							$discount = $subtotal * ($_SESSION["discount"]["amount"] / 100);
+						}else{
+							$discount = $_SESSION["discount"]["amount"];
 						}
-					}
+				}
 			}
 			return $this->_currency_round($discount);
 		}

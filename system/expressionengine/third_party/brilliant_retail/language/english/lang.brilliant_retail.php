@@ -187,13 +187,14 @@ $lang = array(
 	'br_category_selection_error' => 'Please select a category for your product',
 	
 	// Tabs 
-	'br_details' => 'Details',
-	'br_options' => 'Options',
-	'br_pricing' => 'Pricing',
-	'br_category' => 'Categories',
-	'br_images' => 'Images',
-	'br_related' => 'Related Products', 
-	'br_seo' => 'SEO',
+	'br_details' 	=> 'Details',
+	'br_options' 	=> 'Options',
+	'br_pricing' 	=> 'Pricing',
+	'br_category' 	=> 'Categories',
+	'br_images' 	=> 'Images',
+	'br_addon' 		=> 'Add-on Products',
+	'br_related' 	=> 'Related Products', 
+	'br_seo' 		=> 'SEO',
 
 	// Product New / Edit  
 		'br_sku' => 'SKU',

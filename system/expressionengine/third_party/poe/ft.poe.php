@@ -50,13 +50,13 @@ class Poe_ft extends EE_Fieldtype {
 	 */
 	function display_field($data)
 	{
-		_set_theme();
+		$this->_set_theme();
 		return '<textarea name="'.$this->field_name.'" class="ckeditor">'.$data.'</textarea>';
 	}
 
 	function display_cell($data)
 	{
-		_set_theme();
+		$this->_set_theme();
 		return '<textarea name="'.$this->cell_name.'" class="ckeditor">'.$data.'</textarea>';
 	}
 	

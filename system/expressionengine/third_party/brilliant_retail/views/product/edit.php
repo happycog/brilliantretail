@@ -52,16 +52,17 @@
                         
 					<?php
 						$tabs = array(
-										'details' => $tab_detail,
-										'attributes' => $tab_attributes,
-										'pricing' => $tab_price,
-										'sale_pricing' => $tab_sale_price,
-										'categories' => $tab_category,
-										'images' => $tab_image,
-										'options' => $tab_option,
-										'related' => $tab_related,
-										'seo' => $tab_seo,
-										'feed' => $tab_feed
+										'details' 		=> $tab_detail,
+										'attributes' 	=> $tab_attributes,
+										'pricing' 		=> $tab_price,
+										'sale_pricing' 	=> $tab_sale_price,
+										'categories' 	=> $tab_category,
+										'images' 		=> $tab_image,
+										'options' 		=> $tab_option,
+										#'addon' 		=> $tab_addon,
+										'related' 		=> $tab_related,
+										'seo' 			=> $tab_seo,
+										'feed' 			=> $tab_feed
 										);
 						foreach($tabs as $key=>$val){
 							echo $val;

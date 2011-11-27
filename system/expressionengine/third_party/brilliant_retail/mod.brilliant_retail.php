@@ -109,6 +109,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$form = ( $this->EE->TMPL->fetch_param('form') ) ? $this->EE->TMPL->fetch_param('form') : 'yes';
 			$products = $this->_get_product($product_id);
 			
+			
 			$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
 			if(!$products){
 				preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
@@ -119,8 +120,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 			}
 			$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
+
+
+			$tagdata = $this->EE->TMPL->tagdata;
+
 			// Parse Tags	
-				$tagdata = $this->EE->TMPL->tagdata;
 				$tagdata = preg_replace($pattern,"",$tagdata);
 				$output = $this->EE->TMPL->parse_variables($tagdata, $products);
 				if($form == 'yes'){
@@ -139,6 +143,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});
 								</script>';
 				}
+			
 			$this->switch_cnt = 0;
 			$output = preg_replace_callback('/'.LD.'image_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output);
 			return $this->return_data = $output;
@@ -151,6 +156,58 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$this->switch_cnt++;
 			return $options[$option];
 		}
+		
+	/*
+	* Create a br wraper for displaying custom fields 
+	*/
+		function product_custom(){
+			$entry_id = $this->EE->TMPL->fetch_param('entry_id');
+			include_once(APPPATH.'modules/channel/mod.channel.php');
+			$custom = new Channel();
+			$custom->tagparams['entry_id'] 	= $entry_id;
+			$custom->tagparams['dynamic'] 	= 'no';
+			return $custom->entries();
+		}
+	
+
+	/**
+	* Display add-on products to a specified product_id
+	* 
+	* @access	public
+	* @param	int
+	* @return	string
+	*/	
+		public function product_addon()
+		{
+			$product_id = $this->EE->TMPL->fetch_param('product_id');
+			$products = $this->EE->product_model->get_products($product_id);
+			$output = '';
+			$addon = array();
+			if(count($products[0]["addon"]) == 0){
+				return $output;
+			}
+			$i = 0;
+			foreach($products[0]["addon"] as $row){
+				if(isset($row["product_id"])){
+					if($add = $this->_get_product($row["product_id"])){
+						
+						// Set up the new addon prefixed array
+						
+							foreach($add[0] as $key => $val){
+								$tmp['addon_'.$key] = $val;
+							}
+						
+						$addon[$i] = $tmp;
+						$i++; 
+					}
+				}
+			}
+			
+			$vars[0] = array('addon_products' => $addon);
+			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata,$vars);
+			return $output;
+		}
+		
 	/**
 	* Display products related to a specified product_id
 	* 
@@ -172,12 +229,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 			foreach($products[0]["related"] as $row){
 				if(isset($row["product_id"])){
 					if($rel = $this->EE->product_model->get_products($row["product_id"])){
-						$related[$i] = array(
-											'related_product_id' => $rel[0]["product_id"],
-											'related_url' => $rel[0]["url"], 
-											'related_title' => $rel[0]["title"], 
-											'related_thumb' => $rel[0]["image_thumb"]
-											);
+						
+						// Set up the new related prefixed array
+						
+							foreach($rel[0] as $key => $val){
+								$tmp['related_'.$key] = $val;
+							}
+						
+						// Add depreciated 
+							$tmp['related_thumb'] = $rel[0]["image_thumb"];
+									
+						$related[$i] = $tmp;
 						$i++; 
 					}
 				}
@@ -522,196 +584,211 @@ class Brilliant_retail extends Brilliant_retail_core{
 	
 		function cart_add()
 		{
-			foreach($_POST as $key => $val){
-				$data[$key] = $this->EE->input->post($key,TRUE);
-			}
+			// We get a post of inputs that are 
+			// prepended with the product_id 
+			// lets fancy magic it into a usable post array
 			
-			if(!isset($data["product_id"])){
-				$_SESSION["br_alert"] = lang('br_product_configuration_required');
-				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
-			}
-			
-			// Clean the quantity value 
-				if(!isset($data["quantity"])) $data["quantity"] = 1;
-				
-				$data["quantity"] = round($data["quantity"] * 1);
-				if($data["quantity"] == 0){
-					$data["quantity"] = 1;
-				}
-			
-			$product_id = $data["product_id"];
-			$product = $this->EE->product_model->get_products($data["product_id"]);
-			
-			$amt = $this->_check_product_price($product[0]);
-	
-			// Set some defaults
-				$configurable_id = '';
-				$subscription = array();
-				$options = '';
-				$sku = $product[0]["sku"];
-		
-			// Configurable product options  		
-				if($product[0]["type_id"] == 3){
-					$tmp = $this->_get_config_id($data,$product[0]);
-					if($tmp == false){
-						$_SESSION["br_alert"] = lang('br_product_configuration_required');
-						$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["product_url"].'/'.$product[0]["url"]));
-						exit();
-					}
-					$sku = $tmp["sku"];
-					$configurable_id = $tmp["configurable_id"];
-					
-					$adjust = '';
-					
-					if($tmp["adjust"] != 0){
-						if($tmp["adjust"] > 0){
-							$dir = '+';
-							$amt["price"] = $this->_currency_round(($amt["price"] + $tmp["adjust"]));
-						}else{
-							$dir = '-';
-							$amt["price"] = $this->_currency_round(($amt["price"] - abs($tmp["adjust"])));			
-						}
-						$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($tmp["adjust"])).')<br />';
-					}
-					$prod = $this->EE->product_model->get_config_product($configurable_id);
-					$attributes = unserialize($prod[0]["attributes"]);
-					$tmp = array();
-					foreach($attributes as $a){
-						$tmp[] = urldecode($a);
-					}
-					$list = join(" / ",$tmp);
-					$options = $list.$adjust;
-				}
-	
-			// Subscriptions 
-				if($product[0]["type_id"] == 6){
-					// We only want to allow 1 per subscription
-						$data["quantity"] = 1;
-					$subscription = $product[0]["subscription"][0];
-					$periods = array(
-										1=>strtolower(lang('br_days')),
-										2=>strtolower(lang('br_months')) 
-									);
-					$options .= '<div class="subscription_options">';
-					
-					// format the renewal period
-						$length = rtrim($periods[$subscription["period"]],'s').'(s)';
-						
-					// Is there a trial period?
-						$subscription["price"] = $amt["price"];
-						$options .= '<label>'.lang('br_renews').':</label> 
-									'.lang('br_every').' '.$subscription["length"].' '.$length.'
-									<label>'.lang('br_price').':</label>
-									'.$this->_config["currency_marker"].$this->_currency_round($amt["price"]);
-						if($subscription["trial_occur"] >= 1){
-							$amt["base"]  = $subscription["trial_price"];
-							$amt["price"] = $subscription["trial_price"];
-							$amt["label"] = $subscription["trial_price"];
-							$options .= '<label>'.lang('br_trial_price').':</label> 
-										'.$this->_config["currency_marker"].$this->_currency_round($subscription["trial_price"]).'<br />
-										<label>'.lang('br_trial_length').':</label> 
-										'.$subscription["trial_occur"].' '.$length;
-						}
-					$options .= '</div>';
-				}
-
-			// Donations 
-			if($product[0]["type_id"] == 7){
-
-				if($data["donation_price"][0] == 'other'){
-					$price = $data["donation_other"]*1;
-					if($price < $product[0]["donation"][0]["min_donation"]){
-						$price = $product[0]["donation"][0]["min_donation"];
-					}
-				}else{
-					$price = $data["donation_price"][0];
-				}
-				$price = $this->_currency_round($price);
-				$amt["base"]  = $price;
-				$amt["price"] = $price;
-				$amt["label"] = '<p class="price">'.$price.'</p>';
-
-				// Are we going to setup a recurring profile?
-				if($product[0]["donation"][0]["allow_recurring"] == 1){
-					if(isset($data["recurring"])){
-						
-						$subscription["product_id"] 		= $product[0]["product_id"];
-						$subscription["length"] 			= 1;
-						$subscription["period"] 			= 2;
-						$subscription["group_id"] 			= 0;
-						$subscription["trial_price"] 		= '';
-						$subscription["trial_occur"] 		= '';
-						$subscription["cancel_group_id"] 	= 0;
-						$subscription["price"] 				= $price;
-
-						$options .= '<div class="subscription_options">	
-										<label>'.lang('br_recurring_donation').':</label> 
-										'.lang('br_every_months').' 
-										<label>'.lang('br_price').':</label>
-										'.$this->_config["currency_marker"].$this->_currency_round($amt["price"]).
-									'</div>';
-					}				
-				}
-						
-			}
-
-			// Add and adjust for options
-				$tmp = '';
-				foreach($data as $key => $val){
-					if(strpos($key,"cAttribute_option_") !== false && trim($val) != ''){
+				foreach($_POST as $key => $val){
+					if($key != 'product_id'){
 						$a = explode('_',$key);
-						$tmp .= '<h4>'.$product[0]["options"][$a[2]]["title"].':</h4>';
-						if($product[0]["options"][$a[2]]["type"] == 'dropdown'){
-							$adjust = '';
-							$price = $product[0]["options"][$a[2]]["opts"][$val]["price"];
-							if($price != 0){
-								if($price > 0){
-									$dir = '+';
-									$amt["price"] = $this->_currency_round(($amt["price"] + $price));
-								}else{
-									$dir = '-';
-									$amt["price"] = $this->_currency_round(($amt["price"] - abs($price)));
-								}
-								$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($price)).')<br />';
-							}	
-							$tmp .= $product[0]["options"][$a[2]]["opts"][$val]["title"] . $adjust;
-						}else{
-							$tmp .= $val.'<br />';
-						}
+						$b = ltrim($key,$a[0].'_');
+						$post[$a[0]]['product_id'] = $a[0];
+						$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
 					}
 				}
-				$options .= $tmp;
 			
-			if($product[0]["image_large"] == ''){ $product[0]["image_large"] = 'products/noimage.jpg'; }
-			if($product[0]["image_thumb"] == ''){ $product[0]["image_thumb"] = 'products/noimage.jpg'; }
-			$content = array(
-								'product_id'		=> 	$product[0]["product_id"],
-								'type_id'			=> 	$product[0]["type_id"],
-								'url_title' 		=> 	$product[0]["url"], 
-								'sku' 				=> 	$sku,
-								'configurable_id' 	=>  $configurable_id,
-								'subscription' 		=> 	$subscription, 
-								'quantity'  		=> 	$data["quantity"], 
-								'image_large' 		=> 	$product[0]["image_large"],
-								'image_thumb' 		=> 	$product[0]["image_thumb"],
-								'price_html' 		=> 	$amt["label"],
-								'base'   			=> 	$this->_currency_round($amt["base"]),
-								'price'   			=> 	$this->_currency_round($amt["price"]),
-								'cost' 				=> 	$product[0]["cost"], 
-								'discount'			=> 	$this->_discount_amount($amt["price"]), 
-								'title'    			=> 	$product[0]["title"],
-								'taxable' 			=> 	$product[0]["taxable"], 
-								'weight' 			=> 	$product[0]["weight"],  
-								'shippable' 		=> 	$product[0]["shippable"],  
-								'options' 			=> 	$options,
-								'subtotal' 			=> 	$this->_currency_round(($amt["price"] * $data["quantity"])) 
-				          	);
-			$content = serialize($content);
-			$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
-							'session_id' => session_id(), 
-							'content' => $content,
-							'updated' => date("Y-n-d G:i:s"));
-			$this->EE->product_model->cart_set($data);
+		// Now add them
+			foreach($post as $data){
+			
+				if(!isset($data["product_id"])){
+					$_SESSION["br_alert"] = lang('br_product_configuration_required');
+					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+				}
+				
+				// Clean the quantity value 
+					if(!isset($data["quantity"])) $data["quantity"] = 1;
+					
+					$data["quantity"] = round($data["quantity"] * 1);
+					if($data["quantity"] == 0){
+						$data["quantity"] = 1;
+					}
+				
+				$product_id = $data["product_id"];
+				$product = $this->EE->product_model->get_products($data["product_id"]);
+				
+				$amt = $this->_check_product_price($product[0]);
+		
+				// Set some defaults
+					$configurable_id = '';
+					$subscription = array();
+					$options = '';
+					$sku = $product[0]["sku"];
+			
+				// Configurable product options  		
+					if($product[0]["type_id"] == 3){
+						$tmp = $this->_get_config_id($data,$product[0]);
+						if($tmp == false){
+							$_SESSION["br_alert"] = lang('br_product_configuration_required');
+							$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["product_url"].'/'.$product[0]["url"]));
+							exit();
+						}
+						$sku = $tmp["sku"];
+						$configurable_id = $tmp["configurable_id"];
+						
+						$adjust = '';
+						
+						if($tmp["adjust"] != 0){
+							if($tmp["adjust"] > 0){
+								$dir = '+';
+								$amt["price"] = $this->_currency_round(($amt["price"] + $tmp["adjust"]));
+							}else{
+								$dir = '-';
+								$amt["price"] = $this->_currency_round(($amt["price"] - abs($tmp["adjust"])));			
+							}
+							$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($tmp["adjust"])).')<br />';
+						}
+						$prod = $this->EE->product_model->get_config_product($configurable_id);
+						$attributes = unserialize($prod[0]["attributes"]);
+						$tmp = array();
+						foreach($attributes as $a){
+							$tmp[] = urldecode($a);
+						}
+						$list = join(" / ",$tmp);
+						$options = $list.$adjust;
+					}
+		
+				// Subscriptions 
+					if($product[0]["type_id"] == 6){
+						// We only want to allow 1 per subscription
+							$data["quantity"] = 1;
+						$subscription = $product[0]["subscription"][0];
+						$periods = array(
+											1=>strtolower(lang('br_days')),
+											2=>strtolower(lang('br_months')) 
+										);
+						$options .= '<div class="subscription_options">';
+						
+						// format the renewal period
+							$length = rtrim($periods[$subscription["period"]],'s').'(s)';
+							
+						// Is there a trial period?
+							$subscription["price"] = $amt["price"];
+							$options .= '<label>'.lang('br_renews').':</label> 
+										'.lang('br_every').' '.$subscription["length"].' '.$length.'
+										<label>'.lang('br_price').':</label>
+										'.$this->_config["currency_marker"].$this->_currency_round($amt["price"]);
+							if($subscription["trial_occur"] >= 1){
+								$amt["base"]  = $subscription["trial_price"];
+								$amt["price"] = $subscription["trial_price"];
+								$amt["label"] = $subscription["trial_price"];
+								$options .= '<label>'.lang('br_trial_price').':</label> 
+											'.$this->_config["currency_marker"].$this->_currency_round($subscription["trial_price"]).'<br />
+											<label>'.lang('br_trial_length').':</label> 
+											'.$subscription["trial_occur"].' '.$length;
+							}
+						$options .= '</div>';
+					}
+	
+				// Donations 
+				if($product[0]["type_id"] == 7){
+	
+					if($data["donation_price"][0] == 'other'){
+						$price = $data["donation_other"]*1;
+						if($price < $product[0]["donation"][0]["min_donation"]){
+							$price = $product[0]["donation"][0]["min_donation"];
+						}
+					}else{
+						$price = $data["donation_price"][0];
+					}
+					$price = $this->_currency_round($price);
+					$amt["base"]  = $price;
+					$amt["price"] = $price;
+					$amt["label"] = '<p class="price">'.$price.'</p>';
+	
+					// Are we going to setup a recurring profile?
+					if($product[0]["donation"][0]["allow_recurring"] == 1){
+						if(isset($data["recurring"])){
+							
+							$subscription["product_id"] 		= $product[0]["product_id"];
+							$subscription["length"] 			= 1;
+							$subscription["period"] 			= 2;
+							$subscription["group_id"] 			= 0;
+							$subscription["trial_price"] 		= '';
+							$subscription["trial_occur"] 		= '';
+							$subscription["cancel_group_id"] 	= 0;
+							$subscription["price"] 				= $price;
+	
+							$options .= '<div class="subscription_options">	
+											<label>'.lang('br_recurring_donation').':</label> 
+											'.lang('br_every_months').' 
+											<label>'.lang('br_price').':</label>
+											'.$this->_config["currency_marker"].$this->_currency_round($amt["price"]).
+										'</div>';
+						}				
+					}
+							
+				}
+	
+				// Add and adjust for options
+					$tmp = '';
+					foreach($data as $key => $val){
+						if(strpos($key,"cAttribute_option_") !== false && trim($val) != ''){
+							$a = explode('_',$key);
+							$tmp .= '<h4>'.$product[0]["options"][$a[2]]["title"].':</h4>';
+							if($product[0]["options"][$a[2]]["type"] == 'dropdown'){
+								$adjust = '';
+								$price = $product[0]["options"][$a[2]]["opts"][$val]["price"];
+								if($price != 0){
+									if($price > 0){
+										$dir = '+';
+										$amt["price"] = $this->_currency_round(($amt["price"] + $price));
+									}else{
+										$dir = '-';
+										$amt["price"] = $this->_currency_round(($amt["price"] - abs($price)));
+									}
+									$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($price)).')<br />';
+								}	
+								$tmp .= $product[0]["options"][$a[2]]["opts"][$val]["title"] . $adjust;
+							}else{
+								$tmp .= $val.'<br />';
+							}
+						}
+					}
+					$options .= $tmp;
+				
+				if($product[0]["image_large"] == ''){ $product[0]["image_large"] = 'products/noimage.jpg'; }
+				if($product[0]["image_thumb"] == ''){ $product[0]["image_thumb"] = 'products/noimage.jpg'; }
+				$content = array(
+									'product_id'		=> 	$product[0]["product_id"],
+									'type_id'			=> 	$product[0]["type_id"],
+									'url_title' 		=> 	$product[0]["url"], 
+									'sku' 				=> 	$sku,
+									'configurable_id' 	=>  $configurable_id,
+									'subscription' 		=> 	$subscription, 
+									'quantity'  		=> 	$data["quantity"], 
+									'image_large' 		=> 	$product[0]["image_large"],
+									'image_thumb' 		=> 	$product[0]["image_thumb"],
+									'price_html' 		=> 	$amt["label"],
+									'base'   			=> 	$this->_currency_round($amt["base"]),
+									'price'   			=> 	$this->_currency_round($amt["price"]),
+									'cost' 				=> 	$product[0]["cost"], 
+									'discount'			=> 	$this->_discount_amount($amt["price"]), 
+									'title'    			=> 	$product[0]["title"],
+									'taxable' 			=> 	$product[0]["taxable"], 
+									'weight' 			=> 	$product[0]["weight"],  
+									'shippable' 		=> 	$product[0]["shippable"],  
+									'options' 			=> 	$options,
+									'subtotal' 			=> 	$this->_currency_round(($amt["price"] * $data["quantity"])) 
+					          	);
+				$content = serialize($content);
+				$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
+								'session_id' => session_id(), 
+								'content' => $content,
+								'updated' => date("Y-n-d G:i:s"));
+				$this->EE->product_model->cart_set($data);
+
+			} // End Data Loop
+
 
 			if(isset($_SESSION["discount"])){
 				$this->promo_check_code($_SESSION["discount"]["code"]);
@@ -2509,11 +2586,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 			return $output;
 		}
 		
-		function subscription_update(){
+		function customer_subscription_update(){
 		
 		}
 		
-		function subscription_cancel(){
+		function customer_subscription_cancel(){
 		
 		}
 		

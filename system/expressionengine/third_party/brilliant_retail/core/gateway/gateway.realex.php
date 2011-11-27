@@ -104,8 +104,10 @@ class Gateway_realex extends Brilliant_retail_gateway {
 			curl_close ($ch); 
 				
 		//Tidy it up
-			$response = eregi_replace ( "[[:space:]]+", " ", $response );
-			$response = eregi_replace ( "[\n\r]", "", $response );
+		
+			$response = preg_replace ("/\s+/", " ", $response);
+			$response = preg_replace ("/[\r\n]/", "", $response);
+
 			$xmlcheck = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
 										
 			/* ==/ end realex auth code /== */

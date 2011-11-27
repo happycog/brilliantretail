@@ -75,6 +75,9 @@ class Product_model extends CI_Model {
 					$products[$i] = $row;
 				
 				// Get Product Price
+					$products[$i]["entry_id"] = $this->get_product_entry($row["product_id"]);
+
+				// Get Product Price
 					$products[$i]["price_matrix"] = $this->get_product_price($row["product_id"],1);
 
 				// Get Product Price
@@ -125,6 +128,9 @@ class Product_model extends CI_Model {
 						}
 					}
 				
+				// Product Addon 
+					$products[$i]["addon"] 	= ''; #$this->get_product_addon($row["product_id"]);
+					
 				// Product Related 
 					$products[$i]["related"] = $this->get_product_related($row["product_id"]);
 	
@@ -158,6 +164,9 @@ class Product_model extends CI_Model {
 		}
 	
 	function get_product_collection($search,$limit=0,$offset=0,$sort,$dir,$cat,$prefix='exp_'){
+		
+		$site_id = $this->config->item('site_id');
+			
 		// Get a simple count of all products
 			$sql = "SELECT 
 						count(product_id) as cnt 
@@ -185,6 +194,8 @@ class Product_model extends CI_Model {
 			}else{
 				$sql .= "WHERE 1 = 1 ";
 			}
+			
+			$sql .= " AND p.site_id = ".$site_id;
 			
 			if(trim($search) != ''){
 				$sql .= " AND 
@@ -304,7 +315,27 @@ class Product_model extends CI_Model {
 		}
 		return $products;
 	}
-
+	
+	function get_product_entry($product_id){
+		return 0;
+		// Not quite ready for prime time
+			if (isset($this->session->cache['get_product_entry'])){
+				$product = $this->session->cache['get_product_entry'];
+			}else{
+				$this->db->select('*');
+				$this->db->from('br_product_entry');		
+				$query = $this->db->get();
+				$product = array();
+				$i = 0;
+				foreach ($query->result_array() as $row){
+					$product[$row["product_id"]] =  $row["entry_id"];
+					$i++;
+				}
+				$this->session->cache['get_product_entry'] = $product;
+			}
+			return $product[$product_id];
+	}
+	
 	function get_product_thumbnail($product_id)
 	{
 		$thumb = '';
@@ -532,7 +563,11 @@ class Product_model extends CI_Model {
 				unset($data["min_donation"]);
 				unset($data["allow_recurring"]);
 				
-	
+			if(isset($data["addon"])){
+				$addon = $data["addon"];
+				unset($data["addon"]);
+			}
+			
 			if(isset($data["related"])){
 				$related = $data["related"];
 				unset($data["related"]);
@@ -819,6 +854,18 @@ class Product_model extends CI_Model {
 					$this->db->insert('br_product_donation',$donation);
 				}
 			
+			// Addon Products 
+				if(isset($addon)){
+					$this->db->delete('br_product_addon', array('parent_id' => $product_id)); 
+					foreach($addon as $r){
+						$data = array(	
+							'product_id' => $r, 
+							'parent_id' => $product_id
+						);
+						$this->db->insert('br_product_addon',$data);
+					}			
+				}
+				
 			// Related Products 
 				if(isset($related)){
 					$this->db->delete('br_product_related', array('parent_id' => $product_id)); 
@@ -858,6 +905,7 @@ class Product_model extends CI_Model {
 		#$this->db->delete('br_product_download', array('product_id' => $product_id)); 
 		$this->db->delete('br_product_images', array('product_id' => $product_id)); 
 		$this->db->delete('br_product_options', array('product_id' => $product_id)); 
+		$this->db->delete('br_product_addon', array('parent_id' => $product_id)); 
 		$this->db->delete('br_product_related', array('parent_id' => $product_id)); 
 		$this->db->delete('br_product_subscription', array('product_id' => $product_id)); 
 		
@@ -982,6 +1030,27 @@ class Product_model extends CI_Model {
 		}
 		return $cat;
 	}
+
+	function get_product_addon($product_id){
+		if (isset($this->session->cache['get_product_addon'][$product_id])){
+			$addon = $this->session->cache['get_product_addon'][$product_id];
+		}else{
+			$this->db->select('*');
+			$this->db->where('parent_id',$product_id);
+			$this->db->from('br_product_addon');		
+			$query = $this->db->get();
+			$addon = array();
+			$i = 0;
+			foreach ($query->result_array() as $row){
+				if($r=$this->get_product_basic($row["product_id"])){
+					$addon[$i] = $r;
+					$i++;
+				}
+			}
+			$this->session->cache['get_product_addon'][$product_id] = $addon;		
+		}
+		return $addon;
+	}
 	
 	function get_product_related($product_id){
 		if (isset($this->session->cache['get_product_related'][$product_id])){
@@ -1003,6 +1072,7 @@ class Product_model extends CI_Model {
 		}
 		return $related;
 	}
+
 	function get_product_bundle($product_id){
 		if(isset($this->session->cache['get_product_bundle'][$product_id])){
 			$products = $this->session->cache['get_product_bundle'][$product_id];
@@ -1085,7 +1155,7 @@ class Product_model extends CI_Model {
 	}
 
 	function get_attributes($set_id = '',$product_id = ''){
-			
+
 			// Editing or new?
 				$isProduct = false;	
 			
@@ -1143,7 +1213,6 @@ class Product_model extends CI_Model {
 						}
 					$i++;
 				}
-	
 			return $attributes;
 	}
 	

@@ -39,6 +39,7 @@ class Product {
 	{
 		$products[0]["product_id"] 			= 0;
 		$products[0]["bundle"] 				= array();
+		$products[0]["addon"] 				= array();
 		$products[0]["related"] 			= array();
 		$products[0]["type_id"] 			= 1;
 		$products[0]["attribute_set_id"] 	= 0;

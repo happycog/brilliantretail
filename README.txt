@@ -12,6 +12,20 @@ http://getsatisfaction.com/brilliantretail
 
 # CHANGE LOG # 
 
+* Added New BR Poe Fieldtype [#0000118]
+* Fixed Discount error when logged in as super admin [#0000138]
+* Fixed WYSIWYG Editor Image Error [#0000114]
+* Fixed checkout "email you entered doesn't appear to be valid" [#0000136]
+* Fixed Site ID missing from get_product_collection [#0000133]
+* Fixed Disabled Promo Still Working. [#0000130]
+* Fixed Search error if my search contains less than 3 characters. [#0000127]
+* Fixed Zero subtotal with tax // shipping cost still shows no_payment gateway. [#0000123]
+* Fixed Email validation errors (dpdexter) - resolved. [#0000117]
+* Updated Rename fieldtype to BrilliantRetail Products. [#0000116]
+* Updated CKEditor to the latest release. [#0000115]
+* Added cart discounts to promos. [#0000122]
+
+
 1.0.4.0 - October 4, 2011
 * IMPORTANT: Moved cp_theme/brilliant_retail directory to third_party/brilliant_retail 
 * IMPORTANT: Moved css and js files from _assets (parsed) to js and css folders in brilliant_retail theme

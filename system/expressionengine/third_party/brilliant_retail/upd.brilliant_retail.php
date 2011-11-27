@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.4.3';
+	public $version	= '1.0.4.1';
 	
 	function Brilliant_retail_upd()
 	{
@@ -925,6 +925,17 @@ class Brilliant_retail_upd {
 				('484', '2534', 'N;'), 
 				('485', '2535', 'N;'), 
 				('520', '2536', 'N;');";
+
+## ----------------------------
+##  Table structure for exp_br_product_related
+## ----------------------------
+	$sql[] = "DROP TABLE IF EXISTS exp_br_product_addon;";
+	$sql[] = "CREATE TABLE exp_br_product_addon (
+  related_id int(11) NOT NULL AUTO_INCREMENT,
+  parent_id int(11) NOT NULL,
+  product_id int(11) NOT NULL,
+  PRIMARY KEY (related_id)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Table structure for exp_br_product_related

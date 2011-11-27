@@ -1,4 +1,4 @@
-{!-- SEARCH PAGE
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -21,5 +21,14 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-!--}
-{exp:brilliant_retail:search term="{segment_3}"}
+
+## ----------------------------
+##  Table structure for exp_br_product_related
+## ----------------------------
+	$sql[] = "DROP TABLE IF EXISTS exp_br_product_addon;";
+	$sql[] = "CREATE TABLE exp_br_product_addon (
+					related_id int(11) NOT NULL AUTO_INCREMENT,
+					parent_id int(11) NOT NULL,
+					product_id int(11) NOT NULL,
+					PRIMARY KEY (related_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";

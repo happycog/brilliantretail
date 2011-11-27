@@ -146,6 +146,15 @@
 										'value' => $products[0]["cost"])
 								)?></td>
 		</tr>
+		
+		<?php
+			foreach($custom as $c){
+				echo '		<tr>
+								<td>'.$c["settings"]["field_label"].'</td>
+								<td>'.$c["display_field"].'</td>
+							</tr>';
+			}
+		?>
 
 </table>
 <script type="text/javascript">

@@ -1072,15 +1072,18 @@ div#error p{
 	padding: 4px 10px;
 }
 
+#addon_selected, 
 #related_selected {
 	margin-top:40px;
 }
 
+#addon_results, 
 #related_results {
 	border: #CCC solid;
 	border-width: 0 0 1px 1px;
 }
 
+#addon_results tr td , 
 #related_results tr td {
 	background: #F7F7F7;
 	border: #CCC solid;
@@ -1347,6 +1350,7 @@ table.b2r_product_tbl tr.b2r_active td {
 	background: #e8edf1; 
 }	
 
+#addonTable h4, 
 #relatedTable h4 {
 	padding: 10px 0;
 }
@@ -1355,6 +1359,8 @@ table.b2r_product_tbl tr.b2r_active td {
 #bundle_results a,
 #bundle_selected a,
 #imageTable a,
+#addon_selected a, 
+#addon_results a,
 #related_selected a, 
 #related_results a {
 	color: #0581A7;
@@ -2411,9 +2417,8 @@ input#delete {
 		cursor:pointer;
 	}
 	
-	
-/* I'm just going to steal the BR FieldType stuff here to style the related entries */
 
+table#addonTable .br_fieldtype,
 table#relatedTable .br_fieldtype {
 	border:1px #ccc solid;
 	background: url(../images/bg_fieldtype.jpg) repeat-x #fff;
@@ -2421,6 +2426,7 @@ table#relatedTable .br_fieldtype {
 	margin-top:10px;
 }
 
+table#addonTable .br_fieldtype div.search, 
 table#relatedTable .br_fieldtype div.search {
 	background: url(../images/bg_fieldtype_search.png) repeat-x transparent;
 	float:none;
@@ -2428,6 +2434,7 @@ table#relatedTable .br_fieldtype div.search {
 	height: 40px;
 }
 
+table#addonTable .br_fieldtype div.search_clear,
 table#relatedTable .br_fieldtype div.search_clear {
 	position: absolute;
 	margin: 0 0 0 192px;
@@ -2438,6 +2445,7 @@ table#relatedTable .br_fieldtype div.search_clear {
 	display: none;
 }
 
+table#addonTable .br_fieldtype div.search input,
 table#relatedTable .br_fieldtype div.search input {
 	margin-left: 20px;
 	border: none; 
@@ -2446,11 +2454,15 @@ table#relatedTable .br_fieldtype div.search input {
 	font-size: 12px;
 }
 
+table#addonTable .br_fieldtype .br_fieldtype_search, 
+table#addonTable .br_fieldtype .br_fieldtype_results,
 table#relatedTable .br_fieldtype .br_fieldtype_search, 
 table#relatedTable .br_fieldtype .br_fieldtype_results {
 	float:left;
 	width: 50%;
 }
+
+table#addonTable .br_fieldtype .result_div, 
 table#relatedTable .br_fieldtype .result_div{
 	height:90px;
 	width: 80%;
@@ -2463,24 +2475,31 @@ table#relatedTable .br_fieldtype .result_div{
 	-webkit-border-radius: 3px;
 }
 
+table#addonTable .br_fieldtype_results,
 table#relatedTable .br_fieldtype_results {
 	padding-bottom: 10px;
 }
 
+table#addonTable .br_fieldtype .result_div td,  
+table#addonTable .br_fieldtype .br_fieldtype_results td,
 table#relatedTable .br_fieldtype .result_div td,  
 table#relatedTable .br_fieldtype .br_fieldtype_results td {
 	padding: 5px 3px;
 }
 
+table#addonTable .br_fieldtype_results h4,
 table#relatedTable .br_fieldtype_results h4 {
 	margin-top: 40px;
 	margin-bottom: 10px;
 }
 
+table#addonTable .tDnD_whileDrag td,
 table#relatedTable .tDnD_whileDrag td {
 	background-color: #F7F7F7;
 	font-weight: bold;
 }
+
+table#addonTable .tDnD_whileDrag td a, 
 table#relatedTable .tDnD_whileDrag td a{
 	font-weight: bold;
 }

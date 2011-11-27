@@ -54,6 +54,7 @@
 			</div>
 		</div>
 	{/no_results}
+		
 <!-- Product -->
 <div id="product" class="page">
 	<div class="wrapper">
@@ -199,6 +200,12 @@
                 		<h3>{label}</h3>
 	                	<div>{value}</div>
 					{/attribute}
+					
+					{!--
+						Add-on Template 
+					!--}
+
+
                 </div> <!-- features -->                
             </div> <!-- details -->
             
@@ -235,6 +242,9 @@
     </div>
 </div> <!-- product -->
 <!-- end of Product Page -->
+
+	{!-- {embed='product/addon' product_id='{product_id}'} !--}
+
 
 {/exp:brilliant_retail:product}
 
