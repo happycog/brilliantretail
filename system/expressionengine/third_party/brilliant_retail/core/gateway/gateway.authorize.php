@@ -150,11 +150,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 											'amount' => $data["order_total"],
 											'details' => serialize($details), 
 											'approval' => $resp[4],
-<<<<<<< HEAD
 											'subscription' => ''
-=======
-											'subscription' => ''   
->>>>>>> Patch_1041
 										);
 				}
 				return $trans;
