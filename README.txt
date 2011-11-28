@@ -11,7 +11,7 @@ https://www.brilliantretail.com/user-guide
 http://getsatisfaction.com/brilliantretail  
 
 # CHANGE LOG # 
-
+* Added cart discounts to promos. [#0000122]
 * Added New BR Poe Fieldtype [#0000118]
 * Fixed Discount error when logged in as super admin [#0000138]
 * Fixed WYSIWYG Editor Image Error [#0000114]
@@ -23,7 +23,6 @@ http://getsatisfaction.com/brilliantretail
 * Fixed Email validation errors (dpdexter) - resolved. [#0000117]
 * Updated Rename fieldtype to BrilliantRetail Products. [#0000116]
 * Updated CKEditor to the latest release. [#0000115]
-* Added cart discounts to promos. [#0000122]
 
 
 1.0.4.0 - October 4, 2011

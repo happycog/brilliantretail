@@ -587,16 +587,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// We get a post of inputs that are 
 			// prepended with the product_id 
 			// lets fancy magic it into a usable post array
-			
 				foreach($_POST as $key => $val){
 					if($key != 'product_id'){
-						$a = explode('_',$key);
-						$b = ltrim($key,$a[0].'_');
-						$post[$a[0]]['product_id'] = $a[0];
-						$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
+						if(strpos($key,"_") === false){
+							// If its a single post with no appended product_id 
+							$post[0]["product_id"] 	= $_POST["product_id"];
+							$post[0]["quantity"] 	= $_POST["quantity"];
+						}else{
+							// If its a multiple post 
+							$a = explode('_',$key);
+							$b = ltrim($key,$a[0].'_');
+							$post[$a[0]]['product_id'] = $a[0];
+							$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
+						}
 					}
 				}
-			
+
 		// Now add them
 			foreach($post as $data){
 			
