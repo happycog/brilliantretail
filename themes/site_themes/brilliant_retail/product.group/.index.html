@@ -117,6 +117,41 @@
 					<div class="clearboth"><!-- --></div>
                     {!-- Insert Product Specific Selectors !--}
                     	
+                    	{!-- Donation Product Type !--}
+	                    	{donation}
+
+								{price_options}
+								
+								{!-- If you have a subscription supported gateway you can setup recurring donations !--}
+
+									{if allow_recurring}
+										<div id="donation_recurring">
+											<input type="checkbox" name="recurring" /> I would like to setup a 
+											recurring donation every month for the amount selected. 
+										</div>
+									{/if}
+
+	                    	{/donation}
+
+						{!-- Subscription Product Type !--}			                    	
+	                    	{subscription}
+
+	                    		<div>
+	                    			<b>Renews Every:</b> {length} {renewal}
+	                    		</div>
+
+								{!-- Did you setup a trial? !--}
+									{if {trial_occur} >= 1}
+										<div>
+											<b>Trial Price:</b> ${trial_price}
+										</div>
+										<div>
+											<b>Trial Occurances:</b> {trial_occur}
+										</div>
+									{/if}
+							
+							{/subscription}
+                    	
 						{!-- Configurable Product Type !--}
 
 	                    	{configurable}

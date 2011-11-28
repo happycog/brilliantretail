@@ -164,6 +164,16 @@ class Customer_model extends CI_Model {
 			$str = $this->db->insert_string('member_data', $member_data);
 			$this->db->query($str);
 		
+		
+		// If we are using the new auth library we need to 
+		// resave the password 
+			if(APP_VER >= 2.2){
+				// Validate password post EE v.2.2
+				// Load the Auth module
+					$this->load->library('Auth');
+					$this->auth->update_password($member_id,$password);
+			}
+
 		return $member_id;
 	}
 	

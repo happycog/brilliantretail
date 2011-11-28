@@ -2261,6 +2261,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Get the member ID 
 					$member_id = $this->EE->db->insert_id();
 
+				// If we are using the new auth library we need to 
+				// resave the password 
+					if(APP_VER >= 2.2){
+						# Validate password post EE v.2.2
+							// Load the Auth module
+								$this->EE->load->library('Auth');
+								$this->EE->auth->update_password($member_id,$data['password']);
+					}
+
 				// Call the member_member_register hook 
 					$edata = $this->EE->extensions->call('member_member_register', $new, $member_id);
 					if ($this->EE->extensions->end_script === TRUE) return;
