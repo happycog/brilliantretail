@@ -105,9 +105,9 @@ class Shipping_ups extends Brilliant_retail_shipping {
 										<UnitOfMeasurement>  
 											<Code>IN</Code>  
 										</UnitOfMeasurement>  
-										<Length>'.($config["size_unit"] != "in" ? $this->_convert_sze($config["size_length"],$config["size_unit"],"in") : $config["size_length"]).'</Length>  
-										<Width>'.($config["size_unit"] != "in" ? $this->_convert_sze($config["size_width"],$config["size_unit"],"in") : $config["size_width"]).'</Width>  
-										<Height>'.($config["size_unit"] != "in" ? $this->_convert_sze($config["size_height"],$config["size_unit"],"in") : $config["size_height"]).'</Height>  
+										<Length>'.($config["size_unit"] != "in" ? $this->_convert_size($config["size_length"],$config["size_unit"],"in") : $config["size_length"]).'</Length>  
+										<Width>'.($config["size_unit"] != "in" ? $this->_convert_size($config["size_width"],$config["size_unit"],"in") : $config["size_width"]).'</Width>  
+										<Height>'.($config["size_unit"] != "in" ? $this->_convert_size($config["size_height"],$config["size_unit"],"in") : $config["size_height"]).'</Height>  
 									</Dimensions>  
 									<PackageWeight>  
 										<UnitOfMeasurement>  
