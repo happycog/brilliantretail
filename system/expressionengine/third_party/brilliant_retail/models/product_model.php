@@ -179,11 +179,11 @@ class Product_model extends CI_Model {
 		// Create a SQL statement
 			$sql = "SELECT 
 						SQL_CALC_FOUND_ROWS 
-						p.enabled, 
+						p.product_id,   
 						p.title, 
 						p.quantity,
 						p.type_id,   
-						p.product_id  
+						p.enabled  
 					FROM 
 						".$prefix."br_product p "; 
 			if($cat != ''){

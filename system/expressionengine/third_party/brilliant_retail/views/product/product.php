@@ -28,19 +28,22 @@
 
 	$this->table->set_heading(
 							array(
-						    		'data' => lang('status'), 
-						    		'width' => '50px'),
+						    		'data' 	=> lang('br_product_id'), 
+						    		'width' => '75px'),
 						    array(
-						    		'data' => lang('br_title'), 
+						    		'data' 	=> lang('br_title'), 
 						    		'width' => '*'), 
 						    array(
-						    		'data' => lang('br_qty'), 
+						    		'data' 	=> lang('br_qty'), 
 									'width' => '15%'),
 						   	array(
-						    		'data' => lang('br_type'), 
+						    		'data' 	=> lang('br_type'), 
 									'width' => '15%'),
+							array(
+						    		'data' 	=> lang('status'), 
+						    		'width' => '100px'),
 						   	array(
-						    		'data' => '<input type="checkbox" id="toggle_check" />', 
+						    		'data' 	=> '<input type="checkbox" id="toggle_check" />', 
 									'style' => 'text-align:center',
 									'width' => '5%')
 						   );
@@ -111,6 +114,7 @@
 		var oTable = $('#productTable').dataTable({
 													"iDisplayLength": 25, 
 													"aoColumns": [
+																		null,
 																		null,
 																		null,
 																		null,

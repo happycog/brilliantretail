@@ -607,8 +607,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 			foreach($post as $data){
 			
 				if(!isset($data["product_id"])){
-					$_SESSION["br_alert"] = lang('br_product_configuration_required');
-					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+					#$_SESSION["br_alert"] = lang('br_product_configuration_required');
+					#$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 				}
 				
 				// Clean the quantity value 
@@ -1507,11 +1507,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$password = strtolower(substr(md5(time()),0,8));
 						$member_id = $this->EE->customer_model->create_customer($data,$password,$group_id);
 						$eml[0] = array(
-											"fname" => $data["br_fname"],
-											"lname" => $data["br_lname"],
-											"email" => $data["email"],
-											"password" => $password,
-											"username" => $data["email"] 
+											"fname" 	=> $data["br_fname"],
+											"lname" 	=> $data["br_lname"],
+											"email" 	=> $data["email"],
+											"password" 	=> $password,
+											"username" 	=> $data["email"], 
+											"join_date" => $this->EE->localize->now 
 										);
 						// Call the member_member_register hook 
 							$edata = $this->EE->extensions->call('member_member_register', $eml[0], $member_id);
@@ -1524,26 +1525,25 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Set the shipping automatically
 				if(isset($data["ship_same_address"])){
 					unset($data["ship_same_address"]);
-					$data["br_shipping_fname"] = $data["br_billing_fname"];
-					$data["br_shipping_lname"] = $data["br_billing_lname"];
-					$data["br_shipping_company"] = $data["br_billing_company"];
-					$data["br_shipping_phone"] = $data["br_billing_phone"];
-					$data["br_shipping_address1"] = $data["br_billing_address1"];
-					$data["br_shipping_address2"] = $data["br_billing_address2"];
-					$data["br_shipping_country"] = $data["br_billing_country"];
-					$data["br_shipping_city"] = $data["br_billing_city"];
-					$data["br_shipping_zip"] = $data["br_billing_zip"];
-					$data["br_shipping_state"] = $data["br_billing_state"];
+					$data["br_shipping_fname"] 		= $data["br_billing_fname"];
+					$data["br_shipping_lname"] 		= $data["br_billing_lname"];
+					$data["br_shipping_company"] 	= $data["br_billing_company"];
+					$data["br_shipping_phone"] 		= $data["br_billing_phone"];
+					$data["br_shipping_address1"] 	= $data["br_billing_address1"];
+					$data["br_shipping_address2"] 	= $data["br_billing_address2"];
+					$data["br_shipping_country"] 	= $data["br_billing_country"];
+					$data["br_shipping_city"] 		= $data["br_billing_city"];
+					$data["br_shipping_zip"] 		= $data["br_billing_zip"];
+					$data["br_shipping_state"] 		= $data["br_billing_state"];
 				}
 
-			$data["cart"] = $this->EE->product_model->cart_get();
-			$data["cart_coupon_code"] = isset($_SESSION["discount"]["code"]) ? $_SESSION["discount"]["code"] : '';
-			$data["cart_tax"] = $this->_get_cart_tax($data["br_shipping_country"],$data["br_shipping_state"],$data["br_shipping_zip"]);
-			$data["cart_subtotal"] = $this->cart_subtotal();
-			$data["cart_discount"] = $this->_get_cart_discount();
-			$data["cart_total"] = $this->_get_cart_total();
-			$data["order_total"] = ($data["cart_total"] + $data["cart_tax"] + $data["cart_shipping"]);
-							
+			$data["cart"] 				= $this->EE->product_model->cart_get();
+			$data["cart_coupon_code"] 	= isset($_SESSION["discount"]["code"]) ? $_SESSION["discount"]["code"] : '';
+			$data["cart_tax"] 			= $this->_get_cart_tax($data["br_shipping_country"],$data["br_shipping_state"],$data["br_shipping_zip"]);
+			$data["cart_subtotal"] 		= $this->cart_subtotal();
+			$data["cart_discount"] 		= $this->_get_cart_discount();
+			$data["cart_total"] 		= $this->_get_cart_total();
+			$data["order_total"] 		= ($data["cart_total"] + $data["cart_tax"] + $data["cart_shipping"]);
 
 			// Get Custom Fields
 				$tmp = $this->EE->customer_model->_get_custom_fields();
@@ -1586,18 +1586,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 			// Create the order 
 				$order = array (
-					"site_id" 	=> $this->EE->session->userdata["site_id"], 
-					"member_id" => $member_id, 
-					"status_id" => $data["payment"]["status"],
-					"base" 		=> $this->_currency_round($data["cart_subtotal"]),
-					"tax" 		=> $this->_currency_round($data["cart_tax"]),
-					"shipping" 	=> $this->_currency_round($data["cart_shipping"]), 
-					"total" 	=> $this->_currency_round($data["cart_total"]),
-					"discount" 	=> $this->_currency_round($data["cart_discount"]), 
-					"cart_id"	 => $data["cart"]["cart_id"], 
-					"merchant_id" => $data["transaction_id"],  
-					"coupon_code" => $data["cart_coupon_code"], 
-					"created" 	=> time()
+					"site_id" 		=> $this->EE->session->userdata["site_id"], 
+					"member_id" 	=> $member_id, 
+					"status_id" 	=> $data["payment"]["status"],
+					"base" 			=> $this->_currency_round($data["cart_subtotal"]),
+					"tax" 			=> $this->_currency_round($data["cart_tax"]),
+					"shipping" 		=> $this->_currency_round($data["cart_shipping"]), 
+					"total" 		=> $this->_currency_round($data["cart_total"]),
+					"discount" 		=> $this->_currency_round($data["cart_discount"]), 
+					"cart_id"	 	=> $data["cart"]["cart_id"], 
+					"merchant_id" 	=> $data["transaction_id"],  
+					"coupon_code" 	=> $data["cart_coupon_code"], 
+					"created" 		=> time()
 				); 
 			
 				// Hook before we create the order
@@ -1660,7 +1660,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				// Address 
 					$address[0] = array(	
-										"order_id" => $order_id,
+										"order_id" 			=> $order_id,
 										"billing_fname" 	=> $data["br_billing_fname"],
 										"billing_lname" 	=> $data["br_billing_lname"],
 										"billing_company" 	=> $data["br_billing_company"],

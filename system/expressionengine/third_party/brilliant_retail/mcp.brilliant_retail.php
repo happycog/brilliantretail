@@ -543,11 +543,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$i = 0;
 				foreach($products["results"] as $p){
 					$entry_id = 0; #$this->_product_entry_id($p["product_id"]);
-					$enabled = ($p['enabled'] == 1) ? 'status_on' : 'status_off' ;
-					$row[] = array(	'<img src="'.$this->_theme('images/icon_'.$enabled.'.png').'" />',
+					$enabled = ($p['enabled'] == 1) ? lang('br_enabled') : lang('br_disabled');
+					$row[] = array(	$p['product_id'],
 									'<a href="'.$this->vars["base_url"].'&method=product_edit&product_id='.$p['product_id'].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id.'">'.$p['title'].'</a>',
 									$p['quantity'],
 									$this->vars["product_type"][$p['type_id']],
+									'<span class="order_status_'.$p['enabled'].'">'.$enabled.'</span>',
 									'<input type="checkbox" name="batch['.$p['product_id'].']" style="text-align:center" />');
 				}
 				$output = array(
