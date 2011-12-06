@@ -62,8 +62,7 @@
 		// 
 		$sql[] = "	INSERT INTO 
 						exp_br_product_entry 
-						
-						(product_id, entry_id) 
-							VALUES 
-						(".$rst["product_id"].",".$result[0]["entry_id"].")";
+							(product_id, entry_id) 
+								VALUES 
+							(".$rst["product_id"].",".$result[0]["entry_id"].")";
 	}

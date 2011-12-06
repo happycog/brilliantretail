@@ -1377,7 +1377,7 @@ class Brilliant_retail_core {
 		
 		$uri = $_SERVER["REQUEST_URI"];
 		$check = explode($hash,$uri);
-		
+
 		if(isset($check[1]) && trim($check[1],"/") == ''){
 			unset($_SESSION[$hash]);
 		}

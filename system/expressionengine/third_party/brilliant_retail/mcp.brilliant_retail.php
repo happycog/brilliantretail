@@ -542,7 +542,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$row = array();
 				$i = 0;
 				foreach($products["results"] as $p){
-					$entry_id = 0; #$this->_product_entry_id($p["product_id"]);
+					$entry_id = $this->_product_entry_id($p["product_id"]);
 					$enabled = ($p['enabled'] == 1) ? lang('br_enabled') : lang('br_disabled');
 					$row[] = array(	$p['product_id'],
 									'<a href="'.$this->vars["base_url"].'&method=product_edit&product_id='.$p['product_id'].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id.'">'.$p['title'].'</a>',
@@ -621,7 +621,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 										));
 			
 			$this->vars["custom"] = array();
-			/*
 
 				// Lets play with adding custom channel fields to BR
 				// NOT QUITE READY FOR PRIME TIME
@@ -646,7 +645,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 														);
 					}
 				}
-			*/
 
 			// Is there a gateway available to support subscriptions?
 				$this->vars["can_subscribe"] = $this->_can_subscribe();
@@ -766,7 +764,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			$this->vars["custom"] = array();
 
-			/*
 				// NOT READY FOR PRIME TIME
 				// Lets play with adding custom channel fields to BR
 
@@ -809,7 +806,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 														);
 					}
 				}
-				*/
 
 			// Is there a gateway available to support subscriptions?
 				$this->vars["can_subscribe"] = $this->_can_subscribe();
@@ -1038,10 +1034,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Clean up the product url and make sure its unique
 				$data["url"] = $this->_check_product_url($data);
 
-			
-			
-			/* 
-			
+
 			// Check For Custom Fields
 			
 				$this->EE->load->library('api'); 
@@ -1096,7 +1089,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						unset($data[$key]);
 					}
 				}
-			*/
 				
 			// Feeds			
 				$prod_feed= array();

@@ -36,12 +36,19 @@ class Product_model extends CI_Model {
 	*/
 		public function get_products($product_id = '' , $disabled = '',$cat='')
 		{
+			// Now try to get it from 			
 			if($product_id != ''){
+				// Try and return it from session cache
+					if (isset($this->session->cache['get_products'][$product_id])){
+						return $this->session->cache['get_products'][$product_id];
+					}
+
 				// Try to return from cache	
 					if($str=read_from_cache('product_'.$product_id)){
 						$arr[0] = unserialize($str);
 						// only return enabled cached products
 							if($arr[0]["enabled"] == 1){
+								$this->session->cache['get_products'][$product_id] = $arr;
 								return $arr;
 							}
 					}
@@ -49,6 +56,7 @@ class Product_model extends CI_Model {
 				// Get the specific product id
 					$this->db->where('product_id',$product_id);
 			}
+			
 			if($disabled == ''){
 				$this->db->where('enabled >',0);
 			}
@@ -74,13 +82,13 @@ class Product_model extends CI_Model {
 				// General Product Details 
 					$products[$i] = $row;
 				
-				// Get Product Price
+				// Get Product Entry Id (Experimental) 
 					$products[$i]["entry_id"] = $this->get_product_entry($row["product_id"]);
 
 				// Get Product Price
 					$products[$i]["price_matrix"] = $this->get_product_price($row["product_id"],1);
 
-				// Get Product Price
+				// Get Product Sale Price
 					$products[$i]["sale_matrix"] = $this->get_product_price($row["product_id"],2);
 				
 				// Product Categories 
@@ -160,6 +168,12 @@ class Product_model extends CI_Model {
 				save_to_cache('product_'.$row["product_id"],serialize($products[$i]));
 				$i++;
 			}
+			
+			// Save it to the session cache 
+				if($product_id != ''){
+					$this->session->cache['get_products'][$product_id] = $products;
+				}
+			
 			return $products;
 		}
 	
@@ -317,7 +331,6 @@ class Product_model extends CI_Model {
 	}
 	
 	function get_product_entry($product_id){
-		return 0;
 		// Not quite ready for prime time
 			if (isset($this->session->cache['get_product_entry'])){
 				$product = $this->session->cache['get_product_entry'];

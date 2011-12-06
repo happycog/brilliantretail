@@ -26,7 +26,7 @@
 /* Details Tab	*/
 /****************/
 ?>
-	<table id="product_detail_tbl" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
+<table id="product_detail_tbl" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
 		<tr>
 			<th colspan="2">
 				<?php
@@ -146,17 +146,27 @@
 										'value' => $products[0]["cost"])
 								)?></td>
 		</tr>
-		
+</table>		
 		<?php
 			foreach($custom as $c){
-				echo '		<tr>
-								<td>'.$c["settings"]["field_label"].'</td>
-								<td>'.$c["display_field"].'</td>
+				echo '	<p>&nbsp;</p>
+						<table cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
+							<tr>
+								<th colspan="2">'.$c["settings"]["field_label"].'</th>
 							</tr>';
+				if($c["settings"]["field_instructions"] != ""){
+					echo '	<tr>
+								<td colspan="2">'.$c["settings"]["field_instructions"].'</td>
+							</tr>';
+				}			
+					
+				echo '		<tr>
+								<td colspan="2">'.$c["display_field"].'</td>
+							</tr>
+						</table>';
 			}
 		?>
 
-</table>
 <script type="text/javascript">
 	$(function(){
 		<?php

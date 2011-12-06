@@ -109,7 +109,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$form = ( $this->EE->TMPL->fetch_param('form') ) ? $this->EE->TMPL->fetch_param('form') : 'yes';
 			$products = $this->_get_product($product_id);
 			
-			
 			$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
 			if(!$products){
 				preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
@@ -119,14 +118,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 					return '';
 				}
 			}
+			
 			$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
-
-
 			$tagdata = $this->EE->TMPL->tagdata;
 
 			// Parse Tags	
 				$tagdata = preg_replace($pattern,"",$tagdata);
 				$output = $this->EE->TMPL->parse_variables($tagdata, $products);
+				
+				// We should add a configuration variable to remove the 
+				// the blank default first option. 
+				#$output = str_replace('<option value=""></option>',"",$output);
+				
 				if($form == 'yes'){
 					$hidden = '<input type="hidden" name="product_id" value="'.$products[0]["product_id"].'" />';
 					if($products[0]["type_id"] == 6){
@@ -190,19 +193,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 			foreach($products[0]["addon"] as $row){
 				if(isset($row["product_id"])){
 					if($add = $this->_get_product($row["product_id"])){
-						
 						// Set up the new addon prefixed array
-						
 							foreach($add[0] as $key => $val){
 								$tmp['addon_'.$key] = $val;
 							}
-						
 						$addon[$i] = $tmp;
 						$i++; 
 					}
 				}
 			}
-			
 			$vars[0] = array('addon_products' => $addon);
 			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata,$vars);
 			return $output;
@@ -342,16 +341,25 @@ class Brilliant_retail extends Brilliant_retail_core{
 					return '<img src="'.$this->_config["media_url"].$src.'" title="'.$title.'" width="'.$width.'" />';
 				}
 		}
-	
+
+	/**
+	* Catalog - The power of catalog based searching! 
+	* 
+	* @access	public
+	* @return	string
+	*/	
+		
 		public function catalog()
 		{ 
-	
-			$url_title = $this->EE->TMPL->fetch_param('url_title');
+			$key = $this->EE->TMPL->fetch_param('url_title');
+			if($key == ''){
+				$this->EE->TMPL->log_item('BrilliantRetail: No url_title provided. segment_2 assigned');
+				$key = $this->EE->uri->segment(2);
+			}
 			
-			$key = ($url_title == '') ? $this->EE->uri->segment(2) : $url_title;
 			if(!$category = $this->EE->product_model->get_category_by_key($key)){
-				// Not a product page 
-			 	$this->EE->functions->redirect($this->EE->functions->create_url($this->EE->config->item('site_404')));
+				// Not a valid catalog page
+				$this->EE->functions->redirect($this->EE->functions->create_url($this->EE->config->item('site_404')));
 			 	exit();
 			}
 
@@ -368,26 +376,26 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			// Build our variable data
 				$vars[0] = array(
-									'site_id' =>  $category[0]['site_id'],
-									'category_id' => $category[0]['category_id'],
-									'category_image' => $img,
-									'category_detail' => $category[0]['detail'],
-									'parent_id' =>  $category[0]['parent_id'],
-									'category_title' =>  $category[0]['title'],
-									'url_title' =>  $category[0]['url_title'],
-									'meta_title' =>  $category[0]['meta_title'],
-									'meta_keyword' =>  $category[0]['meta_keyword'],
-									'meta_descr' =>  $category[0]['meta_descr'],
-									'total_results' => count($category[0]["products"]),
-									'results' => $category[0]["products"],
-									'no_results' => array(),
+									'site_id' 			=>  $category[0]['site_id'],
+									'category_id' 		=> 	$category[0]['category_id'],
+									'category_image' 	=>	$img,
+									'category_detail' 	=> 	$category[0]['detail'],
+									'parent_id' 		=>  $category[0]['parent_id'],
+									'category_title' 	=>  $category[0]['title'],
+									'url_title' 		=>  $category[0]['url_title'],
+									'meta_title' 		=>  $category[0]['meta_title'],
+									'meta_keyword' 		=>  $category[0]['meta_keyword'],
+									'meta_descr' 		=>  $category[0]['meta_descr'],
+									'total_results' 	=> 	count($category[0]["products"]),
+									'results' 			=> 	$category[0]["products"],
+									'no_results' 		=> 	array(),
 									'result_filter_set' => ''
 								);
 				
 			// Filter the results
-				if(count($category[0]["products"]) != 0)
+				if(count($category[0]["products"]) != 0){
 					$vars = $this->_filter_results($vars,$key,true);
-			
+				}
 			// If there are no product
 				if(count($category[0]["products"]) == 0 || !isset($vars[0]["results"])){
 					$no_result = '';
@@ -396,19 +404,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if(isset($matches[1])){
 						$no_result = trim($matches[1]);
 					}
-					$vars[0]['no_results'][0] = array(0 => $no_result);
-					$vars[0]['result_paginate'][0] = array();
-					$vars[0]['result_paginate_bottom'][0] = array();
-					$vars[0]['result_filter_set'][0] = array();
+					$vars[0]['no_results'][0] 				= array(0 => $no_result);
+					$vars[0]['result_paginate'][0] 			= array();
+					$vars[0]['result_paginate_bottom'][0] 	= array();
+					$vars[0]['result_filter_set'][0] 		= array();
 					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 					return $output;
 				}
 			
-			foreach($vars[0]['results'] as $rst){
-				$tmp = $this->_get_product($rst["product_id"]);
-				$results[] = $tmp[0];
-			}
-			$vars[0]['results'] = $results;
+			// Doubled up the array offset. Lets fix that 
+				foreach($vars[0]['results'] as $rst){
+					$tmp = $this->_get_product($rst["product_id"]);
+					$results[] = $tmp[0];
+				}
+				$vars[0]['results'] = $results;
 
 			// Add form_open / form_close tags
 				$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
@@ -421,13 +430,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$vars[0]["results"][$i]["form_close"] 	= '	</form>';
 					$i++;
 				}
-			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 			
-			$this->switch_cnt = 0;
-			$output = preg_replace_callback('/'.LD.'product_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output);
-			return $this->return_data = $output;
+			// Parse this thing
+				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
+			
+			// Set our switch
+				$this->switch_cnt = 0;
+				$output = preg_replace_callback('/'.LD.'product_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output);
+				return $output;
 		}
 
+	/**
+	* Catalog Layered 
+	* 
+	* @access	public
+	* @return	string
+	*/	
 		public function catalog_layered()
 		{
 			// Get the category key 
@@ -435,7 +453,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($key == ''){
 					$key = $this->EE->uri->segment(2);
 				}
-			
 				$layered = $this->EE->product_model->get_category_by_key($key);
 	
 				$vars[0] = array('results' => $layered[0]["products"]);
@@ -449,14 +466,21 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				return $output;
 		}
-	
 
+	/**
+	* Category Menu 
+	* 
+	* @access	public
+	* @return	string
+	*/	
 		public function category_menu()
 		{
-			// Get the parameters 
-				
-				// Element ID for the UL tag		
+			// Parameters
+				// ID for the UL tag		
 					$id = ($this->EE->TMPL->fetch_param('id') == '') ? 'nav' : $this->EE->TMPL->fetch_param('id');
+
+				// Class for the UL tag		
+					$class = ($this->EE->TMPL->fetch_param('class') == '') ? '' : $this->EE->TMPL->fetch_param('class');
 
 				// Style allows for linear or nested
 					$style = ($this->EE->TMPL->fetch_param('style')) ? $this->EE->TMPL->fetch_param('style') : 'nested' ;
@@ -470,12 +494,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Show only the parent category
 					$parent_only = $this->EE->TMPL->fetch_param('parent_only');
 				
-				// level of starting navigation
-					$level = ($this->EE->TMPL->fetch_param("level")) ? $this->EE->TMPL->fetch_param("level") : 1;
-	
-				// depth of navigation 
-					$depth = ($this->EE->TMPL->fetch_param("depth")) ? $this->EE->TMPL->fetch_param("depth") : 3;
-				
 				// Base path
 					$path = ($this->EE->TMPL->fetch_param('path') == '') ? 'catalog' : $this->EE->TMPL->fetch_param('path') ;
 				
@@ -487,7 +505,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 			// Get the categories
 				$cat = $this->EE->product_model->get_categories(1,$sort);
-				
 	
 			// Check to see if there are any list items to add before or after
 				$before = "";
@@ -505,7 +522,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Build the output 
 				$output  = '';
 				if($style == 'nested'){
-					$output  .= "<ul id=\"".$id."\">\n";
+					$output  .= "<ul id=\"".$id."\" class=\"".$class."\">\n";
 				}
 				$output .= $before;
 				if(isset($cat[0])){
@@ -518,7 +535,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 			return $output;
 		}
 	
-	/* CART FUNCTIONS */
+/********************/
+/* CART FUNCTIONS 	*/
+/********************/
 	
 		public function cart_clear_link()
 		{
@@ -587,28 +606,35 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// We get a post of inputs that are 
 			// prepended with the product_id 
 			// lets fancy magic it into a usable post array
-				foreach($_POST as $key => $val){
-					if($key != 'product_id'){
-						if(strpos($key,"_") === false){
-							// If its a single post with no appended product_id 
-							$post[0]["product_id"] 	= $_POST["product_id"];
-							$post[0]["quantity"] 	= $_POST["quantity"];
-						}else{
-							// If its a multiple post 
-							$a = explode('_',$key);
-							$b = ltrim($key,$a[0].'_');
-							$post[$a[0]]['product_id'] = $a[0];
-							$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
+				if(isset($_POST["product_id"]) && isset($_POST["quantity"])){
+					$post[0]["product_id"] 	= $_POST["product_id"];
+					$post[0]["quantity"] 	= $_POST["quantity"];
+				}else{
+					foreach($_POST as $key => $val){
+						if($key != 'product_id'){
+							if(strpos($key,"_") === false){
+								if($key != 'quantity'){
+									// If its a single post with no appended product_id 
+									$post[0]["product_id"] 	= $_POST["product_id"];
+									$post[0]["quantity"] 	= $_POST["quantity"];
+								}
+							}else{
+								// If its a multiple post 
+								$a = explode('_',$key);
+								$b = ltrim($key,$a[0].'_');
+								$post[$a[0]]['product_id'] = $a[0];
+								$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
+							} 
 						}
 					}
 				}
-
+				
 		// Now add them
 			foreach($post as $data){
 			
 				if(!isset($data["product_id"])){
-					#$_SESSION["br_alert"] = lang('br_product_configuration_required');
-					#$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+					$_SESSION["br_alert"] = lang('br_product_configuration_required');
+					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 				}
 				
 				// Clean the quantity value 
