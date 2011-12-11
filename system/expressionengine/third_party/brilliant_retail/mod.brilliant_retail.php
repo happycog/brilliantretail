@@ -2923,40 +2923,33 @@ class Brilliant_retail extends Brilliant_retail_core{
 		 * Product Feed
 		 *
 		 * @return mixed product data
-		 * @author Kevin Thompson
 		 */
-		function feed()
-		{
+		function feed(){
 			$code     = $this->EE->TMPL->fetch_param('code');
 			$feed     = $this->EE->feed_model->get_feed_by_code($code);
-			
-			if ( $feed )
-			{
-  		  $products = $this->EE->product_model->get_products_by_feed($feed['feed_id']);
-  		  $rows     = array();
-  		  $total    = count($products);
-		  
-  		  foreach ( $products as $i => $product)
-  		  {
-  		    $product  = $this->_get_product( $product['product_id'] );
-  		    $rows[$i] = $product[0];
-  		    $rows[$i]['price']  = strip_tags($product[0]['price']);
-  		    $rows[$i]['count']  = $i + 1;
-  		    $rows[$i]['total_results'] = $total;
-  		    
-  		  }
+		
+			if($feed){
+				$products = $this->EE->product_model->get_products_by_feed($feed['feed_id']);
+				$rows     = array();
+				$total    = count($products);
+		
+				foreach($products as $i => $product){
+					$product  = $this->_get_product( $product['product_id'] );
+					$rows[$i] = $product[0];
+					$rows[$i]['price']  = strip_tags($product[0]['price']);
+					$rows[$i]['count']  = $i + 1;
+					$rows[$i]['total_results'] = $total;
+				}
 			}
-		  
-		  if ( $feed && count($rows) > 0 ){		    
-    		$this->switch_cnt = 0;
-  			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $rows);
-  			$output = preg_replace_callback('/'.LD.'row_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output); 
+		
+			if($feed && count($rows) > 0){		    
+				$this->switch_cnt = 0;
+				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $rows);
+				$output = preg_replace_callback('/'.LD.'row_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output); 
 				return $this->return_data = $output;
-		  }
-		  else
-		  {
+			}else{
 				return '';
-		  }
+			}
 		}
 		
 	

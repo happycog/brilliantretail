@@ -220,6 +220,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 			
+			
+			// Add the create product button
+				$this->EE->cp->set_right_nav(array(
+					'br_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
+				));
+			
 			// ajax url to get order_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
 			
@@ -411,6 +417,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				exit();
 		}
 		
+		public function order_license_manager(){
+			// Page title
+				$this->vars['cp_page_title'] = lang('br_order_license_manager');
+				$this->vars["selected"] = 'order';
+				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+				return $this->EE->load->view('order/license_manager', $this->vars, TRUE);	
+		}
 	/************************/
 	/* Customer Tab		 	*/
 	/************************/
