@@ -295,6 +295,8 @@ if(!isset($_SESSION["cart"])){
 
     		imagejpeg($newImg,$new_img,100);
     		
+    		imagedestroy($newImg);
+    		
 		    return true;
 		}
 	}

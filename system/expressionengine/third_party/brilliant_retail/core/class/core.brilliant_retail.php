@@ -37,7 +37,8 @@ include_once(PATH_THIRD.'brilliant_retail/core/class/product.brilliant_retail.ph
 class Brilliant_retail_core {
 	
 	public $_config = array();
-	public $iste_id = '';
+	public $site_id = '';
+	
 	private $cat_tree 	= 0;
 	private $cat = array();
 	private $cat_count = 0;
@@ -1836,6 +1837,12 @@ class Brilliant_retail_core {
 							'sale_price' 	=> $sale["price"]
 						);
 				}
+			}
+			
+			
+			// Insert Check Product 
+			if($this->EE->extensions->active_hook('br_check_product_price_end') === TRUE){
+				$amt = $this->EE->extensions->call('br_check_product_price_end', $amt); 
 			}
 			return $amt;		
 		}

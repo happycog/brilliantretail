@@ -86,9 +86,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 				// Do an admin access check 
 					$access = $this->_check_admin_access($this->method);
-					
-## IMPORTANT ADD HOOK HERE 
-						
+
+					if($this->EE->extensions->active_hook('br_check_admin_access_after') === TRUE){
+						$access = $this->EE->extensions->call('br_check_admin_access_after', $access); 
+					}
+
 				// Generate the menu
 					$this->_create_admin_menu();
 
@@ -629,13 +631,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_new()
 		{
-			$this->EE->load->model('tools_model');
-			$this->EE->cp->add_js_script( array(
-											'ui' => array('core', 'widget', 'button', 'dialog'),
-											'plugin' => array('scrollable', 'scrollable.navigator', 'ee_filebrowser', 'ee_fileuploader', 'markitup', 'thickbox'),
-										));
-			
-			$this->vars["custom"] = array();
+			return $this->product_edit();	
+		$this->vars["custom"] = array();
 
 				// Lets play with adding custom channel fields to BR
 				// NOT QUITE READY FOR PRIME TIME
@@ -665,7 +662,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["can_subscribe"] = $this->_can_subscribe();
 			
 			$this->EE->cp->add_js_script( array(
-												'ui' => 'accordion,datepicker' 
+												'ui' => 'datepicker' 
 												));
 			
 			$this->vars["selected"] = 'product';
@@ -760,65 +757,75 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["tab_seo"] 		= $this->EE->load->view('product/tabs/seo', $this->vars, TRUE);
 			$this->vars["tab_feed"] = $this->EE->load->view('product/tabs/feed', $this->vars, TRUE);
 
-			return $this->EE->load->view('product/edit', $this->vars, TRUE);	
+			return $this->EE->load->view('product/edit', $this->vars, TRUE);
 		}
 		
 		function product_edit()
 		{
-			$this->EE->load->model('tools_model');
-			$this->EE->cp->add_js_script( array(
-											'ui' => array('core', 'widget', 'button', 'dialog'),
-											'plugin' => array('scrollable', 'scrollable.navigator', 'ee_filebrowser', 'ee_fileuploader', 'markitup', 'thickbox'),
-										));
-			
-			if(!isset($_GET["product_id"])){
-				return $this->product();
-			}
-			$product_id = $_GET["product_id"];
-			$entry_id 	= $_GET["entry_id"];
-			
-			$this->vars["custom"] = array();
-
-				// NOT READY FOR PRIME TIME
-				// Lets play with adding custom channel fields to BR
-
-					$this->EE->load->library('api'); 
-					$this->EE->api->instantiate('channel_fields');
-					$this->EE->api->instantiate('channel_entries');
-					
-				// Get the fields for the channel
-					$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,array(),FALSE);
+			// Lets setup a new product flag. If we are going to edit the product flip 
+			// to false so that we can differeniate in certain places when needed. 
+				$new_product 	= TRUE;
+				$product_id 	= 0;
+				$entry_id 		= 0;
 				
-				// Get the data for the entry_id 	
-					$prefix = $this->EE->db->dbprefix;
-					$sql = "SELECT 
-								d.* 
-							FROM 
-								".$prefix."br_product_entry p, 
-								".$prefix."channel_data d 
-							WHERE 
-								p.entry_id = d.entry_id 
-							AND 
-								p.product_id = ".$product_id;
+			// If we were passed a GET product_id and entry_id then 
+			// we are editind
+				if(isset($_GET["product_id"]) && isset($_GET["entry_id"])){
+					$new_product = FALSE;
+					$product_id = $_GET["product_id"];
+					$entry_id 	= $_GET["entry_id"];
+				}
+			
+			// Custom Channel Fields
+			
+				$this->vars["custom"] = array();
+
+				$this->EE->load->library('api'); 
+				$this->EE->api->instantiate('channel_fields');
+				$this->EE->api->instantiate('channel_entries');
+					
+			// Get the fields for the channel
+				$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,array(),FALSE);
 				
-					$qry = $this->EE->db->query($sql);
-					$result = $qry->result_array();
-					
-					// Data array holds the field data 
-					// in field_id_# key => val format
-						$data = $result[0];
-					
+			
+			// Get current data if its an edit
+			
+				if($new_product == FALSE)
+				{
+					// Get the data for the entry_id 	
+						$prefix = $this->EE->db->dbprefix;
+						$sql = "SELECT 
+									d.* 
+								FROM 
+									".$prefix."br_product_entry p, 
+									".$prefix."channel_data d 
+								WHERE 
+									p.entry_id = d.entry_id 
+								AND 
+									p.product_id = ".$product_id;
+							$qry = $this->EE->db->query($sql);
+							$result = $qry->result_array();
+							
+							// Data array holds the field data 
+							// in field_id_# key => val format
+								$data = $result[0];
+				}
+
+			// Build the inputs 
+				
 				$i = 0;
 				foreach($fields as $f){
 					// We only want the custom fields for this channel
 					if(isset($f["field_name"])){
 						$this->EE->api_channel_fields->set_settings($f["field_type"],$f);
 						$this->EE->api_channel_fields->setup_handler($f["field_id"]);
-						$param[0] = $data["field_id_".$f["field_id"]];
-						$this->vars["custom"][] = array(
-														'settings' 		=> $f,
-														'display_field' => $this->EE->api_channel_fields->apply('display_field', $param)
-														);
+						
+						// Either put in existing data or nothing on new product
+							$param[0] = ($new_product == FALSE) ? $data["field_id_".$f["field_id"]] : "";
+							$this->vars["custom"][] = array(
+															'settings' 		=> $f,
+															'display_field' => $this->EE->api_channel_fields->apply('display_field', $param)
+															);
 					}
 				}
 
@@ -839,9 +846,58 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// on the search terms provided. 
 			
 			// Get the products 
-			$products = $this->EE->product_model->get_products($product_id,1);
 			
-			$product_feeds = $this->EE->product_model->get_feed_id_by_product($product_id);
+			if($new_product == FALSE){
+				
+				$products = $this->EE->product_model->get_products($product_id,1);
+				
+				// We know the type
+					
+					$this->vars["type"] = $this->vars['product_type'][$products[0]['type_id']];
+					
+					$fields = array();
+					
+					$values = '<tr>';
+					
+					if(isset($products[0]["configurable"])){
+						foreach($products[0]["configurable"] as $c){
+							$tmp = unserialize($c["attributes"]);
+							foreach($tmp as $key => $val){
+								$fields[$key] = $key;	
+								// build the configurable attributes into the row
+									$values .= '<td><input type="hidden" name="config_attr_'.$key.'[]" value="'.$val.'" />'.$val.'</td>';
+							}
+							
+							// Basic inputs
+							
+							$values .= '	<td class="w50">
+												<input type="text" name="config_sku[]" value="'.$c["sku"].'" /></td>
+											<td class="w50">
+												<input type="text" name="config_qty[]" value="'.$c["qty"].'" /></td>
+											<td>
+												<select style="display:none" name="config_adjust_type[]">';
+			
+												$sel = ($c["adjust_type"] == 'fixed') ? 'selected="selected"' : '' ;
+													$values .= '<option '.$sel.'>fixed</option>';
+												$sel = ($c["adjust_type"] == 'percent') ? 'selected="selected"' : '' ;
+													$values .= '<option '.$sel.'>percent</option>';
+			
+							$values .= '		</select>
+												<input type="text" name="config_adjust[]" style="width:50px" value="'.$c["adjust"].'" /></td>
+											<td class="move_config_row">
+												<img src="'.$this->_theme('images/icon_move.png').'" /></td>
+											<td class="w50">
+												<a href="#" class="config_item_remove">'.lang('delete').'</a></td>
+										</tr>';
+						}
+					}	
+					
+					// if its configurable 
+						if($products[0]["type_id"] == 3){
+							$this->vars["config_products"] = $this->_build_configurable_form($fields,$values);
+						}	
+						
+					$product_feeds = $this->EE->product_model->get_feed_id_by_product($product_id);
 			
 			if($products[0]["sale_start"] == '0000-00-00 00:00:00'){
 				$products[0]["sale_start"] = '';
@@ -869,51 +925,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 														'entry_id'		=> $entry_id  
 													);
 			
-			$this->vars["type"] = $this->vars['product_type'][$this->vars['products'][0]['type_id']];
 			
-			$values = '';
-			$fields = array();
-			
-			$values .= '<tr>';
-			
-			if(isset($products[0]["configurable"])){
-				foreach($products[0]["configurable"] as $c){
-					$tmp = unserialize($c["attributes"]);
-					foreach($tmp as $key => $val){
-						$fields[$key] = $key;	
-						// build the configurable attributes into the row
-							$values .= '<td><input type="hidden" name="config_attr_'.$key.'[]" value="'.$val.'" />'.$val.'</td>';
-					}
-					
-					// Basic inputs
-					
-					$values .= '	<td class="w50">
-										<input type="text" name="config_sku[]" value="'.$c["sku"].'" /></td>
-									<td class="w50">
-										<input type="text" name="config_qty[]" value="'.$c["qty"].'" /></td>
-									<td>
-										<select style="display:none" name="config_adjust_type[]">';
-	
-										$sel = ($c["adjust_type"] == 'fixed') ? 'selected="selected"' : '' ;
-											$values .= '<option '.$sel.'>fixed</option>';
-										$sel = ($c["adjust_type"] == 'percent') ? 'selected="selected"' : '' ;
-											$values .= '<option '.$sel.'>percent</option>';
-	
-					$values .= '		</select>
-										<input type="text" name="config_adjust[]" style="width:50px" value="'.$c["adjust"].'" /></td>
-									<td class="move_config_row">
-										<img src="'.$this->_theme('images/icon_move.png').'" /></td>
-									<td class="w50">
-										<a href="#" class="config_item_remove">'.lang('delete').'</a></td>
-								</tr>';
-				}
-			}	
-			
-			// if its configurable 
-				if($products[0]["type_id"] == 3){
-					$this->vars["config_products"] = $this->_build_configurable_form($fields,$values);
-				}
-				
 			// Get the available member groups
 				$qry = $this->EE->member_model->get_member_groups();
 				$groups = array();
@@ -926,7 +938,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["attrs"] = $this->_product_attrs($this->vars['products'][0]["attribute_set_id"],$this->vars['products'][0]["product_id"]);
 			$this->vars["attribute_sets"] = $this->EE->product_model->get_attribute_sets();
 			$this->vars['add_attributes'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_add_atributes');
-			
 			$this->vars["options"] = $this->_product_options($this->vars['products'][0]["product_id"]);
 			
 			// Get the images 
@@ -954,7 +965,87 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$categories = $this->_product_category_tree($cat[0],$cat,0,$selected);
 					}
 					
-					$this->vars["categories"] = $categories;
+					$this->vars["categories"] = $categories;			
+									
+						
+						
+			}else{
+				// Build an empty product shell 
+				// Build an empty product shell 
+					$p = new Product();
+					$products = $p->createshell();
+					$this->vars["products"] = $products;
+					
+						// Generate the list of products based 
+						// on the search terms provided. 
+						$this->vars["type_id"] = 0;
+						
+						// Set the type options 
+							$options = '<select id="type_id" name="type_id">';
+							foreach($this->vars['product_type'] as $key => $val){
+								$options .= '<option value="'.$key.'">'.$val.'</option>';
+							}
+							$options .= '</select>';
+							
+							$this->vars["type"] = $options;
+							// member groups for the price matrix / subscriptions
+								$qry = $this->EE->member_model->get_member_groups();
+								$groups = array();
+								foreach($qry->result_array() as $row){
+									$groups[] = $row;
+								}
+								$this->vars["groups"] = $groups;
+		
+							// some defaults for configurable products 
+								$this->vars["config_opts"] = $this->EE->product_model->get_attribute_config();
+								$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
+		
+							// some defaults for donations 
+								$this->vars["products"][0]["donation"][0] = array(
+																					'min_donation' 			=> 10,
+																					'allow_recurring' 		=> 0
+																				);
+							// some defaults for subscriptions 
+								$this->vars["products"][0]["subscription"][0] = array(
+																						'length' 			=> 1,
+																						'period' 			=> 2,
+																						'trial_price' 		=> '',
+																						'trial_period' 		=> 1, 
+																						'trial_occur' 		=> 1,
+																						'group_id' 			=> 0,  
+																						'cancel_group_id' 	=> 0
+																					);
+							// get the sub_type	
+								$this->vars["sub_type"] = $this->_get_sub_type();
+							
+						// No Attributes by default				
+						$this->vars["attribute_sets"] = $this->EE->product_model->get_attribute_sets();
+						$this->vars['add_attributes'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_add_atributes');
+						$this->vars["attrs"] = '';
+						$this->vars["options"] = array();
+						$this->vars["images"] = array();
+						
+						$products = array();
+						$this->vars['title'] 	= lang('br_new_product');
+						$this->vars['hidden'] 	= array(
+															'site_id' => $this->site_id,
+															'product_id' => 0,
+															'type_id' => 0 
+														);
+							// Get Categories
+				
+								$cat = $this->EE->product_model->get_categories();
+						
+							// Create a tree 
+								if(isset($cat[0])){
+									$categories = $this->_product_category_tree($cat[0],$cat,0);
+								}else{
+									$categories = array();
+								}
+								$this->vars["categories"] = $categories;
+			}
+			
+			
 			$this->vars['feeds'] = $this->EE->feed_model->get_feeds();
 
 			$this->vars["tab_detail"] = $this->EE->load->view('product/tabs/detail', $this->vars, TRUE);
@@ -992,14 +1083,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 		
-		function product_update()
+		function product_update($data='',$redirect=TRUE)
 		{
-			// Clean up the post
-				foreach($_POST as $key => $val){
-					$data[$key] = $this->EE->input->post($key);
+				if($data == ''){
+					// Clean up the post
+					foreach($_POST as $key => $val){
+						$data[$key] = $this->EE->input->post($key);
+					}
 				}
+				
 				$continue = false; // Go back to the product after update?
-			
+				
 				if(isset($data["entry_id"])){
 					$entry_id = $data["entry_id"];
 					unset($data["entry_id"]);
@@ -1060,27 +1154,38 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 				// Get the fields for the channel
 					$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,array(),FALSE);
-				
-				// Get the data for the entry_id 	
+					
 					$prefix = $this->EE->db->dbprefix;
-					$sql = "SELECT 
-								p.*, 
-								d.* 
-							FROM 
-								".$prefix."br_product_entry p, 
-								".$prefix."channel_data d 
-							WHERE 
-								p.entry_id = d.entry_id 
-							AND 
-								p.product_id = ".$data["product_id"];
-				
-					$qry = $this->EE->db->query($sql);
-					$result = $qry->result_array();
+						
+				// New Product 
+					if($data["product_id"] == 0){
+						// We'll create the new channel entry 
+						$entry = array(
+						        		'title'         => $data["title"],
+						       			'entry_date'    => time()
+										);
+						if($this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$entry)){
+							$qry = $this->EE->db->query("SELECT entry_id FROM ".$prefix."channel_titles ORDER BY entry_id DESC LIMIT 1");
+							$result = $qry->result_array();
+							$entry_id = $result[0]["entry_id"];
+						}
+					}else{
+						// Get the data for the entry_id 	
+						$sql = "SELECT 
+									p.*, 
+									d.* 
+								FROM 
+									".$prefix."br_product_entry p, 
+									".$prefix."channel_data d 
+								WHERE 
+									p.entry_id = d.entry_id 
+								AND 
+									p.product_id = ".$data["product_id"];
 					
-					// Data array holds the field data 
-					// in field_id_# key => val format
-						$custom = $result[0];
-					
+						$qry = $this->EE->db->query($sql);
+						$result = $qry->result_array();
+					}
+						
 				foreach($data as $key => $val){
 					if(substr($key,0,8) == 'field_id'){
 						$this->EE->api_channel_fields->settings[$fields[$key]["field_id"]]['entry_id'] = $result[0]["entry_id"];
@@ -1124,6 +1229,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				// Create the product 
 					$data["product_id"] = $this->EE->product_model->update_product($data,'',$this->vars["media_dir"]);
 				
+				// Create the product / entry relationship
+					$insert = array(
+										"product_id" 	=> $data["product_id"],
+										"entry_id"		=> $entry_id
+									);
+					$this->EE->db->insert('br_product_entry',$insert);
+					
 				// Hook after we create the product 
 					if($this->EE->extensions->active_hook('br_product_create_after') === TRUE){
 						$data = $this->EE->extensions->call('br_product_create_after', $data); 
@@ -1157,22 +1269,25 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			}
 							
-			//Reindex product search
-				$this->_index_products();
-			
 			// Clear the meta cache
 				remove_from_cache('meta_info');
 
 			// Clear the db cache 
 				$this->EE->functions->clear_caching('db');
-
-			br_set('message',lang('br_product_update_success'));
-			if($continue == true){
-				header('location: '.$this->base_url.'&method=product_edit&product_id='.$data["product_id"].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id);
+			
+			if($redirect==TRUE){
+				//Reindex product search
+					$this->_index_products();
+				
+					br_set('message',lang('br_product_update_success'));
+					if($continue == true){
+						header('location: '.$this->base_url.'&method=product_edit&product_id='.$data["product_id"].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id);
+					}else{
+						header('location: '.$this->base_url.'&method=product');
+					}
 			}else{
-				header('location: '.$this->base_url.'&method=product');
+				return $data["product_id"];	
 			}
-			exit();
 		}
 
 		function product_configurable_create_options()

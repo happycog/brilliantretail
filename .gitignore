@@ -6,8 +6,10 @@ images/*
 media/cache/*
 media/import/*
 media/file/*
+media/download/*
 media/products/*
 media/images/*
+media/import/*
 media/attachments/*
 themes/third_party/brilliant_retail/script/ckeditor/plugins/pgrfilemanager/PGRThumb/cache/* 
 themes/site_themes/brilliant_retail/_test.group/*

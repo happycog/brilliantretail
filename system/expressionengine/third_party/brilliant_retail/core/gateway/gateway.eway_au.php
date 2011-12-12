@@ -44,11 +44,11 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
 
        					$xmlResponse = $this->sendTransactionToEway($xmlRequest,$config['x_test_request']);
 
-       					if($xmlResponse!=""){
-							$responseFields = simplexml_load_string($xmlResponse);
-							$responseArray = objectsIntoArray($responseFields);
+						if(isset($xmlResponse["error"])){
+							$trans = array('error' => $xmlResponse["error"]);
+							return $trans;
 						}
-						
+	
 						if(trim($responseArray['ewayTrxnStatus']) != "True"){
 							$trans = array(
 								'error' => $responseArray['ewayTrxnError']
@@ -91,7 +91,7 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlRequest);
 	        $xmlResponse = curl_exec($ch);
-
+	        
         if(curl_errno( $ch ) == CURLE_OK)
         	return $xmlResponse;
 	}
