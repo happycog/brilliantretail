@@ -632,7 +632,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function product_new()
 		{
 			return $this->product_edit();	
-		$this->vars["custom"] = array();
+			$this->vars["custom"] = array();
 
 				// Lets play with adding custom channel fields to BR
 				// NOT QUITE READY FOR PRIME TIME
@@ -762,6 +762,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_edit()
 		{
+			// Load Resources Required for custom fields
+				$this->EE->load->model('tools_model');
+				$this->EE->cp->add_js_script( array(
+												'ui' => array('core', 'widget', 'button', 'dialog'),
+												'plugin' => array('scrollable', 'scrollable.navigator', 'ee_filebrowser', 'ee_fileuploader', 'markitup', 'thickbox'),
+											));
+			
 			// Lets setup a new product flag. If we are going to edit the product flip 
 			// to false so that we can differeniate in certain places when needed. 
 				$new_product 	= TRUE;
