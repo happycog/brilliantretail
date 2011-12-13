@@ -4465,6 +4465,7 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_ship;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_subscription;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product;";
+			$sql[] = "DROP TABLE IF EXISTS exp_br_product_addon;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_attributes;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_bundle;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_category;";
@@ -4565,5 +4566,4 @@ class Brilliant_retail_upd {
 		}
 		return $arr;
 	}
-	
 }

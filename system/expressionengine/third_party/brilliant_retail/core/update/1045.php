@@ -33,18 +33,14 @@
 					PRIMARY KEY (product_entry_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
-
 ## We need to load up some 
-
 	$this->EE->load->library('api'); 
+	$this->EE->api->instantiate('channel_structure');
 	$this->EE->api->instantiate('channel_entries');
 
 ## Create a field group
 
-## We need a BrilliantRetail channel
-
-	// We should check to make sure that there isn't an existing BR 
-	// Channel. If so lets create a new channel. 
+## Create [protected] BrilliantRetail channel per site
 
 ## Create an entry for every product
 
@@ -60,9 +56,9 @@
 		$result = $qry->result_array();
 	
 		// 
-		$sql[] = "	INSERT INTO 
-						exp_br_product_entry 
-							(product_id, entry_id) 
-								VALUES 
-							(".$rst["product_id"].",".$result[0]["entry_id"].")";
+		$this->EE->db->query("	INSERT INTO 
+									exp_br_product_entry 
+								(product_id, entry_id) 
+									VALUES 
+								(".$rst["product_id"].",".$result[0]["entry_id"].")";
 	}

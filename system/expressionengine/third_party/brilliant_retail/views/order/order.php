@@ -46,13 +46,11 @@ $this->table->set_heading(
 	array(
 			'data' => lang('br_order_status'),
 			'style' => 'width:60px'
-		)
-	/*
-		,array(
+		),
+	array(
     		'data' => '<input type="checkbox" id="toggle_check" />', 
 			'style' => 'text-align:center',
 			'width' => '5%')
-	*/
 );
 $content = $this->table->generate();
 ?>
@@ -74,11 +72,27 @@ $content = $this->table->generate();
                 
                 	<div id="b2r_settings">
                 
+                		<?=form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_batch',array('method' => 'POST', 'id' => 'order_form'))?>
+                        	
 						<div id="b2r_page" class="b2r_category">
 
                         	<?=$content?>
+
+                        	<div id="header_buttons">
+                        		<select id="action" name="action">
+                            		<option value="">------------</option> 
+                            		<option value="0"><?=lang('br_delete_selected_products')?></option>
+                            		<option value="1"><?=lang('br_enable_selected_products')?></option>
+                            		<option value="2"><?=lang('br_disable_selected_products')?></option>
+                            	</select>
+                            	<?=form_submit(array('name' => 'submit', 'value' => lang('submit'), 'class'=>'submit', 'id' => 'batch_submit'))?>
+                        	</div>
                         	
                         	<div class="b2r_clearboth"><!-- --></div>
+        				
+        				</div>
+        				
+        				</form>
         				
                     </div> <!-- b2r_dashboard --> 
                     
@@ -103,7 +117,8 @@ $content = $this->table->generate();
 																		null,
 																		null,
 																		null,
-																		null
+																		null,
+																		{ "bSortable": false }
 																	], 
 													"bProcessing": true,
 													"bServerSide": true,

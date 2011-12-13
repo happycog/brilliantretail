@@ -228,6 +228,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					'br_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
 				));
 			
+				$this->vars['action']	= $this->base_url.'&method=order_batch';
+
 			// ajax url to get order_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
 			
@@ -249,8 +251,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											date('n/d/y',$row["created"]),
 											'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
 											$row["total"],
-											'<span class="order_status_'.$row["status_id"].'">'.$status.'</span>'
-											#,array('data' => '<input type="checkbox" name="batch['.$row["order_id"].']" />', 'style' => 'text-align:center')
+											'<span class="order_status_'.$row["status_id"].'">'.$status.'</span>',
+											'<input type="checkbox" name="batch['.$row["order_id"].']" />'
 									);
 				}
 			
@@ -273,7 +275,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
 				$print = $this->EE->input->get("print",true);
-			
+				
 			// Page title
 				$this->vars['cp_page_title'] = lang('br_order_detail');
 				$this->vars["selected"] = 'order';
@@ -284,7 +286,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Order Information
 				$this->vars["status"] = $this->_config["status"];			
 				$this->vars['order'] = $this->EE->order_model->get_order($order_id);
-				
 				// Do we have a user photo?
 					if($this->vars['order']['photo_filename'] != ''){
 						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['photo_filename'].'" />';
@@ -309,6 +310,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}else{
 					return $this->EE->load->view('order/detail', $this->vars, TRUE);	
 				}
+		}
+		
+		function order_batch(){
+			var_dump($_POST);
 		}
 		
 		function order_update_status()
