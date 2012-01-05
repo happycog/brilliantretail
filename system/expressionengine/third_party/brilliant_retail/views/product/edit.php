@@ -49,7 +49,6 @@
 									<?=lang('br_form_error_message')?>
 								</p>
 							</div>
-                        
 					<?php
 						$tabs = array(
 										'details' 		=> $tab_detail,
@@ -69,7 +68,6 @@
 							echo '<p>&nbsp;</p>';
 						}
 					?>
-
 							<div class="b2r_clearboth"><!-- --></div>
 			    			<div id="header_buttons">
 								<?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
@@ -116,11 +114,5 @@
 				return false;
 			}
 		});
-		stripe_table();
 	});
-	function stripe_table(){
-		$('.mainTable tr').removeClass('even').removeClass('odd');
-		$('.mainTable tr:even').addClass('even');
-		$('.mainTable tr:odd').addClass('odd');
-	}
 </script>

@@ -644,7 +644,6 @@ $lang = array(
 $local_path = PATH_THIRD.'_local/brilliant_retail/language/';
 if(file_exists($local_path)){
 	$this->EE =& get_instance();
-	$this->EE->load->helper('brilliant_retail');
 	$lang_dir = $this->EE->session->userdata["language"];
 	if($lang_dir == ''){
 		$lang_dir = 'english';

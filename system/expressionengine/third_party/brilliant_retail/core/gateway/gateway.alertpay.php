@@ -137,7 +137,7 @@ class Gateway_alertpay extends Brilliant_retail_gateway {
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Business E-mail', 
-							'code'		=> 'ap_merchant', 
+							'code'		=> 'dt_merchant', 
 							'type' 		=> 'text',
 							'required' 	=> true,
 							'sort' 		=> 1
@@ -145,7 +145,7 @@ class Gateway_alertpay extends Brilliant_retail_gateway {
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Test Mode', 
-							'code' 		=> 'ap_test',
+							'code' 		=> 'dt_test',
 							'type' 		=> 'dropdown', 
 							'options' 	=> '1:True|0:False (Transactions are Live)',
 							'value' 	=> '1',
@@ -154,7 +154,7 @@ class Gateway_alertpay extends Brilliant_retail_gateway {
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'IPN Security Code', 
-							'code'		=> 'ap_securitycode', 
+							'code'		=> 'dt_securitycode', 
 							'type' 		=> 'text',
 							'sort' 		=> 2
 							);

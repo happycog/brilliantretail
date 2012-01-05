@@ -868,7 +868,7 @@ class Product_model extends CI_Model {
 				}
 			
 			// Addon Products 
-				if($addon != ""){
+				if(isset($addon)){
 					$this->db->delete('br_product_addon', array('parent_id' => $product_id)); 
 					foreach($addon as $r){
 						$data = array(	

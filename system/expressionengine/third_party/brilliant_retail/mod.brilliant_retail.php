@@ -25,9 +25,9 @@ include_once(PATH_THIRD.'brilliant_retail/core/class/core.brilliant_retail.php')
 
 class Brilliant_retail extends Brilliant_retail_core{
 	
-	var $return_data = '';
-	var $range =  '';
-	var $switch_cnt = 0;
+	var $return_data 	= '';
+	var $range 			= '';
+	var $switch_cnt 	= 0;
 	
 	function __construct(){
 		parent::__construct();
@@ -166,10 +166,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function product_custom(){
 			$entry_id = $this->EE->TMPL->fetch_param('entry_id');
 			include_once(APPPATH.'modules/channel/mod.channel.php');
+			$this->EE->TMPL->tagparams['entry_id'] 				= $entry_id;
+			$this->EE->TMPL->tagparams['limit'] 				= '1';
+			$this->EE->TMPL->tagparams['dynamic'] 				= 'no';
+			$this->EE->TMPL->tagparams['show_future_entries'] 	= 'yes';
+			
 			$custom = new Channel();
-			$custom->tagparams['entry_id'] 	= $entry_id;
-			$custom->tagparams['dynamic'] 	= 'no';
-			return $custom->entries();
+			$tagdata = $custom->entries();
+			return $tagdata;
 		}
 	
 

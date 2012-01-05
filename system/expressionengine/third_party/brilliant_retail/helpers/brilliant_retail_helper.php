@@ -132,13 +132,14 @@ if(!isset($_SESSION["cart"])){
 		function read_system_files($type){
 			// List Core Files
 				
-				$dir = realpath(rtrim(dirname(__FILE__),'/').'/../core/'.$type);
-				$files = read_dir_files($dir);
+				$dir = PATH_THIRD.'brilliant_retail/core/'.$type;
+				$files = read_dir_files($dir); 
 		
 			// List Local Files
-				$local_dir = realpath(rtrim(dirname(__FILE__),'/').'/../local/'.$type);
+				$local_dir = PATH_THIRD.'_local/brilliant_retail/'.$type;
 				$local = read_dir_files($local_dir);
-		
+				
+				
 			// Merge
 				foreach($files as $f){
 					if(substr($f,0,strlen($type)+1) == $type.'.'){

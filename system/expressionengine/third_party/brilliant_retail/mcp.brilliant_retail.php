@@ -126,7 +126,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/ckeditor/ckeditor.js').'"></script>');
+					#$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/ckeditor/ckeditor.js').'"></script>');
+					
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
@@ -648,7 +649,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 				// Get the fields for the channel
 					$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,array(),FALSE);
-
+					
 				$i = 0;
 				foreach($fields as $f){
 					// We only want the custom fields for this channel
@@ -851,7 +852,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
 			$this->EE->cp->add_js_script(  array(
-												'ui' => 'datepicker' 
+												'ui' => 'datepicker,tabs' 
 												));
 	
 			// Generate the list of products based 
@@ -1290,12 +1291,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			if($redirect==TRUE){
 				//Reindex product search
 					$this->_index_products();
-				
 					br_set('message',lang('br_product_update_success'));
 					if($continue == true){
-						header('location: '.$this->base_url.'&method=product_edit&product_id='.$data["product_id"].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id);
+						$this->EE->functions->redirect($this->base_url.'&method=product_edit&product_id='.$data["product_id"].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id);
 					}else{
-						header('location: '.$this->base_url.'&method=product');
+						$this->EE->functions->redirect($this->base_url.'&method=product');
 					}
 			}else{
 				return $data["product_id"];	
@@ -2357,8 +2357,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$type = trim(strtolower($_GET["type"]));
 			$code = trim(strtolower($_GET["code"]));
-			$path = rtrim(dirname(__FILE__),'/').'/'.$type.'/gateway/gateway.'.$_GET["code"].'.php';
-
+			if($type=='local'){
+				$loc = '_local/brilliant_retail';
+			}else{
+				$loc = 'brilliantretail/core';			
+			}
+			$path = PATH_THIRD.$loc.'/gateway/gateway.'.$_GET["code"].'.php';
+			
 			if(!file_exists($path)){ 
 				br_set('alert',lang('br_module_install_error'));
 				header('location: '.$this->base_url.'&method=config_gateway');

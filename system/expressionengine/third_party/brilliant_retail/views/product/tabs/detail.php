@@ -28,38 +28,24 @@
 ?>
 <table id="product_detail_tbl" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
 		<tr>
-			<th colspan="2">
+			<th>
 				<?php
 					if($products[0]["product_id"] == 0){
 						echo lang('br_new_product');
 					}else{
-						echo $products[0]["title"];
+						echo $products[0]["title"].' ['.$hidden["product_id"].']';
 					}
 				?></th>
 		</tr>
-		<?php
-			if($products[0]["product_id"] != 0){
-				// We are editing so lets 
-				// show the product id
-		?>
-						<tr>
-							<td>
-								<?=lang('br_product_id')?>
-							</td>
-							<td>
-								<?=$hidden["product_id"]?></td>
-						</tr>
-		<?php
-			}
-		?>
 		<tr>
-			<td><?=lang('br_product_type').' *'?></td>
-			<td>
-				<?=$type.$sub_type?></td>
+			<td class="custom_field">
+				<label><em class="required">*</em> <?=lang('br_product_type')?> - <?=$type?></label>
+				<?=$sub_type?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_product_title').' *'?></td>
-			<td>
+			<td class="custom_field">
+				<label><em class="required">*</em> <?=lang('br_product_title')?></label>
+				<br />
 				<?=form_input(
 								array(	'name' => 'title', 
 										'id' => 'title',
@@ -69,8 +55,9 @@
 							)?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_url_title').' *'?></td>
-			<td>
+			<td class="custom_field">
+				<label><em class="required">*</em> <?=lang('br_url_title')?></label>
+				<br />
 				<?=form_input(
 								array(	'name' => 'url', 
 										'id' => 'url',
@@ -80,8 +67,9 @@
 								)?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_product_detail').' *'?></td>
-			<td>
+			<td class="custom_field">
+				<label><?=lang('br_product_detail')?></label>
+				<br />
 				<?=form_textarea(
 											array(	'name' => 'detail', 
 													'value' => $products[0]["detail"],
@@ -91,13 +79,15 @@
 										)?></td>
 		</tr>
 		<tr>
-			<td><?=lang('status')?></td>
-			<td>
+			<td class="custom_field">
+				<label><?=lang('status')?></label>
+				<br />
 				<?=form_dropdown('enabled', array(1 => lang('br_enabled'), 0 => lang('br_disabled')), $products[0]["enabled"])?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_product_sku').' *'?></td>
-			<td>
+			<td class="custom_field">
+				<label><?=lang('br_product_sku').' *'?></label>
+				<br />
 				<?=form_input(
 										array(	'name' => 'sku', 
 												'value' => $products[0]["sku"],
@@ -106,32 +96,42 @@
 										)?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_shippable')?></td>
-			<td><?=form_dropdown('shippable', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["shippable"])?></td>
+			<td class="custom_field">
+				<label><?=lang('br_shippable')?></label>
+				<br />
+				<?=form_dropdown('shippable', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["shippable"])?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_product_weight')?></td>
-			<td><?=form_input(	array(	'name' => 'weight', 
+			<td class="custom_field">
+				<label><?=lang('br_product_weight')?></label>
+				<br />
+				<?=form_input(	array(	'name' => 'weight', 
 										'value' => $products[0]["weight"],
 										'class' => '',
 										'title' => lang('br_details').' - '.lang('br_product_weight'))
 								)?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_featured')?></td>
-			<td><?=form_dropdown('featured', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["featured"])?></td>
+			<td class="custom_field">
+				<label><?=lang('br_featured')?></label>
+				<br />
+				<?=form_dropdown('featured', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["featured"])?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_quantity')?></td>
-			<td><?=form_input(
+			<td class="custom_field">
+				<label><?=lang('br_quantity')?></label>
+				<br />
+				<?=form_input(
 								array(	'name' => 'quantity', 
 										'value' => $products[0]["quantity"],
 										'title' => lang('br_details').' - '.lang('br_quantity'))
 								)?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_taxable')?></td>
-			<td><?=form_dropdown(	
+			<td class="custom_field">
+				<label><?=lang('br_taxable')?></label>
+				<br />
+				<?=form_dropdown(	
 									'taxable', 
 									array(	1 => lang('br_yes'), 
 											0 => lang('br_no')), 
@@ -139,8 +139,10 @@
 								?></td>
 		</tr>
 		<tr>
-			<td><?=lang('br_cost')?></td>
-			<td><?=form_input(	array(	'name' => 'cost', 
+			<td class="custom_field">
+				<label><?=lang('br_cost')?></label>
+				<br />
+				<?=form_input(	array(	'name' => 'cost', 
 										'class' => '',
 										'title' => lang('br_cost'),
 										'value' => $products[0]["cost"])
@@ -152,16 +154,16 @@
 				echo '	<p>&nbsp;</p>
 						<table cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
 							<tr>
-								<th colspan="2">'.$c["settings"]["field_label"].'</th>
+								<th>'.$c["settings"]["field_label"].'</th>
 							</tr>';
 				if($c["settings"]["field_instructions"] != ""){
 					echo '	<tr>
-								<td colspan="2">'.$c["settings"]["field_instructions"].'</td>
+								<td class="custom_field">'.$c["settings"]["field_instructions"].'</td>
 							</tr>';
 				}			
 					
 				echo '		<tr>
-								<td colspan="2">'.$c["display_field"].'</td>
+								<td class="custom_field">'.$c["display_field"].'</td>
 							</tr>
 						</table>';
 			}
