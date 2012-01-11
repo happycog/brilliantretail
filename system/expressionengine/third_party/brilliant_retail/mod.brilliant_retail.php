@@ -63,6 +63,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				return '';
 			}
 		}
+
 	/**
 	* Show meta for given section
 	* 
@@ -2131,14 +2132,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 	/* END CHECKOUT */
 	
-	/* CUSTOMER */
-		
-	// Create a login form
-		function login_form()
-		{
-			$output = '';
-			return $output;
-		}	
+	/* CUSTOMER */	
 		
 	// Create a register form
 		function register_form()

@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.4.1';
+	public $version	= '1.0.4.5';
 	
 	function Brilliant_retail_upd()
 	{
@@ -4490,10 +4490,28 @@ class Brilliant_retail_upd {
 		{
 			$this->EE->db->query($query);
 		}
-
-		# TO-DO 
-		# Remove cache directories
 		
+		// As of 1.0.4.5 we are no longer going to update the base install above.
+		// I'm not sure why the absolute genius David Dexter did it that way before
+		// but lets just include the incrementals after base install to keep things 
+		// consistent. - dpd
+		
+			$updates = array(1045);
+			
+			// better unset the previous queries
+				foreach($updates as $u){
+					$sql = array();
+					// we are going to do each 'update' so that if one is dependent on another we don't have
+					// any problems					
+						$fl = PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'update'.DIRECTORY_SEPARATOR.$i.'.php';	
+						include($f);
+					// Run DB updates
+						foreach ($sql as $query){
+							$this->EE->db->query($query);
+						}
+				}
+			$this->reset_cache();
+
 		return TRUE;
 	}
 
@@ -4511,7 +4529,7 @@ class Brilliant_retail_upd {
 		$this->EE->load->dbforge();
 		
 		// Required for updating member fields
-		$sql = array();
+			$sql = array();
 		
 		// Get the current version
 			$version = str_replace(".","",$this->version)*1;

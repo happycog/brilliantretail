@@ -205,8 +205,8 @@ hr {
 #b2r_content {
 	position: relative;
 	zoom: 1;
-	margin: 15px;
-	border: 1px #CCC solid;
+	/* 	margin: 15px;
+		border: 1px #CCC solid; */
 	padding: 0;
 	background: url(../images/bg_b2r_content.jpg) 0 0 repeat-y; }
 	
@@ -514,7 +514,8 @@ table.subTable tr.odd td {
 	padding: 12px 12px 0; }
 
 #mainContent .pageContents {
-padding: 0;
+	border-top: none;
+	padding: 0;
 }
 
 #mainContent .pageContents #b2r_dashboard table {
@@ -1745,7 +1746,6 @@ p.b2r_save a b {
 	padding: 0 0 5px;
 }
 
-#b2r_settings .b2r_category table#productTable td:first-child,
 #b2r_settings .b2r_category table#promoTable td:first-child {
 	text-align: center;
 }

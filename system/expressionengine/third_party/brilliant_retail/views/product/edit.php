@@ -58,7 +58,7 @@
 										'categories' 	=> $tab_category,
 										'images' 		=> $tab_image,
 										'options' 		=> $tab_option,
-										#'addon' 		=> $tab_addon,
+										#'addon' 		=> $tab_addon, // Not quite ready for prime time - dpd
 										'related' 		=> $tab_related,
 										'seo' 			=> $tab_seo,
 										'feed' 			=> $tab_feed

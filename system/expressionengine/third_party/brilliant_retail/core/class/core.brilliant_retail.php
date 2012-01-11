@@ -38,6 +38,7 @@ class Brilliant_retail_core {
 	
 	public $_config = array();
 	public $site_id = '';
+	public $br_channel_id = '';
 	
 	private $cat_tree 	= 0;
 	private $cat = array();
@@ -85,7 +86,8 @@ class Brilliant_retail_core {
 			}
 			$this->_config = $this->EE->core_model->get_config();
 			$this->site_id = $this->EE->config->item('site_id');
-			
+			$this->br_channel_id = $this->_config["store"][$this->site_id]["channel_id"];
+
 			$this->_config["currency"] 			= $this->_config["store"][$this->site_id]["currency"];
 			$this->_config["currency_id"] 		= $this->_config["store"][$this->site_id]["currency_id"];
 			$this->_config["currency_marker"] 	= $this->_config["store"][$this->site_id]["currency_marker"];

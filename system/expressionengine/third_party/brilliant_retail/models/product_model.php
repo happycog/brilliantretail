@@ -195,6 +195,7 @@ class Product_model extends CI_Model {
 						SQL_CALC_FOUND_ROWS 
 						p.product_id,   
 						p.title, 
+						p.sku,
 						p.quantity,
 						p.type_id,   
 						p.enabled  
@@ -213,7 +214,9 @@ class Product_model extends CI_Model {
 			
 			if(trim($search) != ''){
 				$sql .= " AND 
-							( 	title LIKE '%".mysql_real_escape_string($search)."%' 
+							( 	product_id LIKE '%".mysql_real_escape_string($search)."%' 
+								||
+							  	title LIKE '%".mysql_real_escape_string($search)."%' 
 								||
 							  	sku LIKE '%".mysql_real_escape_string($search)."%'
 							)";

@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.4.1'; 
+		public $version			= '1.0.4.5'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -41,8 +41,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		public $method 			= '';
 		public $group_access 	= '';
 		public $submenu 		= '';
-		public $br_channel_id 	= 4;
-		
+		private $_file_manager 	= array();
+		private $_channel_data 	= '';
+	
 		// Ajax methods ignore list for 
 		// member group permissions list
 		
@@ -569,6 +570,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$enabled = ($p['enabled'] == 1) ? lang('br_enabled') : lang('br_disabled');
 					$row[] = array(	$p['product_id'],
 									'<a href="'.$this->vars["base_url"].'&method=product_edit&product_id='.$p['product_id'].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id.'">'.$p['title'].'</a>',
+									$p['sku'],
 									$p['quantity'],
 									$this->vars["product_type"][$p['type_id']],
 									'<span class="order_status_'.$p['enabled'].'">'.$enabled.'</span>',
@@ -768,13 +770,36 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_edit()
 		{
-			// Load Resources Required for custom fields
-				$this->EE->load->model('tools_model');
-				$this->EE->cp->add_js_script( array(
-												'ui' => array('core', 'widget', 'button', 'dialog'),
-												'plugin' => array('scrollable', 'scrollable.navigator', 'ee_filebrowser', 'ee_fileuploader', 'markitup', 'thickbox'),
-											));
 			
+			// Load Resources Required for custom fields
+				$this->EE->lang->loadfile('content');
+				$this->EE->load->library('api'); 
+				$this->EE->api->instantiate('channel_fields');
+				$this->EE->api->instantiate('channel_entries');
+				
+				$this->EE->load->library('filemanager');
+				$this->EE->load->library('spellcheck');
+				$this->EE->load->library('file_field');
+				$this->EE->load->model('channel_model');
+				$this->EE->load->model('tools_model');
+				$this->EE->load->helper(array('snippets','typography', 'spellcheck'));
+				
+				$this->EE->file_field->browser();
+				$this->EE->cp->get_installed_modules();
+				
+				// Load channel data
+					$this->_channel_data = $this->_load_channel_data($this->br_channel_id);
+
+				// Setup the file list for custom fields
+					$this->_setup_file_list();
+					$this->vars["file_list"] = $this->_file_manager['file_list'];
+
+				$this->EE->cp->add_js_script( array(
+												'ui' => array('datepicker','resizable', 'draggable', 'droppable','tabs','core', 'widget', 'button', 'dialog'),
+												'plugin' => array('scrollable', 'scrollable.navigator','toolbox.expose','overlay','ee_fileuploader','ee_filebrowser','tmpl','ee_url_title','markitup', 'thickbox'),
+												'file'		=> array('json2', 'cp/publish', 'cp/publish_tabs', 'cp/global')
+											));
+
 			// Lets setup a new product flag. If we are going to edit the product flip 
 			// to false so that we can differeniate in certain places when needed. 
 				$new_product 	= TRUE;
@@ -792,15 +817,26 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Custom Channel Fields
 			
 				$this->vars["custom"] = array();
-
-				$this->EE->load->library('api'); 
-				$this->EE->api->instantiate('channel_fields');
-				$this->EE->api->instantiate('channel_entries');
 					
+			// Setup some helpers
+				$this->vars["spell_enabled"] 	= TRUE;
+				$this->vars["smileys_enabled"] 	= (isset($this->EE->cp->installed_modules['emoticon']) ? TRUE : FALSE);
+				if ($this->vars["smileys_enabled"]){
+					$this->EE->load->helper('smiley');
+					$this->EE->cp->add_to_foot(smiley_js());
+				}
+	
+			// Glossary Items
+				$this->vars['glossary_items'] = $this->EE->load->ee_view('content/_assets/glossary_items', '', TRUE);
+
+			// Set the global javascript (Content Publish Method) 	
+				$this->_set_global_js($entry_id);
+			
+			
 			// Get the fields for the channel
+				
 				$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,array(),FALSE);
 				
-			
 			// Get current data if its an edit
 			
 				if($new_product == FALSE)
@@ -825,6 +861,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 
 			// Build the inputs 
+
+				$fields = $this->_prep_field_wrapper($fields);
 				
 				$i = 0;
 				foreach($fields as $f){
@@ -851,10 +889,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
-			$this->EE->cp->add_js_script(  array(
-												'ui' => 'datepicker,tabs' 
-												));
-	
 			// Generate the list of products based 
 			// on the search terms provided. 
 			
@@ -979,11 +1013,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					
 					$this->vars["categories"] = $categories;			
-									
-						
-						
+
 			}else{
-				// Build an empty product shell 
 				// Build an empty product shell 
 					$p = new Product();
 					$products = $p->createshell();
@@ -1058,7 +1089,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								$this->vars["categories"] = $categories;
 			}
 			
-			
+			$this->_markitup();
+
 			$this->vars['feeds'] = $this->EE->feed_model->get_feeds();
 
 			$this->vars["tab_detail"] = $this->EE->load->view('product/tabs/detail', $this->vars, TRUE);
@@ -1072,6 +1104,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["tab_related"] 	= $this->EE->load->view('product/tabs/related', $this->vars, TRUE);
 			$this->vars["tab_seo"] = $this->EE->load->view('product/tabs/seo', $this->vars, TRUE);
 			$this->vars["tab_feed"] = $this->EE->load->view('product/tabs/feed', $this->vars, TRUE);
+			
+			$this->EE->javascript->compile();
 			
 			return $this->EE->load->view('product/edit', $this->vars, TRUE);	
 		}
@@ -3286,4 +3320,288 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			return $can_subscribe;
 		}
-}
+		
+		// Borrowed from content_publish controller ::
+
+		private function _setup_file_list()
+		{
+			$this->EE->load->model('file_upload_preferences_model');
+			
+			$upload_directories = $this->EE->file_upload_preferences_model->get_file_upload_preferences($this->EE->session->userdata('group_id'));
+			
+			$this->_file_manager = array(
+				'file_list'						=> array(),
+				'upload_directories'			=> array(),
+			);
+		
+			$fm_opts = array(
+								'id', 'name', 'url', 'pre_format', 'post_format', 
+								'file_pre_format', 'file_post_format', 'properties', 
+								'file_properties'
+							);
+		
+			foreach($upload_directories as $row)
+			{
+				$this->_file_manager['upload_directories'][$row['id']] = $row['name'];
+	
+				foreach($fm_opts as $prop)
+				{
+					$this->_file_manager['file_list'][$row['id']][$prop] = $row[$prop];
+				}
+			}
+		}
+		
+		
+function _markitup()
+	{
+		$this->EE->load->model('admin_model');
+		
+		$html_buttons = $this->EE->admin_model->get_html_buttons($this->EE->session->userdata('member_id'));
+		$button_js = array();
+		$has_image = FALSE;
+		
+		foreach ($html_buttons->result() as $button)
+		{
+			if (strpos($button->classname, 'btn_img') !== FALSE)
+			{
+				// images are handled differently because of the file browser
+				// at least one image must be available for this to work
+				$has_image = TRUE;
+												
+				if (count($this->_file_manager['file_list']))
+				{
+					$button_js[] = array('name' => $button->tag_name, 'key' => $button->accesskey, 'replaceWith' => '', 'className' => $button->classname);
+					$this->EE->javascript->set_global('filebrowser.image_tag', $button->tag_open);
+				}
+			}
+			elseif(strpos($button->classname, 'markItUpSeparator') !== FALSE)
+			{
+				// separators are purely presentational
+				$button_js[] = array('separator' => '---');
+			}
+			else
+			{
+				$button_js[] = array('name' => $button->tag_name, 'key' => strtoupper($button->accesskey), 'openWith' => $button->tag_open, 'closeWith' => $button->tag_close, 'className' => $button->classname);
+			}
+		}
+		
+		// We force an image button if it doesn't already exist
+		if ($has_image == FALSE && count($this->_file_manager['file_list']))
+		{
+			$button_js[] = array('name' => 'img', 'key' => '', 'replaceWith' => '', 'className' => 'btn_img');
+			$this->EE->javascript->set_global('filebrowser.image_tag', '<img src="[![Link:!:http://]!]" alt="[![Alternative text]!]" />');			
+		}
+		
+		$this->EE->javascript->set_global('p.image_tag', 'foo you!');
+
+		$markItUp = $markItUp_writemode = array(
+			'nameSpace'		=> "html",
+			'onShiftEnter'	=> array('keepDefault' => FALSE, 'replaceWith' => "<br />\n"),
+			'onCtrlEnter'	=> array('keepDefault' => FALSE, 'openWith' => "\n<p>", 'closeWith' => "</p>\n"),
+			'markupSet'		=> $button_js,
+		);
+
+		// -------------------------------------------
+		//	Hidden Configuration Variable
+		//	- allow_textarea_tabs => Add tab preservation to all textareas or disable completely
+		// -------------------------------------------
+
+		if ($this->EE->config->item('allow_textarea_tabs') == 'y')
+		{
+			$markItUp['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
+			$markItUp_writemode['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
+		}
+		elseif ($this->EE->config->item('allow_textarea_tabs') != 'n')
+		{
+			$markItUp_writemode['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
+		}
+
+		$markItUp_nobtns = $markItUp;
+		unset($markItUp_nobtns['markupSet']);
+
+		$this->EE->cp->add_js_script(array("
+			<script type=\"text/javascript\" charset=\"utf-8\">
+			// <![CDATA[
+			mySettings = ".$this->EE->javascript->generate_json($markItUp, TRUE).";
+			myNobuttonSettings = ".$this->EE->javascript->generate_json($markItUp_nobtns, TRUE).";
+			myWritemodeSettings = ".$this->EE->javascript->generate_json($markItUp_writemode, TRUE).";
+			// ]]>
+			</script>
+
+		"), FALSE);
+
+		$this->EE->javascript->set_global('publish.show_write_mode', ($this->_channel_data['show_button_cluster'] == 'y') ? TRUE : FALSE);
+	}
+		
+	private function _load_channel_data($channel_id)
+	{
+		$this->EE->load->model('channel_model');
+		$query = $this->EE->channel_model->get_channel_info($channel_id);
+		$row = $query->row_array();
+		return $row;
+	}
+	
+	private function _prep_field_wrapper($field_list)
+	{
+		$defaults = array(
+			'field_show_spellcheck'			=> 'n',
+			'field_show_smileys'			=> 'n',
+			'field_show_glossary'			=> 'n',
+			'field_show_formatting_btns'	=> 'n',
+			'field_show_writemode'			=> 'n',
+			'field_show_file_selector'		=> 'n',
+			'field_show_fmt'				=> 'n',
+			'field_fmt_options'				=> array()
+		);
+		
+		$markitup_buttons = array();
+		$get_format = array();
+	
+		foreach ($field_list as $field => &$data)
+		{
+			$data['has_extras'] = FALSE;
+			
+			foreach($defaults as $key => $val)
+			{
+				if (isset($data[$key]) && $data[$key] == 'y')
+				{
+					$data['has_extras'] = TRUE;
+					continue;
+				}
+
+				$data[$key] = $val;
+			}
+			
+			if ($data['field_show_smileys'] == 'y' && $this->vars["smileys_enabled"] === TRUE)
+			{
+				$data['smiley_table'] = $this->_build_smiley_table($field);
+			}
+			
+			if ($data['field_show_fmt'] == 'y')
+			{
+				// We'll get all the format options in one go
+				$get_format[] = $data['field_id'];
+			}
+			
+			if ($this->_channel_data['show_button_cluster'] == 'y' && isset($data['field_show_formatting_btns']) && $data['field_show_formatting_btns'] == 'y')
+			{
+				$markitup_buttons['fields'][$field] = $data['field_id'];
+			}
+		}
+		
+		// Field formatting
+		if (count($get_format) > 0)
+		{
+			$this->db->select('field_id, field_fmt');
+			$this->db->where_in('field_id', $get_format);
+			$this->db->order_by('field_fmt');
+			$query = $this->db->get('field_formatting');
+
+			if ($query->num_rows() > 0)
+			{
+				foreach ($query->result_array() as $format)
+				{
+					$name = ucwords(str_replace('_', ' ', $format['field_fmt']));
+			
+					if ($name == 'Br')
+					{
+						$name = lang('auto_br');
+					}
+					elseif ($name == 'Xhtml')
+					{
+						$name = lang('xhtml');
+					}
+					
+					$field_list['field_id_'.$format['field_id']]['field_fmt_options'][$format['field_fmt']] = $name;
+				}
+			}
+		}
+		
+		$this->EE->javascript->set_global('publish.markitup', $markitup_buttons);
+		
+		return $field_list;
+	}
+	
+	private function _build_smiley_table($field_name)
+	{		
+		$this->EE->load->library('table');
+
+		$this->EE->table->set_template(array(
+			'table_open' => 
+			'<table style="text-align: center; margin-top: 5px;" cellspacing="0" class="mainTable padTable smileyTable">'
+		));
+
+		$image_array = get_clickable_smileys($this->EE->config->slash_item('emoticon_url'),$field_name);
+		$col_array = $this->EE->table->make_columns($image_array, 8);
+		$smilies = '<div class="smileyContent" style="display: none;">';
+		$smilies .= $this->EE->table->generate($col_array).'</div>';
+		$this->EE->table->clear();
+		
+		return $smilies;
+	}
+	
+	/**
+	 * Set Global Javascript
+	 *
+	 * @param 	int
+	 * @return 	void
+	 */
+	private function _set_global_js($entry_id)
+	{
+		$autosave_interval_seconds = ($this->EE->config->item('autosave_interval_seconds') === FALSE) ? 60 : $this->EE->config->item('autosave_interval_seconds');
+
+		//	Create Foreign Character Conversion JS
+		include(APPPATH.'config/foreign_chars.php');
+
+		/* -------------------------------------
+		/*  'foreign_character_conversion_array' hook.
+		/*  - Allows you to use your own foreign character conversion array
+		/*  - Added 1.6.0
+		* 	- Note: in 2.0, you can edit the foreign_chars.php config file as well
+		*/  
+			if (isset($this->extensions->extensions['foreign_character_conversion_array']))
+			{
+				$foreign_characters = $this->extensions->call('foreign_character_conversion_array');
+			}
+		/*
+		/* -------------------------------------*/
+
+		$date_fmt = ($this->EE->session->userdata('time_format') != '') ? $this->EE->session->userdata('time_format') : $this->EE->config->item('time_format');
+
+		$this->EE->javascript->set_global(array(
+			'date.format'						=> $date_fmt,
+			'lang.add_new_html_button'			=> lang('add_new_html_button'),
+			'lang.add_tab' 						=> lang('add_tab'),
+			'lang.close' 						=> lang('close'),
+			'lang.confirm_exit'					=> lang('confirm_exit'),
+			'lang.duplicate_tab_name'			=> lang('duplicate_tab_name'),
+			'lang.hide_toolbar' 				=> lang('hide_toolbar'),
+			'lang.illegal_characters'			=> lang('illegal_characters'),
+			'lang.loading'						=> lang('loading'),
+			'lang.tab_name'						=> lang('tab_name'),
+			'lang.show_toolbar' 				=> lang('show_toolbar'),
+			'lang.tab_name_required' 			=> lang('tab_name_required'),
+			'publish.autosave.interval'			=> (int) $autosave_interval_seconds,
+			'publish.channel_id'				=> $this->_channel_data['channel_id'],
+			'publish.default_entry_title'		=> $this->_channel_data['default_entry_title'],
+			'publish.field_group'				=> $this->_channel_data['field_group'],
+			'publish.foreignChars'				=> $foreign_characters,
+			'publish.lang.layout_removed'		=> lang('layout_removed'),
+			'publish.lang.no_member_groups'		=> lang('no_member_groups'),
+			'publish.lang.refresh_layout'		=> lang('refresh_layout'),
+			'publish.lang.tab_count_zero'		=> lang('tab_count_zero'),
+			'publish.lang.tab_has_req_field'	=> lang('tab_has_req_field'),
+			'publish.markitup.foo'				=> FALSE,
+			'publish.smileys'					=> ($this->vars["smileys_enabled"]) ? TRUE : FALSE,
+			'publish.url_title_prefix'			=> $this->_channel_data['url_title_prefix'],
+			'publish.which'						=> ($entry_id === 0) ? 'new' : 'edit',
+			'publish.word_separator'			=> $this->EE->config->item('word_separator') != "dash" ? '_' : '-',
+			'user.can_edit_html_buttons'		=> $this->EE->cp->allowed_group('can_edit_html_buttons'),
+			'user.foo'							=> FALSE,
+			'user_id'							=> $this->EE->session->userdata('member_id'),
+			'upload_directories'				=> $this->_file_manager['file_list'],
+		));
+	}
+
+
+}	
