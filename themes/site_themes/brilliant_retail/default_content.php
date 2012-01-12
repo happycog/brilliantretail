@@ -173,6 +173,7 @@ VALUES
 ## exp_upload_prefs
 	
 	$media_dir = realpath(FCPATH.'../media/images');  
+	$media_dir = rtrim($media_dir,'/').'/';
 	chmod($media_dir,DIR_WRITE_MODE);
 	$sql[] = "INSERT INTO exp_upload_prefs 
 				(id,

@@ -809,7 +809,7 @@ class Brilliant_retail_upd {
 ##  Table structure for exp_br_product_download
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_product_download;";
-	$sql[] = "	CREATE TABLE exp_br_product_download (
+	$sql[] = "CREATE TABLE exp_br_product_download (
 					downloadable_id int(11) NOT NULL AUTO_INCREMENT,
 					product_id int(11) NOT NULL,
 					title varchar(100) NOT NULL,
@@ -820,6 +820,17 @@ class Brilliant_retail_upd {
 					download_length int(10) NOT NULL,
 					download_version varchar(50) DEFAULT NULL,
 					PRIMARY KEY (downloadable_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+
+## ----------------------------
+##  Table structure for exp_br_product_related
+## ----------------------------
+	$sql[] = "DROP TABLE IF EXISTS exp_br_product_entry;";
+	$sql[] = "CREATE TABLE exp_br_product_entry (
+					product_entry_id int(11) NOT NULL AUTO_INCREMENT,
+					product_id int(11) NOT NULL,
+					entry_id int(11) NOT NULL,
+					PRIMARY KEY (product_entry_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
@@ -4026,6 +4037,7 @@ class Brilliant_retail_upd {
 	$sql[] = "	CREATE TABLE exp_br_store (
 					store_id int(11) NOT NULL AUTO_INCREMENT,
 					site_id int(11) NOT NULL DEFAULT '1',
+					channel_id int(11) NOT NULL,
 					logo varchar(100) NOT NULL DEFAULT 'logo.png',
 					license varchar(255) NOT NULL,
 					phone varchar(255) NOT NULL,
@@ -4068,7 +4080,7 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$path = rtrim(realpath(APPPATH.'/../../'),'/').DIRECTORY_SEPARATOR.'media';
 	$sql[] = "INSERT INTO exp_br_store VALUES 
-				('1', '1', 'logo.png', '', '(888) 555-5555', '12207 Wilshire Blvd', 'Suite 201', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', 'http://".$_SERVER["HTTP_HOST"]."/media/','".$path."','','','',0,0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','checkout/thankyou','customer','product','25')";
+				('1', '1','0','logo.png', '', '(888) 555-5555', '12207 Wilshire Blvd', 'Suite 201', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', 'http://".$_SERVER["HTTP_HOST"]."/media/','".$path."','','','',0,0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','checkout/thankyou','customer','product','25')";
 				
 ## ----------------------------
 ##  Table structure for exp_br_tax
@@ -4421,7 +4433,7 @@ class Brilliant_retail_upd {
 		{
 			$this->EE->db->query($query);
 		}
-		
+
 		return TRUE;
 	}
 
@@ -4471,6 +4483,7 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_category;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_configurable;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_download;";
+			$sql[] = "DROP TABLE IF EXISTS exp_br_product_entry;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_feeds;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_images;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_price;;";
@@ -4490,27 +4503,6 @@ class Brilliant_retail_upd {
 		{
 			$this->EE->db->query($query);
 		}
-		
-		// As of 1.0.4.5 we are no longer going to update the base install above.
-		// I'm not sure why the absolute genius David Dexter did it that way before
-		// but lets just include the incrementals after base install to keep things 
-		// consistent. - dpd
-		
-			$updates = array(1045);
-			
-			// better unset the previous queries
-				foreach($updates as $u){
-					$sql = array();
-					// we are going to do each 'update' so that if one is dependent on another we don't have
-					// any problems					
-						$fl = PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'update'.DIRECTORY_SEPARATOR.$i.'.php';	
-						include($f);
-					// Run DB updates
-						foreach ($sql as $query){
-							$this->EE->db->query($query);
-						}
-				}
-			$this->reset_cache();
 
 		return TRUE;
 	}

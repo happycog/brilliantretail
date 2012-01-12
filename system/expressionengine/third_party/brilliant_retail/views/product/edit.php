@@ -99,6 +99,34 @@
 	<div class="b2r_clearboth"><!-- --></div>    
 </div> <!-- #b2retail -->
 
+<!-- Modals -->
+	<div id="write_mode_container">
+		<div id="write_mode_close_container">
+			<a href="#" class="publish_to_field close"><?=lang('wm_publish_to_field')?></a>&nbsp;
+			<a href="#" class="discard_changes close"><?=lang('wm_discard_changes')?></a>
+		</div>
+
+		<div id="write_mode_writer">
+			<textarea id="write_mode_textarea"></textarea>
+		</div>
+		<div id="write_mode_footer">
+			<a href="#" class="publish_to_field close"><?=lang('wm_publish_to_field')?></a>&nbsp;
+			<a href="#" class="discard_changes close"><?=lang('wm_discard_changes')?></a>
+		</div>
+	</div>
+	
+	<?php if ($this->session->userdata('group_id') == 1):?>
+		<div id="new_tab_dialog" title="<?=lang('add_tab')?>" style="display: none;">
+			<form action="#">
+				<p>
+					<label><?=lang('tab_name')?></label> 
+					<input id="tab_name" type="text" value="" name="tab_name"/>
+				</p>
+			</form>
+		</div>
+	<?php endif;?>
+<!-- /Modals -->
+
 <script type="text/javascript">
 	var field = 10000;
 	var imgCount = 10000;

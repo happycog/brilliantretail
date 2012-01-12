@@ -179,9 +179,9 @@ class Core_model extends CI_Model {
 	function create_store($site_id){
 		// Create the store record 
 			$sql  = "	INSERT INTO exp_br_store 
-						(site_id,logo,license,phone,address1,address2,city,state,country,zipcode,fax,currency_id,result_limit,result_per_page,result_paginate,register_group,guest_checkout,media_url,media_dir,meta_title,meta_keywords,meta_descr,subscription_enabled,first_notice,second_notice,third_notice,cancel_subscription,secure_url,cart_url,checkout_url,customer_url,product_url,low_stock)
+						(site_id,channel_id,logo,license,phone,address1,address2,city,state,country,zipcode,fax,currency_id,result_limit,result_per_page,result_paginate,register_group,guest_checkout,media_url,media_dir,meta_title,meta_keywords,meta_descr,subscription_enabled,first_notice,second_notice,third_notice,cancel_subscription,secure_url,cart_url,checkout_url,customer_url,product_url,low_stock)
 							VALUES 
-						(".$site_id.",'logo.png', '', '(888) 555-5555', '12207 Wilshire Blvd', 'Suite 201', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', '/media/','/media/','','','',0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','customer','product','25')";
+						(".$site_id.",'0','logo.png', '', '(888) 555-5555', '12207 Wilshire Blvd', 'Suite 201', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', '/media/','/media/','','','',0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','customer','product','25')";
 			$this->db->query($sql);
 		// Create the store system config record
 			
