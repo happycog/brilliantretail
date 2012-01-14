@@ -4483,6 +4483,7 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_category;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_configurable;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_download;";
+			$sql[] = "DROP TABLE IF EXISTS exp_br_product_donation;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_entry;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_feeds;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_images;";

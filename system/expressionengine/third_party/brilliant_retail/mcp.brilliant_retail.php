@@ -92,9 +92,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$access = $this->EE->extensions->call('br_check_admin_access_after', $access); 
 					}
 
-				// Generate the menu
-					$this->_create_admin_menu();
-
 				// System ALERT / MESSAGE
 					$this->vars['message'] = ''; 
 					$this->vars['alert'] = '';
@@ -116,11 +113,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->vars['product_type'] = $this->_config['product_type'];	
 				
 				// Set a default breadcrumb title
-					$this->vars['cp_page_title'] = 'BrilliantRetail';
-									
-				// Current Site ID
-					$this->site_id = $this->EE->config->item('site_id');				
-					$this->vars['site_id'] = $this->site_id;
+					$this->EE->cp->set_breadcrumb($this->base_url, 'BrilliantRetail');
 
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
@@ -173,7 +166,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	 */	
 		function dashboard()
 		{
-			$this->vars['cp_page_title'] = lang('br_dashboard');
+			$this->vars['cp_page_title'] = lang('nav_br_dashboard');
 
 			$this->vars["selected"] = 'dashboard';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
@@ -218,7 +211,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function order()
 		{
-			$this->vars['cp_page_title'] = lang('br_order');
+			$this->vars['cp_page_title'] = lang('nav_br_order');
 			$this->vars["selected"] = 'order';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -227,7 +220,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// Add the create product button
 				$this->EE->cp->set_right_nav(array(
-					'br_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
+					'nav_br_order_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
 				));
 			
 				$this->vars['action']	= $this->base_url.'&method=order_batch';
@@ -279,9 +272,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$print = $this->EE->input->get("print",true);
 				
 			// Page title
-				$this->vars['cp_page_title'] = lang('br_order_detail');
-				$this->vars["selected"] = 'order';
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+				$this->vars['cp_page_title'] = lang('nav_br_order_detail');
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 			
@@ -428,20 +419,26 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		public function order_license_manager(){
 			// Page title
-				$this->vars['cp_page_title'] = lang('br_order_license_manager');
-				$this->vars["selected"] = 'order';
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+				$this->vars['cp_page_title'] = lang('nav_br_order_license_manager');
+				
+			// Add the create product button
+				$this->EE->cp->set_right_nav(array(
+					'nav_br_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order'
+				));
+				
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 				return $this->EE->load->view('order/license_manager', $this->vars, TRUE);	
 		}
+		
+		
 	/************************/
 	/* Customer Tab		 	*/
 	/************************/
 	
 		function customer()
 		{
-			$this->vars['cp_page_title'] = lang('br_customer');
+			$this->vars['cp_page_title'] = lang('nav_br_customer');
 			$this->vars["selected"] = 'customer';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -490,7 +487,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Parameters
 				$member_id = $this->EE->input->get('memberid');
 
-			$this->vars['cp_page_title'] = lang('br_customer_orders');
+			$this->vars['cp_page_title'] = lang('nav_br_customer_orders');
 			$this->vars["selected"] = 'customer';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -537,7 +534,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['categories'] = $this->EE->product_model->get_all_categories();
 				$this->vars['catid'] = $_SESSION["catid"];
 			
-				$this->vars['cp_page_title'] = lang('br_products');
+				$this->vars['cp_page_title'] = lang('nav_br_products');
 				$this->vars["selected"] = 'product';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -833,12 +830,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->_set_global_js($entry_id);
 			
 			
-			// Get the fields for the channel
-				
-				$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,array(),FALSE);
-				
 			// Get current data if its an edit
 			
+				$data = array();
+				
 				if($new_product == FALSE)
 				{
 					// Get the data for the entry_id 	
@@ -860,10 +855,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								$data = $result[0];
 				}
 
-			// Build the inputs 
-
-				$fields = $this->_prep_field_wrapper($fields);
+			// Get the fields for the channel
 				
+				$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,$data,FALSE);
+				
+			// Build the inputs 
+				
+				$fields = $this->_prep_field_wrapper($fields);
+
 				$i = 0;
 				foreach($fields as $f){
 					// We only want the custom fields for this channel
@@ -883,7 +882,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Is there a gateway available to support subscriptions?
 				$this->vars["can_subscribe"] = $this->_can_subscribe();
 			
-			$this->vars['cp_page_title'] = lang('br_products');
+			$this->vars['cp_page_title'] = lang('nav_br_products');
 			$this->vars["selected"] = 'product';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -1019,7 +1018,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$p = new Product();
 					$products = $p->createshell();
 					$this->vars["products"] = $products;
-					
+					$this->vars['product_feeds'] = array();
+
 						// Generate the list of products based 
 						// on the search terms provided. 
 						$this->vars["type_id"] = 0;
@@ -1455,7 +1455,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["promo"] = $this->EE->promo_model->get_promo();
 			
 			// Set the header/breadcrumb 
-				$this->vars['cp_page_title'] = lang('br_promotion');
+				$this->vars['cp_page_title'] = lang('nav_br_promotion');
 			
 				$this->EE->cp->set_right_nav(array(
 					'br_new_promo' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_new'
@@ -1476,6 +1476,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			// Search Url for selecting individual products
 			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
+
+			$this->vars['cp_page_title'] = lang('nav_br_promotion');
 			
 			$this->vars["selected"] = 'promo';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
@@ -1527,6 +1529,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				header('location: '.$this->base_url.'&method=config_promo');
 			}
 			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
+
+			$this->vars['cp_page_title'] = lang('nav_br_promotion');
 			
 			$this->EE->cp->add_js_script(  array(
 									'ui' => 'accordion,datepicker' 
@@ -1641,7 +1645,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function report()
 		{
 			// Set the header/breadcrumb 
-				$this->vars['cp_page_title'] = lang('br_report');
+				$this->vars['cp_page_title'] = lang('nav_br_report');
 				
 			$list = array();
 			// Get the core reports
@@ -1699,7 +1703,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 
 			// Set the header/breadcrumb 
-				$this->vars['cp_page_title'] = lang('br_report');
+				$this->vars['cp_page_title'] = lang('nav_br_report');
 				$this->vars["selected"] = 'report';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -1764,23 +1768,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Configuration Tab 	*/
 	/************************/
 		
-		function config()
-		{
-			$this->vars['cp_page_title'] = lang('br_config');
-			// Set the selected menu
-			$this->vars["selected"] = 'config';
-			$this->vars["sub_selected"] = '';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-			$this->vars["content"] = '';
-			
-			return $this->EE->load->view('config/index', $this->vars, TRUE);
-		}
+		/* 
+		*	Config method is just a placeholder 
+		* 	to build our permissions array. 
+		*/
+		function config(){}
 		
 		function config_attribute()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_attribute');
+			$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
 			
 			$this->vars["attributes"] = (array)$this->EE->product_model->get_attributes();
 			// Set the selected menu
@@ -1876,7 +1872,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_attribute_edit()
 		{
 			$attribute_id = $this->EE->input->get('attribute_id');
-			$this->vars['cp_page_title'] = lang('br_config_attribute');
+			$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_by_id($attribute_id);
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_attribute';
@@ -1892,7 +1888,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_attributeset()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_attributeset');
+			$this->vars['cp_page_title'] = lang('nav_br_config_attributeset');
 
 			$this->vars["attributes"] = (array)$this->EE->product_model->get_attribute_sets();
 			
@@ -1913,7 +1909,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_attributeset_create()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_attributeset');
+			$this->vars['cp_page_title'] = lang('nav_br_config_attributeset');
 
 			$attribute_set_id = 0;
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_set_list($attribute_set_id);
@@ -1935,7 +1931,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_attributeset_edit()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_attributeset');
+			$this->vars['cp_page_title'] = lang('nav_br_config_attributeset');
 
 			$attribute_set_id = $this->EE->input->get('attribute_set_id');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_set_list($attribute_set_id);
@@ -1976,7 +1972,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_category()
 		{
 			// Set the selected menu
-			$this->vars['cp_page_title'] = lang('br_config_category');
+			$this->vars['cp_page_title'] = lang('nav_br_config_category');
 
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_category';
@@ -2004,7 +2000,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_category_edit()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_category');
+			$this->vars['cp_page_title'] = lang('nav_br_config_category');
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_category';
 			$cat = $this->EE->product_model->get_category($this->EE->input->get('cat_id'));
@@ -2138,7 +2134,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Check available templates against 
 			// templates in the DB for the site id
 				
-				$this->vars['cp_page_title'] = lang('br_config_email');
+				$this->vars['cp_page_title'] = lang('nav_br_config_email');
 				
 				$path = PATH_THIRD.'brilliant_retail/core/notifications';
 				$files = read_dir_files($path);
@@ -2216,7 +2212,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_feeds()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_feeds');
+			$this->vars['cp_page_title'] = lang('nav_br_config_feeds');
 			
 			$this->EE->cp->set_right_nav(array(
 				'br_new_config_feeds' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_feeds_edit'
@@ -2236,7 +2232,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_feeds_edit()
 		{		  
-			$this->vars['cp_page_title'] = lang('br_config_feeds');
+			$this->vars['cp_page_title'] = lang('nav_br_config_feeds');
 
   			// Load Libraries & Helpers
   				$this->EE->load->library( array('form_validation') );
@@ -2332,7 +2328,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_gateway()
 		{
 			// Set the selected menu
-				$this->vars['cp_page_title'] = lang('br_config_gateway');
+				$this->vars['cp_page_title'] = lang('nav_br_config_gateway');
 				$this->vars["selected"] = 'config';
 				$this->vars["sub_selected"] = 'config_gateway';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
@@ -2425,7 +2421,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_gateway_edit()
 		{
 			// Set the selected menu
-				$this->vars['cp_page_title'] = lang('br_config_gateway');
+				$this->vars['cp_page_title'] = lang('nav_br_config_gateway');
 				$this->vars["selected"] = 'config';
 				$this->vars["sub_selected"] = 'config_gateway';
 				
@@ -2515,7 +2511,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_permission()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_permission');
+			$this->vars['cp_page_title'] = lang('nav_br_config_permission');
 			
 			$this->vars["groups"] = $this->EE->access_model->get_member_groups();
 				
@@ -2531,7 +2527,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_permission_edit()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_permission');
+			$this->vars['cp_page_title'] = lang('nav_br_config_permission');
 			$group_id = $this->EE->input->get("group_id",true);
 			$this->vars["permissions"] = $this->_admin_permission_tree($group_id);
 			$this->vars["group"] = $this->EE->access_model->get_group_title($group_id);
@@ -2582,7 +2578,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			
 			// Set the selected menu
-				$this->vars['cp_page_title'] = lang('br_config_shipping');
+				$this->vars['cp_page_title'] = lang('nav_br_config_shipping');
 				$this->vars["selected"] = 'config';
 				$this->vars["sub_selected"] = 'config_shipping';
 
@@ -2697,7 +2693,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_shipping_edit()
 		{
 			// Set the selected menu
-				$this->vars['cp_page_title'] = lang('br_config_shipping');
+				$this->vars['cp_page_title'] = lang('nav_br_config_shipping');
 				$this->vars["selected"] = 'config';
 				$this->vars["sub_selected"] = 'config_shipping';
 				
@@ -2770,7 +2766,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_site()
 		{
-			$this->vars['cp_page_title'] = lang('br_config_site');
+			$this->vars['cp_page_title'] = lang('nav_br_config_site');
 			
 			// Load the accordion ui plugin
 			$this->EE->cp->add_js_script( array(
@@ -2838,7 +2834,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_tax()
 		{ 
-			$this->vars['cp_page_title'] = lang('br_config_tax');
+			$this->vars['cp_page_title'] = lang('nav_br_config_tax');
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_tax';
 			
@@ -2854,7 +2850,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_tax_new(){
 		
-			$this->vars['cp_page_title'] = lang('br_config_tax');
+			$this->vars['cp_page_title'] = lang('nav_br_config_tax');
 
 			// GET THE TAX ID 
 				$tax_id = 0;
@@ -2887,7 +2883,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_tax_edit(){
 		
-			$this->vars['cp_page_title'] = lang('br_config_tax');
+			$this->vars['cp_page_title'] = lang('nav_br_config_tax');
 
 			// GET THE TAX ID 
 				$tax_id = (int) $_GET["tax_id"];
@@ -3101,58 +3097,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			$tree .= '</ul>';
 			return $tree;
-		}
-		
-		function _create_admin_menu(){
-			
-			/* Create the primary menu */
-				$this->vars["menu"]["dashboard"] 	= $this->base_url.AMP.'method=dashboard';
-				if(isset($this->group_access["brilliant_retail"]["customer"])){
-					$this->vars["menu"]["customer"]		= $this->base_url.AMP.'method=customer';
-				}
-				if(isset($this->group_access["brilliant_retail"]["order"])){
-					$this->vars["menu"]["order"] 		= $this->base_url.AMP.'method=order';
-				}
-				if(isset($this->group_access["brilliant_retail"]["product"])){
-					$this->vars["menu"]["product"]		= $this->base_url.AMP.'method=product';
-				}
-				
-				if($this->_config["store"][$this->site_id]["subscription_enabled"] == 1){
-					if(isset($this->group_access["brilliant_retail"]["subscription"])){
-						$this->vars["menu"]["subscription"] = $this->base_url.AMP.'method=subscription';
-					}
-				}
-				
-				if(isset($this->group_access["brilliant_retail"]["promo"])){
-					$this->vars["menu"]["promo"]	= $this->base_url.AMP.'method=promo';
-				}
-				if(isset($this->group_access["brilliant_retail"]["report"])){
-					$this->vars["menu"]["report"]	= $this->base_url.AMP.'method=report';
-				}
-				if(isset($this->group_access["brilliant_retail"]["config"])){
-					$this->vars["menu"]["config"]	= $this->base_url.AMP.'method=config';
-			
-					/* Create the submenu for configuration */
-						
-						$config_subs = array(	'config_email',
-												'config_tax',
-												'config_gateway',
-												'config_shipping',
-											 	'config_tax',
-											 	'config_attribute',
-											 	'config_attributeset',
-											 	'config_category',
-											 	'config_site', 
-											 	'config_permission', 
-											 	'config_feeds'
-											 );
-						foreach($config_subs as $sub){
-							if(isset($this->group_access["brilliant_retail"][$sub])){
-								$this->vars["submenu"][$sub]= $this->base_url.AMP.'method='.$sub;
-							}
-						}						
-						ksort($this->vars["submenu"]);
-				}
 		}
 		
 		function _check_product_sku($data,$cnt=1)

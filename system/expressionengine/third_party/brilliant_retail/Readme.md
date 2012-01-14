@@ -28,3 +28,11 @@ Just some little notes for me. Since I'm the only one looking these days.
 ### State / Country
 
 * Need to update changes sent in ticket system
+
+
+
+
+
+# Changelog
+
+Removed _clean_search_term in favor of ExpressionEngine native sanitize_search_terms() method

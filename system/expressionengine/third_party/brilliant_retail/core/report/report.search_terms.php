@@ -26,7 +26,7 @@ class Report_search_terms extends Brilliant_retail_report {
 	public $title 	= 'Customer Searches';
 	public $descr 	= 'Search terms by customer and number of results returned';
 	public $category	= 'general'; #(Options: sales, customers, products, general)
-	public $version 	= 1.0;
+	public $version 	= '1.0';
 	public $date_range = '';
 
 	function get_report(){	

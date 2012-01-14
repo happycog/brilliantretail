@@ -21,6 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+include_once(PATH_THIRD.'brilliant_retail/mcp.brilliant_retail.php');
 
 class Brilliant_retail_ext {
 	
@@ -30,6 +31,10 @@ class Brilliant_retail_ext {
 	public $name			= 'Brilliant Retail';
 	public $settings_exist	= 'n';
 	public $version			= '1.0.4.5';
+	public $site_id 		= 1;
+	public $base_url 		= '';
+	public $nav_menu 		= array();
+	public $_config 		= array();
 	
 	/**
 	 * Constructor
@@ -40,6 +45,9 @@ class Brilliant_retail_ext {
 	{
 		$this->EE =& get_instance();
 		$this->settings = $settings;
+		
+		$this->site_id = $this->EE->config->item('site_id');				
+		$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module=brilliant_retail';
 	}// ----------------------------------------------------------------------
 	
 	/**
@@ -59,7 +67,7 @@ class Brilliant_retail_ext {
 		
 		$data[] = array(
 			'class'		=> __CLASS__,
-			'method'	=> 'br_hidden_channel_entries',
+			'method'	=> 'br_edit_entries_additional_where',
 			'hook'		=> 'edit_entries_additional_where',
 			'settings'	=> serialize($this->settings),
 			'version'	=> $this->version,
@@ -68,7 +76,7 @@ class Brilliant_retail_ext {
 		
 		$data[] = array(
 			'class'		=> __CLASS__,
-			'method'	=> 'br_hidden_channel_menu',
+			'method'	=> 'br_cp_menu_array',
 			'hook'		=> 'cp_menu_array',
 			'settings'	=> serialize($this->settings),
 			'version'	=> $this->version,
@@ -88,13 +96,42 @@ class Brilliant_retail_ext {
 	 * @param 
 	 * @return 
 	 */
-	public function br_hidden_channel_menu($menu)
+	public function br_cp_menu_array($menu)
 	{
+		$this->EE->lang->loadfile('brilliant_retail');
+		$this->EE->load->model('access_model');
+		$this->EE->load->model('core_model');
+		
+		$this->_config = $this->EE->core_model->get_config();
+
 		if ($this->EE->extensions->last_call !== FALSE)
 		{
 			$menu = $this->EE->extensions->last_call;
 		}
+		$group_id = $this->EE->session->userdata['group_id'];
 		
+		if($group_id == 1){
+			// We are going to give the super admin access to 
+			// all sections
+			$f = get_class_methods('Brilliant_retail_mcp');
+			foreach($f as $m){
+				if(substr($m,0,1) != '_' && $m != 'index'){
+					$this->group_access['brilliant_retail'][$m] = $m;
+				}
+			}
+		}else{
+			$this->group_access = $this->EE->access_model->get_admin_access($group_id);
+		}
+		
+
+		$this->_create_admin_menu();
+				
+		$tmp["br_store"] = $this->nav_menu;
+		
+		foreach($menu as $key => $val){
+			$tmp[$key] = $val;
+		}
+		$menu = $tmp;
 		// Get the channel_titles
 		
 			$arr = $this->_get_channels();
@@ -110,13 +147,17 @@ class Brilliant_retail_ext {
 					$titles[] = $row->channel_title;
 				}
 			}
-			
+
 		// Loop through and unset any BrilliantRetail Channel 
 		// Publish or Edit links
 			foreach($menu["content"]["publish"] as $key => $val){
 				if(in_array($key,$titles)){
 					unset($menu["content"]["publish"][$key]);
-					unset($menu["content"]["edit"][$key]);
+					if(is_array($menu["content"]["edit"])){
+						if(isset($menu["content"]["edit"][$key])){
+							unset($menu["content"]["edit"][$key]);
+						}
+					}
 				}
 			}
 		return $menu;
@@ -128,11 +169,11 @@ class Brilliant_retail_ext {
 	 * @param 
 	 * @return 
 	 */
-	public function br_hidden_channel_entries()
+	public function br_edit_entries_additional_where()
 	{
-		#$arr = $this->_get_channels();
-		#$filter['channel_id !='] = $arr;
-		#return $filter;
+		$arr = $this->_get_channels();
+		$filter['channel_id !='] = $arr;
+		return $filter;
 	}
 	
 	// ----------------------------------------------------------------------
@@ -184,6 +225,67 @@ class Brilliant_retail_ext {
 		}
 		return $arr;
 	}
+	
+	
+	function _create_admin_menu(){
+			
+	/* Create the primary menu */
+		$this->nav_menu["br_dashboard"] 	= $this->base_url.AMP.'method=dashboard';
+		$this->nav_menu[] = "----";
+					
+		if(isset($this->group_access["brilliant_retail"]["customer"])){
+			$this->nav_menu["br_customer"]		= $this->base_url.AMP.'method=customer';
+		}
+		if(isset($this->group_access["brilliant_retail"]["order"])){
+			$this->nav_menu["br_order"] 		= $this->base_url.AMP.'method=order';
+		}
+		if(isset($this->group_access["brilliant_retail"]["product"])){
+			$this->nav_menu["br_product"]		= $this->base_url.AMP.'method=product';
+		}
+		
+		if($this->_config["store"][$this->site_id]["subscription_enabled"] == 1){
+			if(isset($this->group_access["brilliant_retail"]["subscription"])){
+				$this->nav_menu["subscription"] = $this->base_url.AMP.'method=subscription';
+			}
+		}
+	
+		if(isset($this->group_access["brilliant_retail"]["promo"])){
+			$this->nav_menu["br_promo"]	= $this->base_url.AMP.'method=promo';
+		}
+
+		if(isset($this->group_access["brilliant_retail"]["report"])){
+			$this->nav_menu["br_report"]	= $this->base_url.AMP.'method=report';
+		}
+		if(isset($this->group_access["brilliant_retail"]["config"])){
+	
+			/* Create the submenu for configuration */
+				
+				$config_subs = array(	'config_attribute',
+									 	'config_attributeset',
+									 	'config_category',
+									 	'config_gateway',
+										'config_email',
+										'config_permission', 
+									 	'config_feeds', 
+										'config_shipping',
+									 	'config_site', 
+									 	'config_tax'
+									 );
+				foreach($config_subs as $sub){
+					if(isset($this->group_access["brilliant_retail"][$sub])){
+						$c['br_'.$sub] = $this->base_url.AMP.'method='.$sub;
+					}
+				}
+				if(isset($c)){
+					$this->nav_menu[] = "----";
+					foreach($c as $key => $val){
+						$this->nav_menu["br_config"][$key] = $val;
+					}
+				}						
+				#ksort($this->nav_menu["config"]);
+		}
+}
+	
 	// ----------------------------------------------------------------------
 }
 

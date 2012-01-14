@@ -26,7 +26,7 @@ class Report_low_stock extends Brilliant_retail_report {
 	public $title 		= 'Low Stock Warning';
 	public $descr 		= 'Lists low stock for products';
 	public $category	= 'products'; #(Options: sales, customers, products, general)
-	public $version 	= .5;
+	public $version 	= '0.5';
 	public $date_range 	= '';
 
 	function get_report(){	

@@ -51,22 +51,50 @@
 							</div>
 					<?php
 						$tabs = array(
-										'details' 		=> $tab_detail,
-										'attributes' 	=> $tab_attributes,
-										'pricing' 		=> $tab_price,
-										'sale_pricing' 	=> $tab_sale_price,
-										'categories' 	=> $tab_category,
-										'images' 		=> $tab_image,
-										'options' 		=> $tab_option,
-										#'addon' 		=> $tab_addon, // Not quite ready for prime time - dpd
-										'related' 		=> $tab_related,
-										'seo' 			=> $tab_seo,
-										'feed' 			=> $tab_feed
+										'br_publish' 	=> array(
+															'details' 		=> $tab_detail,
+															'attributes' 	=> $tab_attributes,
+															'images' 		=> $tab_image,
+															'options' 		=> $tab_option 
+														),
+										'br_price' 		=> array(
+																'pricing' 		=> $tab_price,
+																'sale_pricing' 	=> $tab_sale_price,
+														),
+										'br_categories'	=> array(
+																'categories' 	=> $tab_category,
+															),
+										'br_related' 	=> array(
+																#'addon' 		=> $tab_addon, // Not quite ready for prime time - dpd
+																'related' 		=> $tab_related,
+															), 				
+										'br_seo' 	=> array(
+																'seo' 			=> $tab_seo,
+																'feed' 			=> $tab_feed
+															) 				
 										);
+						
+						echo '<ul class="tab_menu" id="tab_menu_tabs">';
 						foreach($tabs as $key=>$val){
-							echo $val;
-							echo '<p>&nbsp;</p>';
+							echo '	<li id="menu_d" title="'.$key.'" class="content_tab">
+										<a href="#" title="menu_'.$key.'" class="menu_'.$key.'">'.lang($key).'</a>&nbsp;
+									</li>';							
 						}
+						echo '</ul>
+								<div class="holder">';
+						$i = 0;
+						foreach($tabs as $key=>$val){
+							$js_hide = ($i != 0) ? 'js_hide' : '' ; 
+							echo '<div class="main_tab '.$js_hide.'" id="'.$key.'">';
+							foreach($val as $k=>$v){
+								echo $v;
+								echo '<p>&nbsp;</p>';
+							}
+							echo '</div>';
+							$i++;
+						}
+							echo '<p>&nbsp;</p>';
+						echo '</div>';
 					?>
 							<div class="b2r_clearboth"><!-- --></div>
 			    			<div id="header_buttons">

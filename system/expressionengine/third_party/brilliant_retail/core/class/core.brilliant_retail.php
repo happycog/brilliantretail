@@ -999,20 +999,6 @@ class Brilliant_retail_core {
 		return $hits;
 	}
 	
-	function _clean_search_term($term){
-		$term = strip_tags($term);
-		$term = preg_replace("/[^ A-Za-z0-9_-]/"," ",$term);
-		$parts = explode(" ",$term);
-		$newterm = '';
-		foreach($parts as $p){
-			#if(strlen($p) >= 3){
-				$newterm .= $p.' ';
-			#}
-		}
-		$newterm = trim($newterm);
-		return $newterm;
-	}
-	
 	function _payment_options($osc_enabled = true,$tax=0,$shipping=0){
 		$output = '';
 		$this->EE->load->model('product_model'); 

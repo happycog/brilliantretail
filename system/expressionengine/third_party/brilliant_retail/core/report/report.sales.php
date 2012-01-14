@@ -26,7 +26,7 @@ class Report_sales extends Brilliant_retail_report {
 	public $title 	= 'General Sales';
 	public $descr 	= 'General sales report for orders over a given time period';
 	public $category	= 'sales'; #(Options: sales, customers, products, general)
-	public $version 	= .5;
+	public $version 	= '0.5';
 	public $date_range = '';
 
 	function get_report(){	

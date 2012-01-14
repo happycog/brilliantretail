@@ -214,7 +214,7 @@ hr {
 #b2r_content #b2r_botleft {
 	position: absolute;
 	bottom: 0;
-	left: 0;
+	left: 5px;
 	margin: 0;
 	padding: 12px 0 0 9px;
 	width: 193px;
@@ -232,14 +232,14 @@ hr {
 
 #b2r_content #b2r_botleft p#b2r_botleft_version {
 	float: left;
-	margin: 5px 0 0 7px;
+	margin: 4px 0 0 6px;
 	padding: 0;
 	width: 40px;
 	height: 13px;
 	overflow: hidden;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 8px;
-	color: #89999f;
+	font-size: 9px;
+	color: #FFF;
 	font-weight: bold;
 	text-align: center;
 	line-height: 13px; }
@@ -365,7 +365,7 @@ hr {
 
 
 #b2r_main {
-	margin: 0 0 0 203px;
+	margin: 0;
 	padding: 0;
 	zoom: 1; }
 
@@ -1509,7 +1509,7 @@ table.b2r_bar td img {
 #b2r_settings {
 	background: #ECF1F4;
 	margin: 0;
-	padding: 0;
+	padding: 0 0 30px;
 }
 
 #b2r_settings textarea {
@@ -1988,7 +1988,7 @@ input#delete {
 	border: solid #D0D7DF;
 	border-width: 0 0 0 1px;
 	border-spacing: 0;
-	width: 400px;
+	width: 100%;
 	margin-bottom: 10px;
 }
 

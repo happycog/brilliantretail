@@ -21,6 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+/*
 ?>
 <div id="b2r_sidebar">
 	<div class="b2r_menu">
@@ -42,3 +43,5 @@
     </div>
     <div class="b2r_submenu_bot"><!-- --></div>
 </div> <!-- b2r_sidebar -->
+*/
+?>

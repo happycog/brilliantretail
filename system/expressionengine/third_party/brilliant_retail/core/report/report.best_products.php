@@ -26,7 +26,7 @@ class Report_best_products extends Brilliant_retail_report {
 	public $title 		= 'Products Best Sellers';
 	public $descr 		= 'Lists the best selling products and earnings to-date by each product';
 	public $category	= 'products'; #(Options: sales, customers, products, general)
-	public $version 	= 1.0;
+	public $version 	= '1.0';
 	public $date_range 	= '';
 
 	function get_report(){	

@@ -127,18 +127,29 @@
 										'title' => lang('br_details').' - '.lang('br_quantity'))
 								)?></td>
 		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><?=lang('br_taxable')?></label>
-				<br />
-				<?=form_dropdown(	
+</table>		
+
+
+				<div class="publish_field" id="hold_br_taxable">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('br_taxable')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_cost">
+						<fieldset class="holder">
+							<?=form_dropdown(	
 									'taxable', 
 									array(	1 => lang('br_yes'), 
 											0 => lang('br_no')), 
 									$products[0]["taxable"])
-								?></td>
-		</tr>
-</table>		
+								?>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
 
 
 				<div class="publish_field" id="hold_br_cost">

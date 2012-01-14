@@ -2758,12 +2758,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 		function search()
 		{
+			// Load native EE helper to sanitize search term
+				$this->EE->load->helper('search');
+		
 			// Set the return location 
 				$return = ($this->EE->TMPL->fetch_param('return')) ? ($this->EE->TMPL->fetch_param('return')) : 'catalog/result';
 			
 			// Get the product search collection
 				$term = ($this->EE->TMPL->fetch_param('term')) ? $this->EE->TMPL->fetch_param('term') : $this->EE->input->post('search', TRUE);
-				$term = $this->_clean_search_term($term);
+				
+				$term = sanitize_search_terms($term);
+				
 				$hits = $this->_search_index($term);
 				$hash = sha1(time().$term);
 				$i=0;

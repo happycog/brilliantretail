@@ -26,7 +26,7 @@ class Report_coupons extends Brilliant_retail_report {
 	public $title 	= 'Coupon Usage';
 	public $descr 	= 'Coupon usage report for orders over a given time period';
 	public $category	= 'sales'; #(Options: sales, customers, products, general)
-	public $version 	= .5;
+	public $version 	= '0.5';
 	public $date_range = '';
 
 	function get_report(){	
