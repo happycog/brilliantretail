@@ -29,10 +29,9 @@ Just some little notes for me. Since I'm the only one looking these days.
 
 * Need to update changes sent in ticket system
 
-
-
-
-
 # Changelog
 
 Removed _clean_search_term in favor of ExpressionEngine native sanitize_search_terms() method
+Updated model > order_model > get_order_collection method with proper left join to remove existing member requirement. 
+Updated model > order_model > get_order with proper right join to remove existing member requirement. 
+Updated model > order_model > create_shipment/create_order_address/create_order_download/create_order_payment/create_order_item to return insert_id

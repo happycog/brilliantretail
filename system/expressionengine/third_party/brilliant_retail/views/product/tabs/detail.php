@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@copyright	Copyright (c) 2011-2012, Brilliant2.com		*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -129,7 +129,6 @@
 		</tr>
 </table>		
 
-
 				<div class="publish_field" id="hold_br_taxable">
 
 					<label class="hide_field">
@@ -185,133 +184,68 @@
 
 				<div id="sub_hold_field_<?=$c["settings"]['field_id']?>">
 										
-										<?php if($c["settings"]['field_instructions'] != ''):?>
-											<div class="instruction_text">
-												<?=auto_typography('<strong>'.$this->lang->line('instructions').'</strong>'.NBS.$c["settings"]['field_instructions'])?>
-											</div>
-										<?php endif;?>
-										
-										<fieldset class="holder">
-											<?=isset($c["settings"]['string_override']) ? $c["settings"]['string_override'] : $c["display_field"]?>
-											<?=form_error($c["settings"]["field_name"])?>
+							<?php if($c["settings"]['field_instructions'] != ''):?>
+								<div class="instruction_text">
+									<?=auto_typography('<strong>'.$this->lang->line('instructions').'</strong>'.NBS.$c["settings"]['field_instructions'])?>
+								</div>
+							<?php endif;?>
+							
+							<fieldset class="holder">
+								<?=isset($c["settings"]['string_override']) ? $c["settings"]['string_override'] : $c["display_field"]?>
+								<?=form_error($c["settings"]["field_name"])?>
 
-										<?php if ($c["settings"]['has_extras']): ?>
-											<p class="spellcheck markitup">
+							<?php if ($c["settings"]['has_extras']): ?>
+								<p class="spellcheck markitup">
 
-												<?php if ($c["settings"]['field_show_writemode'] == 'y'):?>
-													<a href="#" class="write_mode_trigger" id="id_<?=$c["settings"]['field_id']?>" title="<?=lang('write_mode')?>"><img alt="<?=lang('write_mode')?>" width="22" height="21" src="<?=$cp_theme_url?>images/publish_write_mode.png" /></a> 
-												<?php endif;?>
+									<?php if ($c["settings"]['field_show_writemode'] == 'y'):?>
+										<a href="#" class="write_mode_trigger" id="id_<?=$c["settings"]['field_id']?>" title="<?=lang('write_mode')?>"><img alt="<?=lang('write_mode')?>" width="22" height="21" src="<?=$cp_theme_url?>images/publish_write_mode.png" /></a> 
+									<?php endif;?>
 
-												<?php if ($c["settings"]['field_show_file_selector'] == 'y' && count($file_list) > 0):?>
-													<a href="#" class="markItUpButton">
-													<img class="file_manipulate js_show" src="<?=$cp_theme_url?>images/publish_format_picture.gif" alt="<?=lang('file')?>" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-												<?php endif;?>
+									<?php if ($c["settings"]['field_show_file_selector'] == 'y' && count($file_list) > 0):?>
+										<a href="#" class="markItUpButton">
+										<img class="file_manipulate js_show" src="<?=$cp_theme_url?>images/publish_format_picture.gif" alt="<?=lang('file')?>" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<?php endif;?>
 
-												<?php if($spell_enabled && $c["settings"]['field_show_spellcheck'] == 'y'):?>
-													<a href="#" class="spellcheck_link" id="spelltrigger_<?=(ctype_digit($c["settings"]['field_id']))?'field_id_':''?><?=$c["settings"]['field_id']?>" title="<?=lang('check_spelling')?>"><img src="<?=$cp_theme_url.'images/spell_check_icon.png'?>" style="margin-bottom: -8px;" alt="<?=lang('check_spelling')?>" /></a>
-												<?php endif;?>
+									<?php if($spell_enabled && $c["settings"]['field_show_spellcheck'] == 'y'):?>
+										<a href="#" class="spellcheck_link" id="spelltrigger_<?=(ctype_digit($c["settings"]['field_id']))?'field_id_':''?><?=$c["settings"]['field_id']?>" title="<?=lang('check_spelling')?>"><img src="<?=$cp_theme_url.'images/spell_check_icon.png'?>" style="margin-bottom: -8px;" alt="<?=lang('check_spelling')?>" /></a>
+									<?php endif;?>
 
-												<?php if($c["settings"]['field_show_glossary'] == 'y'):?>
-													<a href="#" class="glossary_link" title="<?=lang('glossary')?>"><img src="<?=$cp_theme_url.'images/spell_check_glossary.png'?>" style="margin-bottom: -8px;" alt="<?=lang('glossary')?>" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-												<?php endif;?>
+									<?php if($c["settings"]['field_show_glossary'] == 'y'):?>
+										<a href="#" class="glossary_link" title="<?=lang('glossary')?>"><img src="<?=$cp_theme_url.'images/spell_check_glossary.png'?>" style="margin-bottom: -8px;" alt="<?=lang('glossary')?>" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<?php endif;?>
 
-												<?php if ($smileys_enabled && $c["settings"]['field_show_smileys'] == 'y'):?>
-													<a href="#" class="smiley_link" title="<?=lang('emoticons')?>"><?=lang('emoticons')?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-												<?php endif;?>
-												
-												<?php if ($c["settings"]['field_show_fmt'] == 'y' && count($c["settings"]['field_fmt_options']) > 0):?>
-													<?=lang('formatting')?>
-													<?=form_dropdown('field_ft_'.$c["settings"]['field_id'], $c["settings"]['field_fmt_options'], $c["settings"]['field_fmt'])?> 
-												<?php endif;?>
+									<?php if ($smileys_enabled && $c["settings"]['field_show_smileys'] == 'y'):?>
+										<a href="#" class="smiley_link" title="<?=lang('emoticons')?>"><?=lang('emoticons')?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<?php endif;?>
+									
+									<?php if ($c["settings"]['field_show_fmt'] == 'y' && count($c["settings"]['field_fmt_options']) > 0):?>
+										<?=lang('formatting')?>
+										<?=form_dropdown('field_ft_'.$c["settings"]['field_id'], $c["settings"]['field_fmt_options'], $c["settings"]['field_fmt'])?> 
+									<?php endif;?>
 
-											</p>
+								</p>
 
-											<?php if($spell_enabled && $c["settings"]['field_show_spellcheck'] == 'y'):
-												echo build_spellcheck($c["settings"]["field_name"]);
-											endif;?>
+								<?php if($spell_enabled && $c["settings"]['field_show_spellcheck'] == 'y'):
+									echo build_spellcheck($c["settings"]["field_name"]);
+								endif;?>
 
-											<?php if($c["settings"]['field_show_glossary'] == 'y'):
-												echo $glossary_items;
-											endif;?>
-											<?php if(isset($c["settings"]['smiley_table'])):
-												echo $c["settings"]['smiley_table'];
-											endif;?>
-										<?php endif; ?>
-										
-										</fieldset>
-	
-									</div> <!-- /sub_hold_field -->
+								<?php if($c["settings"]['field_show_glossary'] == 'y'):
+									echo $glossary_items;
+								endif;?>
+								<?php if(isset($c["settings"]['smiley_table'])):
+									echo $c["settings"]['smiley_table'];
+								endif;?>
+							<?php endif; ?>
+							
+							</fieldset>
+
+						</div> <!-- /sub_hold_field -->
 				</div>
-<?php
-/*				
-				
-				
-				
-				echo '	<p>&nbsp;</p>
-						<table cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
-							<tr>
-								<th>'.$c["settings"]["field_label"].'</th>
-							</tr>';
-				if($c["settings"]["field_instructions"] != ""){
-					echo '	<tr>
-								<td class="custom_field">'.$c["settings"]["field_instructions"].'</td>
-							</tr>';
-				}			
-					
-				echo '		<tr>
-								<td class="custom_field publish_field" id="hold_field_'.$c["settings"]["field_id"].'">'.$c["display_field"];
-?>
 
-				<p class="spellcheck markitup">
-
-					<?php if ($c["settings"]['field_show_writemode'] == 'y'):?>
-						<a href="#" class="write_mode_trigger" id="id_<?=$c["settings"]['field_id']?>" title="<?=lang('write_mode')?>"><img alt="<?=lang('write_mode')?>" width="22" height="21" src="<?=$cp_theme_url?>images/publish_write_mode.png" /></a> 
-					<?php endif;?>
-					
-					<?php if ($c["settings"]['field_show_file_selector'] == 'y' && count($file_list) > 0):?>
-						<a href="#" class="markItUpButton">
-						<img class="file_manipulate js_show" src="<?=$cp_theme_url?>images/publish_format_picture.gif" alt="<?=lang('file')?>" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<?php endif;?>
-					
-					<?php if($spell_enabled && $c["settings"]['field_show_spellcheck'] == 'y'):?>
-						<a href="#" class="spellcheck_link" id="spelltrigger_<?=(ctype_digit($c["settings"]['field_id']))?'field_id_':''?><?=$c["settings"]['field_id']?>" title="<?=lang('check_spelling')?>"><img src="<?=$cp_theme_url.'images/spell_check_icon.png'?>" style="margin-bottom: -8px;" alt="<?=lang('check_spelling')?>" /></a>
-					<?php endif;?>
-					
-					<?php if($c["settings"]['field_show_glossary'] == 'y'):?>
-						<a href="#" class="glossary_link" title="<?=lang('glossary')?>"><img src="<?=$cp_theme_url.'images/spell_check_glossary.png'?>" style="margin-bottom: -8px;" alt="<?=lang('glossary')?>" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<?php endif;?>
-					
-					<?php if ($smileys_enabled && $c["settings"]['field_show_smileys'] == 'y'):?>
-						<a href="#" class="smiley_link" title="<?=lang('emoticons')?>"><?=lang('emoticons')?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<?php endif;?>
-					
-					<?php if ($c["settings"]['field_show_fmt'] == 'y' && count($c["settings"]['field_fmt_options']) > 0):?>
-						<?=lang('formatting')?>
-						<?=form_dropdown('field_ft_'.$c["settings"]['field_id'], $c["settings"]['field_fmt_options'], $c["settings"]['field_fmt'])?> 
-					<?php endif;?>
-					
-					</p>
-					
-					<?php if($spell_enabled && $c["settings"]['field_show_spellcheck'] == 'y'):
-					echo build_spellcheck($c["settings"]["field_name"]);
-					endif;?>
-					
-					<?php if($c["settings"]['field_show_glossary'] == 'y'):
-					echo $glossary_items;
-					endif;?>
-					<?php if(isset($c["settings"]['smiley_table'])):
-					echo $c["settings"]['smiley_table'];
-					endif;?>
 		<?php
-			echo '				</td>
-							</tr>
-						</table>';
-			
-		*/
 			}
-		
 		?>
-
+<div><!-- End Cap !--></div>
 <script type="text/javascript">
 	$(function(){
 		<?php

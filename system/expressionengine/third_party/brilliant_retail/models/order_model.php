@@ -27,16 +27,42 @@ class Order_model extends CI_Model {
 	function get_order($order_id){
 		$this->load->model('customer_model');
 		$order = array();
-		$this->db->select('o.*,m.*');
+		
+		// Seems a little odd but we are going to get the order address information 
+		// first. This is so we can use the billing address as the static information 
+		// if the member_id no longer exists
+		
+			$this->db->select('*');
+			$this->db->from('br_order_address');
+			$this->db->where('order_id',$order_id);
+			$query = $this->db->get();
+			$i = 0;
+			foreach($query->result_array() as $val){
+				$order['address'][$i] = $val;	
+				$i++;
+			}
+		
+		$this->db->select('o.*');
 		$this->db->from('br_order o');
-		$this->db->join('members m', 'o.member_id = m.member_id');
 		$this->db->where('o.order_id = '.$order_id);
 		$query = $this->db->get();
 		foreach($query->result_array() as $val){
 			$member = $this->customer_model->get_customer_profile($val["member_id"]);
-			$order = $val;
-			$order["member"] = $member;
+			$order = array_merge($order,$val);
+			if($member){
+				$order["member"] = $member;
+			}else{
+				// The member_id no longer exists so lets 
+				// do some static magic
+					$order["member"] = array(
+											'br_fname' 			=> $order['address'][0]['billing_fname'],
+											'br_lname' 			=> $order['address'][0]['billing_lname'],
+											'email'				=> '', 
+											'photo_filename' 	=> '' 
+											);
+			}
 		}
+
 		$this->db->select('	oi.*,
 							opts.options as opts,
 							opts.order_item_option_id');
@@ -50,21 +76,13 @@ class Order_model extends CI_Model {
 			$order['items'][$i] = $val;	
 			$i++;
 		}
-		$this->db->select('*');
-		$this->db->from('br_order_address');
-		$this->db->where('order_id',$order_id);
-		$query = $this->db->get();
-		$i = 0;
-		foreach($query->result_array() as $val){
-			$order['address'][$i] = $val;	
-			$i++;
-		}
 		// Get payment info
 			$this->db->select('*');
 			$this->db->from('br_order_payment');
 			$this->db->where('order_id',$order_id);
 			$query = $this->db->get();
 			$i = 0;
+			$order["payment"] = array(); 
 			foreach($query->result_array() as $val){
 				$order["payment"][$i] = $val;
 				$i++;
@@ -76,6 +94,7 @@ class Order_model extends CI_Model {
 			$this->db->where('order_id',$order_id);
 			$query = $this->db->get();
 			$i = 0;
+			$order["shipment"] = array();
 			foreach($query->result_array() as $val){
 				$order["shipment"][$i] = $val;
 				$i++;
@@ -146,6 +165,7 @@ class Order_model extends CI_Model {
 						o.order_id,
 						o.created, 
 						CONCAT(d.".$fl_fname.", ' ', d.".$fl_lname.") as customer,  
+						CONCAT(a.billing_fname, ' ', a.billing_lname) as billing_customer, 
 						(o.base + o.shipping + o.tax - o.discount) as total,
 						o.status_id,
 						o.base,
@@ -154,17 +174,22 @@ class Order_model extends CI_Model {
 						o.discount,
 						o.member_id  
 					FROM 
-						".$prefix."br_order o,
-						".$prefix."member_data d, 
-						".$prefix."members m  						
-					WHERE 
-						o.member_id = d.member_id 
-					AND 
+						".$prefix."br_order_address a,  
+						".$prefix."br_order o  
+					LEFT JOIN
+						".$prefix."members m  
+							ON 
 						o.member_id = m.member_id 
-					AND 
+					LEFT JOIN					
+						".$prefix."member_data d 
+							ON 
+						o.member_id = d.member_id 
+					WHERE 
 						o.site_id = ".$this->config->item('site_id')." 
 					AND 
-						o.status_id >= 0 ";
+						o.status_id >= 0 
+					AND 
+						o.order_id = a.order_id ";
 			
 			if($start_date != ''){
 				$start_date = date("U",strtotime(date("Y-n-d 00:00:00",strtotime($start_date))));
@@ -182,7 +207,11 @@ class Order_model extends CI_Model {
 									|| 
 								d.".$fl_fname." LIKE '%".$search."%' 
 									|| 
-								d.".$fl_lname." LIKE '%".$search."%' )";	
+								d.".$fl_lname." LIKE '%".$search."%'
+									||
+								a.billing_fname LIKE '%".$search."%' 
+									|| 
+								a.billing_lname  LIKE '%".$search."%' )";	
 			}
 			
 			$sql .= " ORDER BY ".($sort+1)." ".$dir;
@@ -190,7 +219,7 @@ class Order_model extends CI_Model {
 			if($limit != 0){
 				$sql .= " LIMIT ".$offset.",".$limit;
 			}
-		
+
 		// Run the sql
 			$query = $this->db->query($sql);
 			$rst = $query->result_array();
@@ -380,29 +409,32 @@ class Order_model extends CI_Model {
 	
 	function create_order($order){
 		$this->db->insert('br_order',$order);
-		// Grab the order id
-		$order_id = $this->db->insert_id();
-		return $order_id;
+		return $this->db->insert_id();
 	}
 	
 	function create_shipment($data){
 		$this->db->insert('br_order_ship',$data);
+		return $this->db->insert_id();
 	}
 	
 	function create_order_address($address){
 		$this->db->insert('br_order_address',$address);
+		return $this->db->insert_id();
 	}
 
 	function create_order_download($download){
 		$this->db->insert('br_order_download',$download);
+		return $this->db->insert_id();
 	}
 
 	function create_order_payment($payment){
 		$this->db->insert('br_order_payment',$payment);
+		return $this->db->insert_id();
 	}
 
 	function create_order_item($item){
 		$this->db->insert('br_order_item',$item);
+		return $this->db->insert_id();
 	}
 	
 	function reduce_item_inventory($item){

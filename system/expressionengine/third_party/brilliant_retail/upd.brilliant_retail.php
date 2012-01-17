@@ -4429,6 +4429,16 @@ class Brilliant_retail_upd {
 					UNIQUE KEY hash (hash)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
+	
+	$sql[] = "	INSERT INTO exp_extensions  
+					(class,method,hook,settings,priority,version,enabled) 
+				VALUES
+					('Brilliant_retail_ext', 'br_edit_entries_additional_where', 'edit_entries_additional_where', '', '10', '".$this->version."', 'y')";
+	$sql[] = "	INSERT INTO exp_extensions  
+					(class,method,hook,settings,priority,version,enabled) 
+				VALUES
+					('Brilliant_retail_ext', 'br_cp_menu_array', 'cp_menu_array', '', '10', '".$this->version."', 'y')";
+
 		foreach ($sql as $query)
 		{
 			$this->EE->db->query($query);

@@ -241,10 +241,19 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// Build the row array 
 				foreach ($orders["results"] as $row){
+					
+					// Customer can be a member but we want to 
+					// handle the instance where the member has 
+					// been deleted better so the model returns 
+					// the billing_fname/lname as well in cases
+					// where the customer response is Null
+						$customer = ($row["customer"] != null) ? '<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>' : $row["billing_customer"];
+											
 						$status = $this->_config["status"][$row["status_id"]];
+					
 						$order[] = array('	<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$row["order_id"].'">'.$row["order_id"].'</a>', 
 											date('n/d/y',$row["created"]),
-											'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
+											$customer, 
 											$row["total"],
 											'<span class="order_status_'.$row["status_id"].'">'.$status.'</span>',
 											'<input type="checkbox" name="batch['.$row["order_id"].']" />'
@@ -280,8 +289,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["status"] = $this->_config["status"];			
 				$this->vars['order'] = $this->EE->order_model->get_order($order_id);
 				// Do we have a user photo?
-					if($this->vars['order']['photo_filename'] != ''){
-						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['photo_filename'].'" />';
+					if($this->vars['order']['member']['photo_filename'] != ''){
+						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['member']['photo_filename'].'" />';
 					}else{
 						$this->vars['member_photo'] = '<img src="'.$this->_config["media_url"].'images/profile-pic.jpg" />';
 					}

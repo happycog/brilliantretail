@@ -50,9 +50,17 @@
         						<td>
 									<p>
 										<b><?=$order["address"][0]["shipping_fname"]?> <?=$order["address"][0]["shipping_lname"]?></b><br />
+										<?=$order["address"][0]["shipping_company"]?><br />
 										<?=$order["address"][0]["shipping_address1"]?><br />
-										<?=$order["address"][0]["shipping_address2"]?><br />
-										<?=$order["address"][0]["shipping_city"]?>, <?=$order["address"][0]["shipping_state"]?> <?=$order["address"][0]["shipping_zip"]?>
+										<?php 
+											if(trim($order["address"][0]["shipping_address2"]) != '')
+											{
+												echo $order["address"][0]["shipping_address2"].'<br />';
+											}
+										?>
+										<?=$order["address"][0]["shipping_city"]?>, <?=$order["address"][0]["shipping_state"]?> <?=$order["address"][0]["shipping_zip"]?><br />
+										<?=$order["address"][0]["shipping_country"]?><br />
+										<?=$order["address"][0]["shipping_phone"]?>
 									</p></td>
         					</tr>
         				</table></td>
@@ -66,9 +74,17 @@
         						<td>
 									<p>
 										<b><?=$order["address"][0]["billing_fname"]?> <?=$order["address"][0]["billing_lname"]?></b><br />
+										<?=$order["address"][0]["billing_company"]?><br />
 										<?=$order["address"][0]["billing_address1"]?><br />
-										<?=$order["address"][0]["billing_address2"]?><br />
-										<?=$order["address"][0]["billing_city"]?>, <?=$order["address"][0]["billing_state"]?> <?=$order["address"][0]["billing_zip"]?>
+										<?php 
+											if(trim($order["address"][0]["billing_address2"]) != '')
+											{
+												echo $order["address"][0]["billing_address2"].'<br />';
+											}
+										?>
+										<?=$order["address"][0]["billing_city"]?>, <?=$order["address"][0]["billing_state"]?> <?=$order["address"][0]["billing_zip"]?><br />
+										<?=$order["address"][0]["billing_country"]?><br />
+										<?=$order["address"][0]["billing_phone"]?>
 									</p></td>
         					</tr>
         				</table></td>

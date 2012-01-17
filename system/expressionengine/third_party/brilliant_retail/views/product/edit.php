@@ -64,11 +64,11 @@
 										'br_categories'	=> array(
 																'categories' 	=> $tab_category,
 															),
-										'br_related' 	=> array(
+										'br_crosssell' 	=> array(
 																#'addon' 		=> $tab_addon, // Not quite ready for prime time - dpd
 																'related' 		=> $tab_related,
 															), 				
-										'br_seo' 	=> array(
+										'br_seo' 		=> array(
 																'seo' 			=> $tab_seo,
 																'feed' 			=> $tab_feed
 															) 				
@@ -96,22 +96,19 @@
 							echo '<p>&nbsp;</p>';
 						echo '</div>';
 					?>
-							<div class="b2r_clearboth"><!-- --></div>
-			    			<div id="header_buttons">
-								<?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
-								<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
+							<ul id="publish_submit_buttons">
+								<li><?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?></li>
+								<li><?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?></li>
 								<?php 
 									if($products[0]["product_id"] != 0){ 
 								?>
-										<?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?>
-										<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
+									<li><?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?></li>
+									<li><?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?></li>
 								<?php
 									}
 								?>
-								<div class="b2r_clearboth"><!-- --></div>
-							</div>
-							<p>&nbsp;</p>
-					</div> <!-- b2r_dashboard --> 
+							</ul>
+						</div> <!-- b2r_dashboard --> 
                 </div> <!-- b2r_panel_int -->
 				<div class="b2r_clearboth"><!-- --></div>
             </div> <!-- b2r_panel -->

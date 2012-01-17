@@ -45,7 +45,7 @@
                             	echo 	$member_photo. 
                             			'<h5>'.$order["member"]["br_fname"].' '.$order["member"]["br_lname"].'
                             			<br />
-										<span><a href="mailto:'.$order["email"].'">'.$order["email"].'</a></span></h5>';
+										<span><a href="mailto:'.$order["member"]["email"].'">'.$order["member"]["email"].'</a></span></h5>';
 							?>
                             </div>
                         	<div id="order_status_id">
@@ -91,9 +91,15 @@
 															<b><?=$order["address"][0]["shipping_fname"]?> <?=$order["address"][0]["shipping_lname"]?></b><br />
 															<?=$order["address"][0]["shipping_company"]?><br />
 															<?=$order["address"][0]["shipping_address1"]?><br />
-															<?=$order["address"][0]["shipping_address2"]?><br />
+															<?php 
+																if(trim($order["address"][0]["shipping_address2"]) != '')
+																{
+																	echo $order["address"][0]["shipping_address2"].'<br />';
+																}
+															?>
 															<?=$order["address"][0]["shipping_city"]?>, <?=$order["address"][0]["shipping_state"]?> <?=$order["address"][0]["shipping_zip"]?><br />
-															<?=$order["address"][0]["shipping_country"]?>
+															<?=$order["address"][0]["shipping_country"]?><br />
+															<?=$order["address"][0]["shipping_phone"]?>
 														</p></td>
                             					</tr>
                             				</table></td>
@@ -109,10 +115,16 @@
 															<b><?=$order["address"][0]["billing_fname"]?> <?=$order["address"][0]["billing_lname"]?></b><br />
 															<?=$order["address"][0]["billing_company"]?><br />
 															<?=$order["address"][0]["billing_address1"]?><br />
-															<?=$order["address"][0]["billing_address2"]?><br />
+															<?php 
+																if(trim($order["address"][0]["billing_address2"]) != '')
+																{
+																	echo $order["address"][0]["billing_address2"].'<br />';
+																}
+															?>
 															<?=$order["address"][0]["billing_city"]?>, <?=$order["address"][0]["billing_state"]?> <?=$order["address"][0]["billing_zip"]?><br />
-															<?=$order["address"][0]["billing_country"]?>
-														</p></td>
+															<?=$order["address"][0]["billing_country"]?><br />
+															<?=$order["address"][0]["billing_phone"]?>
+													</p></td>
                             					</tr>
                             				</table></td>
                             		</tr>
@@ -290,7 +302,7 @@
                             	</table>
 
                         	<div class="b2r_clearboth"><!-- --></div>
-        				
+
                     </div> <!-- b2r_dashboard --> 
                     
                 </div> <!-- b2r_panel_int -->
