@@ -838,16 +838,16 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_product_images;";
 	$sql[] = "CREATE TABLE exp_br_product_images (
-  image_id int(11) NOT NULL AUTO_INCREMENT,
-  product_id int(11) NOT NULL,
-  filenm varchar(100) NOT NULL,
-  title varchar(100) DEFAULT NULL,
-  large int(11) NOT NULL DEFAULT '0',
-  thumb int(11) NOT NULL DEFAULT '0',
-  exclude int(11) NOT NULL DEFAULT '0',
-  sort int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (image_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				  image_id int(11) NOT NULL AUTO_INCREMENT,
+				  product_id int(11) NOT NULL,
+				  filenm varchar(100) NOT NULL,
+				  title varchar(100) DEFAULT NULL,
+				  large int(11) NOT NULL DEFAULT '0',
+				  thumb int(11) NOT NULL DEFAULT '0',
+				  exclude int(11) NOT NULL DEFAULT '0',
+				  sort int(11) NOT NULL DEFAULT '0',
+				  PRIMARY KEY (image_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Records of exp_br_product_images
@@ -942,22 +942,22 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_product_addon;";
 	$sql[] = "CREATE TABLE exp_br_product_addon (
-  related_id int(11) NOT NULL AUTO_INCREMENT,
-  parent_id int(11) NOT NULL,
-  product_id int(11) NOT NULL,
-  PRIMARY KEY (related_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				  related_id int(11) NOT NULL AUTO_INCREMENT,
+				  parent_id int(11) NOT NULL,
+				  product_id int(11) NOT NULL,
+				  PRIMARY KEY (related_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Table structure for exp_br_product_related
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_product_related;";
 	$sql[] = "CREATE TABLE exp_br_product_related (
-  related_id int(11) NOT NULL AUTO_INCREMENT,
-  parent_id int(11) NOT NULL,
-  product_id int(11) NOT NULL,
-  PRIMARY KEY (related_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				  related_id int(11) NOT NULL AUTO_INCREMENT,
+				  parent_id int(11) NOT NULL,
+				  product_id int(11) NOT NULL,
+				  PRIMARY KEY (related_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Records of exp_br_product_related
@@ -990,41 +990,41 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_product_subscription;";
 	$sql[] = "CREATE TABLE exp_br_product_subscription (
-  subscription_id int(11) NOT NULL AUTO_INCREMENT,
-  product_id int(11) NOT NULL,
-  length int(11) NOT NULL DEFAULT '30',
-  period int(11) NOT NULL,
-  group_id int(11) NOT NULL DEFAULT '0',
-  trial_price decimal(10,2) DEFAULT NULL,
-  trial_occur int(11) NOT NULL DEFAULT '1',
-  cancel_group_id int(11) NOT NULL,
-  PRIMARY KEY (subscription_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				  subscription_id int(11) NOT NULL AUTO_INCREMENT,
+				  product_id int(11) NOT NULL,
+				  length int(11) NOT NULL DEFAULT '30',
+				  period int(11) NOT NULL,
+				  group_id int(11) NOT NULL DEFAULT '0',
+				  trial_price decimal(10,2) DEFAULT NULL,
+				  trial_occur int(11) NOT NULL DEFAULT '1',
+				  cancel_group_id int(11) NOT NULL,
+				  PRIMARY KEY (subscription_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Table structure for exp_br_promo
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_promo;";
 	$sql[] = "CREATE TABLE exp_br_promo (
-  promo_id int(11) NOT NULL AUTO_INCREMENT,
-  site_id int(11) NOT NULL DEFAULT '1',
-  title varchar(50) NOT NULL,
-  code varchar(30) NOT NULL,
-  start_dt timestamp NULL DEFAULT NULL,
-  end_dt timestamp NULL DEFAULT NULL,
-  code_type varchar(10) NOT NULL DEFAULT 'fixed',
-  discount_type varchar(50) DEFAULT 'item',
-  max_discount decimal(10,2) DEFAULT 0,
-  amount decimal(10,2) NOT NULL DEFAULT '0.00',
-  enabled int(11) NOT NULL DEFAULT '0',
-  descr varchar(200) NOT NULL,
-  category_list text,
-  product_list text,
-  min_subtotal decimal(10,2) NOT NULL DEFAULT '1.00',
-  min_quantity int(11) NOT NULL DEFAULT '1',
-  uses_per int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (promo_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				  promo_id int(11) NOT NULL AUTO_INCREMENT,
+				  site_id int(11) NOT NULL DEFAULT '1',
+				  title varchar(50) NOT NULL,
+				  code varchar(30) NOT NULL,
+				  start_dt timestamp NULL DEFAULT NULL,
+				  end_dt timestamp NULL DEFAULT NULL,
+				  code_type varchar(10) NOT NULL DEFAULT 'fixed',
+				  discount_type varchar(50) DEFAULT 'item',
+				  max_discount decimal(10,2) DEFAULT 0,
+				  amount decimal(10,2) NOT NULL DEFAULT '0.00',
+				  enabled int(11) NOT NULL DEFAULT '0',
+				  descr varchar(200) NOT NULL,
+				  category_list text,
+				  product_list text,
+				  min_subtotal decimal(10,2) NOT NULL DEFAULT '1.00',
+				  min_quantity int(11) NOT NULL DEFAULT '1',
+				  uses_per int(11) NOT NULL DEFAULT '0',
+				  PRIMARY KEY (promo_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Records of exp_br_promo
@@ -1038,28 +1038,28 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_search;";
 	$sql[] = "CREATE TABLE exp_br_search (
-  search_id int(11) NOT NULL AUTO_INCREMENT,
-  site_id int(11) NOT NULL DEFAULT '1',
-  hash varchar(100) NOT NULL,
-  search_term varchar(100) NOT NULL,
-  result_count int(11) NOT NULL,
-  member_id int(11) NOT NULL,
-  ip varchar(100) NOT NULL,
-  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (search_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				  search_id int(11) NOT NULL AUTO_INCREMENT,
+				  site_id int(11) NOT NULL DEFAULT '1',
+				  hash varchar(100) NOT NULL,
+				  search_term varchar(100) NOT NULL,
+				  result_count int(11) NOT NULL,
+				  member_id int(11) NOT NULL,
+				  ip varchar(100) NOT NULL,
+				  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				  PRIMARY KEY (search_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Table structure for exp_br_state
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_state;";
 	$sql[] = "CREATE TABLE exp_br_state (
-  state_id int(11) NOT NULL AUTO_INCREMENT,
-  zone_id int(11) NOT NULL,
-  title varchar(100) NOT NULL,
-  code varchar(10) NOT NULL,
-  PRIMARY KEY (state_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				  state_id int(11) NOT NULL AUTO_INCREMENT,
+				  zone_id int(11) NOT NULL,
+				  title varchar(100) NOT NULL,
+				  code varchar(10) NOT NULL,
+				  PRIMARY KEY (state_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Records of exp_br_state

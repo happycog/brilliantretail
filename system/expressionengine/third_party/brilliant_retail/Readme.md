@@ -6,6 +6,8 @@ Just some little notes for me. Since I'm the only one looking these days.
 
 * Create field group per site and add the group id to new channels
 * Create channel per site and add channel_id to the store configuration array
+* Need to add product_entry table to install upd file. 
+* Need to add product_entry rows to install upd file. 
 
 ### Product Edit Page
 

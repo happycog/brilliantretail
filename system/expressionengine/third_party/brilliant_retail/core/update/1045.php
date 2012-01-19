@@ -33,4 +33,4 @@
 					PRIMARY KEY (product_entry_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 	
-	$this->EE->db->query("ALTER TABLE exp_br_store ADD COLUMN channel_id int(11) NOT NULL DEFAULT 0 AFTER site_id");
+	$this->EE->db->query("ALTER TABLE exp_br_store ADD COLUMN channel_id int(11) AFTER site_id");

@@ -1273,7 +1273,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			
 			unset($data['feed_id']);
-			
+								
 			// If product_id is 0 then its a new product
 			if($data["product_id"] == 0){
 

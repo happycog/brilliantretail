@@ -466,6 +466,19 @@ class Product_model extends CI_Model {
 	*/
 		public function update_product($data,$product_id = '',$media_dir)
 		{
+			// Test to see if the product id 
+			// was sent in the array data
+				$product_id = $data['product_id'];
+				unset($data["product_id"]);
+				
+			// Is it a new product? Then lets create it
+				if($product_id == 0){
+					$new = array('title' => $data["title"]);
+					$this->db->set($new);
+					$this->db->insert('br_product'); 
+					$product_id = $this->db->insert_id();
+				}
+				
 			// Bundle Products 
 				if($data["type_id"] == '2'){
 					$bundle = $data["bundle"];	
@@ -522,7 +535,7 @@ class Product_model extends CI_Model {
 			// Downloadable Products 
 				if($data["type_id"] == '4'){
 					$download = array(
-											'product_id' => $data["product_id"], 
+											'product_id' => $product_id, 
 											'title' => $data["download_title"],
 											'filenm' => $data["download_filenm"],
 											'filenm_orig' => $data["download_filenm_orig"],
@@ -588,20 +601,7 @@ class Product_model extends CI_Model {
 				$related = $data["related"];
 				unset($data["related"]);
 			}
-			
-			// Test to see if the product id 
-			// was sent in the array data
-				$product_id = $data['product_id'];
-				unset($data["product_id"]);
-				
-			// Is it a new product? Then lets create it
-				if($product_id == 0){
-					$new = array('title' => $data["title"]);
-					$this->db->set($new);
-					$this->db->insert('br_product'); 
-					$product_id = $this->db->insert_id();
-				}
-				
+
 			// Setup our price matrix
 				// Delete any options that currently exist for this product
 					$this->db->delete('br_product_price', array('product_id' => $product_id)); 
