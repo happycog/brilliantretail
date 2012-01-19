@@ -88,12 +88,16 @@
 </div>
 <script type="text/javascript">
 	function _bind_config_button(){
-		$('#config_selected').tableDnD({
-											dragHandle:'move_config_row',
-											onDragClass: 'tDnD_whileDrag',  
-											onDrop: stripe_table 
-										});
-
+		// Activate Sortable
+		$('#config_selected tbody').sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_config_row',
+			helper:function(e, ui) {
+				ui.children().each(function() {
+					$(this).width($(this).width());
+				});		
+				return ui;
+			}
+		});
+		
 		$('#configurableCreate').bind('click',function(){
 			var config_attr = $('#config_attr').val();
 			var config_sku = $('#config_sku').val();
@@ -113,12 +117,7 @@
 			$(tmp).prependTo($('#config_selected tbody'));
 
 			// reset the dnd for the rows
-				$('#config_selected').unbind().tableDnD({
-															dragHandle:'move_config_row',
-															onDragClass: 'tDnD_whileDrag',  
-															onDrop: stripe_table 
-														});
-	
+
 			$('.config_item_remove').unbind().bind('click',function(){
 				$(this).parent().parent().remove();
 				var rows = $('#config_selected tbody tr').size();

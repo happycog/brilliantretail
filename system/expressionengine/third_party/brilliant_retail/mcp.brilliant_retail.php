@@ -125,9 +125,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.tableDnD.js').'"></script>');
-
+					
 					$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css').'" />');
 						
 				// Set our admin theme 	

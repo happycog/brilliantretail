@@ -153,14 +153,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 			return $this->return_data = $output;
 		}
 		
-		public function _parse_switch($match)
-		{
-			$options = explode('|', $match[2]);
-			$option = $this->switch_cnt % count($options);
-			$this->switch_cnt++;
-			return $options[$option];
-		}
-		
 	/*
 	* Create a br wraper for displaying custom fields 
 	*/
@@ -2369,6 +2361,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						
 						// Validate the current email
 							$validate = $this->EE->auth->authenticate_id($member_id,$current_password);
+							
 							if(!$validate){
 								$_SESSION["br_alert"] = lang('br_password_current_invalid');
 								$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
@@ -3004,5 +2997,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}else{
 					return $this->EE->functions->create_url($src);
 				}
+		}
+		
+	/*
+	* Helper function for parsing internal switches 
+	*/	
+		public function _parse_switch($match)
+		{
+			$options = explode('|', $match[2]);
+			$option = $this->switch_cnt % count($options);
+			$this->switch_cnt++;
+			return $options[$option];
 		}
 }

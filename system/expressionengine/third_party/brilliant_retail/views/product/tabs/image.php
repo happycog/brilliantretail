@@ -193,11 +193,19 @@ function _restripe_images(){
 	$('#imageTable tr').removeClass('even').removeClass('odd');
 	$('#imageTable tr:even').addClass('even');
 	$('#imageTable tr:odd').addClass('odd');
-	$('#imageTable').tableDnD({
-								dragHandle:'move_image_row',
-								onDragClass: 'tDnD_whileDrag',  
-								onDrop: stripe_table  
-							});
+	$('#imageTable tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
+							helper:function(e, ui) {
+								ui.children().each(function() {
+									$(this).width($(this).width());
+								});		
+								return ui;
+							},
+							update:function(){
+												$('#imageTable tr').removeClass('even').removeClass('odd');
+												$('#imageTable tr:even').addClass('even');
+												$('#imageTable tr:odd').addClass('odd');
+											}
+						});
 							
 	$('.remove_img').unbind('click').bind('click',function(){
 																		$(this).parent().parent().remove();

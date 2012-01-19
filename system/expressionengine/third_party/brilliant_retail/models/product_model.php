@@ -729,25 +729,27 @@ class Product_model extends CI_Model {
 						mkdir($file);
 					}
 					foreach($_FILES as $key => $f){
-						$a = explode("_",$key);
-						$title = $cAttr["cAttribute_".$a[1]."_title"];
-						unset($cAttr["cAttribute_".$a[1]."_title"]);
-						
-						if($f["name"] !== ''){
-							$filename = $f["name"];
-							move_uploaded_file($f["tmp_name"],$file.'/'.$f["name"]);
-						}else{
-							// Get previous file name
-							$prev = unserialize($cAttr["cAttribute_".$a[1]]);
-							$filename = $prev["file"];
+						if(strpos($key,'cAttribute_') != FALSE){
+							$a = explode("_",$key);
+							$title = $cAttr["cAttribute_".$a[1]."_title"];
+							unset($cAttr["cAttribute_".$a[1]."_title"]);
+							
+							if($f["name"] !== ''){
+								$filename = $f["name"];
+								move_uploaded_file($f["tmp_name"],$file.'/'.$f["name"]);
+							}else{
+								// Get previous file name
+								$prev = unserialize($cAttr["cAttribute_".$a[1]]);
+								$filename = $prev["file"];
+							}
+							
+							$arr = array(	
+											'title' => $title,
+											'file' => $filename 
+											);
+							
+							$cAttr["cAttribute_".$a[1]] = $arr;	
 						}
-						
-						$arr = array(	
-										'title' => $title,
-										'file' => $filename 
-										);
-						
-						$cAttr["cAttribute_".$a[1]] = $arr;	
 					}
 				}
 				
