@@ -178,10 +178,14 @@
 		$(".datepicker").removeClass('hasDatepicker').unbind().datepicker();
 		$('#price_table tr').removeClass('even');
 		$('#price_table tr:even').addClass('even');
-		$('#price_table').tableDnD({
-										dragHandle:'move_price_row',
-										onDragClass: 'tDnD_whileDrag',  
-										onDrop: _restripe_products
+		$('#price_table tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
+							helper:function(e, ui) {
+								ui.children().each(function() {
+									$(this).width($(this).width());
+								});		
+								return ui;
+							},
+							update:  _restripe_products
 									});
 
 		$('.remove_price_row').unbind().bind('click',function(){

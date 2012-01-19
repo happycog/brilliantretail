@@ -76,7 +76,6 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 		}
 		
 		$theme = $this->EE->config->item('theme_folder_url').'third_party/brilliant_retail';
-		$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$theme.'/script/jquery.tableDnD.js"></script>');
 		$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$theme.'/script/jquery.metadata.js"></script>');
 		$this->EE->cp->add_to_head('<link rel="stylesheet" href="'.$theme.'/css/br_fieldtype.css" type="text/css" media="screen" /> ');
 		
@@ -94,7 +93,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 							</div>
 						</div>
 						<div class="br_fieldtype_results">
-							<h4>'.lang('selected_products').'</h4>
+							<h4>'.lang('br_selected_products').'</h4>
 							<table id="product_selected_'.$this->field_name.'" width="100%" cellpadding="0" cellspacing="0">
 								'.$rows.'
 							</table>
@@ -155,8 +154,14 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 						}
 						
 						function _remove_product_'.$this->field_name.'(){
-							var productSelected = $(\'#product_selected_'.$this->field_name.'\');
-							productSelected.tableDnD({onDragStyle:"backgroundColor:blue"});
+							var productSelected = $(\'#product_selected_'.$this->field_name.' tbody\');
+							productSelected.unbind().sortable({axis:\'y\', cursor:\'move\', opacity:0.6,
+							helper:function(e, ui) {
+								ui.children().each(function() {
+									$(this).width($(this).width());
+								});		
+								return ui;
+							}						});
 							$(\'.remove_product\').unbind(\'click\').bind(\'click\',function(){
 								$(this).parent().parent().remove();
 								return false;

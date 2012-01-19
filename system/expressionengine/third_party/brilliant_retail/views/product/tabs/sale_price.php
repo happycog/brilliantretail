@@ -175,10 +175,14 @@
 		$(".datepicker").removeClass('hasDatepicker').unbind().datepicker();
 		$('#sale_price_table tr').removeClass('odd');
 		$('#sale_price_table tr:odd').addClass('odd');
-		$('#sale_price_table').tableDnD({
-										dragHandle:'move_sale_price_row',
-										onDragClass: 'tDnD_whileDrag',  
-										onDrop: _sale_price_restripe
+		$('#sale_price_table tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
+							helper:function(e, ui) {
+								ui.children().each(function() {
+									$(this).width($(this).width());
+								});		
+								return ui;
+							},
+							update:  _sale_price_restripe
 									});
 
 		$('.remove_sale_price_row').unbind().bind('click',function(){

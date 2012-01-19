@@ -156,11 +156,15 @@
 		
 	}
 	function _remove_related(){
-		var relatedSelected = $('#related_selected');
-		relatedSelected.tableDnD({
-										dragHandle:'move_related_row',
-										onDragClass: 'tDnD_whileDrag',  
-										onDrop: stripe_table
+		var relatedSelected = $('#related_selected tbody');
+		relatedSelected.unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
+							helper:function(e, ui) {
+								ui.children().each(function() {
+									$(this).width($(this).width());
+								});		
+								return ui;
+							},
+							update: stripe_table
 									});
 			
 		$('.remove_related').unbind('click').bind('click',function(){

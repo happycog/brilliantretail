@@ -28,28 +28,31 @@
 $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 ?>	
 <table id="imageTable" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
-	<tr class="nodrag nodrop">
-		<th colspan="7"><?=lang('br_images')?></th>
-	</tr>
-	<tr class="nodrag nodrop">
-		<td colspan="7" align="right" style="text-align:right">
-			<div id="img_upload_button" style="margin:0;"> 
-				<div id="showprogress"><img src="<?=$theme?>images/loader.gif" /></div>
-				<div id="divButtonPlaceholder">
-					<span id="spanButtonPlaceholder"></span>
-				</div>
-				<div id="showimages"></div>
-			</div></td>
-	</tr>
-	<tr id="image_header" class="nodrag nodrop" <?=$hide_header?>>
-		<td width="120"><b><?=lang('br_image')?></b></td>
-		<td width="*"><b><?=lang('br_title')?></b></td>
-		<td width="65"><b><?=lang('br_large')?></b></td>
-		<td width="65"><b><?=lang('br_thumbnail')?></b></td>
-		<td width="65"><b><?=lang('br_exclude')?></b></td>
-		<td width="10">&nbsp;</td>
-		<td width="30">&nbsp;</td>
-	</tr>
+	<thead>
+		<tr>
+			<th colspan="7"><?=lang('br_images')?></th>
+		</tr>
+		<tr>
+			<td colspan="7" align="right" style="text-align:right">
+				<div id="img_upload_button" style="margin:0;"> 
+					<div id="showprogress"><img src="<?=$theme?>images/loader.gif" /></div>
+					<div id="divButtonPlaceholder">
+						<span id="spanButtonPlaceholder"></span>
+					</div>
+					<div id="showimages"></div>
+				</div></td>
+		</tr>
+		<tr id="image_header" <?=$hide_header?>>
+			<td width="120"><b><?=lang('br_image')?></b></td>
+			<td width="*"><b><?=lang('br_title')?></b></td>
+			<td width="65"><b><?=lang('br_large')?></b></td>
+			<td width="65"><b><?=lang('br_thumbnail')?></b></td>
+			<td width="65"><b><?=lang('br_exclude')?></b></td>
+			<td width="10">&nbsp;</td>
+			<td width="30">&nbsp;</td>
+		</tr>
+	</thead>
+	<tbody>
 <?php
 	$cnt = 0;
 	
@@ -75,6 +78,7 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 		$cnt++;
 	}
 ?>
+	</tbody>
 </table>
 <script type="text/javascript">
 	$(function(){
@@ -193,7 +197,7 @@ function _restripe_images(){
 	$('#imageTable tr').removeClass('even').removeClass('odd');
 	$('#imageTable tr:even').addClass('even');
 	$('#imageTable tr:odd').addClass('odd');
-	$('#imageTable tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
+	$('#imageTable tbody').not('.nodrag').unbind().sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
 							helper:function(e, ui) {
 								ui.children().each(function() {
 									$(this).width($(this).width());

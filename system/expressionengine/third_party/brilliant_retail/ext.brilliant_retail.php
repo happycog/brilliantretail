@@ -171,9 +171,9 @@ class Brilliant_retail_ext {
 	 */
 	public function br_edit_entries_additional_where()
 	{
-		#$arr = $this->_get_channels();
-		#$filter['channel_id !='] = $arr;
-		#return $filter;
+		$arr = $this->_get_channels();
+		$filter['channel_id !='] = $arr;
+		return $filter;
 	}
 	
 	// ----------------------------------------------------------------------

@@ -242,18 +242,26 @@ $option = 10000;
 	
 		_remove_drop_opt();
 		
-		$('#optionTable').unbind().tableDnD({
-										dragHandle:'move_option_row',
-										onDragClass: 'tDnD_whileDrag',  
-										onDrop: _option_related
-									});
+		$('#optionTable tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
+							helper:function(e, ui) {
+								ui.children().each(function() {
+									$(this).width($(this).width());
+								});		
+								return ui;
+							},
+							update: _option_related
+							});
 		
 				
-		$('.dropOptions').unbind().tableDnD({
-										dragHandle:'move_drop_option_row',
-										onDragClass: 'tDnD_whileDrag',  
-										onDrop: _option_related
-									});
+		$('#optionTable tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
+													helper:function(e, ui) {
+														ui.children().each(function() {
+															$(this).width($(this).width());
+														});		
+														return ui;
+													},
+													update: _option_related
+												});
 	
 		// bind the remove button																								
 		$('.remove').unbind().bind('click',function(){
