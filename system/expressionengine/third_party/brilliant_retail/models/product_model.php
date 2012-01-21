@@ -729,27 +729,29 @@ class Product_model extends CI_Model {
 						mkdir($file);
 					}
 					foreach($_FILES as $key => $f){
-						if(strpos($key,'cAttribute_') != FALSE){
-							$a = explode("_",$key);
-							$title = $cAttr["cAttribute_".$a[1]."_title"];
-							unset($cAttr["cAttribute_".$a[1]."_title"]);
-							
-							if($f["name"] !== ''){
-								$filename = $f["name"];
-								move_uploaded_file($f["tmp_name"],$file.'/'.$f["name"]);
-							}else{
-								// Get previous file name
-								$prev = unserialize($cAttr["cAttribute_".$a[1]]);
-								$filename = $prev["file"];
+						// Lets only deal with our files uploads. Others might want 
+						// to upload files via Channel Fieldtypes
+							if(strpos($key,'cAttribute_') != FALSE){
+								$a = explode("_",$key);
+								$title = $cAttr["cAttribute_".$a[1]."_title"];
+								unset($cAttr["cAttribute_".$a[1]."_title"]);
+								
+								if($f["name"] !== ''){
+									$filename = $f["name"];
+									move_uploaded_file($f["tmp_name"],$file.'/'.$f["name"]);
+								}else{
+									// Get previous file name
+									$prev = unserialize($cAttr["cAttribute_".$a[1]]);
+									$filename = $prev["file"];
+								}
+								
+								$arr = array(	
+												'title' => $title,
+												'file' => $filename 
+												);
+								
+								$cAttr["cAttribute_".$a[1]] = $arr;	
 							}
-							
-							$arr = array(	
-											'title' => $title,
-											'file' => $filename 
-											);
-							
-							$cAttr["cAttribute_".$a[1]] = $arr;	
-						}
 					}
 				}
 				
@@ -760,7 +762,7 @@ class Product_model extends CI_Model {
 					}
 					$data = array(	
 										'descr' => $val, 
-										'attribute_id' => $a[1], 
+										'attribute_id' => $a[2], 
 										'product_id' => $product_id
 									);
 					$this->db->insert('br_product_attributes',$data);

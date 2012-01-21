@@ -74,7 +74,7 @@
 											array(	'name' => 'detail', 
 													'value' => $products[0]["detail"],
 													'title' => lang('br_details').' - '.lang('br_description').' '.lang('br_is_required'),
-													'class' => 'ckeditor',
+													'id' => 'ckeditor',
 													'style' => 'width:400px')
 										)?></td>
 		</tr>
@@ -84,50 +84,100 @@
 				<br />
 				<?=form_dropdown('enabled', array(1 => lang('br_enabled'), 0 => lang('br_disabled')), $products[0]["enabled"])?></td>
 		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><?=lang('br_product_sku').' *'?></label>
-				<br />
-				<?=form_input(
+</table>		
+
+				<div class="publish_field" id="hold_br_sku">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('br_product_sku').' *'?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_featured">
+						<fieldset class="holder">
+							<?=form_input(
 										array(	'name' => 'sku', 
 												'value' => $products[0]["sku"],
 												'class' => '{required:true}',
 												'title' => lang('br_details').' - '.lang('br_product_sku').' '.lang('br_is_required'))
 										)?></td>
-		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><?=lang('br_shippable')?></label>
-				<br />
-				<?=form_dropdown('shippable', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["shippable"])?></td>
-		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><?=lang('br_product_weight')?></label>
-				<br />
-				<?=form_input(	array(	'name' => 'weight', 
-										'value' => $products[0]["weight"],
-										'class' => '',
-										'title' => lang('br_details').' - '.lang('br_product_weight'))
-								)?></td>
-		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><?=lang('br_featured')?></label>
-				<br />
-				<?=form_dropdown('featured', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["featured"])?></td>
-		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><?=lang('br_quantity')?></label>
-				<br />
-				<?=form_input(
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+
+				<div class="publish_field" id="hold_br_shippable">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('br_shippable')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_featured">
+						<fieldset class="holder">
+							<?=form_dropdown('shippable', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["shippable"])?></td>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+				<div class="publish_field" id="hold_br_weight">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('br_product_weight')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_featured">
+						<fieldset class="holder">
+							<?=form_input(	array(	'name' => 'weight', 
+																	'value' => $products[0]["weight"],
+																	'class' => '',
+																	'title' => lang('br_details').' - '.lang('br_product_weight'))
+															)?>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+
+				<div class="publish_field" id="hold_br_taxable">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('br_featured')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_featured">
+						<fieldset class="holder">
+							<?=form_dropdown('featured', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["featured"])?></td>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+
+				<div class="publish_field" id="hold_br_taxable">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('br_quantity')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_quantity">
+						<fieldset class="holder">
+							<?=form_input(
 								array(	'name' => 'quantity', 
 										'value' => $products[0]["quantity"],
 										'title' => lang('br_details').' - '.lang('br_quantity'))
-								)?></td>
-		</tr>
-</table>		
+								)?>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+
 
 				<div class="publish_field" id="hold_br_taxable">
 
@@ -248,6 +298,21 @@
 <div><!-- End Cap !--></div>
 <script type="text/javascript">
 	$(function(){
+
+	    if (typeof CKEDITOR == 'undefined'){
+	        window.CKEDITOR_BASEPATH = '<?=$detail_ckeditor_path?>';
+	        $.getScript('<?=$detail_ckeditor_url?>',function(){
+		        // wait for CKEditor to be loaded
+	        	var checkCkeditorInterval = setInterval(function() {
+	            	if (typeof CKEDITOR != 'undefined'){
+	            	    initCkeditorFields();
+		                clearInterval(checkCkeditorInterval);
+	        		}
+	        	}, 10);
+	        });
+	    }else{
+	    	initCkeditorFields();
+		}
 		<?php
 			if($hidden["product_id"] == 0){
 		?>
@@ -340,5 +405,10 @@
 		<?php	
 			}
 		?>
-	})
+	});
+
+	function initCkeditorFields(){
+		CKEDITOR.replace( 'detail' );
+	}
+	
 </script>

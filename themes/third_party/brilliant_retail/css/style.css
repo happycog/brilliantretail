@@ -907,10 +907,6 @@ table#b2r_db_performance_bot td img {
 
 /* Product */
 
-.publish_field {
-	border-right: 1px red solid;
-}
-
 .move_sale_price_row,
 .move_price_row,  
 .move_image_row, 

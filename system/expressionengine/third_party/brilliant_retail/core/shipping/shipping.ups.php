@@ -32,6 +32,7 @@ class Shipping_ups extends Brilliant_retail_shipping {
 	function quote($data,$config){
 		
 		$this->rates = array();
+		$tmp = array();
 		
 		$title['14'] = 'Next Day Air Early AM';
 		$title['01'] = 'Next Day Air';
@@ -125,7 +126,7 @@ class Shipping_ups extends Brilliant_retail_shipping {
 				preg_match('/<MonetaryValue>(.*?)<\/MonetaryValue>/',$results,$rate);
 				$price = isset($rate[1]) ? $rate[1] : '' ;
 				if($price != ''){
-					$this->rates[$c] = array(
+					$tmp[$price][$c] = array(
 										'code' => $c,
 										'rate' => $price,
 										'label' => $title[$c]
@@ -133,6 +134,15 @@ class Shipping_ups extends Brilliant_retail_shipping {
 				}
 			}
 		}
+		// Resort the responses based on rate
+			ksort($tmp);
+			foreach($tmp as $t){
+				foreach($t as $key=>$val){
+					$this->rates[$key] = $val;
+				}
+			}
+
+		// Reture rates
 		return $this->rates;
 	}
 	

@@ -25,10 +25,15 @@
 /************************************************************/
 
 .br_fieldtype {
-	border:1px #ccc solid;
-	background: url(../images/bg_fieldtype.jpg) repeat-x #fff;
-	padding: 10px 15px;
-	margin-top:10px;
+	background: url("../images/bg_fieldtype.jpg") repeat-x scroll 0 0 #FFFFFF;
+	border: 1px solid #CCCCCC;
+	margin-top: 10px;
+	padding: 4px 12px;
+	border-radius: 4px 4px 4px 4px;
+}
+
+.br_fieldtype .poe_move {
+	cursor: move;
 }
 
 .br_fieldtype div.search {
@@ -60,6 +65,7 @@
 .br_fieldtype .br_fieldtype_results {
 	float:left;
 	width: 50%;
+	margin-bottom: 10px;
 }
 .br_fieldtype .result_div{
 	height:90px;
@@ -74,12 +80,33 @@
 }
 
 .br_fieldtype_results {
-	padding-bottom: 10px;
+	margin-top: 40px;
+	border: #EEE solid;
+	border-width: 0 0 1px;
 }
 
+.br_fieldtype_results thead tr th {
+	text-align: left;
+	padding: 	3px 5px;
+	color: 		#505050;
+	font-size: 	12px;
+	text-shadow: 0 1px #FFFFFF;
+	background: url(../images/bg_fieldtype.jpg) repeat-x #fff;
+}
+	
 .br_fieldtype .result_div td,  
 .br_fieldtype .br_fieldtype_results td {
-	padding: 5px 3px;
+	padding: 2px 5px;
+	font-size: 12px;
+}
+.br_fieldtype .br_fieldtype_results table {
+	border: #EEE solid;
+	border-width: 0 1px;
+}
+
+.br_fieldtype .br_fieldtype_results td {
+	border: #EEE solid;
+	border-width: 1px 0 0;
 }
 
 .br_fieldtype_results h4 {

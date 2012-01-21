@@ -101,7 +101,7 @@ class Core_model extends CI_Model {
 											'sort' 		=> round($data["sort"] * 1),
 											'label' 	=> $data["label"],
 											'enabled' 	=> $data["enabled"]), 
-									"config_id = ".$data["config_id"]);
+											"config_id = ".$data["config_id"]);
 				unset($data["sort"]);
 				unset($data["label"]);
 				unset($data["enabled"]);
@@ -111,13 +111,13 @@ class Core_model extends CI_Model {
 			foreach($data as $key => $val){
 				if(strpos($key,'cAttribute_') !== false){ 
 					// Custom Attributes
-					$config_data_id = str_replace('cAttribute_','',$key);
+					$config_data_id = str_replace('0_cAttribute_','',$key);
 					$this->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
 				}
 				if(strpos($key,'cAttributePW_') !== false){ 
 					// Custom Attributes
 					if($val != '************************'){
-						$config_data_id = str_replace('cAttributePW_','',$key);
+						$config_data_id = str_replace('0_cAttributePW_','',$key);
 						$this->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
 					}
 				}

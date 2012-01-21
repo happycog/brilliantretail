@@ -51,15 +51,71 @@ class Poe_ft extends EE_Fieldtype {
 	function display_field($data)
 	{
 		$this->_set_theme();
-		return '<textarea name="'.$this->field_name.'" class="ckeditor">'.$data.'</textarea>';
+		$str 	= 	'<textarea name="'.$this->field_name.'" class="replace_ckeditor">'.$data.'</textarea>';
+		$str 	.=	$this->_create_js();
+		return $str;
 	}
 
 	function display_cell($data)
 	{
 		$this->_set_theme();
-		return '<textarea name="'.$this->cell_name.'" class="ckeditor">'.$data.'</textarea>';
+		$str 	= 	'<textarea name="'.$this->cell_name.'" class="replace_ckeditor" >'.$data.'</textarea>';
+		$str 	.=	$this->_create_js();
+		return $str;
 	}
 	
+
+
+	
+
+	
+	function _create_js(){
+		if (isset($this->session->cache['br_poe_js'])){
+			return "<script type='text/javascript'>
+						$(function(){
+							initPoeCkeditorFields();
+						});
+					</script>";	
+		}
+		$str = "<script type='text/javascript'>
+					$(function(){
+						if (typeof CKEDITOR == 'undefined'){
+					        window.CKEDITOR_BASEPATH = '".$this->theme."/script/ckeditor/';
+					        $.getScript('".$this->theme."/script/ckeditor/ckeditor.js',function(){
+						        var checkPoeCkeditor = setInterval(function() {
+					            	if (typeof CKEDITOR != 'undefined'){
+										initPoeCkeditorFields();
+					                	clearInterval(checkPoeCkeditor);
+					                }
+					        	}, 10);
+					        });
+					    }else{
+					    	initPoeCkeditorFields();
+						}
+					})
+					function initPoeCkeditorFields(){
+						var a = $('.replace_ckeditor');
+						if (a.length > 0){
+							$.each(a,function(index,value){
+								CKEDITOR.replace($(value).attr('name'));
+								$(value).removeClass('replace_ckeditor');
+							});
+							clearTimeout(setCKEditor);
+						}else{
+							clearInterval(setCKEditor);
+							var setCKEditor = setTimeout(function() {
+						    	if (typeof CKEDITOR != 'undefined'){
+						        	initPoeCkeditorFields();
+						        }
+					        }, 10);
+						}
+					}
+				</script>";	
+		
+		$this->session->cache['br_poe_js'] = TRUE;
+		
+		return $str;		
+	}
 	// --------------------------------------------------------------------
 		
 	/**

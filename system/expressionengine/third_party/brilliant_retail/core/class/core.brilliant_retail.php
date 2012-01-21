@@ -317,8 +317,12 @@ class Brilliant_retail_core {
 			}
 	}
 	
-		function _theme($str = ''){ 
-			return $this->EE->config->item('theme_folder_url').'third_party/brilliant_retail/'.trim($str,'/');
+		function _theme($str = '',$trailing_slash=FALSE){ 
+			$path = $this->EE->config->item('theme_folder_url').'third_party/brilliant_retail/'.trim($str,'/');
+			if($trailing_slash === TRUE){
+				$path .= '/';
+			}
+			return $path;
 		}
 				
 		function _currency_round($amt){
@@ -673,7 +677,7 @@ class Brilliant_retail_core {
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			$val = ($val != '') ? '************************' : '' ;
-			return '<input name="cAttributePW_'.$attribute_id.'" value="'.$val.'" title="'.$input_title.'" type="password" class="'.$class.' cleartext" />';
+			return '<input name="'.$product_id.'_cAttributePW_'.$attribute_id.'" value="'.$val.'" title="'.$input_title.'" type="password" class="'.$class.' cleartext" />';
 		}
 		
 		function _producttype_file($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){

@@ -31,7 +31,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 
 	var $info = array(
 		'name'		=> 'BrilliantRetail Products',
-		'version'	=> '1.0.1.1'
+		'version'	=> '1.0.1.2'
 	);
 	
 	function Brilliant_retail_ft()
@@ -53,6 +53,8 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 	function display_field($data)
 	{
 		$this->EE->lang->loadfile('brilliant_retail');
+		$theme = $this->EE->config->item('theme_folder_url').'third_party/brilliant_retail';
+		
 		$rows = '';
 		if($data != ''){
 			$this->EE->load->model('product_model');
@@ -67,6 +69,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 					$rows .= '	<tr>
 									<td width="60%" style="width:auto;">
 										'.$prod["title"].'</td>
+									<td width="10%" class="poe_move"><img src="'.$theme.'/images/icon_move.png" /></td>
 									<td width="10%" style="text-align:right">
 										<a class="remove_product" href="#">'.lang('remove').'</a><input type="hidden" value="'.$p.'" name="'.$this->field_name.'[]">
 									</td>
@@ -75,7 +78,6 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 			}
 		}
 		
-		$theme = $this->EE->config->item('theme_folder_url').'third_party/brilliant_retail';
 		$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$theme.'/script/jquery.metadata.js"></script>');
 		$this->EE->cp->add_to_head('<link rel="stylesheet" href="'.$theme.'/css/br_fieldtype.css" type="text/css" media="screen" /> ');
 		
@@ -93,8 +95,13 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 							</div>
 						</div>
 						<div class="br_fieldtype_results">
-							<h4>'.lang('br_selected_products').'</h4>
 							<table id="product_selected_'.$this->field_name.'" width="100%" cellpadding="0" cellspacing="0">
+								<thead>
+									<tr>
+										<th colspan="3">
+										'.lang('br_selected_products').'</th>
+									</tr>
+								</thead>
 								'.$rows.'
 							</table>
 						</div>
@@ -146,7 +153,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 							new_row.attr({\'id\':\'\'}).find(\'td:eq(3)\').remove();
 							new_row.find(\'td:eq(1)\').remove();
 							new_row.find(\'td:eq(0)\').attr({\'style\':\'width:auto\',\'width\':\'60%\'});
-							$(\'<td width="10%" style="text-align:right"><a href="#" class="remove_product">'.lang('remove').'</a><input type="hidden" name="'.$this->field_name.'[]" value="\'+product_id+\'"></td>\').appendTo(new_row);
+							$(\'<td width="10%" class="poe_move"><img src="'.$theme.'/images/icon_move.png" /></td><td width="10%" style="text-align:right"><a href="#" class="remove_product">'.lang('remove').'</a><input type="hidden" name="'.$this->field_name.'[]" value="\'+product_id+\'"></td>\').appendTo(new_row);
 							$(new_row).appendTo(productSelected);
 							row.remove();
 							_remove_product_'.$this->field_name.'();
@@ -155,13 +162,18 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 						
 						function _remove_product_'.$this->field_name.'(){
 							var productSelected = $(\'#product_selected_'.$this->field_name.' tbody\');
-							productSelected.unbind().sortable({axis:\'y\', cursor:\'move\', opacity:0.6,
-							helper:function(e, ui) {
-								ui.children().each(function() {
-									$(this).width($(this).width());
-								});		
-								return ui;
-							}						});
+							productSelected.sortable("destroy").sortable({
+																axis:\'y\', 
+																cursor:\'move\', 
+																opacity:0.6,
+																handle:\'.poe_move\',
+																helper:function(e, ui) {
+																						ui.children().each(function() {
+																															$(this).width($(this).width());
+																														});		
+																						return ui;
+																						}
+															});
 							$(\'.remove_product\').unbind(\'click\').bind(\'click\',function(){
 								$(this).parent().parent().remove();
 								return false;

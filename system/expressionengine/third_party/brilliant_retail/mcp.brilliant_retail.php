@@ -120,7 +120,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
-					#$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/ckeditor/ckeditor.js').'"></script>');
 					
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
@@ -774,7 +773,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_edit()
 		{
-			
+			$this->vars["detail_ckeditor_path"] = $this->_theme('/script/ckeditor',TRUE);
+			$this->vars["detail_ckeditor_url"] = $this->_theme('/script/ckeditor/ckeditor.js');
+					
 			// Load Resources Required for custom fields
 				$this->EE->lang->loadfile('content');
 				$this->EE->load->library('api'); 
@@ -2457,7 +2458,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						// Use our input functions
 							$fx = '_producttype_'.$f["type"];
 							
-							$input = $this->$fx($f["config_data_id"],
+							$input = $this->$fx(0,
+												$f["config_data_id"],
 												'',
 												$f["label"],
 												$f["required"],
@@ -2709,7 +2711,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					// Use our input functions
 						$fx = '_producttype_'.$f["type"];
 						
-						$input = $this->$fx($f["config_data_id"],
+						$input = $this->$fx(0,
+											$f["config_data_id"],
 											'',
 											$f["label"],
 											$f["required"],
@@ -3272,7 +3275,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $can_subscribe;
 		}
 		
-		// Borrowed from content_publish controller ::
+	/************************************************/
+	/* The section below includes helper functions	*/
+	/* required by the Channel Fieldtypes. They are */ 
+	/* inspired by the channel_publish.php file		*/ 
+	/*												*/ 
+	/************************************************/
 
 		private function _setup_file_list()
 		{
@@ -3303,7 +3311,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 		
 		
-function _markitup()
+	function _markitup()
 	{
 		$this->EE->load->model('admin_model');
 		
@@ -3532,7 +3540,6 @@ function _markitup()
 			'lang.tab_name'						=> lang('tab_name'),
 			'lang.show_toolbar' 				=> lang('show_toolbar'),
 			'lang.tab_name_required' 			=> lang('tab_name_required'),
-			'publish.autosave.interval'			=> (int) $autosave_interval_seconds,
 			'publish.channel_id'				=> $this->_channel_data['channel_id'],
 			'publish.default_entry_title'		=> $this->_channel_data['default_entry_title'],
 			'publish.field_group'				=> $this->_channel_data['field_group'],
