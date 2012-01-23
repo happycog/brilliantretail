@@ -357,7 +357,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->_send_email('customer-order-status', $eml);
 				}
 			// Set the message and relocate	
-				br_set('message',lang('br_order_status_success'));
+				$this->EE->session->set_flashdata('message_success', lang('br_order_status_success'));
 				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 				exit();
 		}
@@ -405,7 +405,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$data["created"] = time();
 				$this->EE->order_model->create_order_note($data);
 			// Message and relocate
-				br_set('message',lang('br_order_add_note_success'));
+				$this->EE->session->set_flashdata('message_success', lang('br_order_add_note_success'));
 				header('location: '.$this->base_url.'&method=order_detail&order_id='.$data["order_id"]);
 				exit();
 		}
@@ -418,7 +418,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Remove it 
 				$this->EE->order_model->remove_order_note($order_note_id);
 			// Message and redirect
-				br_set('message',lang('br_order_remove_note_success'));
+				$this->EE->session->set_flashdata('message_success', lang('br_order_remove_note_success'));
 				header('location: '.$this->base_url.'&method=order_detail&order_id='.$order_id);
 				exit();
 		}
@@ -613,7 +613,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							
 							remove_from_cache('product_'.$key);
 						}
-						br_set('message',lang('br_product_delete_success'));
+						$this->EE->session->set_flashdata('message_success', lang('br_product_delete_success'));
 
 				}elseif($data["action"] == 1){
 					
@@ -623,7 +623,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$this->EE->logger->log_action("Product #".$key." enabled by ".$this->EE->session->userdata["username"]." (member_id: ".$this->EE->session->userdata["member_id"].")");
 							remove_from_cache('product_'.$key);
 						}
-						br_set('message',lang('br_product_update_success'));
+						$this->EE->session->set_flashdata('message_success', lang('br_product_update_success'));
 
 				}elseif($data["action"] == 2){
 
@@ -633,7 +633,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$this->EE->logger->log_action("Product #".$key." disabled by ".$this->EE->session->userdata["username"]." (member_id: ".$this->EE->session->userdata["member_id"].")");
 							remove_from_cache('product_'.$key);
 						}
-						br_set('message',lang('br_product_update_success'));
+						$this->EE->session->set_flashdata('message_success', lang('br_product_update_success'));
 				}
 				$this->_index_products();
 			}
@@ -1171,7 +1171,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					
 					// Reindex the products
 					$this->_index_products();
-					br_set('message',lang('br_product_delete_success'));
+					$this->EE->session->set_flashdata('message_success', lang('br_product_delete_success'));
 					header('location: '.$this->base_url.'&method=product');
 					exit();
 				}
@@ -1333,7 +1333,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			if($redirect==TRUE){
 				//Reindex product search
 					$this->_index_products();
-					br_set('message',lang('br_product_update_success'));
+					$this->EE->session->set_flashdata('message_success', lang('br_product_update_success'));
 					if($continue == true){
 						$this->EE->functions->redirect($this->base_url.'&method=product_edit&product_id='.$data["product_id"].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id);
 					}else{
@@ -1533,7 +1533,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$promo_id = $this->EE->input->get('promo_id');
 
 			if(!is_numeric($promo_id)){
-				br_set('alert',lang('br_error_invalid_id'));
+				$this->EE->session->set_flashdata('message_failure',lang('br_error_invalid_id'));
 				header('location: '.$this->base_url.'&method=config_promo');
 			}
 			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
@@ -1595,7 +1595,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Check for delete
 				if(isset($_POST["delete"])){
 					$this->EE->promo_model->delete_promo($_POST["promo_id"]);
-					br_set('message',lang('br_promo_delete_success'));
+					$this->EE->session->set_flashdata('message_success', lang('br_promo_delete_success'));
 					header('location: '.$this->base_url.'&method=promo');
 					exit();
 				}
@@ -1637,7 +1637,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->promo_model->update_promo($_POST);
 				$promo_id = $_POST["promo_id"];
 			}
-			br_set('message',lang('br_promo_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_promo_update_success'));
 			if($continue == 1){
 				header('location: '.$this->base_url.'&method=promo_edit&promo_id='.$promo_id);
 				exit();
@@ -1820,7 +1820,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				if(isset($_POST["delete"])){
 					$this->EE->product_model->delete_attribute($_POST["attribute_id"]);
 					remove_from_cache('config');
-					br_set('message',lang('br_attribute_delete_success'));
+					$this->EE->session->set_flashdata('message_success', lang('br_attribute_delete_success'));
 					header('location: '.$this->base_url.'&method=config_attribute');
 					exit();
 				}
@@ -1845,7 +1845,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$attribute_id = $this->EE->product_model->update_attribute($_POST);
 			remove_from_cache('config');
-			br_set('message',lang('br_attribute_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_attribute_update_success'));
 			if($continue == true){
 				header('location: '.$this->base_url.'&method=config_attribute_edit&attribute_id='.$attribute_id);
 			}else{
@@ -1889,7 +1889,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
 			$this->vars["content"] = $this->EE->load->view('config/attribute_edit', $this->vars, TRUE);
-			br_set('message',lang('br_attribute_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_attribute_update_success'));
 			return $this->EE->load->view('config/index', $this->vars, TRUE);			
 		}
 		
@@ -1963,7 +1963,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{	
 			$this->EE->product_model->update_attribute_set();
 			remove_from_cache('config');
-			br_set('message',lang('br_attribute_set_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_attribute_set_update_success'));
 			return $this->config_attributeset();
 		}
 
@@ -1972,7 +1972,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$attribute_set_id = $this->EE->input->get('attribute_set_id');
 			$this->vars["attributes"] = $this->EE->product_model->delete_attribute_set($attribute_set_id);
 			remove_from_cache('config');
-			br_set('message',lang('br_attribute_set_delete_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_attribute_set_delete_success'));
 			header('location: '.$this->base_url.'&method=config_attributeset');
 			exit();
 		}
@@ -2213,7 +2213,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							'bcc_list' 		=> $_POST['bcc_list'] 
 						);
 			$this->EE->email_model->update_email($email_id,$data);
-			br_set('message',lang('br_email_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_email_update_success'));
 			header('location: '.$this->base_url.'&method=config_email');
 			exit();
 		}
@@ -2309,7 +2309,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
   			if( $this->EE->input->post('delete') ){
   				$this->EE->feed_model->delete_feed($this->EE->input->post('feed_id'));
   				remove_from_cache('config');
-  				br_set('message',lang('br_feed_delete_success'));
+  				$this->EE->session->set_flashdata('message_success', lang('br_feed_delete_success'));
   				$this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
   			}
 			
@@ -2403,7 +2403,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$path = PATH_THIRD.$loc.'/gateway/gateway.'.$_GET["code"].'.php';
 			
 			if(!file_exists($path)){ 
-				br_set('alert',lang('br_module_install_error'));
+				$this->EE->session->set_flashdata('message_failure',lang('br_module_install_error'));
 				header('location: '.$this->base_url.'&method=config_gateway');
 				exit();
 			}else{
@@ -2418,7 +2418,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 																		$class->descr,
 																		$class->version
 																	);
-				br_set('message',lang('br_module_install_success'));
+				$this->EE->session->set_flashdata('message_success', lang('br_module_install_success'));
 				$class->install($config_id);
 			}
 			remove_from_cache('config');
@@ -2499,7 +2499,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$data[$key] = $val;
 			}
 			$this->EE->core_model->module_update($data);
-			br_set('message',lang('br_module_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_module_update_success'));
 			header('location: '.$this->base_url.'&method=config_gateway');
 			exit();
 		}
@@ -2512,7 +2512,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$class = new $str();
 			$class->remove($config_id);
 			$this->EE->core_model->module_remove($_GET["config_id"]);
-			br_set('message',lang('br_module_remove_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_module_remove_success'));
 			remove_from_cache('config');
 			header('location: '.$this->base_url.'&method=config_gateway');
 			exit();
@@ -2578,7 +2578,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 		
 			// Set a message and return to overview
-				br_set('message',lang('br_permission_update_success'));
+				$this->EE->session->set_flashdata('message_success', lang('br_permission_update_success'));
 				header('location: '.$this->base_url.'&method=config_permission');
 				exit();
 		}
@@ -2653,7 +2653,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$code = trim(strtolower($_GET["code"]));
 			$path = rtrim(dirname(__FILE__),'/').'/'.$type.'/shipping/shipping.'.$_GET["code"].'.php';
 			if(!file_exists($path)){ 
-				br_set('alert',lang('br_module_install_error'));
+				$this->EE->session->set_flashdata('message_failure',lang('br_module_install_error'));
 				header('location: '.$this->base_url.'&method=config_shipping');
 				exit();
 			}else{
@@ -2668,7 +2668,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 																		$class->descr,
 																		$class->version
 																	);
-				br_set('message',lang('br_module_install_success'));
+				$this->EE->session->set_flashdata('message_success', lang('br_module_install_success'));
 					$data[] = array(
 								'config_id' => $config_id, 
 								'label'	 	=> lang('br_label'), 
@@ -2755,7 +2755,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			}
 			$this->EE->core_model->module_update($data);
-			br_set('message',lang('br_module_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_module_update_success'));
 			header('location: '.$this->base_url.'&method=config_shipping');
 			exit();
 		}
@@ -2768,7 +2768,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$class 	= new $str();
 			$class->remove($config_id);
 			$this->EE->core_model->module_remove($config_id);
-			br_set('message',lang('br_module_remove_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_module_remove_success'));
 			remove_from_cache('config');
 			header('location: '.$this->base_url.'&method=config_shipping');
 			exit();
@@ -2834,10 +2834,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			if(!uuid_validate($data["license"])){
 				$data["license"] = '';
-				br_set('alert',lang('br_invalid_license'));
+				$this->EE->session->set_flashdata('message_failure',lang('br_invalid_license'));
 			}
 			$this->EE->store_model->update_store($data);
-			br_set('message',lang('br_store_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_store_update_success'));
 			header('location: '.$this->base_url.'&method=config_site');
 			exit();
 		}
@@ -2930,7 +2930,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Check for delete
 				if(isset($_POST["delete"])){
 					$this->EE->tax_model->delete_tax($_POST["tax_id"]);
-					br_set('message',lang('br_tax_delete_success'));
+					$this->EE->session->set_flashdata('message_success', lang('br_tax_delete_success'));
 					header('location: '.$this->base_url.'&method=config_tax');
 					exit();
 				}
@@ -2944,7 +2944,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->tax_model->update_tax($_POST);
 				$tax_id = $_POST["tax_id"];
 			}
-			br_set('message',lang('br_tax_update_success'));
+			$this->EE->session->set_flashdata('message_success', lang('br_tax_update_success'));
 			if($continue == 1){
 				header('location: '.$this->base_url.'&method=config_tax_edit&tax_id='.$tax_id);
 				exit();
