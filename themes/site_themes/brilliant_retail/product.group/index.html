@@ -54,41 +54,6 @@
 			</div>
 		</div>
 	{/no_results}
-
-{exp:br:product_custom entry_id="{entry_id}"}
-	{my_textarea}
-	{my_tagger}<br />
-	{my_pill}<br />
-	{my_switch}<br />
-	{my_list}<br />
-	{my_list backspace="2"}{item}, {/my_list}
-	{my_multipleselect}<br />
-	
-	{my_assets var_prefix="file"}
-		{count}
-		url: {file:url}<br />
-		{file:server_path}<br />
-		{file:subfolder}<br />
-		{file:filename}<br />
-		{file:extension}<br />
-		{file:date_modified}<br />
-		{file:kind}<br />
-		{file:width}<br />
-		{file:height}<br />
-		{file:size}<br />
-		{file:asset_id}<br />
-		{file:title}<br />
-		{file:date}<br />
-		{file:alt_text}<br />
-		{file:caption}<br />
-		{file:author}<br />
-		{file:desc}<br />
-		{file:location}<br />
-		{file:total_files}<br />
-		{file:absolute_total_files}<br />
-	{/my_assets}
-{/exp:br:product_custom}
-		
 <!-- Product -->
 <div id="product" class="page">
 	<div class="wrapper">
@@ -195,15 +160,11 @@
 			                	<p>{value}</p>
 							{/attr:code} 
 	                !--}
+
 	                {attribute}
                 		<h3>{label}</h3>
 	                	<div>{value}</div>
 					{/attribute}
-					
-					{!--
-						Add-on Template 
-					!--}
-
 
                 </div> <!-- features -->                
             </div> <!-- details -->

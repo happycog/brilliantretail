@@ -37,54 +37,104 @@
 					}
 				?></th>
 		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><em class="required">*</em> <?=lang('br_product_type')?> - <?=$type?></label>
-				<?=$sub_type?></td>
-		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><em class="required">*</em> <?=lang('br_product_title')?></label>
-				<br />
-				<?=form_input(
-								array(	'name' => 'title', 
-										'id' => 'title',
-										'value' => $products[0]["title"],
-										'class' => '{required:true}',
-										'title' => lang('br_details').' - '.lang('br_product_title').' '.lang('br_is_required'))
-							)?></td>
-		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><em class="required">*</em> <?=lang('br_url_title')?></label>
-				<br />
-				<?=form_input(
+</table>		
+
+				<div class="publish_field" id="hold_br_title">
+
+					<label class="hide_field">
+						<span>
+							<em class="required">*</em> <?=lang('br_product_type')?> - <?=$type?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_title">
+						<fieldset class="holder custom_field">
+							<?=$sub_type?></fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+				
+				<div class="publish_field" id="hold_br_title">
+
+					<label class="hide_field">
+						<span>
+							<em class="required">*</em> <?=lang('br_title')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_title">
+						<fieldset class="holder">
+							<?=form_input(
+										array(	'name' => 'title', 
+												'id' => 'title',
+												'value' => $products[0]["title"],
+												'class' => '{required:true}',
+												'title' => lang('br_details').' - '.lang('br_product_title').' '.lang('br_is_required'))
+									)?></fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+
+				<div class="publish_field" id="hold_br_url_title">
+
+					<label class="hide_field">
+						<span>
+							<em class="required">*</em> <?=lang('br_url_title')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_url_title">
+						<fieldset class="holder">
+							<?=form_input(
 								array(	'name' => 'url', 
 										'id' => 'url',
 										'value' => $products[0]["url"],
 										'class' => '',
 										'title' => lang('br_details').' - '.lang('br_url_title').' '.lang('br_is_required'))
-								)?></td>
-		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><?=lang('br_product_detail')?></label>
-				<br />
-				<?=form_textarea(
-											array(	'name' => 'detail', 
-													'value' => $products[0]["detail"],
-													'title' => lang('br_details').' - '.lang('br_description').' '.lang('br_is_required'),
-													'id' => 'ckeditor',
-													'style' => 'width:400px')
-										)?></td>
-		</tr>
-		<tr>
-			<td class="custom_field">
-				<label><?=lang('status')?></label>
-				<br />
-				<?=form_dropdown('enabled', array(1 => lang('br_enabled'), 0 => lang('br_disabled')), $products[0]["enabled"])?></td>
-		</tr>
-</table>		
+								)?>
+														</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+
+				<div class="publish_field" id="hold_br_detail">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('br_product_detail')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_detail">
+						<fieldset class="holder">
+							<?=form_textarea(
+												array(	'name' => 'detail', 
+														'value' => $products[0]["detail"],
+														'title' => lang('br_details').' - '.lang('br_description').' '.lang('br_is_required'),
+														'id' => 'ckeditor',
+														'style' => 'width:400px')
+											)?>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+
+
+				<div class="publish_field" id="hold_br_status">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('status').' *'?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_featured">
+						<fieldset class="holder">
+							<?=form_dropdown('enabled', array(1 => lang('br_enabled'), 0 => lang('br_disabled')), $products[0]["enabled"])?>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
 
 				<div class="publish_field" id="hold_br_sku">
 
@@ -101,7 +151,7 @@
 												'value' => $products[0]["sku"],
 												'class' => '{required:true}',
 												'title' => lang('br_details').' - '.lang('br_product_sku').' '.lang('br_is_required'))
-										)?></td>
+										)?>
 						</fieldset>
 					</div> <!-- /sub_hold_field -->
 
@@ -117,7 +167,7 @@
 	
 					<div id="sub_hold_br_featured">
 						<fieldset class="holder">
-							<?=form_dropdown('shippable', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["shippable"])?></td>
+							<?=form_dropdown('shippable', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["shippable"])?>
 						</fieldset>
 					</div> <!-- /sub_hold_field -->
 
@@ -152,7 +202,7 @@
 	
 					<div id="sub_hold_br_featured">
 						<fieldset class="holder">
-							<?=form_dropdown('featured', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["featured"])?></td>
+							<?=form_dropdown('featured', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["featured"])?>
 						</fieldset>
 					</div> <!-- /sub_hold_field -->
 

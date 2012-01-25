@@ -1755,6 +1755,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 											'sku' 				=> $items["sku"],
 											'options' 			=> $items["options"],
 										);
+										
 						$this->EE->order_model->create_order_item($item);
 						
 						// If its a downloadable then add the link
@@ -1763,14 +1764,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 								// Get the file info 
 									$dl = $this->EE->order_model->_get_download_file($item);
 									// Generate a uuid as the license key...
-									$dl["license"] = uuid();
 									unset($dl["title"]);
 									unset($dl["filenm_orig"]);
 									unset($dl["filenm"]);
 									unset($dl["created"]);
 									
-								// Insert into the db 
-									$this->EE->order_model->create_order_download($dl);
+								// Need to loop through based on item count
+									for($i=0;$i<$item["quantity"];$i++){
+										// Insert into the db 
+										$dl["license"] = uuid();
+										$this->EE->order_model->create_order_download($dl);
+									}
 							}
 						
 						// Only reduce inventory on direct sales

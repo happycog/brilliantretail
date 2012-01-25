@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.4.5'; 
+		public $version			= '1.0.4.6'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -120,7 +120,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
-					
+					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
@@ -781,12 +781,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->load->library('api'); 
 				$this->EE->api->instantiate('channel_fields');
 				$this->EE->api->instantiate('channel_entries');
-				
 				$this->EE->load->library('filemanager');
 				$this->EE->load->library('spellcheck');
 				$this->EE->load->library('file_field');
 				$this->EE->load->model('channel_model');
-				$this->EE->load->model('tools_model');
 				$this->EE->load->helper(array('snippets','typography', 'spellcheck'));
 				
 				$this->EE->file_field->browser();
@@ -810,6 +808,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$new_product 	= TRUE;
 				$product_id 	= 0;
 				$entry_id 		= 0;
+				
+			// Get the upload preferences  
+				$this->_get_upload_preferences($this->EE->session->userdata('group_id'),$entry_id);	
 				
 			// If we were passed a GET product_id and entry_id then 
 			// we are editind
@@ -3274,6 +3275,45 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			return $can_subscribe;
 		}
+	
+	
+	# Thanks Brandon Kelly for this Cross-compatible between ExpressionEngine 2.0 and 2.4
+	# Referenced: https://gist.github.com/1671737
+		function _get_upload_preferences($group_id = NULL, $id = NULL)
+		{
+			if (version_compare(APP_VER, '2.4', '>='))
+			{
+				$this->EE->load->model('file_upload_preferences_model');
+				return $this->EE->file_upload_preferences_model->get_file_upload_preferences($group_id, $id);
+			}
+		
+			if (version_compare(APP_VER, '2.1.5', '>='))
+			{
+				$this->EE->load->model('file_upload_preferences_model');
+				$result = $this->EE->file_upload_preferences_model->get_upload_preferences($group_id, $id);
+			}
+			else
+			{
+				$this->EE->load->model('tools_model');
+				$result = $this->EE->tools_model->get_upload_preferences($group_id, $id);
+			}
+		
+			// If an $id was passed, just return that directory's preferences
+			if ( ! empty($id))
+			{
+				return $result->row_array();
+			}
+		
+			// Use upload destination ID as key for row for easy traversing
+			$return_array = array();
+			foreach ($result->result_array() as $row)
+			{
+				$return_array[$row['id']] = $row;
+			}
+		
+			return $return_array;
+		}
+	
 		
 	/************************************************/
 	/* The section below includes helper functions	*/

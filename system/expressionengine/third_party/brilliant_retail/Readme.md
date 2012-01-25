@@ -39,3 +39,4 @@ Updated model > order_model > get_order with proper right join to remove existin
 Updated model > order_model > create_shipment/create_order_address/create_order_download/create_order_payment/create_order_item to return insert_id
 Updated UPS shipping model to return rates in order desc. 
 Updated Control Panel success and failure messages to use EE system messages
+Added option_count to product > option tag pair

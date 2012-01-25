@@ -48,7 +48,7 @@
 										<th style="width:100px"><?=lang('br_customer_username')?></th>
 										<th><?=lang('br_customer_email')?></th>
 										<th style="width:60px"><?=lang('br_customer_created')?></th>
-										<th style="width:80px"><?=lang('br_customer_group')?></th>
+										<th style="width:80px"><?=lang('br_member_group')?></th>
 										<th style="width:120px"><?=lang('br_total')?></th>
 										<th style="width:80px"><?=lang('br_customer_history')?></th>
 									</tr>

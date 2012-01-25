@@ -73,7 +73,7 @@
 																'feed' 			=> $tab_feed
 															) 				
 										);
-						
+						/*
 						echo '<ul class="tab_menu" id="tab_menu_tabs">';
 						foreach($tabs as $key=>$val){
 							echo '	<li id="menu_d" title="'.$key.'" class="content_tab">
@@ -82,9 +82,10 @@
 						}
 						echo '</ul>
 								<div class="holder">';
+						*/
 						$i = 0;
 						foreach($tabs as $key=>$val){
-							$js_hide = ($i != 0) ? 'js_hide' : '' ; 
+							$js_hide = ''; #($i != 0) ? 'js_hide' : '' ; 
 							echo '<div class="main_tab '.$js_hide.'" id="'.$key.'">';
 							foreach($val as $k=>$v){
 								echo $v;
@@ -93,8 +94,7 @@
 							echo '</div>';
 							$i++;
 						}
-							echo '<p>&nbsp;</p>';
-						echo '</div>';
+						#echo '</div>';
 					?>
 							<ul id="publish_submit_buttons">
 								<li><?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?></li>

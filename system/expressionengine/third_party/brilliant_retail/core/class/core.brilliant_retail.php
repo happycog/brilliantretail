@@ -490,6 +490,7 @@ class Brilliant_retail_core {
 							$option = $this->_producttype_dropdown($products[0]["product_id"],'option_'.$i,$opt["title"],$opt["title"],$opt["required"],'',$list);
 						}
 						$option_list[] = array( 
+												'option_count' => ($i+1),
 												'option_label' => $opt["title"],
 												'option_input' => $option 
 												);
