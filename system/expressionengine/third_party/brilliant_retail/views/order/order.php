@@ -78,6 +78,8 @@ $content = $this->table->generate();
 
                         	<?=$content?>
 
+							<?php
+							/*
                         	<div id="header_buttons">
                         		<select id="action" name="action">
                             		<option value="">------------</option> 
@@ -87,8 +89,9 @@ $content = $this->table->generate();
                             	</select>
                             	<?=form_submit(array('name' => 'submit', 'value' => lang('submit'), 'class'=>'submit', 'id' => 'batch_submit'))?>
                         	</div>
-                        	
-                        	<div class="b2r_clearboth"><!-- --></div>
+                			*/
+                			?>
+                			<div class="b2r_clearboth"><!-- --></div>
         				
         				</div>
         				

@@ -49,7 +49,8 @@
 	
 					<div id="sub_hold_title">
 						<fieldset class="holder custom_field">
-							<?=$sub_type?></fieldset>
+							<?=$sub_type?>
+						</fieldset>
 					</div> <!-- /sub_hold_field -->
 
 				</div>

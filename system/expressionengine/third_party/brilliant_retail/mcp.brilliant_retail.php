@@ -118,6 +118,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
+					// Added to match EE default styling
+						$this->EE->cp->add_to_head('<script type="text/javascript">$.fn.dataTableExt.oStdClasses.sSortAsc="headerSortUp";$.fn.dataTableExt.oStdClasses.sSortDesc = "headerSortDown";</script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
@@ -536,11 +538,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Set the parameters 
 				$_SESSION["catid"] = (isset($_GET["cat_id"])) ? $_GET["cat_id"] : "";
 
+			$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
+			
 			// Get the categories 
 				$this->vars['categories'] = $this->EE->product_model->get_all_categories();
 				$this->vars['catid'] = $_SESSION["catid"];
 			
-				$this->vars['cp_page_title'] = lang('nav_br_products');
+				$this->vars['cp_page_title'] = lang('view').' '.lang('nav_br_products');
 				$this->vars["selected"] = 'product';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -773,9 +777,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_edit()
 		{
+
 			$this->vars["detail_ckeditor_path"] = $this->_theme('/script/ckeditor',TRUE);
 			$this->vars["detail_ckeditor_url"] = $this->_theme('/script/ckeditor/ckeditor.js');
-					
+			
 			// Load Resources Required for custom fields
 				$this->EE->lang->loadfile('content');
 				$this->EE->load->library('api'); 
@@ -803,12 +808,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 												'file'		=> array('json2', 'cp/publish', 'cp/publish_tabs', 'cp/global')
 											));
 
+			// Set the Breadcrumb
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
+
 			// Lets setup a new product flag. If we are going to edit the product flip 
 			// to false so that we can differeniate in certain places when needed. 
 				$new_product 	= TRUE;
 				$product_id 	= 0;
 				$entry_id 		= 0;
-				
+
 			// Get the upload preferences  
 				$this->_get_upload_preferences($this->EE->session->userdata('group_id'),$entry_id);	
 				
@@ -2524,7 +2532,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars['cp_page_title'] = lang('nav_br_config_permission');
 			
 			$this->vars["groups"] = $this->EE->access_model->get_member_groups();
-				
+
 			// Set the selected menu
 			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_permission';

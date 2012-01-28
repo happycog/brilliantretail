@@ -55,6 +55,7 @@ $this->table->set_heading(
 	*/
 );
 $content = $this->table->generate();
+$content = '';
 ?>
 <div id="b2retail">
 

@@ -29,7 +29,7 @@
 <table cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
 	<tr>
 		<th colspan="2">
-			<?=lang('br_config_feeds')?></th>
+			<?=lang('nav_br_config_feeds')?></th>
 	</tr>
 <?php
 

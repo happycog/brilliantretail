@@ -459,25 +459,6 @@ hr {
 	margin: 2px 0;
 }	
 
-table.mainTable th:last-child {
-	border-right: 1px solid #8FA2AD!important;
-}
-
-table.mainTable th.sorting_disabled {
-	cursor: text;
-} 
-
-table.mainTable th.sorting_asc {
-    background:         transparent url('../images/table_sort_desc.gif') bottom right no-repeat;
-    border-left:        1px solid #C60047;
-
-}
-table.mainTable th.sorting_desc {
-    background:         transparent url('../images/table_sort_asc.gif') bottom right no-repeat;
-    border-left:        1px solid #C60047;
-
-}
-
 table.subTable {
 	border-left: 1px solid #D0D7DF; 
 }
@@ -486,10 +467,17 @@ table.subTable tr th {
 	border-color: #8FA2AD; 
 	background-image: none;
 	background: #8FA2AD;
+	color: white;
+	padding: 9px 8px 10px 8px;
+	cursor: pointer;
+	text-align: left;
 }
 
 table.subTable td {
-	border-width: 0 0 1px 0;
+	background-color: #EBF0F2;
+	border-right: 1px solid #D0D7DF;
+	border-bottom: 1px solid #D0D7DF;
+	padding: 7px 10px;
 }
 
 table.subTable tr.even td {
@@ -500,12 +488,6 @@ table.subTable tr.odd td {
 	background-color: #EBF0F2;
 }
 /* end of Global */
-
-
-
-
-
-
 
 /* Dashboard */
 

@@ -85,13 +85,13 @@
 						*/
 						$i = 0;
 						foreach($tabs as $key=>$val){
-							$js_hide = ''; #($i != 0) ? 'js_hide' : '' ; 
-							echo '<div class="main_tab '.$js_hide.'" id="'.$key.'">';
+							#$js_hide = ($i != 0) ? 'js_hide' : '' ; 
+							#echo '<div class="main_tab '.$js_hide.'" id="'.$key.'">';
 							foreach($val as $k=>$v){
 								echo $v;
 								echo '<p>&nbsp;</p>';
 							}
-							echo '</div>';
+							#echo '</div>';
 							$i++;
 						}
 						#echo '</div>';

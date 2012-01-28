@@ -30,7 +30,7 @@ class Brilliant_retail_ext {
 	public $docs_url		= 'http://www.brilliantretail.com';
 	public $name			= 'Brilliant Retail';
 	public $settings_exist	= 'n';
-	public $version			= '1.0.4.5';
+	public $version			= '1.0.4.6';
 	public $site_id 		= 1;
 	public $base_url 		= '';
 	public $nav_menu 		= array();
@@ -123,7 +123,6 @@ class Brilliant_retail_ext {
 			$this->group_access = $this->EE->access_model->get_admin_access($group_id);
 		}
 		
-
 		$this->_create_admin_menu();
 				
 		$tmp["br_store"] = $this->nav_menu;
@@ -131,7 +130,10 @@ class Brilliant_retail_ext {
 		foreach($menu as $key => $val){
 			$tmp[$key] = $val;
 		}
-		$menu = $tmp;
+		if(count($tmp["br_store"]) > 0){
+			$menu = $tmp;
+		}
+		
 		// Get the channel_titles
 		
 			$arr = $this->_get_channels();
@@ -230,8 +232,10 @@ class Brilliant_retail_ext {
 	function _create_admin_menu(){
 			
 	/* Create the primary menu */
-		$this->nav_menu["br_dashboard"] 	= $this->base_url.AMP.'method=dashboard';
-		$this->nav_menu[] = "----";
+		if(isset($this->group_access["brilliant_retail"]["dashboard"])){
+			$this->nav_menu["br_dashboard"] 	= $this->base_url.AMP.'method=dashboard';
+			$this->nav_menu[] = "----";
+		}
 					
 		if(isset($this->group_access["brilliant_retail"]["customer"])){
 			$this->nav_menu["br_customer"]		= $this->base_url.AMP.'method=customer';

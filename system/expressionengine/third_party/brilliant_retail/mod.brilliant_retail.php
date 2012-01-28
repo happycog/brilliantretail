@@ -2289,7 +2289,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 				// If we are using the new auth library we need to 
 				// resave the password 
-					if(APP_VER >= 2.2){
+					if(version_compare(APP_VER, '2.2', '<')){
 						# Validate password post EE v.2.2
 							// Load the Auth module
 								$this->EE->load->library('Auth');
@@ -2341,7 +2341,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 				}
 			
-				if(APP_VER < 2.2){
+				if(version_compare(APP_VER, '2.2', '<')){
 					# Validate password pre EE v.2.2
 						$current_password = $this->EE->functions->hash(stripslashes($this->EE->input->post('password',TRUE)));
 						$data['password'] = $this->EE->functions->hash(stripslashes($this->EE->input->post('new_password',TRUE)));

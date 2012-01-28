@@ -466,10 +466,14 @@ class Brilliant_retail_core {
 			 	}
 				
 			// Options
+				$products[0]["has_options"] = FALSE;
 				if(isset($products[0]["options"])){
 					$i = 0;
 					$option_list = array();
 					foreach($products[0]["options"] as $opt){
+						// It has options
+							$products[0]["has_options"] = TRUE;
+							
 						if($opt["type"] == 'text'){
 							$option = $this->_producttype_text($products[0]["product_id"],'option_'.$i,$opt["title"],$opt["title"],$opt["required"],'','');
 						}elseif($opt["type"] == 'textarea'){
@@ -1149,34 +1153,53 @@ class Brilliant_retail_core {
 		return $output;
 	}
 
-	function _price_range($prices,$hash){
-		$max = max($prices);
-		
-		$power = ($this->EE->config->item('br_filter_power')) ? $this->EE->config->item('br_filter_power') : 10;
-		
-		if($max < 10){
-			$power = 5;
-		}elseif($max < 5){
-			$power = 1;
-		}
-		
-		$range = pow($power,(strlen(floor($max))-1));
-		
-		foreach($prices as $p){
-			$key = floor($p/$range);
-			if(isset($bucket[$key])){
-				$bucket[$key]++;
-			}else{
-				$bucket[$key] = 1;
+	/* 
+	*  Create the pirce range size and buckets 
+	 * 
+	 * @param array product 
+	 * @return array amount 
+	 */
+	
+		function _price_range($prices,$hash){
+
+			// If there is a filer applied then 
+			// pull from session cache cause we've already 
+			// run this routine
+				if (isset($this->session->cache['_price_range'][$hash])){
+					return $this->session->cache['_price_range'][$hash];
+				}
+			
+			$max = max($prices);
+			
+			$power = ($this->EE->config->item('br_filter_power')) ? $this->EE->config->item('br_filter_power') : 10;
+			
+			if($max < 10){
+				$power = 5;
+			}elseif($max < 5){
+				$power = 1;
 			}
+			
+			$range = pow($power,(strlen(floor($max))-1));
+			
+			foreach($prices as $p){
+				$key = floor($p/$range);
+				if(isset($bucket[$key])){
+					$bucket[$key]++;
+				}else{
+					$bucket[$key] = 1;
+				}
+			}
+			ksort($bucket);
+			$arr = array(
+							'range' => $range,
+							'bucket' => $bucket
+						);
+
+			// Set to session cache
+				$this->session->cache['_price_range'][$hash] = $arr;
+			
+			return $arr;
 		}
-		ksort($bucket);
-		$arr = array(
-						'range' => $range,
-						'bucket' => $bucket
-					);
-		return $arr;
-	}
 	
 	function _layered_navigation($product,$hash,$category_id = 0){
 		$this->EE->load->model('product_model');
@@ -1568,6 +1591,7 @@ class Brilliant_retail_core {
 					$amt = $this->_check_product_price($p);
 					$prices[] = $amt["price"];
 				}				
+				
 				$price = $this->_price_range($prices,$hash);
 
 				$lower = $_SESSION[$hash]["range"] * $price["range"];

@@ -116,8 +116,8 @@
 	$(function(){
 		var oTable = $('#productTable').dataTable({
 													"iDisplayLength": 25, 
-													"aoColumns": [
-																		null,
+													"aoColumns"	: [
+																		{ "asSorting": [ "desc", "asc" ] }, 
 																		null,
 																		null,
 																		null,
