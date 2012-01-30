@@ -368,8 +368,9 @@ class Brilliant_retail_core {
 
 			// Build the price html
 				$amt = $this->_check_product_price($products[0]);
-				$products[0]["price"] 		= $amt["label"];
-				$products[0]["price_html"] 	= $amt["price_html"];
+				foreach($amt as $key => $val){
+					$products[0][$key] = $val;	
+				}
 			
 			// Configurable product selectors
 				if($products[0]["type_id"] == 3){
@@ -1824,8 +1825,9 @@ class Brilliant_retail_core {
 		function _check_product_price($p)
 		{
 			$group_id = $this->EE->session->userdata["group_id"];
+			$amt = array();
+
 			// Deal with our price matrix 
-			
 			 foreach($p["price_matrix"] as $price){
 			 	if(	$price["group_id"] == 0 || 
 			 		$price["group_id"] == $group_id){

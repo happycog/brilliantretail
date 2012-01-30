@@ -2,6 +2,11 @@
 
 Just some little notes for me. Since I'm the only one looking these days. 
 
+### General 
+
+* Handle non-existing pricing for member groups to products. 
+* Add the on_sale flag to product 
+
 ### Channel Fields
 
 * Create field group per site and add the group id to new channels
