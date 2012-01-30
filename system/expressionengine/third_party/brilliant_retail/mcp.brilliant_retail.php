@@ -219,7 +219,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// Add the create product button
 				$this->EE->cp->set_right_nav(array(
-					'nav_br_order_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
+					#'nav_br_order_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
 				));
 			
 				$this->vars['action']	= $this->base_url.'&method=order_batch';
