@@ -224,10 +224,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$i = 0;
 			foreach($products[0]["related"] as $row){
 				if(isset($row["product_id"])){
-					if($rel = $this->EE->product_model->get_products($row["product_id"])){
-						
+
+					if($rel = $this->_get_product($row["product_id"])){
+
 						// Set up the new related prefixed array
-						
 							foreach($rel[0] as $key => $val){
 								$tmp['related_'.$key] = $val;
 							}
