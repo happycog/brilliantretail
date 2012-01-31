@@ -889,6 +889,26 @@ table#b2r_db_performance_bot td img {
 
 /* Product */
 
+div.arrow_open{
+	width: 15px;
+	height: 15px;
+	background: url(../images/icon_arrows.png) 0 0 no-repeat transparent; 
+}
+
+div.arrow_close{
+	background: url(../images/icon_arrows.png) 0 0 no-repeat transparent; 
+	width: 15px;
+	height: 15px;
+}
+.tree_level_1,
+.tree_level_2,
+.tree_level_3 {
+	/* 
+		display: none;
+	*/
+}
+
+
 .move_sale_price_row,
 .move_price_row,  
 .move_image_row, 

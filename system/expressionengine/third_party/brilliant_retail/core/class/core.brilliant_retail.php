@@ -590,7 +590,7 @@ class Brilliant_retail_core {
 					}else{
 						$validate = '';
 					}
-					$this->cats .= '<div style="padding:4px '.($level*25).'px"><input id="product_cat_'.$val["category_id"].'" class="level_'.$level.' parent_'.$val["parent_id"].'" name="category_title[]" value="'.$key.'" type="checkbox"  '.$validate.$sel.' />&nbsp;' . $val['title'].'</div>';
+					$this->cats .= '<div style="padding:4px '.($level*25).'px" class="tree_level_'.$level.'"><input id="product_cat_'.$val["category_id"].'" class="level_'.$level.' parent_'.$val["parent_id"].'" name="category_title[]" value="'.$key.'" type="checkbox"  '.$validate.$sel.' />&nbsp;' . $val['title'].'</div>';
 					if(isset($cat[$key])){
 						$level++;
 						$this->_product_category_tree($cat[$key],$cat,$level,$selected);	

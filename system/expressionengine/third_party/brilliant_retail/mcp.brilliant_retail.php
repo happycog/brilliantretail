@@ -2407,8 +2407,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			if($type=='local'){
 				$loc = '_local/brilliant_retail';
 			}else{
-				$loc = 'brilliantretail/core';			
+				$loc = 'brilliant_retail/core';			
 			}
+			
 			$path = PATH_THIRD.$loc.'/gateway/gateway.'.$_GET["code"].'.php';
 			
 			if(!file_exists($path)){ 
