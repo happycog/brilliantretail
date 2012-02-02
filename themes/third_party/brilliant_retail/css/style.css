@@ -487,6 +487,14 @@ table.subTable tr.even td {
 table.subTable tr.odd td {
 	background-color: #EBF0F2;
 }
+
+#mainContent .pageContents a.button {
+	float: 					right;
+	color:					#fff;
+	-moz-border-radius:		3px;
+	-webkit-border-radius:	3px;
+}
+
 /* end of Global */
 
 /* Dashboard */
@@ -2069,6 +2077,10 @@ input#delete {
 		line-height: 16px;
 	}
 
+	#order_table table td.totals p{
+		padding: 2px 0;
+	}
+	
 	#order_table table tr.odd td {
 		background-color: #EBF0F2;
 	}

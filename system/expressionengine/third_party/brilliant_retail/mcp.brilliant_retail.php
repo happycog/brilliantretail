@@ -55,7 +55,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											'config_email_update','config_gateway_update','config_permission_update',
 											'config_shipping_update','config_site_update','config_tax_update',
 											"order_ajax","customer_ajax","product_ajax","index_products","order_detail",
-											"customer_orders","product_edit", "product_new","promo_new","promo_edit",
+											"order_detail_add_payment","customer_orders","product_edit", "product_new","promo_new","promo_edit",
 											"report_detail","config_feeds_edit","config_attribute_create","config_attribute_edit",
 											"config_attributeset_create","config_attributeset_edit","config_attributeset_delete",
 											"config_category_edit","config_email_edit","config_gateway_install",
@@ -297,7 +297,18 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->vars["hidden"] = array(
 													'order_id' => $order_id
 												);
-												
+			// Create the order total
+				$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
+				$this->vars['order']['order_total'] = $total; 
+				
+			// Figure out the payments
+				$payment = 0;
+				foreach($this->vars['order']['payment'] as $p){
+					$payment += $p['amount'];
+				}
+				$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
+				$this->vars['order']['order_total_due']		= $this->_currency_round($total-$payment);
+			
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
 				if($print == 'true'){
@@ -311,6 +322,43 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}else{
 					return $this->EE->load->view('order/detail', $this->vars, TRUE);	
 				}
+		}
+		function order_detail_add_payment(){
+			
+			// Parameters
+				$order_id = $this->EE->input->get("order_id");
+				
+			// Page title
+				$this->vars['cp_page_title'] = lang('nav_br_order_detail_add_payment');
+				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+			
+			// Order Information
+				$this->vars["status"] = $this->_config["status"];			
+				$this->vars['order'] = $this->EE->order_model->get_order($order_id);
+				// Do we have a user photo?
+					if($this->vars['order']['member']['photo_filename'] != ''){
+						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['member']['photo_filename'].'" />';
+					}else{
+						$this->vars['member_photo'] = '<img src="'.$this->_config["media_url"].'images/profile-pic.jpg" />';
+					}
+				// Pass the order id
+					$this->vars["hidden"] = array(
+													'order_id' => $order_id
+												);
+			// Create the order total
+				$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
+				$this->vars['order']['order_total'] = $total; 
+				
+			// Figure out the payments
+				$payment = 0;
+				foreach($this->vars['order']['payment'] as $p){
+					$payment += $p['amount'];
+				}
+				$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
+				$this->vars['order']['order_total_due']		= $this->_currency_round($total-$payment);
+			
+			return $this->EE->load->view('order/detail_add_payment', $this->vars, TRUE);	
 		}
 		
 		function order_batch(){
@@ -647,132 +695,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function product_new()
 		{
 			return $this->product_edit();	
-			$this->vars["custom"] = array();
-
-				// Lets play with adding custom channel fields to BR
-				// NOT QUITE READY FOR PRIME TIME
-
-					$this->EE->load->library('api'); 
-					$this->EE->api->instantiate('channel_fields');
-					$this->EE->api->instantiate('channel_entries');
-
-				// Get the fields for the channel
-					$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,array(),FALSE);
-					
-				$i = 0;
-				foreach($fields as $f){
-					// We only want the custom fields for this channel
-					if(isset($f["field_name"])){
-						$this->EE->api_channel_fields->set_settings($f["field_type"],$f);
-						$this->EE->api_channel_fields->setup_handler($f["field_id"]);
-						$parameters = '';
-						$this->vars["custom"][] = array(
-														'settings' 		=> $f,
-														'display_field' => $this->EE->api_channel_fields->apply('display_field', $parameters)
-														);
-					}
-				}
-
-			// Is there a gateway available to support subscriptions?
-				$this->vars["can_subscribe"] = $this->_can_subscribe();
-			
-			$this->EE->cp->add_js_script( array(
-												'ui' => 'datepicker' 
-												));
-			
-			$this->vars["selected"] = 'product';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-
-				// Build an empty product shell 
-					$p = new Product();
-					$products = $p->createshell();
-					$this->vars["products"] = $products;
-					
-				// Generate the list of products based 
-				// on the search terms provided. 
-				$this->vars["type_id"] = 0;
-				
-				// Set the type options 
-					$options = '<select id="type_id" name="type_id">';
-					foreach($this->vars['product_type'] as $key => $val){
-						$options .= '<option value="'.$key.'">'.$val.'</option>';
-					}
-					$options .= '</select>';
-					
-					$this->vars["type"] = $options;
-					// member groups for the price matrix / subscriptions
-						$qry = $this->EE->member_model->get_member_groups();
-						$groups = array();
-						foreach($qry->result_array() as $row){
-							$groups[] = $row;
-						}
-						$this->vars["groups"] = $groups;
-
-					// some defaults for configurable products 
-						$this->vars["config_opts"] = $this->EE->product_model->get_attribute_config();
-						$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
-
-					// some defaults for donations 
-						$this->vars["products"][0]["donation"][0] = array(
-																			'min_donation' 			=> 10,
-																			'allow_recurring' 		=> 0
-																		);
-					// some defaults for subscriptions 
-						$this->vars["products"][0]["subscription"][0] = array(
-																				'length' 			=> 1,
-																				'period' 			=> 2,
-																				'trial_price' 		=> '',
-																				'trial_period' 		=> 1, 
-																				'trial_occur' 		=> 1,
-																				'group_id' 			=> 0,  
-																				'cancel_group_id' 	=> 0
-																			);
-					// get the sub_type	
-						$this->vars["sub_type"] = $this->_get_sub_type();
-					
-				// No Attributes by default				
-				$this->vars["attribute_sets"] = $this->EE->product_model->get_attribute_sets();
-				$this->vars['add_attributes'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_add_atributes');
-				$this->vars["attrs"] = '';
-				$this->vars["options"] = array();
-				$this->vars["images"] = array();
-				
-				$products = array();
-				$this->vars['title'] 	= lang('br_new_product');
-				$this->vars['hidden'] 	= array(
-													'site_id' => $this->site_id,
-													'product_id' => 0,
-													'type_id' => 0 
-												);
-					// Get Categories
-		
-						$cat = $this->EE->product_model->get_categories();
-				
-					// Create a tree 
-						if(isset($cat[0])){
-							$categories = $this->_product_category_tree($cat[0],$cat,0);
-						}else{
-							$categories = array();
-						}
-						$this->vars["categories"] = $categories;
-						
-			$this->vars['product_feeds'] = array();
-			$this->vars['feeds'] = $this->EE->feed_model->get_feeds();
-			$this->vars["tab_detail"] 	= $this->EE->load->view('product/tabs/detail', $this->vars, TRUE);
-			$this->vars["tab_attributes"] 	= $this->EE->load->view('product/tabs/attributes', $this->vars, TRUE);
-			$this->vars["tab_price"] 	= $this->EE->load->view('product/tabs/price', $this->vars, TRUE);
-			$this->vars["tab_sale_price"] 	= $this->EE->load->view('product/tabs/sale_price', $this->vars, TRUE);
-			$this->vars["tab_option"] 	= $this->EE->load->view('product/tabs/option', $this->vars, TRUE);
-			$this->vars["tab_category"] = $this->EE->load->view('product/tabs/category', $this->vars, TRUE);
-			$this->vars["tab_image"] 	= $this->EE->load->view('product/tabs/image', $this->vars, TRUE);
-			$this->vars["tab_addon"] 	= $this->EE->load->view('product/tabs/addon', $this->vars, TRUE);
-			$this->vars["tab_related"] 	= $this->EE->load->view('product/tabs/related', $this->vars, TRUE);
-			$this->vars["tab_seo"] 		= $this->EE->load->view('product/tabs/seo', $this->vars, TRUE);
-			$this->vars["tab_feed"] = $this->EE->load->view('product/tabs/feed', $this->vars, TRUE);
-
-			return $this->EE->load->view('product/edit', $this->vars, TRUE);
 		}
 		
 		function product_edit()
@@ -877,7 +799,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,$data,FALSE);
 				
 			// Build the inputs 
-				
 				$fields = $this->_prep_field_wrapper($fields);
 
 				$i = 0;
@@ -1281,7 +1202,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			
 			unset($data['feed_id']);
-								
+				
 			// If product_id is 0 then its a new product
 			if($data["product_id"] == 0){
 
@@ -3111,7 +3032,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							}
 						}
 					$tree .= '	<li class="'.$class.' level_'.$level.'">
-									<input type="checkbox" name="permissions[]" class="permmision_checkbox" value="'.$this->module.'|'.$m.'" '.$chk.' />&nbsp;'.lang('br_'.$m).'
+									<input type="checkbox" name="permissions[]" class="permmision_checkbox" value="'.$this->module.'|'.$m.'" '.$chk.' />&nbsp;'.lang('nav_br_'.$m).'
 								</li>';
 				}
 			}

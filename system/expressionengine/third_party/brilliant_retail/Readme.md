@@ -2,6 +2,8 @@
 
 Just some little notes for me. Since I'm the only one looking these days. 
 
+### Need to install notifications
+
 ### Price Display 
 
 * Handle non-existing pricing for member groups to products. 
@@ -35,6 +37,11 @@ Just some little notes for me. Since I'm the only one looking these days.
 
 * Need to update changes sent in ticket system
 
+### Hidden Variables
+
+* br_hide_blank_option - Remove the blank option from the configurable / option dropdowns
+* br_filter_power - Adjust the power on the price range buckets 
+
 # Changelog
 
 Removed _clean_search_term in favor of ExpressionEngine native sanitize_search_terms() method
@@ -47,3 +54,4 @@ Updated the related product tag to properly request the _get_product core method
 Added option_count to product > option tag pair
 Added has_options tag (TRUE/FALSE)
 Added on_sale flag to the product tag
+Added mode, sort, and dir parameters to catalog tag

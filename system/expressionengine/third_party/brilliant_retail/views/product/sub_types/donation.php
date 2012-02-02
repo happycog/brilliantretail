@@ -58,6 +58,10 @@ $donation = $products[0]["donation"][0];
 					</select> <em><?=lang('br_donation_instructions')?></em></td>
 			</tr>
 <?php
+}else{
+?>
+	<input type="hidden" name="allow_recurring" value="0" />
+<?php
 }
 ?>
 		</tbody>

@@ -690,8 +690,17 @@ class Product_model extends CI_Model {
 			// Knock Knock.... Housekeeping
 				unset($data["submit"]);
 			
+			// Create a list of the default attributes. Some third_party fieldtypes
+			// caused problems so we had to sanatize the post - dpd
+				$allowed_attr = array("site_id","type_id","title","url",
+											"detail","enabled","sku","shippable",
+											"weight","featured","quantity","taxable",
+											"cost","meta_title","meta_keyword","meta_descr");
+			
 			// Break the inputs into fields which we can 
 			// update individually
+					
+					
 					foreach($data as $key => $val){
 						if(strpos($key,'cAttribute') !== false){ 
 							// Custom Attributes
@@ -705,10 +714,12 @@ class Product_model extends CI_Model {
 							$category = $val;
 						}else{
 							// Default Attributes
-							$attr[$key] = $val;
+							if(in_array($key,$allowed_attr)){
+								$attr[$key] = $val;
+							}
 						}
 					}
-					
+
 					// Clean up the options 
 						$option = $this->_build_opts($option);
 	
@@ -722,7 +733,7 @@ class Product_model extends CI_Model {
 			// Update Custom Attributes
 				
 				$this->db->delete('br_product_attributes', array('product_id' => $product_id)); 
-				
+
 				if(isset($_FILES)){
 					$file = rtrim($media_dir,'/').'/file';
 					if(!file_exists($file)){
@@ -733,28 +744,26 @@ class Product_model extends CI_Model {
 						// to upload files via Channel Fieldtypes
 							if(strpos($key,'cAttribute_') != FALSE){
 								$a = explode("_",$key);
-								$title = $cAttr["cAttribute_".$a[1]."_title"];
-								unset($cAttr["cAttribute_".$a[1]."_title"]);
+								$title = $cAttr[$product_id."_cAttribute_".$a[2]."_title"];
+								unset($cAttr[$product_id."_cAttribute_".$a[2]."_title"]);
 								
 								if($f["name"] !== ''){
 									$filename = $f["name"];
 									move_uploaded_file($f["tmp_name"],$file.'/'.$f["name"]);
 								}else{
 									// Get previous file name
-									$prev = unserialize($cAttr["cAttribute_".$a[1]]);
+									$prev = unserialize($cAttr[$product_id."_cAttribute_".$a[2]]);
 									$filename = $prev["file"];
 								}
-								
 								$arr = array(	
 												'title' => $title,
 												'file' => $filename 
 												);
-								
-								$cAttr["cAttribute_".$a[1]] = $arr;	
+								$cAttr[$product_id."_cAttribute_".$a[2]] = $arr;	
 							}
 					}
 				}
-				
+
 				foreach($cAttr as $key => $val){
 					$a = explode('_',$key);
 					if(is_array($val)){

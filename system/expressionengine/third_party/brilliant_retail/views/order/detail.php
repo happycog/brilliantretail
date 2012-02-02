@@ -72,12 +72,25 @@
 
 							<h4 id="status_text">
                             	<?=lang('br_order_date')?> : <?=date("n/d/y",$order["created"])?><br />
-                            	<?=lang('br_order_number')?> : <?=$order["order_id"]?> (<a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id=<?=$order["order_id"]?>&print=true" target="_blank"><?=lang('print')?></a>)<br />
+                            	<?=lang('br_order_number')?> : <?=$order["order_id"]?><br />
                             </h4>
                             <div class="b2r_clearboth"><!-- --></div>
                             
                             <div class="b2r_line"><!-- --></div>
+													
                             	<table id="order_table" width="100%" cellpadding="0" cellspacing="15">
+                            		<tr>
+                            			<td colspan="2">
+			                            	<div style="text-align:right;">
+												<?php
+													if($order["order_total_due"] > 0){
+														echo '<a href="'.$base_url.'&method=order_detail_add_payment&order_id='.$order["order_id"].'" class="button submit">'.lang('br_add_payment').'</a>';					
+													}
+												?>
+												<a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id=<?=$order["order_id"]?>&print=true" class="button submit" target="_blank"><?=lang('print')?></a>
+											</div>
+                            			</td>
+                            		</tr>
                             		<tr>
                             			<td width="50%">
                             				<table width="100%" class="subOrder" cellpadding="0" cellspacing="0">
@@ -167,18 +180,24 @@
 												?>
 
 												<tr>
-													<td colspan="3" style="text-align:right">
-														<b><?=lang('br_subtotal')?> :</b><br />
-														<b><?=lang('br_discount')?> :</b><br />
-														<b><?=lang('br_shipping')?> :</b><br />
-														<b><?=lang('br_tax')?> :</b><br />
-														<b><?=lang('br_total')?> :</b></td>
-													<td>
-														<?=$currency_marker?><?=$order["base"]?><br />
-														<?=$currency_marker?><?=$order["discount"]?><br />
-														<?=$currency_marker?><?=$order["shipping"]?><br />
-			                            				<?=$currency_marker?><?=$order["tax"]?><br />
-			                            				<?=$currency_marker?><?=number_format(($order["total"]+$order["tax"]+$order["shipping"]),2)?></td>
+													<td colspan="3" class="totals" style="text-align:right">
+														<p><?=lang('br_subtotal')?> :</p>
+														<p><?=lang('br_discount')?> :</p>
+														<p><?=lang('br_shipping')?> :</p>
+														<p><?=lang('br_tax')?> :</p>
+														<p><b><?=lang('br_total')?> :</b></p>
+														<p><b><?=lang('br_total_paid')?> :</b></p>
+														<p><b><?=lang('br_total_due')?> :</b></p>
+													</td>
+													<td class="totals">
+														<p><?=$currency_marker?><?=$order["base"]?></p>
+														<p><?=$currency_marker?><?=$order["discount"]?></p>
+														<p><?=$currency_marker?><?=$order["shipping"]?></p>
+			                            				<p><?=$currency_marker?><?=$order["tax"]?></p>
+			                            				<p><b><?=$currency_marker?><?=$order["order_total"]?></b></p>
+			                            				<p><b><?=$currency_marker?><?=$order["order_total_paid"]?></b></p>
+			                            				<p><b><?=$currency_marker?><?=$order["order_total_due"]?></b></p>
+			                            			</td>
 												</tr>
                             				</table></td>
                             		</tr>
@@ -300,7 +319,9 @@
                             		</tr>                          		
                             		
                             	</table>
-
+								<p>&nbsp;</p>
+								<p>&nbsp;</p>
+								<p>&nbsp;</p>
                         	<div class="b2r_clearboth"><!-- --></div>
 
                     </div> <!-- b2r_dashboard --> 

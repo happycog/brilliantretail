@@ -127,19 +127,25 @@
 								}
 							?>
 
-							<tr>
-								<th colspan="3" style="text-align:right">
-									<?=lang('br_subtotal')?> :<br />
-									<?=lang('br_discount')?> :<br />
-									<?=lang('br_shipping')?> :<br />
-									<?=lang('br_tax')?> :<br />
-									<?=lang('br_total')?> :</th>
-								<th>
-									<?=$currency_marker?><?=$order["base"]?><br />
-									<?=$currency_marker?><?=$order["discount"]?><br />
-									<?=$currency_marker?><?=$order["shipping"]?><br />
-                    				<?=$currency_marker?><?=$order["tax"]?><br />
-                    				<?=$currency_marker?><?=number_format(($order["total"]+$order["tax"]+$order["shipping"]),2)?></th>
+							<tr class="last">
+								<td colspan="3" class="totals" style="text-align:right">
+									<p><?=lang('br_subtotal')?> :</p>
+									<p><?=lang('br_discount')?> :</p>
+									<p><?=lang('br_shipping')?> :</p>
+									<p><?=lang('br_tax')?> :</p>
+									<p><b><?=lang('br_total')?> :</b></p>
+									<p><b><?=lang('br_total_paid')?> :</b></p>
+									<p><b><?=lang('br_total_due')?> :</b></p>
+								</td>
+								<td class="totals">
+									<p><?=$currency_marker?><?=$order["base"]?></p>
+									<p><?=$currency_marker?><?=$order["discount"]?></p>
+									<p><?=$currency_marker?><?=$order["shipping"]?></p>
+                    				<p><?=$currency_marker?><?=$order["tax"]?></p>
+                    				<p><b><?=$currency_marker?><?=$order["order_total"]?></b></p>
+                    				<p><b><?=$currency_marker?><?=$order["order_total_paid"]?></b></p>
+                    				<p><b><?=$currency_marker?><?=$order["order_total_due"]?></b></p>
+                    			</td>
 							</tr>
         				</table></td>
         		</tr>

@@ -115,10 +115,14 @@ $lang = array(
 	
 // Orders 
 
+	'nav_br_order_detail_add_payment' => 'Order Add Payment', 
 	'br_orders' 			=> 'Orders', 
 	'br_new_order' 			=> 'New Order',
 	'br_order_id' 			=> 'ID',
 	'br_subtotal' 			=> 'Subtotal',
+	'br_total_paid' 		=> 'Total Paid',
+	'br_total_due' 			=> 'Total Due',
+	'br_add_payment'		=> 'Add Payment', 
 	'br_order_number' 		=> 'Order Number',
 	'br_bill_to' 			=> 'Bill To Address',
 	'br_ship_to' 			=> 'Ship To Address',
@@ -239,6 +243,7 @@ $lang = array(
 			'br_configurable_product_required' => 'At least 1 configurable option',
 			
 		// Subscriptions 
+			'br_subscription' 			=> 'Subscription', 
 			'br_subscrition_id' 		=> 'ID',
 			'br_subscription_status' 	=> 'Status',
 			'br_subscrition_product' 	=> 'Product ID',
@@ -457,7 +462,7 @@ $lang = array(
 	// Permission Settings 
 		'br_permission' => 'Permissions',
 		'br_permission_update_success' => 'Group Permissions Successfully Updated',
-		'br_order_detail' => 'Order Detail',
+		'nav_br_order_detail' => 'Order Detail',
 		'br_promo_new' => 'Promotion Create',
 		'br_promo_edit' => 'Promotion Edit',
 		'br_report_detail' => 'Report Detail',
@@ -507,17 +512,17 @@ $lang = array(
 		'br_ipn_url' 			=> 'IPN Url',
 		
 	// Shipping 
-		'br_shipping' 		=> 'Shipping', 
-		'br_shipping_methods' => 'Shipping Methods', 
-		'br_country' 		=> 'Country',
-		'br_zip_code' 		=> 'Zip Code',
-		'br_from_price' 	=> 'From Price',
-		'br_to_price' 		=> 'To Price',
-		'br_from_weight'	=> 'From Weight',
-		'br_to_weight' 		=> 'To Weight',
-		'br_add_row' 		=> 'Add Row', 
-		'br_label' 			=> 'Label', 
-		'rates_matrix' 		=> 'Rates Matrix',
+		'br_shipping' 			=> 'Shipping', 
+		'br_shipping_methods' 	=> 'Shipping Methods', 
+		'br_country' 			=> 'Country',
+		'br_zip_code' 			=> 'Zip Code',
+		'br_from_price' 		=> 'From Price',
+		'br_to_price' 			=> 'To Price',
+		'br_from_weight'		=> 'From Weight',
+		'br_to_weight' 			=> 'To Weight',
+		'br_add_row' 			=> 'Add Row', 
+		'br_label' 				=> 'Label', 
+		'rates_matrix' 			=> 'Rates Matrix',
 	
 	// Site 
 		'br_site_name' => 'Site Name',

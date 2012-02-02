@@ -129,13 +129,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				// We should add a configuration variable to remove the 
 				// the blank default first option. 
-				#$output = str_replace('<option value=""></option>',"",$output);
+				$br_hide_blank_option = ($this->EE->config->item('br_hide_blank_option')) ? $this->EE->config->item('br_hide_blank_option') : '';
+				if($br_hide_blank_option === TRUE){
+					$output = str_replace('<option value=""></option>',"",$output);
+				}			
 				
 				if($form == 'yes'){
-					$hidden = '<input type="hidden" name="product_id" value="'.$products[0]["product_id"].'" />';
+					$hidden = '<input type="hidden" name="'.$products[0]["product_id"].'_product_id" value="'.$products[0]["product_id"].'" />';
 					if($products[0]["type_id"] == 6){
 						$hidden .= '<input 	type="hidden" 
-											name="subscription_id"
+											name="'.$products[0]["product_id"].'_subscription_id"
 											value="'.$products[0]["subscription"][0]["subscription_id"].'" />';
 					}
 					
@@ -357,7 +360,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 			if(!$category = $this->EE->product_model->get_category_by_key($key)){
 				// Not a valid catalog page
 				$this->EE->functions->redirect($this->EE->functions->create_url($this->EE->config->item('site_404')));
-			 	exit();
 			}
 
 			// Lets do some price checking magic! 

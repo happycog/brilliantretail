@@ -1408,14 +1408,19 @@ class Brilliant_retail_core {
 			unset($_SESSION[$hash]);
 		}
 		
-		if(!isset($_SESSION[$hash])){
-			$_SESSION[$hash] = array(
-												'mode' => 'grid',
-												'sort' => 'relevance',
-												'dir' => 'desc'
-											);
-		}
-
+		// Set the defaulst for this hash
+			if(!isset($_SESSION[$hash])){
+				// Allow for parametersin the catalog tag
+					$mode 	= ($this->EE->TMPL->fetch_param('mode')) ? $this->EE->TMPL->fetch_param('mode') : 'grid';
+					$sort 	= ($this->EE->TMPL->fetch_param('sort')) ? $this->EE->TMPL->fetch_param('sort')	: 'relevance';
+					$dir 	= ($this->EE->TMPL->fetch_param('dir'))  ? $this->EE->TMPL->fetch_param('dir')	: 'desc';
+					$_SESSION[$hash] = array(
+														'mode' 	=> $mode,
+														'sort'	=> $sort,
+														'dir' 	=> $dir
+													);
+			}
+		
 		if(isset($url["remove"])){
 			if($url["remove"] == 'code'){
 				unset($_SESSION[$hash]["code"][$url["title"]]);
@@ -1437,8 +1442,8 @@ class Brilliant_retail_core {
 
 		// Set the Sort 
 			if(isset($url["sort"])){
-				$sort = array('relevance','price','name');
-				if(in_array($url["sort"],$sort)){
+				$sort_opts = array('relevance','price','name');
+				if(in_array($url["sort"],$sort_opts)){
 					$_SESSION[$hash]["sort"] = $url["sort"];
 					$curr_page = 1; //Changed the sort so send page to page 1
 				}
@@ -1626,11 +1631,13 @@ class Brilliant_retail_core {
 			}
 
 		// Filter down attributes 
+			
+			// We allow for passing attributes via the catalog tag
+			
 			if(isset($url["code"])){
 				$_SESSION[$hash]["code"][$url["title"]] = $url["code"];
 			}	
 
-			
 			if(isset($_SESSION[$hash]["code"])){
 				foreach($_SESSION[$hash]["code"] as $code){
 					foreach($vars[0]["results"] as $key => $val){
