@@ -88,10 +88,8 @@ hr {
 }
 
 #b2r_top #b2r_status {
-	float: left;
-	display: inline;
-	margin: 0 0 0 10px;
-	padding: 1px 0 0;
+	padding: 0 10px;
+	margin: 0;
 	overflow: hidden; }
 
 #b2r_top #b2r_status p#b2r_status_msg {
@@ -103,7 +101,6 @@ hr {
 	font-size: 15px;
 	color: #ecf1f4;
 	line-height: 31px;
-	background: url(../images/map01.gif) 0 0 no-repeat; 
 }
 
 #b2r_top #b2r_status p#b2r_status_alert {
@@ -115,12 +112,12 @@ hr {
 	font-size: 15px;
 	color: #FF0000;
 	line-height: 31px;
-	background: url(../images/map01.gif) 0 0 no-repeat;
+	background-color: #2A3940;
 }
 
 
 #b2r_top #b2r_status img#b2r_status_close {
-	float: left;
+	float: right;
 	margin: 0;
 	padding: 0;
 	width: 20px;
@@ -2113,6 +2110,21 @@ input#delete {
 	#order_note_form table td {
 		background:#EBF0F2;
 	}
+	
+	#order_notes table {
+		margin-bottom: 10px;
+	}
+	
+	#order_notes table th {
+		background: #3E4C54;
+		border-bottom: 0;
+		padding: 5px;
+	}
+	#order_notes table th a{
+		font-weight: bold;
+		color: #FFF;
+	}
+	
 	#order_notes td.order_note {
 		border-bottom: 1px #DDD solid;
 	}

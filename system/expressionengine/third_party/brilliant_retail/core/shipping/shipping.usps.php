@@ -103,7 +103,7 @@ class Shipping_usps extends Brilliant_retail_shipping {
 		// if Domestic
 			if($config["from_country"] == $data["to_country"]){
 				$isdomestic = 1;
-				$reqs = 'API=RateV2&XML=<RateV2Request USERID="'.$config["username"].'">';
+				$reqs = 'API=RateV3&XML=<RateV3Request USERID="'.$config["username"].'">';
 				foreach($domestic as $x => $c){
 					$reqs .= '	<Package ID="'.$x.'">
 									<Service>'.$c.'</Service>
@@ -115,7 +115,7 @@ class Shipping_usps extends Brilliant_retail_shipping {
 									<Machinable>TRUE</Machinable>
 								</Package>';
 				}
-				$reqs .= '</RateV2Request>';
+				$reqs .= '</RateV3Request>';
 			}else{
 				$isdomestic = 0;
 				$reqs =	'<IntlRateRequest USERID="'.$config["username"].'" PASSWORD="'.$config["username"].'">'.
@@ -156,6 +156,11 @@ class Shipping_usps extends Brilliant_retail_shipping {
 						$interOpts[$a[1]] = $a[0];
 					}
 				}
+				
+				if(isset($interOpts["First-Class Mail International Package"])){
+					$interOpts["First-Class Mail International Parcel"] = $interOpts["First-Class Mail International Package"];
+				}
+
 				// International options
 				$xml = simplexml_load_string($results);
 				$id = 0;

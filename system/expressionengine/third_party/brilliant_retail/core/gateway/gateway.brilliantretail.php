@@ -26,6 +26,8 @@ class Gateway_brilliantretail extends Brilliant_retail_gateway {
 	// Required variables
 	public $title 	= 'BrilliantRetail';
 	public $label 	= 'Credit Card Payment (BrilliantRetail)';
+	public $instructions = 'Accept credit cards directly from your site with a BrilliantRetail powered by payleap merchant & gateway account. For more information 
+						visit <b><a href="http://www.brilliantretail.com/accept-credit-cards">our website</a></b>';
 	public $descr 	= 'Accept credit cards directly from your site with a BrilliantRetail powered by payleap merchant & gateway account. For more information 
 						visit <b><a href="http://www.brilliantretail.com/accept-credit-cards">our website</a></b>';
 	public $subscription_enabled = 1;

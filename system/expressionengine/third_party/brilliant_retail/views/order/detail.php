@@ -269,6 +269,13 @@
                             								</tr>
                             								<tr>
                             									<td>
+                            										<b><?=lang('br_note_private')?></b></td>
+                            									<td>
+																	<input type="checkbox" name="order_note_isprivate" />
+																</td>
+                            								</tr>
+                            								<tr>
+                            									<td>
                             										<b><?=lang('br_note_notify')?></b></td>
                             									<td>
 																	<input type="checkbox" name="order_note_notify" />
@@ -288,8 +295,7 @@
                             							</div></td>
                             					</tr>
                             					<tr>
-                            						<td>
-                            							<table width="100%" id="order_notes" cellspacing="0">
+                            						<td id="order_notes">
                             					<?php
                             						$i = 0;
                             						foreach($order["notes"] as $n){ 
@@ -299,14 +305,22 @@
 	                            							if($n["filenm"] != ''){
 	                            								$note .= '<br /><a href="/media/attachments/'.$n["filenm"].'" target="_blank">'.lang('br_attachment').'</a>';
 	                            							}
-	                            							echo '	<tr class="'.$class.'">
-	                            										<td width="20%">
-	                            											'.date('n/d/y g:i:s a',$n["created"]).'</td>
-	                            										<td width="*">
-	                            											'.$note.'</td>
-	                            										<td width="10%">
-	                            											<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'">'.lang('delete').'</a></td>
-	                            									</tr>';
+	                            							echo '	<table width="100%" cellspacing="0">
+		                            									<thead>
+		                            										<tr>
+		                            											<th>
+		                            												'.lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.date('n/d/y g:i:s a',$n["created"]).'</th>
+		                            											<th width="10%">
+		                            												<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'">'.lang('remove').'</a></th>
+		                            										</tr>
+		                            									</thead>
+		                            									<tbody>
+			                            									<tr class="'.$class.'">
+			                            										<td colspan="2">
+			                            											'.$note.'</td>
+			                            									</tr>
+		                            									</tbody>
+		                            								</table>';
 	                            							$i++;
 														}
                             						}

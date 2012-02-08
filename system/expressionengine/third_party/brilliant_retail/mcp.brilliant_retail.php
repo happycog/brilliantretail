@@ -55,7 +55,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											'config_email_update','config_gateway_update','config_permission_update',
 											'config_shipping_update','config_site_update','config_tax_update',
 											"order_ajax","customer_ajax","product_ajax","index_products","order_detail",
-											"order_detail_add_payment","customer_orders","product_edit", "product_new","promo_new","promo_edit",
+											"order_detail_add_payment","order_detail_add_payment_process",
+											"customer_orders","product_edit", "product_new","promo_new","promo_edit",
 											"report_detail","config_feeds_edit","config_attribute_create","config_attribute_edit",
 											"config_attributeset_create","config_attributeset_edit","config_attributeset_delete",
 											"config_category_edit","config_email_edit","config_gateway_install",
@@ -75,12 +76,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->load->model('access_model');
 						
 		// Security for our filemanager integration
-			$_SESSION["filemanager"] = true;
+			$_SESSION["filemanager"] = TRUE;
 				
 			if($switch == TRUE){
 					
-				$this->module = $this->EE->input->get("module",true);
-				$this->method = ($this->EE->input->get("method",true)) ? ($this->EE->input->get("method",true)) : "index" ;
+				$this->module = $this->EE->input->get("module",TRUE);
+				$this->method = ($this->EE->input->get("method",TRUE)) ? ($this->EE->input->get("method",TRUE)) : "index" ;
 	
 				$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module='.$this->module;
 				$this->vars["base_url"] = $this->base_url;
@@ -112,9 +113,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				// Product Types
 					$this->vars['product_type'] = $this->_config['product_type'];	
 				
-				// Set a default breadcrumb title
-					$this->EE->cp->set_breadcrumb($this->base_url, 'BrilliantRetail');
-
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
 					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
@@ -167,7 +165,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_dashboard');
 
-			$this->vars["selected"] = 'dashboard';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -211,14 +208,16 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function order()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_order');
-			$this->vars["selected"] = 'order';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 			
-			
+			$this->EE->cp->set_breadcrumb($this->base_url.'&method=orders', 'BrilliantRetail '.lang('nav_br_order'));
+		
 			// Add the create product button
+				
 				$this->EE->cp->set_right_nav(array(
+					#'nav_br_order_new_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_entry',
 					#'nav_br_order_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
 				));
 			
@@ -277,13 +276,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
-				$print = $this->EE->input->get("print",true);
+				$print = $this->EE->input->get("print",TRUE);
 				
 			// Page title
 				$this->vars['cp_page_title'] = lang('nav_br_order_detail');
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-			
+		
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order', 'BrilliantRetail '.lang('nav_br_order'));
+
 			// Order Information
 				$this->vars["status"] = $this->_config["status"];			
 				$this->vars['order'] = $this->EE->order_model->get_order($order_id);
@@ -311,7 +312,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
-				if($print == 'true'){
+				if($print == 'TRUE'){
 					$this->vars["site_name"] = $this->EE->config->item('site_name');
 					$this->vars["company"] = $this->_config["store"][$this->site_id];
 					$this->vars["print_css"] = $this->_theme('css/print.css');
@@ -325,27 +326,33 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 		function order_detail_add_payment(){
 			
+
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
-				
+
+				$hidden = array('order_id' => $order_id);
+
 			// Page title
 				$this->vars['cp_page_title'] = lang('nav_br_order_detail_add_payment');
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+
+			// Add breadcrumb back to order detail
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order_detail&order_id='.$order_id, 'BrilliantRetail '.lang('nav_br_order_detail').' '.$order_id.'');
 			
 			// Order Information
 				$this->vars["status"] = $this->_config["status"];			
 				$this->vars['order'] = $this->EE->order_model->get_order($order_id);
-				// Do we have a user photo?
-					if($this->vars['order']['member']['photo_filename'] != ''){
-						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['member']['photo_filename'].'" />';
-					}else{
-						$this->vars['member_photo'] = '<img src="'.$this->_config["media_url"].'images/profile-pic.jpg" />';
-					}
-				// Pass the order id
-					$this->vars["hidden"] = array(
-													'order_id' => $order_id
-												);
+
+			// Pass the order id
+				$this->vars["hidden"] = array(
+												'order_id' => $order_id
+											);
+
+			// Get the countries
+				$this->vars["countries"] = $this->EE->product_model->get_countries();
+				$this->vars["map"] 	= $this->EE->javascript->generate_json($this->EE->product_model->get_states($this->vars["countries"]));
+					
 			// Create the order total
 				$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
 				$this->vars['order']['order_total'] = $total; 
@@ -358,9 +365,73 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
 				$this->vars['order']['order_total_due']		= $this->_currency_round($total-$payment);
 			
+			// Lets get our options
+				$this->vars['order']["payment_options"] = $this->_payment_options(TRUE,$this->vars['order']["tax"],$this->vars['order']["shipping"],TRUE);
+			
 			return $this->EE->load->view('order/detail_add_payment', $this->vars, TRUE);	
 		}
 		
+		function order_detail_add_payment_process(){
+			foreach($_POST as $key => $val){
+				$data[$key] = $this->EE->input->post($key);
+			}
+			
+			// Lets get some info from the stored order
+				$order_id = $data["order_id"];
+				$order = $this->EE->order_model->get_order($order_id);
+			
+				// Lets get all the order address stuff we need.
+
+				$data["cart_tax"]		= $order["tax"];
+				
+				// Make sure the end user didn't try to pass an amount greater than
+				// the total due. If so reset it to the order due.
+					$data["order_total"] = ($data["order_amount"] > $data["order_total_due"]) ? $data["order_total_due"] : $data["order_amount"];
+				
+				// Lets get the shipping fields from the order:
+					foreach($order["address"][0] as $key => $val){
+						if(strpos($key,'shipping_') !== FALSE){
+							$data['br_'.$key] = $val; #namespaced forms with br_ prefix
+						}
+					}
+				
+				// Process the payment
+					$data["payment"] = $this->_process_payment($data);
+				
+				// Lets deal with an error message from the gateway
+					if(isset($data["payment"]["error"])){
+						$_SESSION["alert"]= lang('br_order_payment_errror').': '.$data["payment"]["error"];
+						$this->EE->functions->redirect($this->base_url.'&method=order_detail_add_payment&order_id='.$order_id);
+					}
+				$payment[0] = array(
+										'order_id' => $order_id, 
+										'transaction_id' => $data["payment"]["transaction_id"],
+										'payment_type' => $data["payment"]["payment_type"],
+										'details' => $data["payment"]["details"],
+										'amount' => $this->_currency_round($data["payment"]["amount"]),
+										'approval' => $data["payment"]["approval"],
+										'created' => date("Y-n-d H:i:s")
+									);
+			
+				// Setup some email variables
+					$vars[0] = $data;
+					$vars[0]['email'] = $order["member"]['email'];
+				
+				$this->_send_email('admin-order-payment', $vars);
+
+			$this->EE->order_model->create_order_payment($payment[0]);
+			$_SESSION["message"] = lang('br_order_payment_added');
+			$this->EE->functions->redirect($this->base_url.'&method=order_detail&order_id='.$order_id);
+		}		
+
+		function order_entry(){
+			$this->vars['cp_page_title'] = lang('nav_br_new_order');
+			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+			
+			return $this->EE->load->view('order/order_entry', $this->vars, TRUE);	
+		}
 		function order_batch(){
 			var_dump($_POST);
 		}
@@ -372,9 +443,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$data[$key] = $this->EE->input->post($key);
 				}
 			// Is the notify flag set?
-				$notify = false;
+				$notify = FALSE;
 				if(isset($data["notify"])){
-					$notify = true;
+					$notify = TRUE;
 					unset($data["notify"]);
 				}
 			
@@ -395,7 +466,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$tmp = $this->EE->order_model->get_order($data["order_id"]);
 			
 			// Do we notify the user?
-				if($notify == true){
+				if($notify == TRUE){
 					$eml[0]["email"] = $tmp["member"]["email"];
 					$eml[0]["order_id"] = $data["order_id"];
 					$eml[0]["order_status"] = $this->_config["status"][$data["status_id"]];
@@ -407,7 +478,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->_send_email('customer-order-status', $eml);
 				}
 			// Set the message and relocate	
-				$this->EE->session->set_flashdata('message_success', lang('br_order_status_success'));
+				$_SESSION["message"] = lang('br_order_status_success');
 				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 				exit();
 		}
@@ -435,13 +506,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Get Order Details
 				$tmp = $this->EE->order_model->get_order($data["order_id"]);
 			// Did we specify User Notification?
-				$notify = false;
+				$notify = FALSE;
 				if(isset($data["order_note_notify"])){
-					$notify = true;
+					$notify = TRUE;
 					unset($data["order_note_notify"]);
 				}
 			// lets notify
-				if($notify == true){
+				if($notify == TRUE){
 					$eml[0]["email"] 		= $tmp["member"]["email"];
 					$eml[0]["order_id"] 	= $data["order_id"];
 					$eml[0]["order_note"] 	= $data["order_note"];
@@ -455,7 +526,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$data["created"] = time();
 				$this->EE->order_model->create_order_note($data);
 			// Message and relocate
-				$this->EE->session->set_flashdata('message_success', lang('br_order_add_note_success'));
+				$_SESSION["message"] = lang('br_order_add_note_success');
 				header('location: '.$this->base_url.'&method=order_detail&order_id='.$data["order_id"]);
 				exit();
 		}
@@ -468,7 +539,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Remove it 
 				$this->EE->order_model->remove_order_note($order_note_id);
 			// Message and redirect
-				$this->EE->session->set_flashdata('message_success', lang('br_order_remove_note_success'));
+				$_SESSION["message"] = lang('br_order_remove_note_success');
 				header('location: '.$this->base_url.'&method=order_detail&order_id='.$order_id);
 				exit();
 		}
@@ -495,7 +566,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function customer()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_customer');
-			$this->vars["selected"] = 'customer';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -544,7 +614,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$member_id = $this->EE->input->get('memberid');
 
 			$this->vars['cp_page_title'] = lang('nav_br_customer_orders');
-			$this->vars["selected"] = 'customer';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -593,7 +662,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['catid'] = $_SESSION["catid"];
 			
 				$this->vars['cp_page_title'] = lang('view').' '.lang('nav_br_products');
-				$this->vars["selected"] = 'product';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -665,7 +733,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							
 							remove_from_cache('product_'.$key);
 						}
-						$this->EE->session->set_flashdata('message_success', lang('br_product_delete_success'));
+						$_SESSION["message"] = lang('br_product_delete_success');
 
 				}elseif($data["action"] == 1){
 					
@@ -675,7 +743,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$this->EE->logger->log_action("Product #".$key." enabled by ".$this->EE->session->userdata["username"]." (member_id: ".$this->EE->session->userdata["member_id"].")");
 							remove_from_cache('product_'.$key);
 						}
-						$this->EE->session->set_flashdata('message_success', lang('br_product_update_success'));
+						$_SESSION["message"] = lang('br_product_update_success');
 
 				}elseif($data["action"] == 2){
 
@@ -685,7 +753,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$this->EE->logger->log_action("Product #".$key." disabled by ".$this->EE->session->userdata["username"]." (member_id: ".$this->EE->session->userdata["member_id"].")");
 							remove_from_cache('product_'.$key);
 						}
-						$this->EE->session->set_flashdata('message_success', lang('br_product_update_success'));
+						$_SESSION["message"] = lang('br_product_update_success');
 				}
 				$this->_index_products();
 			}
@@ -703,6 +771,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["detail_ckeditor_path"] = $this->_theme('/script/ckeditor',TRUE);
 			$this->vars["detail_ckeditor_url"] = $this->_theme('/script/ckeditor/ckeditor.js');
 			
+			$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
+
 			// Load Resources Required for custom fields
 				$this->EE->lang->loadfile('content');
 				$this->EE->load->library('api'); 
@@ -734,7 +804,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
 
 			// Lets setup a new product flag. If we are going to edit the product flip 
-			// to false so that we can differeniate in certain places when needed. 
+			// to FALSE so that we can differeniate in certain places when needed. 
 				$new_product 	= TRUE;
 				$product_id 	= 0;
 				$entry_id 		= 0;
@@ -799,6 +869,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,$data,FALSE);
 				
 			// Build the inputs 
+				
 				$fields = $this->_prep_field_wrapper($fields);
 
 				$i = 0;
@@ -821,7 +892,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["can_subscribe"] = $this->_can_subscribe();
 			
 			$this->vars['cp_page_title'] = lang('nav_br_products');
-			$this->vars["selected"] = 'product';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -925,7 +995,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["options"] = $this->_product_options($this->vars['products'][0]["product_id"]);
 			
 			// Get the images 
-				$images = $this->EE->product_model->get_product_images($this->vars['products'][0]["product_id"],false);
+				$images = $this->EE->product_model->get_product_images($this->vars['products'][0]["product_id"],FALSE);
 				// Remove the large / thumb values
 					unset($images["image_large"]);
 					unset($images["image_large_title"]);
@@ -1077,7 +1147,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 				}
 				
-				$continue = false; // Go back to the product after update?
+				$continue = FALSE; // Go back to the product after update?
 				
 				if(isset($data["entry_id"])){
 					$entry_id = $data["entry_id"];
@@ -1101,7 +1171,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					
 					// Reindex the products
 					$this->_index_products();
-					$this->EE->session->set_flashdata('message_success', lang('br_product_delete_success'));
+					$_SESSION["message"] = lang('br_product_delete_success');
 					header('location: '.$this->base_url.'&method=product');
 					exit();
 				}
@@ -1111,14 +1181,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$data["product_id"] = 0;
 				$data["title"] .= ' [copy]';
 				$data["url"] .= '-copy';
-				$continue = true;
+				$continue = TRUE;
 			}
 			
 			if(isset($data["save_continue"])){
-				$continue = true;
+				$continue = TRUE;
 				unset($data["save_continue"]);
 			}elseif(isset($data["save"])){
-				$continue = false;
+				$continue = FALSE;
 				unset($data["save"]);
 			}
 			
@@ -1263,8 +1333,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			if($redirect==TRUE){
 				//Reindex product search
 					$this->_index_products();
-					$this->EE->session->set_flashdata('message_success', lang('br_product_update_success'));
-					if($continue == true){
+					$_SESSION["message"] = lang('br_product_update_success');
+					if($continue == TRUE){
 						$this->EE->functions->redirect($this->base_url.'&method=product_edit&product_id='.$data["product_id"].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id);
 					}else{
 						$this->EE->functions->redirect($this->base_url.'&method=product');
@@ -1309,7 +1379,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			function subscription()
 			{ 
 				// Get the products 
-					$this->vars["selected"] = 'subscription';
 					$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 					$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 					$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1364,7 +1433,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	
 			function subscription_detail(){ 
 				// Get the products 
-					$this->vars["selected"] = 'subscription';
 					$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 					$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 					$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1399,7 +1467,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					'br_new_promo' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_new'
 				));
 			
-			$this->vars["selected"] = 'promo';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1417,7 +1484,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$this->vars['cp_page_title'] = lang('nav_br_promotion');
 			
-			$this->vars["selected"] = 'promo';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1474,8 +1540,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									'ui' => 'accordion,datepicker' 
 									));
 									
-			$this->vars["selected"] = 'promo';
-			
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1525,7 +1589,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Check for delete
 				if(isset($_POST["delete"])){
 					$this->EE->promo_model->delete_promo($_POST["promo_id"]);
-					$this->EE->session->set_flashdata('message_success', lang('br_promo_delete_success'));
+					$_SESSION["message"] = lang('br_promo_delete_success');
 					header('location: '.$this->base_url.'&method=promo');
 					exit();
 				}
@@ -1567,7 +1631,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->promo_model->update_promo($_POST);
 				$promo_id = $_POST["promo_id"];
 			}
-			$this->EE->session->set_flashdata('message_success', lang('br_promo_update_success'));
+			$_SESSION["message"] = lang('br_promo_update_success');
 			if($continue == 1){
 				header('location: '.$this->base_url.'&method=promo_edit&promo_id='.$promo_id);
 				exit();
@@ -1629,7 +1693,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$i++;
 				}
 			$this->vars["reports"] = $reports;
-			$this->vars["selected"] = 'report';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1642,7 +1705,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			// Set the header/breadcrumb 
 				$this->vars['cp_page_title'] = lang('nav_br_report');
-				$this->vars["selected"] = 'report';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1723,8 +1785,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				'br_new_attribute' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attribute_create'
 			));
 			
-			$this->vars["selected"] = 'config';
-			$this->vars["sub_selected"] = 'config_attribute';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -1735,7 +1795,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_attribute_update()
 		{
-			$continue = false;
+			$continue = FALSE;
 
 			// Check for duplicate
 				if(isset($_POST["duplicate"])){
@@ -1743,14 +1803,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$_POST["title"] .= ' [copy]';
 					$_POST["code"] .= 'copy';
 					unset($_POST["duplicate"]);
-					$continue = true;
+					$continue = TRUE;
 				}
 			
 			// Check for delete
 				if(isset($_POST["delete"])){
 					$this->EE->product_model->delete_attribute($_POST["attribute_id"]);
 					remove_from_cache('config');
-					$this->EE->session->set_flashdata('message_success', lang('br_attribute_delete_success'));
+					$_SESSION["message"] = lang('br_attribute_delete_success');
 					header('location: '.$this->base_url.'&method=config_attribute');
 					exit();
 				}
@@ -1758,9 +1818,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Check for Save Buttons
 				if(isset($_POST["submit"])){
 					if($_POST["submit"] == 'Save'){
-						$continue = false;	
+						$continue = FALSE;	
 					}else{
-						$continue = true;
+						$continue = TRUE;
 					}
 					unset($_POST["submit"]);
 				}
@@ -1775,8 +1835,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$attribute_id = $this->EE->product_model->update_attribute($_POST);
 			remove_from_cache('config');
-			$this->EE->session->set_flashdata('message_success', lang('br_attribute_update_success'));
-			if($continue == true){
+			$_SESSION["message"] = lang('br_attribute_update_success');
+			if($continue == TRUE){
 				header('location: '.$this->base_url.'&method=config_attribute_edit&attribute_id='.$attribute_id);
 			}else{
 				header('location: '.$this->base_url.'&method=config_attribute');
@@ -1796,7 +1856,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 												'default_text' => '',
 												'options' => ''
 												);
-			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_attribute';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -1812,14 +1871,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$attribute_id = $this->EE->input->get('attribute_id');
 			$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_by_id($attribute_id);
-			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_attribute';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
 			$this->vars["content"] = $this->EE->load->view('config/attribute_edit', $this->vars, TRUE);
-			$this->EE->session->set_flashdata('message_success', lang('br_attribute_update_success'));
+			$_SESSION["message"] = lang('br_attribute_update_success');
 			return $this->EE->load->view('config/index', $this->vars, TRUE);			
 		}
 		
@@ -1835,7 +1893,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				));
 
 			// Set the selected menu
-			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_attributeset';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -1857,7 +1914,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["title"] = '';
 
 			// Set the selected menu
-			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_attribute';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -1879,7 +1935,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["title"] = $attribute_set[0]["title"];
 
 			// Set the selected menu
-			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_attributeset';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -1893,7 +1948,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{	
 			$this->EE->product_model->update_attribute_set();
 			remove_from_cache('config');
-			$this->EE->session->set_flashdata('message_success', lang('br_attribute_set_update_success'));
+			$_SESSION["message"] = lang('br_attribute_set_update_success');
 			return $this->config_attributeset();
 		}
 
@@ -1902,7 +1957,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$attribute_set_id = $this->EE->input->get('attribute_set_id');
 			$this->vars["attributes"] = $this->EE->product_model->delete_attribute_set($attribute_set_id);
 			remove_from_cache('config');
-			$this->EE->session->set_flashdata('message_success', lang('br_attribute_set_delete_success'));
+			$_SESSION["message"] = lang('br_attribute_set_delete_success');
 			header('location: '.$this->base_url.'&method=config_attributeset');
 			exit();
 		}
@@ -1912,7 +1967,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Set the selected menu
 			$this->vars['cp_page_title'] = lang('nav_br_config_category');
 
-			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_category';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -1939,11 +1993,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_category_edit()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_config_category');
-			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_category';
 			$cat = $this->EE->product_model->get_category($this->EE->input->get('cat_id'));
 			
-			$prod = $this->EE->product_model->get_product_by_category($this->EE->input->get('cat_id'),"true");
+			$prod = $this->EE->product_model->get_product_by_category($this->EE->input->get('cat_id'),"TRUE");
 			
 			$cnt = 0;
 			$prod_ary = array();
@@ -1969,7 +2022,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											$(\'#remove_image_link\').bind(\'click\',function(){
 												$(\'#remove_image\').val(1);
 												$(\'#cat_image_container\').remove();
-												return false;
+												return FALSE;
 											});
 										});
 									</script>';
@@ -2108,7 +2161,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			// Send all templates to the view
 				$this->vars["emails"] = $emails;
-				$this->vars["selected"] = 'config';
 				$this->vars["sub_selected"] = 'config_email';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -2122,7 +2174,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$list = $this->EE->email_model->get_emails_by_site_id($this->site_id);
 			$email_id = $this->EE->input->get('email_id');
 			$this->vars["email"] = $this->EE->email_model->get_email_by_id($email_id);
-			$this->vars["selected"] = 'config';
 			$this->vars["sub_selected"] = 'config_email';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
@@ -2143,7 +2194,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							'bcc_list' 		=> $_POST['bcc_list'] 
 						);
 			$this->EE->email_model->update_email($email_id,$data);
-			$this->EE->session->set_flashdata('message_success', lang('br_email_update_success'));
+			$_SESSION["message"] = lang('br_email_update_success');
 			header('location: '.$this->base_url.'&method=config_email');
 			exit();
 		}
@@ -2156,8 +2207,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				'br_new_config_feeds' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_feeds_edit'
 			));	
 			
-			$this->vars["selected"]     = 'config';
-			$this->vars["sub_selected"] = 'config_feeds';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"]         = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"]      = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2239,15 +2288,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
   			if( $this->EE->input->post('delete') ){
   				$this->EE->feed_model->delete_feed($this->EE->input->post('feed_id'));
   				remove_from_cache('config');
-  				$this->EE->session->set_flashdata('message_success', lang('br_feed_delete_success'));
+  				$_SESSION["message"] = lang('br_feed_delete_success');
   				$this->EE->functions->redirect( $this->base_url . AMP . 'method=config_feeds'); 
   			}
 			
 			// Prepare Interface
 				$this->vars['feed']         = $feed_data;
 				$this->vars['categories']   = $this->EE->product_model->get_all_categories();
-				$this->vars["selected"]     = 'config';
-				$this->vars["sub_selected"] = 'config_feeds';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"]         = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"]      = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2267,8 +2314,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			// Set the selected menu
 				$this->vars['cp_page_title'] = lang('nav_br_config_gateway');
-				$this->vars["selected"] = 'config';
-				$this->vars["sub_selected"] = 'config_gateway';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2349,7 +2394,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 																		$class->descr,
 																		$class->version
 																	);
-				$this->EE->session->set_flashdata('message_success', lang('br_module_install_success'));
+				$_SESSION["message"] = lang('br_module_install_success');
 				$class->install($config_id);
 			}
 			remove_from_cache('config');
@@ -2361,8 +2406,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			// Set the selected menu
 				$this->vars['cp_page_title'] = lang('nav_br_config_gateway');
-				$this->vars["selected"] = 'config';
-				$this->vars["sub_selected"] = 'config_gateway';
 				
 				$code 		= $_GET["code"];
 				$config_id	= $_GET["config_id"];
@@ -2430,20 +2473,20 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$data[$key] = $val;
 			}
 			$this->EE->core_model->module_update($data);
-			$this->EE->session->set_flashdata('message_success', lang('br_module_update_success'));
+			$_SESSION["message"] = lang('br_module_update_success');
 			header('location: '.$this->base_url.'&method=config_gateway');
 			exit();
 		}
 
 		function config_gateway_remove()
 		{
-			$config_id = strtolower($this->EE->input->get("config_id",true));
-			$code = strtolower($this->EE->input->get("code",true));
+			$config_id = strtolower($this->EE->input->get("config_id",TRUE));
+			$code = strtolower($this->EE->input->get("code",TRUE));
 			$str = 'Gateway_'.$code;
 			$class = new $str();
 			$class->remove($config_id);
 			$this->EE->core_model->module_remove($_GET["config_id"]);
-			$this->EE->session->set_flashdata('message_success', lang('br_module_remove_success'));
+			$_SESSION["message"] = lang('br_module_remove_success');
 			remove_from_cache('config');
 			header('location: '.$this->base_url.'&method=config_gateway');
 			exit();
@@ -2456,8 +2499,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["groups"] = $this->EE->access_model->get_member_groups();
 
 			// Set the selected menu
-			$this->vars["selected"] = 'config';
-			$this->vars["sub_selected"] = 'config_permission';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2468,13 +2509,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_permission_edit()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_config_permission');
-			$group_id = $this->EE->input->get("group_id",true);
+			$group_id = $this->EE->input->get("group_id",TRUE);
 			$this->vars["permissions"] = $this->_admin_permission_tree($group_id);
 			$this->vars["group"] = $this->EE->access_model->get_group_title($group_id);
 			
 			// Set the selected menu
-				$this->vars["selected"] = 'config';
-				$this->vars["sub_selected"] = 'config_permission';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			// Form stuff 
@@ -2509,7 +2548,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 		
 			// Set a message and return to overview
-				$this->EE->session->set_flashdata('message_success', lang('br_permission_update_success'));
+				$_SESSION["message"] = lang('br_permission_update_success');
 				header('location: '.$this->base_url.'&method=config_permission');
 				exit();
 		}
@@ -2519,9 +2558,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// Set the selected menu
 				$this->vars['cp_page_title'] = lang('nav_br_config_shipping');
-				$this->vars["selected"] = 'config';
-				$this->vars["sub_selected"] = 'config_shipping';
-
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2599,7 +2635,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 																		$class->descr,
 																		$class->version
 																	);
-				$this->EE->session->set_flashdata('message_success', lang('br_module_install_success'));
+				$_SESSION["message"] = lang('br_module_install_success');
 					$data[] = array(
 								'config_id' => $config_id, 
 								'label'	 	=> lang('br_label'), 
@@ -2634,9 +2670,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			// Set the selected menu
 				$this->vars['cp_page_title'] = lang('nav_br_config_shipping');
-				$this->vars["selected"] = 'config';
-				$this->vars["sub_selected"] = 'config_shipping';
-				
 				$code = $_GET["code"];
 				foreach($this->_config["shipping"][$this->site_id][$code]["config_data"] as $f){
 					// Use our input functions
@@ -2686,20 +2719,20 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			}
 			$this->EE->core_model->module_update($data);
-			$this->EE->session->set_flashdata('message_success', lang('br_module_update_success'));
+			$_SESSION["message"] = lang('br_module_update_success');
 			header('location: '.$this->base_url.'&method=config_shipping');
 			exit();
 		}
 
 		function config_shipping_remove()
 		{
-			$config_id = $this->EE->input->get("config_id",true);
-			$code 	= $this->EE->input->get("code",true);
+			$config_id = $this->EE->input->get("config_id",TRUE);
+			$code 	= $this->EE->input->get("code",TRUE);
 			$str 	= 'Shipping_'.$code;
 			$class 	= new $str();
 			$class->remove($config_id);
 			$this->EE->core_model->module_remove($config_id);
-			$this->EE->session->set_flashdata('message_success', lang('br_module_remove_success'));
+			$_SESSION["message"] = lang('br_module_remove_success');
 			remove_from_cache('config');
 			header('location: '.$this->base_url.'&method=config_shipping');
 			exit();
@@ -2714,8 +2747,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									'ui' => 'accordion' 
 									));
 
-			$this->vars["selected"] = 'config';
-			$this->vars["sub_selected"] = 'config_site';
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2768,7 +2799,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->session->set_flashdata('message_failure',lang('br_invalid_license'));
 			}
 			$this->EE->store_model->update_store($data);
-			$this->EE->session->set_flashdata('message_success', lang('br_store_update_success'));
+			$_SESSION["message"] = lang('br_store_update_success');
 			header('location: '.$this->base_url.'&method=config_site');
 			exit();
 		}
@@ -2776,8 +2807,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_tax()
 		{ 
 			$this->vars['cp_page_title'] = lang('nav_br_config_tax');
-			$this->vars["selected"] = 'config';
-			$this->vars["sub_selected"] = 'config_tax';
 			
 			$this->EE->cp->set_right_nav(array('br_new_tax' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_new'));
 			
@@ -2797,8 +2826,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$tax_id = 0;
 
 			// Load Menu			
-				$this->vars["selected"] = 'config';
-				$this->vars["sub_selected"] = 'config_tax';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2830,8 +2857,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$tax_id = (int) $_GET["tax_id"];
 			
 			// Load Menu			
-				$this->vars["selected"] = 'config';
-				$this->vars["sub_selected"] = 'config_tax';
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
@@ -2861,7 +2886,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Check for delete
 				if(isset($_POST["delete"])){
 					$this->EE->tax_model->delete_tax($_POST["tax_id"]);
-					$this->EE->session->set_flashdata('message_success', lang('br_tax_delete_success'));
+					$_SESSION["message"] = lang('br_tax_delete_success');
 					header('location: '.$this->base_url.'&method=config_tax');
 					exit();
 				}
@@ -2875,7 +2900,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->tax_model->update_tax($_POST);
 				$tax_id = $_POST["tax_id"];
 			}
-			$this->EE->session->set_flashdata('message_success', lang('br_tax_update_success'));
+			$_SESSION["message"] = lang('br_tax_update_success');
 			if($continue == 1){
 				header('location: '.$this->base_url.'&method=config_tax_edit&tax_id='.$tax_id);
 				exit();

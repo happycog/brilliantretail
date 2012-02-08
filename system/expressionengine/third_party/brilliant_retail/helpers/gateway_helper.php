@@ -58,12 +58,12 @@ function create_date() {
 function cc_type_number($cc_number) {
  	$card_type = "";
  	$card_regexes = array(
-       "/^4\d{12}(\d\d\d){0,1}$/" => "Visa",
-       "/^5[12345]\d{14}$/"       => "MasterCard",
-       "/^3[47]\d{13}$/"          => "AmEx",
-       "/^6011\d{12}$/"           => "Discover",
-       "/^30[012345]\d{11}$/"     => "DinersClub",
-       "/^3[68]\d{12}$/"          => "DinersClub",
+		"/^4\d{12}(\d\d\d){0,1}$/" => "Visa",
+		"/^5[12345]\d{14}$/"       => "MasterCard",
+		"/^3[47]\d{13}$/"          => "AmEx",
+		"/^6011\d{12}$/"           => "Discover",
+		"/^30[012345]\d{11}$/"     => "DinersClub",
+		"/^3[68]\d{12}$/"          => "DinersClub"
     );
 
  	foreach ($card_regexes as $regex => $type) {

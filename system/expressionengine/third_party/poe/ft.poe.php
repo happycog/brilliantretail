@@ -97,7 +97,23 @@ class Poe_ft extends EE_Fieldtype {
 						var a = $('.replace_ckeditor');
 						if (a.length > 0){
 							$.each(a,function(index,value){
-								CKEDITOR.replace($(value).attr('name'));
+								CKEDITOR.replace($(value).attr('name'),	{
+									toolbar :
+									[
+								        ['Paste','PasteText','PasteFromWord'],
+									    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
+									    ['Bold','Italic','Underline'], 
+									    ['Strike','-','Subscript','Superscript'],
+									    '/',
+									    ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
+									    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+									    ['Image','Link','Unlink','Anchor'],
+									    '/',
+									    ['Format','Font','FontSize'],
+									    ['TextColor','BGColor'],
+									    ['Source'] 
+									]
+								});
 								$(value).removeClass('replace_ckeditor');
 							});
 							clearTimeout(setCKEditor);

@@ -39,7 +39,13 @@ class Gateway_mailin extends Brilliant_retail_gateway {
 							"Method" => "Mail In",
 							"Transaction ID" => $id 
 						);
-										
+		
+		if($this->admin_order === FALSE){
+			$amount = 0;
+		}else{
+			$amount = $data["amount"];
+		}
+									
 		$trans = array(
 							'status' => 2, 
 							'amount' => 0,

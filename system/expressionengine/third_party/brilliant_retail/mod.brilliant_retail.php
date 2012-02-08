@@ -304,18 +304,55 @@ class Brilliant_retail extends Brilliant_retail_core{
 	*/		
 		public function image()
 		{
-			$cache = $this->_config["media_dir"].'cache/';
+			// Include the image manipulation class
+				include_once(PATH_THIRD.'brilliant_retail/libraries/imagetools/src/ImageTools.class.php');
 	
+			// Where do we cache images? 
+				$cache = $this->_config["media_dir"].'cache/';
+				if(!file_exists($cache)){
+					mkdir($cache);
+				}
+			
 			// Get params 
 				$src = $this->EE->TMPL->fetch_param('src');
 				if($src == ''){
 					return;
 				} 
-				$title 	= $this->EE->TMPL->fetch_param('title');
-				$alt 	= $this->EE->TMPL->fetch_param('alt');
-				$url_only = ( $this->EE->TMPL->fetch_param('url_only') == '' ) ? 'no' : $this->EE->TMPL->fetch_param('url_only');
-				$width 	= ( $this->EE->TMPL->fetch_param('width') == '' ) ? 175 : $this->EE->TMPL->fetch_param('width');
-				$height = ( $this->EE->TMPL->fetch_param('height') == '' ) ? 210 : $this->EE->TMPL->fetch_param('height');
+				// Image attributes & sizing
+					$title 			= $this->EE->TMPL->fetch_param('title');
+					$alt 			= $this->EE->TMPL->fetch_param('alt');
+					$width 			= ( $this->EE->TMPL->fetch_param('width')) ? (int) $this->EE->TMPL->fetch_param('width') : 175 ;
+					$height 		= ( $this->EE->TMPL->fetch_param('height')) ? (int) $this->EE->TMPL->fetch_param('height') : 210;
+					$mode 			= ( $this->EE->TMPL->fetch_param('mode')) ? $this->EE->TMPL->fetch_param('mode') : 'matte';
+				
+				// Image effects 
+					## Reflection
+						$reflect 		= ( $this->EE->TMPL->fetch_param('reflect')) ? (int) $this->EE->TMPL->fetch_param('reflect') : 0;
+						$reflect_bg		= ( $this->EE->TMPL->fetch_param('reflect_bg')) ? $this->EE->TMPL->fetch_param('reflect_bg') : '#FFF' ;
+						$reflect_space	= ( $this->EE->TMPL->fetch_param('reflect_space')) ? (int) $this->EE->TMPL->fetch_param('reflect_space') : 1;
+
+					## Watermarking		
+
+						$watermark = ( $this->EE->TMPL->fetch_param('watermark')) ? $this->EE->TMPL->fetch_param('watermark') : '';
+						$watermark_vpos = ( $this->EE->TMPL->fetch_param('watermark_vpos')) ? strtoupper($this->EE->TMPL->fetch_param('watermark_vpos')) : "BOTTOM";
+						$watermark_hpos = ( $this->EE->TMPL->fetch_param('watermark_hpos')) ? strtoupper($this->EE->TMPL->fetch_param('watermark_hpos')) : "RIGHT";
+						
+						// Vertical Spacing 
+							$vPos = array(
+											"TOP" 		=> ImageTools::IMAGE_POSITION_TOP,
+											"CENTER" 	=> ImageTools::IMAGE_POSITION_CENTER,
+											"BOTTOM" 	=> ImageTools::IMAGE_POSITION_BOTTOM
+										);
+						// Horizontal Spacing	
+							$hPos = array(
+											"LEFT" 		=> ImageTools::IMAGE_POSITION_LEFT,
+											"CENTER" 	=> ImageTools::IMAGE_POSITION_CENTER,
+											"RIGHT" 	=> ImageTools::IMAGE_POSITION_RIGHT
+										);
+
+				// Output Settings 
+					$url_only 		= $this->EE->TMPL->fetch_param('url_only');
+				
 				
 			// build the paths 
 			$part = explode('.',$src);
@@ -323,14 +360,63 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$filepath = substr($src,0,-(strlen($part[count($part)-1])+1)).'_'.$width.'_'.$height.'.jpg'; 
 			$a = explode("/",$filepath);
 			$cache_file = $a[count($a)-1];
+			if($reflect > 0){
+				$cache_file = 'r'.$reflect.'_'.$cache_file;	
+			}
+			$use_watermark = FALSE;
+			if($watermark != ''){
+				if(file_exists($this->_config["media_dir"].$watermark)){
+					$v = (isset($vPos[$watermark_vpos])) ? $vPos[$watermark_vpos] : $vPos["BOTTOM"];
+					$h = (isset($hPos[$watermark_hpos])) ? $hPos[$watermark_hpos] : $hPos["RIGHT"];
+					$cache_file = 'w'.$v.$h.'_r'.$reflect.'_'.$cache_file;
+					$use_watermark = TRUE;
+				}
+			}
 			// no cache file
-				if(!file_exists($cache_file)){
-					if(cache_image($src,$cache_file,$ext,$width,$height,$this->_config["media_dir"])){
-						if(strtolower($url_only) == "yes"){
-							return $this->_config["media_url"].'cache/'.$cache_file;
-						}else{
-							return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" width="'.$width.'" />';
+				if(!file_exists($this->_config["media_dir"].'cache/'.$cache_file)){
+					
+					// What mode of sizing do we want to do?
+					// # matte  	(default) scales the image to the height and width provided and 
+					//			 	returns the image matted on the canvas widht / height provided. 
+					// # scale  	Scales to image to fit within the height or width provided. 
+					// # fit  		stretches the image to exactly the dimensions provided 
+						if($mode == 'scale'){ 
+							$size = getimagesize($this->_config["media_dir"].$src);
+							// Calculate the resize side
+								$w_ratio = $size[0] / $width; 
+								$h_ratio = $size[1] / $height; 
+							if($w_ratio >= $h_ratio){
+								$width = $width; 
+								$height = round(($width*$size[1])/$size[0]);	
+							}else{
+								$width = round(($height*$size[0])/$size[1]);
+								$height = $height;
+							}
+						}elseif($mode == 'scale'){ 
+							
 						}
+
+					$img = new ImageTools($this->_config["media_dir"].$src);
+
+					// Do we have a relection?
+						if($reflect > 0){
+							$img->reflect($reflect, $reflect_bg, $reflect_space); // drop shadow percentage, background color, spacing
+						}
+	
+					// Do resize pre watermarking
+						$img->resizeOriginal($width,$height); // new width, new height
+					
+					// Set the image watermark 
+						if($use_watermark === TRUE){
+							$img->addWatermarkImage($this->_config["media_dir"].$watermark, $v, $h, 5); 
+						}
+						
+					$img->save($this->_config["media_dir"].'cache/',$cache_file);
+					
+					if(strtolower($url_only) == "yes"){
+						return $this->_config["media_url"].'cache/'.$cache_file;
+					}else{
+						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" height="'.$height.'" width="'.$width.'" />';
 					}
 				}
 	
@@ -338,7 +424,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if(strtolower($url_only) == "yes"){
 					return $this->_config["media_url"].$src;			
 				}else{
-					return '<img src="'.$this->_config["media_url"].$src.'" title="'.$title.'" width="'.$width.'" />';
+					return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" width="'.$width.'" />';
 				}
 		}
 
@@ -2058,10 +2144,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$class =  $this->EE->TMPL->fetch_param('class');
 				$value =  $this->EE->TMPL->fetch_param('value');
 
-			$states = $this->EE->product_model->get_countries();
+			$countries = $this->EE->product_model->get_countries();
 			$output =  '<select name="'.$name.'" id="'.$id.'" class="'.$class.'">';
 
-			foreach($states as $key => $val){
+			foreach($countries as $key => $val){
 				$sel = ($key == $value) ? 'selected="selected"' : '' ;
 				$output .=	'<option value="'.$key.'" class="{zone_id:'.$val["zone_id"].'}" '.$sel.'>'.$val["title"].'</option>';
 			} 			

@@ -51,6 +51,8 @@ Updated model > order_model > create_shipment/create_order_address/create_order_
 Updated UPS shipping model to return rates in order desc. 
 Updated Control Panel success and failure messages to use EE system messages
 Updated the related product tag to properly request the _get_product core method instead of the product model
+Updated USPS to Rates v3 API
+Fixed issue with USPS First Class International Package rate
 Added option_count to product > option tag pair
 Added has_options tag (TRUE/FALSE)
 Added on_sale flag to the product tag

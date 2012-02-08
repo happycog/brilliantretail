@@ -71,7 +71,7 @@
         <div id="dleft" class="left">
         	<div id="photos">
             	<div class="large">
-            		{exp:brilliant_retail:image src="{image_large}" width="390" height="470"}
+            		{exp:brilliant_retail:image src="{image_large}" watermark="logo.png" watermark_vpos="bottom" watermark_hpos="right" width="390" height="470"}
             	</div>
             	
 				{!-- Only show thumbnails if there are more than 1--}
@@ -102,8 +102,7 @@
         
         
         <div id="dright" class="right">
-        
-            <div id="details">
+        	<div id="details">
                     {price_html}
                     {if {type_id} != 6 AND {type_id} != 7}
                     	<label>Qty:</label>

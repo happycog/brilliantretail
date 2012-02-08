@@ -38,16 +38,19 @@
                 
                 <div id="b2r_panel_int">
                 
-                	<div id="b2r_settings">
+                	<div id="b2r_products" class="br_contain">
+                        	
+                        	order form here please!
 
-						<?=$content?>
-                    
-                    </div> <!-- b2r_settings --> 
+                        	<div class="b2r_clearboth"><!-- --></div>
+
+                    </div> <!-- b2r_dashboard --> 
                     
                 </div> <!-- b2r_panel_int -->
             </div> <!-- b2r_panel -->
-            
+
     	</div> <!-- b2r_main -->
+
         <div class="b2r_clearboth"><!-- --></div>
         
         <?=$br_footer?>

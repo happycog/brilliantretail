@@ -101,10 +101,12 @@ class Order_model extends CI_Model {
 			}	
 			
 		// Order Notes 
-			$this->db->select('*');
-			$this->db->from('br_order_note');
-			$this->db->where('order_id',$order_id);
-			$this->db->order_by('created','desc');
+			$this->db->select('*') 
+					->from('br_order_note') 
+					->where('br_order_note.order_id',$order_id)
+					->join('members', 'members.member_id = br_order_note.member_id') 
+					->order_by('br_order_note.created','desc');
+			
 			$query = $this->db->get();
 			$i = 0;
 			$order["notes"][0] = array();

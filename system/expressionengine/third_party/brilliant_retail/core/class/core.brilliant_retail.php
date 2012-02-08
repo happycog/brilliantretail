@@ -1009,15 +1009,17 @@ class Brilliant_retail_core {
 		return $hits;
 	}
 	
-	function _payment_options($osc_enabled = true,$tax=0,$shipping=0){
+	function _payment_options($osc_enabled=TRUE,$tax=0,$shipping=0,$admin_order=FALSE){
 		$output = '';
 		$this->EE->load->model('product_model'); 
 		$cart = $this->EE->product_model->cart_get();
 		// see if there are subscriptions in the cart
 			$subscriptions = 0;
-			foreach($cart["items"] as $c){
-				if(count($c["subscription"]) > 0){
-					$subscriptions = 1;
+			if(isset($cart["items"])){
+				foreach($cart["items"] as $c){
+					if(count($c["subscription"]) > 0){
+						$subscriptions = 1;
+					}
 				}
 			}
 		$i = 0;
@@ -1028,6 +1030,7 @@ class Brilliant_retail_core {
 					$str = 'Gateway_'.$gateway["code"];
 					$total = $this->_get_cart_total() + $tax + $shipping;
 					$tmp = new $str($total);
+					$tmp->admin_order = $admin_order;
 					$proceed = TRUE;
 					if($total == 0){
 						if($tmp->zero_checkout != TRUE){
@@ -1038,7 +1041,6 @@ class Brilliant_retail_core {
 					if($proceed === TRUE){
 						// Check if the gateway supports 
 						// subscription checkouts 
-							
 							$sub_available = 1;
 							if($subscriptions == 1){
 								if($tmp->subscription_enabled != 1){
@@ -1047,6 +1049,7 @@ class Brilliant_retail_core {
 							}
 						
 						if($tmp->osc_enabled == $osc_enabled && $sub_available == 1){
+							
 							$form = $tmp->form();
 							if($form !== false){
 								$sel = ($i == 0) ? 'checked="checked"' : '';
@@ -2371,6 +2374,7 @@ class Brilliant_retail_core {
 		
 	/** 
 	*	Method checks to see if there is a paired 
+	* 	channel_id for a store
 	*/
 	private function _check_store_channel(){
 
