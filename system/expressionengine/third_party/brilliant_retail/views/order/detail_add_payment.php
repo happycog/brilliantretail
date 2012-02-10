@@ -125,7 +125,7 @@
 											<td style="vertical-align:top">
 												<?=lang('br_add_payment_form')?></td>
 											<td class="col2">
-												<?=$order["payment_options"]?></td>
+												notes form</td>
 										</tr>							
 									</tbody>
 								</table>

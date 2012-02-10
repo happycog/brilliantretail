@@ -2370,13 +2370,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$type = trim(strtolower($_GET["type"]));
 			$code = trim(strtolower($_GET["code"]));
-			if($type=='local'){
-				$loc = '_local/brilliant_retail';
-			}else{
-				$loc = 'brilliant_retail/core';			
-			}
-			
-			$path = PATH_THIRD.$loc.'/gateway/gateway.'.$_GET["code"].'.php';
+	
+			// Create the file page
+				$loc = ($type=='local') ? '_local/brilliant_retail' : 'brilliant_retail/core';			
+				$path = PATH_THIRD.$loc.'/gateway/gateway.'.$_GET["code"].'.php';
 			
 			if(!file_exists($path)){ 
 				$this->EE->session->set_flashdata('message_failure',lang('br_module_install_error'));
@@ -2618,7 +2615,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$type = trim(strtolower($_GET["type"]));
 			$code = trim(strtolower($_GET["code"]));
-			$path = rtrim(dirname(__FILE__),'/').'/'.$type.'/shipping/shipping.'.$_GET["code"].'.php';
+			
+			// Create the file page
+				$loc = ($type=='local') ? '_local/brilliant_retail' : 'brilliant_retail/core';			
+				$path = PATH_THIRD.$loc.'/shipping/shipping.'.$_GET["code"].'.php';
+
 			if(!file_exists($path)){ 
 				$this->EE->session->set_flashdata('message_failure',lang('br_module_install_error'));
 				header('location: '.$this->base_url.'&method=config_shipping');

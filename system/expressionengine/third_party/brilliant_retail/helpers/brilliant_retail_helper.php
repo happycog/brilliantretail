@@ -139,7 +139,6 @@ if(!isset($_SESSION["cart"])){
 				$local_dir = PATH_THIRD.'_local/brilliant_retail/'.$type;
 				$local = read_dir_files($local_dir);
 				
-				
 			// Merge
 				foreach($files as $f){
 					if(substr($f,0,strlen($type)+1) == $type.'.'){
