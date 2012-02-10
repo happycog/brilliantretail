@@ -1025,14 +1025,17 @@ class Brilliant_retail_core {
 		$i = 0;
 
 		if(isset($this->_config["gateway"][$this->site_id])){ // Check if any gateways are enabled
+			
 			foreach($this->_config["gateway"][$this->site_id] as $gateway){
 				if($gateway["enabled"] == 1){
+					
 					$str = 'Gateway_'.$gateway["code"];
+					
 					$total = $this->_get_cart_total() + $tax + $shipping;
 					$tmp = new $str($total);
 					$tmp->admin_order = $admin_order;
 					$proceed = TRUE;
-					if($total == 0){
+					if($total == 0 && $admin_order === FALSE){
 						if($tmp->zero_checkout != TRUE){
 							$proceed = FALSE;
 						}					

@@ -121,12 +121,16 @@
 											<td class="col2">
 												<?=$order["payment_options"]?></td>
 										</tr>	
-										<tr>
-											<td style="vertical-align:top">
-												<?=lang('br_add_payment_form')?></td>
-											<td class="col2">
-												notes form</td>
-										</tr>							
+										<?php 
+											/*
+												<tr>
+													<td style="vertical-align:top">
+														<?=lang('br_add_payment_form')?></td>
+													<td class="col2">
+														notes form</td>
+												</tr>							
+											*/
+										?>
 									</tbody>
 								</table>
 							
