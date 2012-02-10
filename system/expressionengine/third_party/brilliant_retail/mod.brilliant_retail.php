@@ -1846,22 +1846,45 @@ class Brilliant_retail extends Brilliant_retail_core{
 										
 						$this->EE->order_model->create_order_item($item);
 						
-						// If its a downloadable then add the link
-							
-							if($items["type_id"] == 4){
-								// Get the file info 
-									$dl = $this->EE->order_model->_get_download_file($item);
-									// Generate a uuid as the license key...
-									unset($dl["title"]);
-									unset($dl["filenm_orig"]);
-									unset($dl["filenm"]);
-									unset($dl["created"]);
-									
-								// Need to loop through based on item count
-									for($i=0;$i<$item["quantity"];$i++){
-										// Insert into the db 
-										$dl["license"] = uuid();
-										$this->EE->order_model->create_order_download($dl);
+						// We need to create downloadable product links
+						// If its a downloadable product or if its a bundle
+						// containing a downloadable product
+
+							if(	$items["type_id"] == 4 || $items["type_id"] == 2){
+								// Create a file container 
+									$file = array();
+
+								// A download purchse is easy just go ahead and add it 
+									if($items["type_id"] == 4){
+										$file[] = $item;
+									}else{
+										$bundle = $this->EE->product_model->get_product_bundle($item["product_id"]);	
+										foreach($bundle as $b){
+											if($b["type_id"] == 4){
+												$file[] = array(
+																'quantity' 		=> $items["quantity"], 
+																'order_id' 		=> $order_id,
+																'product_id' 	=> $b["product_id"]
+																);
+											}
+										}
+									}
+									foreach($file as $f){
+										// Get the file info 
+											$dl = $this->EE->order_model->_get_download_file($f);
+											// Generate a uuid as the license key...
+											unset($dl["title"]);
+											unset($dl["filenm_orig"]);
+											unset($dl["filenm"]);
+											unset($dl["created"]);
+											
+										// Need to loop through based on item count
+											for($j=0;$j<$f["quantity"];$j++){
+												// Insert into the db 
+												$dl["license"] = uuid();
+												$this->EE->order_model->create_order_download($dl);
+												unset($dl);
+											}
 									}
 							}
 						
@@ -1885,7 +1908,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			               	$order_items[$i]["subtotal"] 	= $this->_currency_round(($items["price"]*$items["quantity"]));
 			               	$i++;
 					}
-					
+											
 				// Add a note to the order
 					if(trim($data["instructions"]) != ''){
 						$arr = array(
@@ -1933,7 +1956,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 							if($this->EE->extensions->active_hook('br_order_create_after') === TRUE){
 								$data = $this->EE->extensions->call('br_order_create_after', $data); 
 							}
-		
 						// Clear out the cart!
 							$this->EE->product_model->cart_clear();
 							unset($_SESSION["discount"]);

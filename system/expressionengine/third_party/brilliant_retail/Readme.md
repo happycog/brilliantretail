@@ -53,6 +53,8 @@ Updated Control Panel success and failure messages to use EE system messages
 Updated the related product tag to properly request the _get_product core method instead of the product model
 Updated USPS to Rates v3 API
 Fixed issue with USPS First Class International Package rate
+Fixed issue with checkout create downloads (check for bug report)
+Fixed issue when download products are contained within bundles
 Added option_count to product > option tag pair
 Added has_options tag (TRUE/FALSE)
 Added on_sale flag to the product tag
