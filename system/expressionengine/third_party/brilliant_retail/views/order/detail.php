@@ -262,17 +262,17 @@
                             								</tr>
                             								<tr>
                             									<td>
+                            										<b><?=lang('br_note_private')?></b></td>
+                            									<td>
+																	<input type="checkbox" value="1" name="isprivate" />
+																</td>
+                            								</tr>
+                            								<tr>
+                            									<td>
                             										<b><?=lang('br_order_note_file')?></b></td>
                             									<td>
 																		<input type="file" name="order_note_file" />
                             									</td>
-                            								</tr>
-                            								<tr>
-                            									<td>
-                            										<b><?=lang('br_note_private')?></b></td>
-                            									<td>
-																	<input type="checkbox" name="order_note_isprivate" />
-																</td>
                             								</tr>
                             								<tr>
                             									<td>
@@ -300,7 +300,11 @@
                             						$i = 0;
                             						foreach($order["notes"] as $n){ 
                             							if(isset($n["order_note"])){
-	                            							$class = ($i % 2 == 0) ? 'even' : 'odd';
+	                            							if($n["isprivate"] == 1){
+	                            								$class = 'private_note';
+	                            							}else{
+	                            								$class = ($i % 2 == 0) ? 'even' : 'odd';
+	                            							}
 	                            							$note = $n["order_note"];
 	                            							if($n["filenm"] != ''){
 	                            								$note .= '<br /><a href="/media/attachments/'.$n["filenm"].'" target="_blank">'.lang('br_attachment').'</a>';
@@ -317,7 +321,7 @@
 		                            									<tbody>
 			                            									<tr class="'.$class.'">
 			                            										<td colspan="2">
-			                            											'.$note.'</td>
+			                            											'.nl2br($note).'</td>
 			                            									</tr>
 		                            									</tbody>
 		                            								</table>';

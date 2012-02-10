@@ -2124,6 +2124,12 @@ input#delete {
 		font-weight: bold;
 		color: #FFF;
 	}
+	#order_notes table {
+		border-top: 0px;
+	}
+	#order_notes table tr.private_note td {
+		background-image: url(../images/bg_private.jpg);
+	}
 	
 	#order_notes td.order_note {
 		border-bottom: 1px #DDD solid;

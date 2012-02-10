@@ -24,7 +24,11 @@
 
 class Order_model extends CI_Model {
 
-	function get_order($order_id){
+	/* 
+	*	Pass in the order_id and optionally if the order note is private
+	*/
+	
+	function get_order($order_id,$private=FALSE){
 		$this->load->model('customer_model');
 		$order = array();
 		
@@ -103,8 +107,12 @@ class Order_model extends CI_Model {
 		// Order Notes 
 			$this->db->select('*') 
 					->from('br_order_note') 
-					->where('br_order_note.order_id',$order_id)
-					->join('members', 'members.member_id = br_order_note.member_id') 
+					->where('br_order_note.order_id',$order_id);
+					
+				if($private === FALSE){
+					$this->db->where('br_order_note.isprivate',0);
+				}
+			$this->db->join('members', 'members.member_id = br_order_note.member_id') 
 					->order_by('br_order_note.created','desc');
 			
 			$query = $this->db->get();

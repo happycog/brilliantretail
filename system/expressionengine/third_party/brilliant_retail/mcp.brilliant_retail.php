@@ -287,7 +287,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			// Order Information
 				$this->vars["status"] = $this->_config["status"];			
-				$this->vars['order'] = $this->EE->order_model->get_order($order_id);
+				$this->vars['order'] = $this->EE->order_model->get_order($order_id,TRUE);
 				// Do we have a user photo?
 					if($this->vars['order']['member']['photo_filename'] != ''){
 						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['member']['photo_filename'].'" />';

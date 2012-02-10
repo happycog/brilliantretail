@@ -59,3 +59,5 @@ Added option_count to product > option tag pair
 Added has_options tag (TRUE/FALSE)
 Added on_sale flag to the product tag
 Added mode, sort, and dir parameters to catalog tag
+Added private note option to admin order detail
+Added nl2br spacing on order notes

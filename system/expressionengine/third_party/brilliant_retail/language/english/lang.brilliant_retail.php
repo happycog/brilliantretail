@@ -137,6 +137,7 @@ $lang = array(
 	'br_add_note' 			=> 'Add Note',
 	'br_order_add_note_success' => 'Order note successfully added',
 	'br_order_note' 		=> 'Order Note',
+	'br_note_private'		=> 'Mark as Private', 
 	'br_order_note_file' 	=> 'Attach File',
 	'br_posted_by' 			=> 'Posted by',
 	'br_status_notify' 		=> 'Nofity Customer',	
@@ -654,7 +655,6 @@ $lang = array(
 // End 
 	'' 
 );
-
 // Doing our own magic to load in any custom language files. 
 $local_path = PATH_THIRD.'_local/brilliant_retail/language/';
 if(file_exists($local_path)){
@@ -663,13 +663,11 @@ if(file_exists($local_path)){
 	if($lang_dir == ''){
 		$lang_dir = 'english';
 	}
-	if(file_exists($local_path.$lang_dir)){
-		$path = $local_path.$lang_dir.'/lang.brilliant_retail.php';
-		if(file_exists($local_path.$lang_dir.'/lang.brilliant_retail.php')){
-			$core_lang = $lang;
-			$lang = array();
-			include($path);
-			$lang = array_merge($core_lang,$lang);
-		}
+	$path = $local_path.$lang_dir.'/lang.brilliant_retail.php';
+	if(file_exists($path)){
+		$core_lang = $lang;
+		$lang = array();
+		include($path);
+		$lang = array_merge($core_lang,$lang);
 	}
 } 
