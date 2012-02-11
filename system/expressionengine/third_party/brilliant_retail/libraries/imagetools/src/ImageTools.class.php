@@ -14,8 +14,6 @@
 		
 		private $image_output_type;
 		
-		
-		
 		/**
 		 * Constructor
 		 *
@@ -30,9 +28,16 @@
 				ini_set('memory_limit', ImageToolsInterface::ALLOCATE_MEMORY);
 				
 				// Check Type
-				$split = explode(".", $path_to_image);
-				$extension = strtoupper($split[ count($split)-1 ]);
-				
+					$size = getimagesize($path_to_image); 
+					$ext = $size['mime'];
+					if($ext == 'image/png'){
+						$extension = 'PNG';
+					}elseif($ext == 'image/gif'){
+						$extension = 'GIF';
+					}else{
+						$extension = 'JPG';
+					}
+
 				switch( $extension )
 				{
 					case "PNG":
@@ -934,4 +939,3 @@
 			imagedestroy($tmp_im);
 		}
 	}
-?>
