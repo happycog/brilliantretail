@@ -10,7 +10,7 @@ session_start();
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@copyright	Copyright (c) 2010-2012 Brilliant2.com		*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -72,6 +72,15 @@ class Brilliant_retail_core {
 			$this->EE->load->model('store_model');
 			$this->EE->load->model('tax_model');
 			
+			$this->EE->lang->loadfile('brilliant_retail');
+			
+		// Create a language overloader! We want to be able to extend 
+		// Brilliant Retail with custom language files so lets locally 
+		// pick any file in the _local/language/[language]/directory 
+		// that follow the lang.XXXX.php pattern
+
+			$this->_load_lang_files();
+
 		// Get the BR _config variable & Set the site_id
 			$sites 	= $this->EE->core_model->get_sites();
 			$stores = $this->EE->core_model->get_stores();
@@ -317,6 +326,32 @@ class Brilliant_retail_core {
 			}
 	}
 	
+	/*
+	* Load _local language files
+	*/
+		public function _load_lang_files(){
+			// Doing our own magic to load in any custom language files. 
+			$lang_dir = $this->EE->session->userdata["language"];
+			if($lang_dir == ''){
+				$lang_dir = 'english';
+			}
+			$local_path = PATH_THIRD.'_local/brilliant_retail/language/'.$lang_dir;
+			$local = read_dir_files($local_path);
+			foreach($local as $loc){
+				$path = $local_path.'/'.$loc;
+				$a = explode(".",basename($path));
+				if(strtolower($a[0]) == 'lang' && strtolower($a[2]) == 'php'){
+					include($path);
+					if(isset($lang)){
+						foreach($lang as $key => $val){
+							$this->EE->lang->language[$key] = $val;
+						}
+						unset($lang);
+					}
+				}
+			}
+		}
+		
 		function _theme($str = '',$trailing_slash=FALSE){ 
 			$path = $this->EE->config->item('theme_folder_url').'third_party/brilliant_retail/'.trim($str,'/');
 			if($trailing_slash === TRUE){

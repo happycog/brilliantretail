@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@copyright	Copyright (c) 2010-2012 Brilliant2.com		*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -1644,48 +1644,28 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Reports Tab  		*/
 	/************************/
 	
+		/* 
+		* Report list method
+		* 
+		* @author David Dexter 
+		*/ 
 		function report()
 		{
 			// Set the header/breadcrumb 
 				$this->vars['cp_page_title'] = lang('nav_br_report');
 				
-			$list = array();
-			// Get the core reports
-				$dir = rtrim(dirname(__FILE__),'/').'/core/report';
-				$files = read_dir_files($dir);
-				foreach($files as $f){
-					if(substr($f,0,7) == 'report.'){
-						$rem = array('report.','.php');
-						$nm = strtolower(str_replace($rem,'',$f));
-						$list[$f] = array(
-											'name' => $nm,
-											'file' => $f,
-											'path' => $dir.'/'.$f);
-					}
-				}		
-			// Get the local reports
-				$dir = rtrim(dirname(__FILE__),'/').'/local/report';
-				$files = read_dir_files($dir);
-				foreach($files as $f){
-					if(substr($f,0,7) == 'report.'){
-						$rem = array('report.','.php');
-						$nm = strtolower(str_replace($rem,'',$f));
-						$list[$f] = array(
-											'name' => $nm,
-											'file' => $f,
-											'path' => $dir.'/'.$f);
-					}
-				}		
-			
+			// Get all of the reports
+				$list = read_system_files('report');		
+
 			// Grab them
 				$i = 0; 	
 				foreach($list as $inc){
 					// Include the file
 						include_once($inc["path"]);
-						$str = 'Report_'.$inc["name"];
+						$str = 'Report_'.$inc["code"];
 						$report = new $str();
 						$reports[$i++] = array(
-												'title' 	=> '<a href="'.$this->base_url.'&method=report_detail&report='.$inc["name"].'">'.$report->title.'</a>',
+												'title' 	=> '<a href="'.$this->base_url.'&method=report_detail&report='.$inc["code"].'">'.$report->title.'</a>',
 												'type' 		=> $report->category,  
 												'descr' 	=> $report->descr,
 												'version' 	=> $report->version
@@ -1699,7 +1679,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			return $this->EE->load->view('report/report', $this->vars, TRUE);	
 		}
-		
+
+		/* 
+		* Report Detail
+		* 
+		* @author David Dexter 
+		*/
 		function report_detail()
 		{
 
@@ -1712,56 +1697,36 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Add the data picker js
 				$this->EE->cp->add_js_script(array('ui' => 'datepicker'));
 			
-			$list = array();
-			// Get the core reports
-				$dir = rtrim(dirname(__FILE__),'/').'/core/report';
-				$files = read_dir_files($dir);
-				foreach($files as $f){
-					if(substr($f,0,7) == 'report.'){
-						$rem = array('report.','.php');
-						$nm = strtolower(str_replace($rem,'',$f));
-						$list[$f] = array(
-											'name' => $nm,
-											'file' => $f,
-											'path' => $dir.'/'.$f);
+			// Get all of the reports
+				$list = read_system_files('report');		
+		
+			// Include the file
+				foreach($list as $inc){
+					$this->vars["report"] = $this->EE->input->get('report');
+					if($inc["code"] == $this->vars["report"]){
+						include_once($inc["path"]);
+						$str = 'Report_'.$inc["code"];	
 					}
-				}		
-			// Get the local reports
-				$dir = rtrim(dirname(__FILE__),'/').'/local/report';
-				$files = read_dir_files($dir);
-				foreach($files as $f){
-					if(substr($f,0,7) == 'report.'){
-						$rem = array('report.','.php');
-						$nm = strtolower(str_replace($rem,'',$f));
-						$list[$f] = array(
-											'name' => $nm,
-											'file' => $f,
-											'path' => $dir.'/'.$f);
-					}
-				}		
-			
-			foreach($list as $inc){
-				$this->vars["report"] = $this->EE->input->get('report');
-				if($inc["name"] == $this->vars["report"]){
-					include_once($inc["path"]);
-					$str = 'Report_'.$inc["name"];	
 				}
-			}
-			$report = new $str();
-			$this->vars["parent"] = $report->category;
-			$this->vars["title"] = $report->title;
-			$this->vars["detail"] = $report->get_report();
-
-			$this->vars["input"] = '';
 			
-			foreach($this->vars["detail"]["input"] as $in){
-				$this->vars["input"] .= $this->_build_report_input($in);
-			}
-			if(isset($_POST["export"]) && $_POST["export"] == 1){
-				$this->_build_report_csv($this->vars["detail"]);
-				return;
-			}
-			return $this->EE->load->view('report/detail', $this->vars, TRUE);	
+			// Initiate the selected report class
+				$report = new $str();
+				$this->vars["parent"] 	= $report->category;
+				$this->vars["title"] 	= $report->title;
+				$this->vars["detail"] 	= $report->get_report();
+				$this->vars["input"] 	= '';
+				
+				foreach($this->vars["detail"]["input"] as $in){
+					$this->vars["input"] .= $this->_build_report_input($in);
+				}
+			
+			// Export it as a csv 	
+				if(isset($_POST["export"]) && $_POST["export"] == 1){
+					$this->_build_report_csv($this->vars["detail"]);
+					return;
+				}
+			// return the view file
+				return $this->EE->load->view('report/detail', $this->vars, TRUE);	
 		}
 	
 	/************************/
@@ -1771,6 +1736,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		/* 
 		*	Config method is just a placeholder 
 		* 	to build our permissions array. 
+		*
+		* 	@author David Dexter
 		*/
 		function config(){}
 		

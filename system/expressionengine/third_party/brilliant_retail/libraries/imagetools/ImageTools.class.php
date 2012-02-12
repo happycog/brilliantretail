@@ -1,7 +1,5 @@
 <?php
 
-	require("ImageTools.interface.php");
-	
 	class ImageTools implements ImageToolsInterface
 	{
 		public $watermark_font_path;

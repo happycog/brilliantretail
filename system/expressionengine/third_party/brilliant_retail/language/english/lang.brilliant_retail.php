@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@copyright	Copyright (c) 2010-2012 Brilliant2.com		*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -655,19 +655,3 @@ $lang = array(
 // End 
 	'' 
 );
-// Doing our own magic to load in any custom language files. 
-$local_path = PATH_THIRD.'_local/brilliant_retail/language/';
-if(file_exists($local_path)){
-	$this->EE =& get_instance();
-	$lang_dir = $this->EE->session->userdata["language"];
-	if($lang_dir == ''){
-		$lang_dir = 'english';
-	}
-	$path = $local_path.$lang_dir.'/lang.brilliant_retail.php';
-	if(file_exists($path)){
-		$core_lang = $lang;
-		$lang = array();
-		include($path);
-		$lang = array_merge($core_lang,$lang);
-	}
-} 

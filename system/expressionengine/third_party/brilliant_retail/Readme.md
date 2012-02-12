@@ -3,6 +3,7 @@
 Just some little notes for me. Since I'm the only one looking these days. 
 
 ### Need to install notifications
+### Need to update copyright throughout from 2011 to 2010-2012 
 
 ### Price Display 
 
@@ -52,6 +53,7 @@ Updated UPS shipping model to return rates in order desc.
 Updated Control Panel success and failure messages to use EE system messages
 Updated the related product tag to properly request the _get_product core method instead of the product model
 Updated USPS to Rates v3 API
+Updated control panel report method to use the read_system_files helper to build file list
 Fixed issue with USPS First Class International Package rate
 Fixed issue with checkout create downloads (check for bug report)
 Fixed issue when download products are contained within bundles
@@ -61,3 +63,9 @@ Added on_sale flag to the product tag
 Added mode, sort, and dir parameters to catalog tag
 Added private note option to admin order detail
 Added nl2br spacing on order notes
+Added _local language override and removed code from package language file 
+Added support for custom language files in _local directory 
+Added support for custom report files in the _local directory 
+Added multiple modes to image tag (matte,scale,fit)
+Added watermark parameter to image tag (optional)
+Added reflection parameter to image tag (optional)

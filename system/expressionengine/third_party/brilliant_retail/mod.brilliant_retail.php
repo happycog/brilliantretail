@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/* 	@copyright	Copyright (c) 2010-2012 Brilliant2.com		*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -31,12 +31,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 	
 	function __construct(){
 		parent::__construct();
-		$this->EE->lang->loadfile('brilliant_retail');
 	}
 
 	/**
 	* Show system messages and alerts
 	* 
+	* @author 	David Dexter 
 	* @access	public
 	* @param	void
 	* @return	string
@@ -54,7 +54,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}
 			return $this->return_data = $output;
 		}
-	
+
+	/**
+	* Check to see if a front end message exists
+	* 
+	* @author 	David Dexter 
+	* @access	public
+	* @param	void
+	* @return	string
+	*/	
 		function message_exists() 
 		{
 			if(isset($_SESSION['br_alert']) || isset($_SESSION["br_message"])){
@@ -67,12 +75,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 	/**
 	* Show meta for given section
 	* 
+	* @author 	David Dexter 
 	* @access	public
 	* @param	void
 	* @return	string
 	*/
-		
-		function meta()
+		public function meta()
 		{
 			// Start out with our defaults
 				$title 		= $this->_config["store"][$this->site_id]["meta_title"];
@@ -305,7 +313,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 		public function image()
 		{
 			// Include the image manipulation class
-				include_once(PATH_THIRD.'brilliant_retail/libraries/imagetools/src/ImageTools.class.php');
+				include_once(PATH_THIRD.'brilliant_retail/libraries/imagetools/ImageTools.interface.php');
+				include_once(PATH_THIRD.'brilliant_retail/libraries/imagetools/ImageTools.class.php');
 	
 			// Where do we cache images? 
 				$cache = $this->_config["media_dir"].'cache/';
@@ -321,10 +330,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Image attributes & sizing
 					$title 			= $this->EE->TMPL->fetch_param('title');
 					$alt 			= $this->EE->TMPL->fetch_param('alt');
-					$width 			= ( $this->EE->TMPL->fetch_param('width')) ? (int) $this->EE->TMPL->fetch_param('width') : 175 ;
-					$height 		= ( $this->EE->TMPL->fetch_param('height')) ? (int) $this->EE->TMPL->fetch_param('height') : 210;
+					$width 			= ( $this->EE->TMPL->fetch_param('width')) ? (int) $this->EE->TMPL->fetch_param('width') : 0 ;
+					$height 		= ( $this->EE->TMPL->fetch_param('height')) ? (int) $this->EE->TMPL->fetch_param('height') : 0;
 					$mode 			= ( $this->EE->TMPL->fetch_param('mode')) ? $this->EE->TMPL->fetch_param('mode') : 'matte';
-				
+					
 				// Image effects 
 					## Reflection
 						$reflect 		= ( $this->EE->TMPL->fetch_param('reflect')) ? (int) $this->EE->TMPL->fetch_param('reflect') : 0;
@@ -357,55 +366,92 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// build the paths 
 			$part = explode('.',$src);
 			$ext = $part[count($part)-1];
-			$filepath = substr($src,0,-(strlen($part[count($part)-1])+1)).'_'.$width.'_'.$height.'.jpg'; 
+			$filepath = substr($src,0,-(strlen($part[count($part)-1])+1));
 			$a = explode("/",$filepath);
-			$cache_file = $a[count($a)-1];
+			$cache_file = $a[count($a)-1].'_'.$mode;
 			if($reflect > 0){
-				$cache_file = 'r'.$reflect.'_'.$cache_file;	
+				$cache_file = $cache_file.'_r'.$reflect;	
 			}
+			
 			$use_watermark = FALSE;
 			if($watermark != ''){
 				if(file_exists($this->_config["media_dir"].$watermark)){
 					$v = (isset($vPos[$watermark_vpos])) ? $vPos[$watermark_vpos] : $vPos["BOTTOM"];
 					$h = (isset($hPos[$watermark_hpos])) ? $hPos[$watermark_hpos] : $hPos["RIGHT"];
-					$cache_file = 'w'.$v.$h.'_r'.$reflect.'_'.$cache_file;
+					$cache_file = $cache_file.'_w'.$v.$h;
 					$use_watermark = TRUE;
 				}
 			}
+			
+			$cache_file = $cache_file.'_'.$width.'_'.$height.'.jpg'; 
+			
 			// no cache file
 				if(!file_exists($this->_config["media_dir"].'cache/'.$cache_file)){
 					
 					// What mode of sizing do we want to do?
 					// # matte  	(default) scales the image to the height and width provided and 
 					//			 	returns the image matted on the canvas widht / height provided. 
-					// # scale  	Scales to image to fit within the height or width provided. 
+					// # scale  	scales to image to the height or width provided. If both are
+					//				provided then it will fit within the dimensions and scale the 
+					//				opposite size accordingly. 
 					// # fit  		stretches the image to exactly the dimensions provided 
-						if($mode == 'scale'){ 
+						$use_width = FALSE;
+						if($mode == 'matte'){ 
 							$size = getimagesize($this->_config["media_dir"].$src);
 							// Calculate the resize side
 								$w_ratio = $size[0] / $width; 
 								$h_ratio = $size[1] / $height; 
 							if($w_ratio >= $h_ratio){
-								$width = $width; 
-								$height = round(($width*$size[1])/$size[0]);	
+								$use_width = TRUE;
+								$n_width = $width; 
+								$n_height = round(($width*$size[1])/$size[0]);	
 							}else{
-								$width = round(($height*$size[0])/$size[1]);
-								$height = $height;
+								$n_width = round(($height*$size[0])/$size[1]);
+								$n_height = $height;
 							}
-						}elseif($mode == 'scale'){ 
-							
+						}elseif($mode == 'scale'){
+							if($width > 0 && $height > 0){
+								$size = getimagesize($this->_config["media_dir"].$src);
+								// Need to calculate the 
+								// Calculate the resize side
+								$w_ratio = $size[0] / $width; 
+								$h_ratio = $size[1] / $height; 
+								if($w_ratio >= $h_ratio){
+									$use_width = TRUE;
+								}
+							}elseif($width > 0){
+								$use_width = TRUE;
+							}
 						}
-
+					
 					$img = new ImageTools($this->_config["media_dir"].$src);
 
 					// Do we have a relection?
 						if($reflect > 0){
 							$img->reflect($reflect, $reflect_bg, $reflect_space); // drop shadow percentage, background color, spacing
 						}
-	
+
 					// Do resize pre watermarking
-						$img->resizeOriginal($width,$height); // new width, new height
-					
+						if($mode == 'fit'){
+							// stretch the image to the exact specs 
+							// provided in the height and width fields 
+								$img->resizeOriginal($width,$height);		
+						}elseif($mode == 'scale'){
+							// scale to height or width. If both are provided then fit within the box
+							if($use_width === TRUE){
+								$img->resizeWidth($width); // new width
+							}else{
+								$img->resizeHeight($height); // new height
+							}
+						}else{
+							// scale and matte to size provided 
+							if($use_width === TRUE){
+								$img->resizeNewByWidth($width,$height,$n_width); // new width, new height
+							}else{
+								$img->resizeNewByHeight($width,$height,$n_height); // new width, new height
+							}
+						}
+						
 					// Set the image watermark 
 						if($use_watermark === TRUE){
 							$img->addWatermarkImage($this->_config["media_dir"].$watermark, $v, $h, 5); 
@@ -416,15 +462,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if(strtolower($url_only) == "yes"){
 						return $this->_config["media_url"].'cache/'.$cache_file;
 					}else{
-						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" height="'.$height.'" width="'.$width.'" />';
+						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" />';
 					}
-				}
-	
-			// Caching failed return the full image
-				if(strtolower($url_only) == "yes"){
-					return $this->_config["media_url"].$src;			
 				}else{
-					return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" width="'.$width.'" />';
+					if(strtolower($url_only) == "yes"){
+						return $this->_config["media_url"].'cache/'.$cache_file;
+					}else{
+						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" />';
+					}
 				}
 		}
 
