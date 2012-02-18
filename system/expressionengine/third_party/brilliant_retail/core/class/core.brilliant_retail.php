@@ -560,8 +560,6 @@ class Brilliant_retail_core {
 								                  		<option value="4">4</option>
 								                  		<option value="5">5</option>
 								                	</select>';
-					
-			
 			return $products;
 			
 		}
@@ -942,6 +940,10 @@ class Brilliant_retail_core {
 		}
 		
 		function _index_products(){
+			// We are in dev mode and don't want to reindex 
+			// everything
+				return TRUE;
+			
 			$this->EE->load->model('product_model');
 			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');

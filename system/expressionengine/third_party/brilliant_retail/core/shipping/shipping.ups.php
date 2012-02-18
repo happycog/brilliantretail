@@ -86,7 +86,7 @@ class Shipping_ups extends Brilliant_retail_shipping {
 									<Address>  
 										<PostalCode>'.$data["to_zip"].'</PostalCode>  
 										<CountryCode>'.$data["to_country"].'</CountryCode>  
-										<ResidentialAddressIndicator/>  
+										<ResidentialAddressIndicator>1</ResidentialAddressIndicator>  
 									</Address>  
 								</ShipTo>  
 								<ShipFrom>  

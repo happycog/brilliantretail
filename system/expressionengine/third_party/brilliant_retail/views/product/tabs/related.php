@@ -29,7 +29,7 @@
 	</tr>
 	<tr class="even">
 		<td style="padding:0">
-			<div class="br_fieldtype" style="margin:0;border-width:0">
+			<div class="br_fieldtype" style="padding-top:5px;margin:0;border-width:0">
 				<div class="br_fieldtype_search">
 							<div id="related_clear" class="search_clear"><!-- clear !--></div>
 							<div class="search"> 

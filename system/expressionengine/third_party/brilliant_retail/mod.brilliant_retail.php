@@ -114,6 +114,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 	*/	
 		function product($product_id='')
 		{
+			include_once(APPPATH.'modules/channel/mod.channel.php');
+			
 			$product_id = ( $this->EE->TMPL->fetch_param('product_id') ) ? $this->EE->TMPL->fetch_param('product_id') : '';
 			$form = ( $this->EE->TMPL->fetch_param('form') ) ? $this->EE->TMPL->fetch_param('form') : 'yes';
 			$products = $this->_get_product($product_id);
@@ -128,8 +130,19 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 			}
 			
-			$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
-			$tagdata = $this->EE->TMPL->tagdata;
+			// Lets have some fun with custom tags
+				$this->EE->TMPL->tagparams['entry_id'] 	= $products[0]["entry_id"];
+				$this->EE->TMPL->tagparams['limit'] 	= '1';
+				$this->EE->TMPL->tagparams['dynamic'] 	= 'no';
+				$this->EE->TMPL->tagparams['show_future_entries'] = 'yes';
+			
+				$custom = new Channel();
+				$tagdata = $custom->entries();
+				
+			// Now lets rock and roll on the standard BR fields	
+			
+			// Form post url
+				$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
 
 			// Parse Tags	
 				$tagdata = preg_replace($pattern,"",$tagdata);

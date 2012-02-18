@@ -26,19 +26,6 @@
 /* Details Tab	*/
 /****************/
 ?>
-<table id="product_detail_tbl" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
-		<tr>
-			<th>
-				<?php
-					if($products[0]["product_id"] == 0){
-						echo lang('br_new_product');
-					}else{
-						echo $products[0]["title"].' ['.$hidden["product_id"].']';
-					}
-				?></th>
-		</tr>
-</table>		
-
 				<div class="publish_field" id="hold_br_title">
 
 					<label class="hide_field">

@@ -63,6 +63,35 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											"config_gateway_edit","config_gateway_remove","config_permission_edit",
 											"config_shipping_install","config_shipping_edit","config_shipping_remove",
 											"config_tax_new","config_tax_edit","subscription_ajax","subscription_update","subscription_detail");
+											
+			private $allowed_fieldtypes = array(
+													'channel_images',
+													'channel_files',
+													'channel_polls',
+													'channel_videos', 
+													'checkboxes',
+													'date',
+													'dropdate', 
+													'file',
+													'grid_lite',
+													'gmap', 
+													'matrix', 
+													'mega_upload', 
+													'multi_select', 
+													'mx_stars_field',
+													'mx_google_map', 
+													'playa',
+													'pt_checkboxes', 
+													'pt_dropdown', 
+													'pt_multiselect',
+													'pt_pill',
+													'pt_radio_buttons', 
+													'pt_switch',
+													'radio', 
+													'rel', 
+													'select', 
+													'text'
+												);								
 
 	function __construct($switch = TRUE,$extended = FALSE)
 	{
@@ -767,7 +796,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_edit()
 		{
-
 			$this->vars["detail_ckeditor_path"] = $this->_theme('/script/ckeditor',TRUE);
 			$this->vars["detail_ckeditor_url"] = $this->_theme('/script/ckeditor/ckeditor.js');
 			
@@ -810,6 +838,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$entry_id 		= 0;
 
 			// Get the upload preferences  
+				$this->EE->load->model('tools_model');
 				$this->_get_upload_preferences($this->EE->session->userdata('group_id'),$entry_id);	
 				
 			// If we were passed a GET product_id and entry_id then 
@@ -875,26 +904,36 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$i = 0;
 				foreach($fields as $f){
 					// We only want the custom fields for this channel
-					if(isset($f["field_name"])){
-						$this->EE->api_channel_fields->set_settings($f["field_type"],$f);
-						$this->EE->api_channel_fields->setup_handler($f["field_id"]);
-						
-						// Either put in existing data or nothing on new product
-							$param[0] = ($new_product == FALSE) ? $data["field_id_".$f["field_id"]] : "";
-							$this->vars["custom"][] = array(
-															'settings' 		=> $f,
-															'display_field' => $this->EE->api_channel_fields->apply('display_field', $param)
-															);
+					if(in_array($f["field_type"],$this->allowed_fieldtypes)){
+						if(isset($f["field_name"])){
+							$this->EE->api_channel_fields->set_settings($f["field_type"],$f);
+							$this->EE->api_channel_fields->setup_handler($f["field_id"]);
+							
+							// Either put in existing data or nothing on new product
+								$param[0] = ($new_product == FALSE) ? $data["field_id_".$f["field_id"]] : "";
+								$this->vars["custom"][] = array(
+																'settings' 		=> $f,
+																'display_field' => $this->EE->api_channel_fields->apply('display_field', $param)
+																);
+						}
+					}else{
+						echo $f["field_type"];
+						exit;
 					}
 				}
 
 			// Is there a gateway available to support subscriptions?
 				$this->vars["can_subscribe"] = $this->_can_subscribe();
 			
-			$this->vars['cp_page_title'] = lang('nav_br_products');
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
-			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
+				if($new_product == FALSE){
+					$this->vars['cp_page_title'] = lang('br_product_edit').' ['.$product_id.']';
+				}else{
+					$this->vars['cp_page_title'] = lang('nav_br_products');
+				}
+				
+				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
+				$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
+				$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
 
 			// Generate the list of products based 
 			// on the search terms provided. 
@@ -1198,7 +1237,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Clean up the product url and make sure its unique
 				$data["url"] = $this->_check_product_url($data);
 
-
 			// Check For Custom Fields
 			
 				$this->EE->load->library('api'); 
@@ -1240,31 +1278,26 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$qry = $this->EE->db->query($sql);
 						$result = $qry->result_array();
 					}
-						
-				foreach($data as $key => $val){
-					if(substr($key,0,8) == 'field_id'){
-						$this->EE->api_channel_fields->settings[$fields[$key]["field_id"]]['entry_id'] = $result[0]["entry_id"];
-						$this->EE->api_channel_fields->set_settings($fields[$key]["field_type"],$fields[$key]);
-						$this->EE->api_channel_fields->setup_handler($fields[$key]["field_id"]);
-						$param[0] = $data[$key];
-						$this->EE->api_channel_fields->apply('validate',$param);
-						$d = $this->EE->api_channel_fields->apply('save',$param);
-						$this->EE->api_channel_fields->apply('post_save', $param);
-						$entry_data[$key] = (is_array($d)) ? join("|",$d) : $d;
-						unset($data[$key]);
+
+				// Check for custom fields
+					$_POST["url_title"]		= $data["url"];
+					$_POST["entry_id"] 		= $entry_id;
+					$_POST["channel_id"]	= $this->br_channel_id;
+					$_POST["entry_date"]	= time();
+	
+					foreach($data as $key => $val){
+						if(	substr($key,0,6) == 'field_'){
+							$a = explode("_",$key);
+							$id[$a[2]] = $a[2];
+						}
 					}
-				}
-				if(isset($entry_data)){
-					$this->EE->db->where('entry_id',$result[0]["entry_id"])
-								->update('channel_data',$entry_data);
-				}
-				// Do one last cleanup check
-				foreach($data as $key => $val){
-					if(substr($key,0,6) == 'field_'){
-						unset($data[$key]);
+					foreach($id as $row){
+						$this->EE->api_channel_fields->setup_handler($row);
+						if($this->EE->api_channel_fields->apply('validate', array($_POST))){
+						}
 					}
-				}
-				
+					$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
+								
 			// Feeds			
 				$prod_feed= array();
 				if (isset($data['feed_id'])){
@@ -3215,12 +3248,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->load->model('file_upload_preferences_model');
 				$result = $this->EE->file_upload_preferences_model->get_upload_preferences($group_id, $id);
 			}
-			else
-			{
 				$this->EE->load->model('tools_model');
 				$result = $this->EE->tools_model->get_upload_preferences($group_id, $id);
-			}
-		
+			
 			// If an $id was passed, just return that directory's preferences
 			if ( ! empty($id))
 			{

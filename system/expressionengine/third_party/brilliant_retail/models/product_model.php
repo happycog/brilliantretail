@@ -203,7 +203,8 @@ class Product_model extends CI_Model {
 						".$prefix."br_product p "; 
 			if($cat != ''){
 				$sql .= ", 	".$prefix."br_product_category c 
-							WHERE p.product_id = c.product_id 
+							WHERE 
+								p.product_id = c.product_id 
 							AND
 								c.category_id = ".$cat." ";
 			}else{
@@ -214,11 +215,11 @@ class Product_model extends CI_Model {
 			
 			if(trim($search) != ''){
 				$sql .= " AND 
-							( 	product_id LIKE '%".mysql_real_escape_string($search)."%' 
+							( 	p.product_id LIKE '%".mysql_real_escape_string($search)."%' 
 								||
-							  	title LIKE '%".mysql_real_escape_string($search)."%' 
+							  	p.title LIKE '%".mysql_real_escape_string($search)."%' 
 								||
-							  	sku LIKE '%".mysql_real_escape_string($search)."%'
+							  	p.sku LIKE '%".mysql_real_escape_string($search)."%'
 							)";
 			}
 			
@@ -591,16 +592,20 @@ class Product_model extends CI_Model {
 				}
 				unset($data["min_donation"]);
 				unset($data["allow_recurring"]);
-				
-			if(isset($data["addon"])){
-				$addon = $data["addon"];
-				unset($data["addon"]);
-			}
 			
-			if(isset($data["related"])){
-				$related = $data["related"];
-				unset($data["related"]);
-			}
+			// Product Addons
+				if(isset($data["addon"])){
+					if(is_array($data["addon"])){
+						$addon = $data["addon"];
+					}
+					unset($data["addon"]);
+				}
+			
+			// Related Items
+				if(isset($data["related"])){
+					$related = $data["related"];
+					unset($data["related"]);
+				}
 
 			// Setup our price matrix
 				// Delete any options that currently exist for this product
