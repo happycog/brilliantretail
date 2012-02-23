@@ -41,6 +41,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		public $method 			= '';
 		public $group_access 	= '';
 		public $submenu 		= '';
+
 		private $_file_manager 	= array();
 		private $_channel_data 	= '';
 	
@@ -81,6 +82,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 													'mx_stars_field',
 													'mx_google_map', 
 													'playa',
+													'poe',
 													'pt_checkboxes', 
 													'pt_dropdown', 
 													'pt_multiselect',
@@ -96,84 +98,90 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	function __construct($switch = TRUE,$extended = FALSE)
 	{
 		parent::__construct();
-		$this->vars["media_dir"] = $this->_config["media_dir"];
-		$this->vars["media_url"] = $this->_config["media_url"];
-		$this->vars["site_url"] = $this->EE->config->item('site_url');
-		$this->vars["site_id"] = $this->site_id;
+		$this->vars["media_dir"] 	= $this->_config["media_dir"];
+		$this->vars["media_url"] 	= $this->_config["media_url"];
+		$this->vars["site_url"] 	= $this->EE->config->item('site_url');
+		$this->vars["site_id"] 		= $this->site_id;
 
 		// Load the access model for the control panel
 			$this->EE->load->model('access_model');
 						
-		// Security for our filemanager integration
-			$_SESSION["filemanager"] = TRUE;
+		// Now we load up stuff. Only do it once! 
+		// Thats what the session->cache check is for
+			if(!isset($this->EE->session->cache['mcp_brilliantretail_construct'])){
 				
-			if($switch == TRUE){
-					
-				$this->module = $this->EE->input->get("module",TRUE);
-				$this->method = ($this->EE->input->get("method",TRUE)) ? ($this->EE->input->get("method",TRUE)) : "index" ;
+				// Security for our filemanager integration
+		
+				$_SESSION["filemanager"] = TRUE;
+			
+				$this->EE->session->cache['mcp_brilliantretail_construct'] = TRUE;	
+			
+				if($switch == TRUE){
+					$this->module = $this->EE->input->get("module",TRUE);
+					$this->method = ($this->EE->input->get("method",TRUE)) ? ($this->EE->input->get("method",TRUE)) : "index" ;
+		
+					$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module='.$this->module;
+					$this->vars["base_url"] = $this->base_url;
 	
-				$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module='.$this->module;
-				$this->vars["base_url"] = $this->base_url;
-
-				// Do an admin access check 
-					$access = $this->_check_admin_access($this->method);
-
-					if($this->EE->extensions->active_hook('br_check_admin_access_after') === TRUE){
-						$access = $this->EE->extensions->call('br_check_admin_access_after', $access); 
-					}
-
-				// System ALERT / MESSAGE
-					$this->vars['message'] = ''; 
-					$this->vars['alert'] = '';
-					
-					$message = br_get('message');
-						if($message){
-							$this->vars['message'] = br_get('message');	
-							br_unset('message');
+					// Do an admin access check 
+						$access = $this->_check_admin_access($this->method);
+	
+						if($this->EE->extensions->active_hook('br_check_admin_access_after') === TRUE){
+							$access = $this->EE->extensions->call('br_check_admin_access_after', $access); 
 						}
-					$alert = br_get('alert');
-						if($alert){
-							$this->vars['alert'] = br_get('alert');	
-							br_unset('alert');
-						}
-				// BrilliantRetail Version Number
-					$this->vars['version'] = $this->version;
-
-				// Product Types
-					$this->vars['product_type'] = $this->_config['product_type'];	
-				
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
-					// Added to match EE default styling
-						$this->EE->cp->add_to_head('<script type="text/javascript">$.fn.dataTableExt.oStdClasses.sSortAsc="headerSortUp";$.fn.dataTableExt.oStdClasses.sSortDesc = "headerSortDown";</script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
-					$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
+	
+					// System ALERT / MESSAGE
+						$this->vars['message'] = ''; 
+						$this->vars['alert'] = '';
+						
+						$message = br_get('message');
+							if($message){
+								$this->vars['message'] = br_get('message');	
+								br_unset('message');
+							}
+						$alert = br_get('alert');
+							if($alert){
+								$this->vars['alert'] = br_get('alert');	
+								br_unset('alert');
+							}
+					// BrilliantRetail Version Number
+						$this->vars['version'] = $this->version;
+	
+					// Product Types
+						$this->vars['product_type'] = $this->_config['product_type'];	
 					
-					$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css').'" />');
-						
-				// Set our admin theme 	
-					$this->vars['theme'] = $this->_theme();	
-						
-					$this->vars["site_name"] 	= $this->EE->config->item('site_name');
-					$this->vars["br_header"] 	= ''; #Depreciated
-					$this->vars["br_logo"] 		= $this->EE->load->view('_assets/_logo', $this->vars, TRUE);
-					$this->vars["br_footer"] 	= $this->EE->load->view('_assets/_footer', $this->vars, TRUE);
-				
-					// Set the acton url for uploading images in the product detail tab
-					// Have to set the upload path based on the control panel 
-					// url so we don't have crossdomain issus
-				 		$this->vars['image_upload'] = $this->_theme('upload/image.php');
-				 		$this->vars['download_upload'] = $this->_theme('upload/file.php');
-						$_SESSION["media_dir"] = $this->vars["media_dir"];
-						$_SESSION["media_url"] = $this->vars["media_url"];
-			}else{
-				$this->EE->lang->loadfile('brilliant_retail');
-			}	
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
+						// Added to match EE default styling
+							$this->EE->cp->add_to_head('<script type="text/javascript">$.fn.dataTableExt.oStdClasses.sSortAsc="headerSortUp";$.fn.dataTableExt.oStdClasses.sSortDesc = "headerSortDown";</script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
+						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css').'" />');
+							
+					// Set our admin theme 	
+						$this->vars['theme'] = $this->_theme();	
+							
+						$this->vars["site_name"] 	= $this->EE->config->item('site_name');
+						$this->vars["br_header"] 	= ''; #Depreciated
+						$this->vars["br_logo"] 		= $this->EE->load->view('_assets/_logo', $this->vars, TRUE);
+						$this->vars["br_footer"] 	= $this->EE->load->view('_assets/_footer', $this->vars, TRUE);
+					
+						// Set the acton url for uploading images in the product detail tab
+						// Have to set the upload path based on the control panel 
+						// url so we don't have crossdomain issus
+					 		$this->vars['image_upload'] = $this->_theme('upload/image.php');
+					 		$this->vars['download_upload'] = $this->_theme('upload/file.php');
+							$_SESSION["media_dir"] = $this->vars["media_dir"];
+							$_SESSION["media_url"] = $this->vars["media_url"];
+				}else{
+					$this->EE->lang->loadfile('brilliant_retail');
+				}	
+			}
 		}
 	
 	/**

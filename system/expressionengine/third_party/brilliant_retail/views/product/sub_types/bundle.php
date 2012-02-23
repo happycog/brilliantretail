@@ -24,21 +24,24 @@
 ?>
 <div id="sub_type_2" class="subtypes">
 	<div class="search">
-		<?=lang('br_search')?>
 		<input type="text" id="bundle_search">
 	</div>
-	<h4><?=lang('br_add_products')?></h4>
 	<div id="bundle_result" class="result_div">
 		<table id="bundle_results" width="100%" cellpadding="0" cellspacing="0">
-			<tr><td colspan="4" style="background-color:#fff"><?=lang('br_bundle_product_search')?></td></tr>
+			<tr>
+				<th><?=lang('nav_br_product')?></th>
+				<th><?=lang('br_type')?></th>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+			</tr>
+			<tr><td colspan="4" style="border-width:0"><?=lang('br_bundle_product_search')?></td></tr>
 		</table>
 	</div>
-	<p>&nbsp;</p>
-	<h4><?=lang('br_bundle_products')?></h4>
 	<table id="bundle_selected" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
-			<th><?=lang('br_product')?></th>
+			<th><?=lang('nav_br_product')?></th>
 			<th><?=lang('br_type')?></th>
+			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 		</tr>
 		<?php
@@ -50,8 +53,9 @@
 								'.$b["title"].'</td>
 							<td>
 								'.$product_type[$b["type_id"]].'</td>
+							<td width="10%" class="move_related_row" style="text-align:center"><img src="'.$theme.'images/icon_move.png" /></td>
 							<td width="10%">
-								<a class="remove_bundle" href="#">remove</a><input type="hidden" value="'.$b["product_id"].'" name="bundle[]">
+								<a class="remove_bundle" href="#">'.lang('remove').'</a><input type="hidden" value="'.$b["product_id"].'" name="bundle[]">
 							</td>
 						</tr>';
 				$i++;
@@ -80,7 +84,7 @@
 	        	function(data){
 	            	brResult.find('tr').remove();
 					$.each(data, function(i,item){
-	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td>'+item.price+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><?=lang('br_add')?></a></td></tr>').appendTo(brResult);
+	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><?=lang('br_add')?></a></td></tr>').appendTo(brResult);
 	            	});
 	            	$('.add_bundle').unbind('click').bind('click',function(){
 						_add_bundle($(this).metadata().product_id);
@@ -109,7 +113,7 @@
 		new_row.attr({'id':''}).find('td:eq(3)').remove();
 		new_row.find('td:eq(2)').remove();
 		new_row.find('td:eq(0)').attr({'style':'width:auto','width':'60%'});
-		$('<td width="10%"><a href="#" class="remove_bundle">remove</a><input type="hidden" name="bundle[]" value="'+product_id+'"></td>').appendTo(new_row);
+		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/icon_move.png" /><input type="hidden" name="bundle[]" value="'+product_id+'"></td><td width="10%"><a href="#" class="remove_bundle"><?=lang('remove')?></a></td>').appendTo(new_row);
 		$(new_row).appendTo(bundleSelected);
 		row.remove();
 		bundleSelected.find('tr:even').addClass('even');

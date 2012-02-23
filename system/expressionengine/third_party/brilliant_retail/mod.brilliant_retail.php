@@ -2740,10 +2740,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$data = array('cnt' => ($downloads[0]["cnt"] + 1 ));
 					$this->EE->order_model->update_downloads_by_member($this->EE->session->userdata["member_id"],$downloads[0]["order_download_id"],$data);
 					
-					$this->EE->load->helper('download');
-					$data = file_get_contents($this->_config["media_dir"].'download/'.$downloads[0]["filenm"]); // Read the file's contents
+					$this->EE->load->helper('my_download');
+					$path = $this->_config["media_dir"].'download/'.$downloads[0]["filenm"];
 					$name = $downloads[0]["filenm_orig"];
-					force_download($name, $data);
+					force_download($name, $path);
 		}
 
 		function customer_subscriptions(){
