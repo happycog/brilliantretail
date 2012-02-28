@@ -187,12 +187,14 @@ $lang = array(
 	'br_virtual' 		=> 'Service',
 	 
 	// Buttons 
-	'br_clear' => 'Clear',
-	'br_add_product' => 'Add Product', 
-	'br_add_files' => 'Add Files',
-	'br_clear_search' => 'Clear Search', 
-	'br_duplicate' => 'Duplicate',
-	'br_save_continue' => 'Save & Continue',
+	'br_clear' 			=> 'Clear',
+	'br_add_product' 	=> 'Add Product', 
+	'br_add_files' 		=> 'Add Files',
+	'br_clear_search' 	=> 'Clear Search', 
+	'br_duplicate' 		=> 'Duplicate',
+	'br_save_continue' 	=> 'Save & Continue',
+	'br_upload'			=> 'Upload',
+	'br_browse'			=> 'Browse', 
 	
 	// Labels
 	'br_required' => 'Required Field', 

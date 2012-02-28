@@ -626,7 +626,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$class = ($this->EE->TMPL->fetch_param('class') == '') ? '' : $this->EE->TMPL->fetch_param('class');
 
 				// Style allows for linear or nested
-					$style = ($this->EE->TMPL->fetch_param('style')) ? $this->EE->TMPL->fetch_param('style') : 'nested' ;
+					$style = ($this->EE->TMPL->fetch_param('style')) ? strtolower($this->EE->TMPL->fetch_param('style')) : 'nested' ;
 				
 				// exclude categories by url_title
 					$exclude = $this->EE->TMPL->fetch_param("exclude");
@@ -1322,6 +1322,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 										var ship_note;
 										$(function(){
 											ship_to = $('#ship_same_address');
+											
+											/* Add a timeout to refresh totals so the session stays alive */
+											setInterval('_update_cart_totals()',600);
 											
 											$('#checkoutform').validate({'ignore' : ':hidden'}); 
 											

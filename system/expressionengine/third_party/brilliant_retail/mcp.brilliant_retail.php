@@ -42,6 +42,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		public $group_access 	= '';
 		public $submenu 		= '';
 
+		public $ajax_url 		= '';
+
 		private $_file_manager 	= array();
 		private $_channel_data 	= '';
 	
@@ -102,7 +104,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		$this->vars["media_url"] 	= $this->_config["media_url"];
 		$this->vars["site_url"] 	= $this->EE->config->item('site_url');
 		$this->vars["site_id"] 		= $this->site_id;
-
+		
+		// Set the ajax url
+			$this->_ajax_url();
+			$this->vars["ajax_url"] = $this->ajax_url;
+		
 		// Load the access model for the control panel
 			$this->EE->load->model('access_model');
 						
@@ -2920,6 +2926,18 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		
 	/* Helper Functions */
+		
+		
+		function _ajax_url()
+		{
+			$url = $this->EE->functions->fetch_site_index(0,0);
+
+			$host = (isset($_SERVER['HTTP_HOST']) == TRUE && $_SERVER['HTTP_HOST'] != FALSE) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+			$url = preg_replace('#http\://(([\w][\w\-\.]*)\.)?([\w][\w\-]+)(\.([\w][\w\.]*))?\/#', "http://".$host."/", $url);
+			
+			// Create new URL
+			$this->ajax_url = $url.QUERY_MARKER.'ACT=';
+		}
 		
 		function _product_entry_id($product_id){
 			if (isset($this->session->cache['product_entry_id'])){

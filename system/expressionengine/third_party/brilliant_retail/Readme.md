@@ -2,6 +2,7 @@
 
 Just some little notes for me. Since I'm the only one looking these days. 
 
+### Need to add a browse function for download files that are present in media/uploads
 ### Need to install notifications
 ### Need to update copyright throughout from 2011 to 2010-2012 
 ### Category expand/collapse: http://checkboxtree.googlecode.com/svn/tags/checkboxtree-0.5.2/index.html

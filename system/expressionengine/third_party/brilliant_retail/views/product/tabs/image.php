@@ -27,64 +27,83 @@
 /********************/
 $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 ?>	
-<table id="imageTable" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
-	<thead>
-		<tr>
-			<th colspan="7"><?=lang('br_images')?></th>
-		</tr>
-		<tr>
-			<td colspan="7" align="right" style="text-align:right">
-				<div id="img_upload_button" style="margin:0;"> 
-					<div id="showprogress"><img src="<?=$theme?>images/loader.gif" /></div>
-					<div id="divButtonPlaceholder">
-						<span id="spanButtonPlaceholder"></span>
-					</div>
-					<div id="showimages"></div>
-				</div></td>
-		</tr>
-		<tr id="image_header" <?=$hide_header?>>
-			<td width="120"><b><?=lang('br_image')?></b></td>
-			<td width="*"><b><?=lang('br_title')?></b></td>
-			<td width="65"><b><?=lang('br_large')?></b></td>
-			<td width="65"><b><?=lang('br_thumbnail')?></b></td>
-			<td width="65"><b><?=lang('br_exclude')?></b></td>
-			<td width="10">&nbsp;</td>
-			<td width="30">&nbsp;</td>
-		</tr>
-	</thead>
-	<tbody>
-<?php
-	$cnt = 0;
-	
-	foreach($images as $img){
-		$large = ($img["large"] == 1) ? 'checked' : '';
-		$thumb = ($img["thumb"] == 1) ? 'checked' : '';
-		$exclude = ($img["exclude"] == 1) ? 'checked' : '';
-		
-		$a = explode(".",$img["filenm"]);
-		$len = strlen($img["filenm"])-(strlen($a[count($a)-1])+1);
-		$base = substr($img["filenm"],0,$len);
-		echo '	<tr>
-					<td style="text-align:center">
-						<img src="'.$media_url.'products/thumb/'.$img["filenm"].'" />
-						<input type="hidden" name="cImg_name['.$base.']" value="'.$img["filenm"].'" /></td>
-					<td><input type="text" name="cImg_title['.$base.']" value="'.$img["title"].'" /></td>
-					<td><input type="radio" name="cImg_large" value="'.$base.'" '.$large.' /></td>
-					<td><input type="radio" name="cImg_thumb" value="'.$base.'" '.$thumb.' /></td>
-					<td><input type="checkbox" name="cImg_exclude['.$base.']"  value="'.$img["filenm"].'" '.$exclude.' /></td>
-					<td class="move_image_row"><img src="'.$theme.'images/icon_move.png" /></td>
-					<td><a href="#" class="remove_img">'.lang('delete').'</a></td>
-				</tr>';
-		$cnt++;
-	}
-?>
-	</tbody>
-</table>
+
+<div class="publish_field" id="hold_br_title">
+
+	<label class="hide_field">
+		<span>
+			<?=lang('br_images')?>
+		</span>
+	</label>
+
+	<div id="sub_hold_title">
+		<fieldset class="holder custom_field">
+			<table id="imageTable" cellspacing="0" cellpadding="0" border="0" width="100%">
+				<thead>
+					<tr>
+						<td colspan="7" align="left" style="text-align:left;border-bottom:0">
+							<div id="img_upload_button">
+								<div id="showprogress"><img src="<?=$theme?>images/loader.gif" /></div>
+								<div id="divButtonPlaceholder">
+									<span id="spanButtonPlaceholder"></span>
+								</div>
+								<div id="showimages"></div>
+							</div>
+							<div id="img_browse_button" >
+								<?=lang('br_browse');?>
+							</div></td>
+					</tr>
+					<tr id="image_header">
+						<th width="120"><b><?=lang('br_image')?></b></th>
+						<th width="*"><b><?=lang('br_title')?></b></th>
+						<th width="65"><b><?=lang('br_large')?></b></th>
+						<th width="65"><b><?=lang('br_thumbnail')?></b></th>
+						<th width="65"><b><?=lang('br_exclude')?></b></th>
+						<th width="10">&nbsp;</th>
+						<th width="30">&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+			<?php
+				$cnt = 0;
+				
+				foreach($images as $img){
+					$large = ($img["large"] == 1) ? 'checked' : '';
+					$thumb = ($img["thumb"] == 1) ? 'checked' : '';
+					$exclude = ($img["exclude"] == 1) ? 'checked' : '';
+					
+					$a = explode(".",$img["filenm"]);
+					$len = strlen($img["filenm"])-(strlen($a[count($a)-1])+1);
+					$base = substr($img["filenm"],0,$len);
+					echo '	<tr>
+								<td>
+									<img src="'.$media_url.'products/thumb/'.$img["filenm"].'" class="thumb" />
+									<input type="hidden" name="cImg_name['.$base.']" value="'.$img["filenm"].'" /></td>
+								<td><input type="text" name="cImg_title['.$base.']" value="'.$img["title"].'" /></td>
+								<td><input type="radio" name="cImg_large" value="'.$base.'" '.$large.' /></td>
+								<td><input type="radio" name="cImg_thumb" value="'.$base.'" '.$thumb.' /></td>
+								<td><input type="checkbox" name="cImg_exclude['.$base.']"  value="'.$img["filenm"].'" '.$exclude.' /></td>
+								<td class="move_image_row"><img src="'.$theme.'images/icon_move.png" /></td>
+								<td><a href="#" class="remove_img">'.lang('delete').'</a></td>
+							</tr>';
+					$cnt++;
+				}
+			?>
+				</tbody>
+			</table>
+		</fieldset>
+	</div> <!-- /sub_hold_field -->
+
+</div>
+
+
+
+
 <script type="text/javascript">
 	$(function(){
 		_restripe_images();
 		create_image_uploader();
-});
+	});
 function create_image_uploader(){
 	// Create the image 
 		swfu = new SWFUpload({
@@ -117,7 +136,7 @@ function create_image_uploader(){
 			upload_success_handler : function uploadSuccess(file,serverData){
 																var img = serverData.split('|');
 																$('	<tr>'+ 
-																	'	<td style="text-align:center"><img src="<?=$media_url?>products/thumb/'+img[1]+'" />'+
+																	'	<td><img src="<?=$media_url?>products/thumb/'+img[1]+'" class="thumb" />'+
 																	'		<input type="hidden" name="cImg_name['+img[0]+']" value="'+img[1]+'" /></td>'+
 																	'	<td><input type="text" name="cImg_title['+img[0]+']" /></td>'+
 																	'	<td><input type="radio" name="cImg_large" value="'+img[0]+'" /></td>'+
@@ -151,14 +170,14 @@ function create_image_uploader(){
 											}
 										},
 			// Button Settings
-			button_image_url : "<?=$theme?>images/btn-img-upload.png",
+			button_image_url : "<?=$theme?>images/btn-add.png",
 			button_placeholder_id : "spanButtonPlaceholder",
-			button_width: 180,
-			button_height: 36,
-			button_text : '<span class="button">Select Images <span class="buttonSmall">(4 MB Max)</span></span>',
-			button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 14pt; color: #ffffff } .buttonSmall { font-size: 10pt; color: #ffffff }',
-			button_text_top_padding: 9,
-			button_text_left_padding: 16,
+			button_width: 100,
+			button_height: 24,
+			button_text : '<span class="button"><?=lang('br_upload')?></span>',
+			button_text_style : '.button { font-family: Helvetica, Arial, sans-serif;font-weight:bold;font-size: 12px; color: #666666 }',
+			button_text_top_padding: 6,
+			button_text_left_padding: 25,
 			button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
 			button_cursor: SWFUpload.CURSOR.HAND,
 			
@@ -194,26 +213,23 @@ function _set_image_radio(){
 }
 
 function _restripe_images(){
-	$('#imageTable tr').removeClass('even').removeClass('odd');
-	$('#imageTable tr:even').addClass('even');
-	$('#imageTable tr:odd').addClass('odd');
-	$('#imageTable tbody').not('.nodrag').unbind().sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
+	$('#imageTable tbody').not('.nodrag').sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
 							helper:function(e, ui) {
 								ui.children().each(function() {
 									$(this).width($(this).width());
 								});		
 								return ui;
 							},
-							update:function(){
-												$('#imageTable tr').removeClass('even').removeClass('odd');
-												$('#imageTable tr:even').addClass('even');
-												$('#imageTable tr:odd').addClass('odd');
-											}
+							placeholder: "image-state-highlight",
+							update: function(){
+								_restripe_images() 
+							}
 						});
 							
 	$('.remove_img').unbind('click').bind('click',function(){
 																		$(this).parent().parent().remove();
 																		_set_image_radio();
+																		_restripe_images();
 																		return false;
 																	});
 }		

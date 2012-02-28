@@ -894,6 +894,10 @@ table#b2r_db_performance_bot td img {
 
 /* Product */
 
+.publish_field fieldset.holder select {
+	min-width:125px;
+}
+
 div.arrow_open{
 	width: 15px;
 	height: 15px;
@@ -907,7 +911,8 @@ div.arrow_close{
 }
 .tree_level_1,
 .tree_level_2,
-.tree_level_3 {
+.tree_level_3,
+.tree_level_4 {
 	/* 
 		display: none;
 	*/
@@ -1830,8 +1835,24 @@ input#delete {
 .download_button {
 	padding: 10px;
 }
+
+#download_add_button, 
 #img_upload_button {
-	margin: 10px;
+	float: left;
+	margin-right: 5px;
+}
+#download_browse_button, 
+#img_browse_button {
+	float:			left;
+	cursor: 		pointer;
+	background:		url(../images/btn-browse.png) top left no-repeat;
+	width:			130px;
+	height:			24px;
+	font-size: 		12px;
+	font-weight: 	bold;
+	padding-left:	25px;
+	padding-top: 	6px;
+	color: 			#666;
 }
 
 #showDownloadProgress, 
@@ -2478,6 +2499,56 @@ table#relatedTable .tDnD_whileDrag td a{
 
 
 /* SUBTYPES */
+
+.subtypes {
+	display: none;
+}
+
+#mainContent table#imageTable tr.image-state-highlight {
+	height: 120px;
+	background-color: green;
+}
+
+#imageTable thead td {
+	padding: 4px;
+}
+
+#imageTable td {
+	vertical-align: top;
+	text-align: center;
+	padding: 8px 4px;
+	border-bottom: 1px #E7E7E7 solid;
+	border-right: 1px #E7E7E7 solid;
+}
+
+#imageTable td img.thumb {
+	border: 1px #E7E7E7 solid;
+}
+
+#imageTable tbody.ui-sortable td {
+	background-color: #fff;
+}
+
+#imageTable td input[type="text"] {
+	width: 90%;
+}
+
+#imageTable {
+	padding-top: 				4px;
+	border: 					1px #BBB solid;
+	border-top-left-radius:		4px;
+	border-top-right-radius:	4px;
+	background: 				#F4F6F6;
+}
+
+#sub_type_4 {
+	padding-top: 				4px;
+	border: 					1px #BBB solid;
+	border-top-left-radius:		4px;
+	border-top-right-radius:	4px;
+	background: 				#F4F6F6;
+}
+
 #sub_type_2 {
 	padding-top: 				4px;
 	border: 					1px #BBB solid;
@@ -2501,6 +2572,18 @@ table#relatedTable .tDnD_whileDrag td a{
 	font-size: 12px;
 }
 
+#download_buttons {
+	border: 0;
+	background: #F4F6F6; 
+	padding: 1px 3px;
+}
+
+#download_selected {
+	border: 0;
+	background: #FFF;
+}
+
+#download_selected th, 
 #bundle_results th {
 	background:	#F4F6F6;
 	border-bottom: #BBB 1px solid;
@@ -2508,13 +2591,11 @@ table#relatedTable .tDnD_whileDrag td a{
 	text-align: left;
 }
 
+download_selected td, 
 #bundle_results td {
 	padding: 	4px;
 	border-bottom: 1px #E7E7E7 solid;
 	border-right: 1px #E7E7E7 solid;
-}
-.subtypes {
-display: none;
 }
 .subtypes .search {
 	float: right;
@@ -2552,14 +2633,18 @@ display: none;
 	border: 		none;
 }
 
+#imageTable tr th,
+#download_selected tr th, 
 #bundle_selected tr th {
+	background:		url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
 	border-top: 	1px #CCC solid;
 	border-bottom: 	1px #AAA solid;
-	text-align: 	left;
-	background:		url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
+	color:			#666;
 	padding: 		6px 10px 4px;
+	text-align: 	left;
 }
 
+#download_selected tr.odd td,
 #bundle_selected tr.odd td,
 #bundle_selected tr.even td {
 	background: #fff;

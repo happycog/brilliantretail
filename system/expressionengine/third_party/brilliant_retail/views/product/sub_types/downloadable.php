@@ -23,23 +23,34 @@
 /************************************************************/
 ?>
 <div id="sub_type_4" class="subtypes">
-	<div id="showDownloadProgress"><img src="<?=$theme?>images/loader.gif" /><span id="showPercent"></span></div>
-	<span id="spanDownloadPlaceholder"></span></span>
-	<input type="hidden" name="require_download" title="<?=lang('br_details').' - '.lang('br_download_file_required').' '.lang('br_is_required')?>" id="sub_type_req_4"  value="1" class="{required:true} sub_type_req" />
 	<table id="download_selected" class="subTable" width="100%" cellpadding="0" cellspacing="0">
-		<tr>
-			<th><?=lang('br_title')?></th>
-			<th><?=lang('br_file_name')?></th>
-			<th><?=lang('br_download_limit')?></th>
-			<th><?=lang('br_download_length')?></th>
-			<th><?=lang('br_download_version')?></th>
-		</tr>
+		<thead>
+			<tr>
+				<td colspan="5" id="download_buttons">
+					<div id="download_add_button">
+						<div id="showDownloadProgress"><img src="<?=$theme?>images/loader.gif" /><span id="showPercent"></span></div>
+						<span id="spanDownloadPlaceholder"></span></span>
+						<input type="hidden" name="require_download" title="<?=lang('br_details').' - '.lang('br_download_file_required').' '.lang('br_is_required')?>" id="sub_type_req_4"  value="1" class="{required:true} sub_type_req" />
+					</div>
+					<div id="download_browse_button" >
+						<?=lang('br_browse');?>
+					</div></td>
+			</tr>
+			<tr>
+				<th><?=lang('br_title')?></th>
+				<th><?=lang('br_file_name')?></th>
+				<th><?=lang('br_download_limit')?></th>
+				<th><?=lang('br_download_length')?></th>
+				<th><?=lang('br_download_version')?></th>
+			</tr>
+		</thead>
+		<tbody>
 		<?php
 			if(isset($products[0]["download"])){
 				$a = $products[0]["download"][0];
-				echo '	<tr>
+				echo '	<tr class="odd">
 							<td>
-								<input type="text" name="download_title" value="'.$a['title'].'" /></td>
+								<input type="text" name="download_title" value="'.$a['title'].'" style="width:96%" /></td>
 								<td>
 									<input type="hidden" name="download_filenm" value="'.$a['filenm'].'" />
 									<input type="hidden" name="download_filenm_orig" value="'.$a['filenm_orig'].'" />'.$a['filenm_orig'].'</td> 
@@ -51,13 +62,14 @@
 									<input type="text" name="download_version" value="'.$a['download_version'].'" style="width:30px" /></td>
 						<tr>';
 			}else{
-				echo '	<tr>
+				echo '	<tr class="odd"> 
 							<td colspan="5">'.lang('br_upload_download_message').'</td>
 						</tr>';
 			}
 		?>
+		</tbody>
 	</table>
-	<div style="text-align:right;padding: 2px">
+	<div style="text-align:right;padding: 5px">
 		<em>*<?=lang('br_download_limit_instruction')?></em>
 	</div>
 </div>
@@ -90,9 +102,9 @@
 										}, 
 			upload_success_handler : function uploadSuccess(file,serverData){
 															var a = serverData.split('|');
-																$('#download_selected tr:gt(0)').remove();
+																$('#download_selected tbody tr:eq(0)').remove();
 																$(	'<tr>'+
-																		'<td><input type="text" name="download_title" value="'+a[0]+'" /></td>'+
+																		'<td><input type="text" name="download_title" value="'+a[0]+'" style="width:96%" /></td>'+
 																		'<td><input type="hidden" name="download_filenm" value="'+a[2]+'" /><input type="hidden" name="download_filenm_orig" value="'+a[1]+'" />'+a[1]+'</td>'+
 																		'<td><input type="text" name="download_limit" value="0" style="width:30px" /> *</td>'+
 																		'<td><input type="text" name="download_length" value="0" style="width:30px" /> *</td>'+
@@ -113,14 +125,14 @@
 										},
 	
 			// Button Settings
-			button_image_url : "<?=$theme?>images/btn-dl-upload.png",
+			button_image_url : "<?=$theme?>images/btn-add.png",
 			button_placeholder_id : "spanDownloadPlaceholder",
-			button_width: 70,
-			button_height: 25,
-			button_text : '<span class="download_button"><?=lang('upload')?></span>',
-			button_text_style : '.download_button { font-family: Helvetica, Arial, sans-serif; font-size: 14pt; color: #ffffff }',
-			button_text_top_padding: 5,
-			button_text_left_padding: 10,
+			button_width: 100,
+			button_height: 24,
+			button_text : '<span class="button"><?=lang('br_upload')?></span>',
+			button_text_style : '.button { font-family: Helvetica, Arial, sans-serif;font-weight:bold;font-size: 12px; color: #666666 }',
+			button_text_top_padding: 6,
+			button_text_left_padding: 25,
 			button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
 			button_cursor: SWFUpload.CURSOR.HAND,
 			
