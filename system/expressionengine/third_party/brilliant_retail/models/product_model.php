@@ -535,6 +535,18 @@ class Product_model extends CI_Model {
 	
 			// Downloadable Products 
 				if($data["type_id"] == '4'){
+					
+					if($data["download_import"] == 1){
+						$old = $media_dir.'import/'.$data["download_filenm"];
+						$parts = pathinfo($old);
+						
+						$data["download_filenm"] = md5($old.rand(1,10000000)).'.'.strtolower($parts['extension']);
+						$new = $media_dir.'download/'.$data["download_filenm"];
+						
+						// lets move the file into the right place with a new name
+							rename($old,$new);
+					}
+					
 					$download = array(
 											'product_id' => $product_id, 
 											'title' => $data["download_title"],
@@ -545,6 +557,7 @@ class Product_model extends CI_Model {
 											'download_version' => $data["download_version"]
 										);
 					unset($data["require_download"]);
+					unset($data["download_import"]);
 					unset($data["download_title"]);
 					unset($data["download_filenm"]);
 					unset($data["download_filenm_orig"]);

@@ -75,7 +75,16 @@ THE SOFTWARE.
         </select>
       </div>
       <div id="content" class="">
-        <div id="leftColumn">
+        <div 
+        	<?php 
+        		if(isset($_REQUEST["browser"]))
+        		{
+         	?>
+         			style="display:none" 
+         	<?php
+         		}
+         	?>
+         	id="leftColumn">
           <div id="folderList">
           </div>
           <?php if (PGRFileManagerConfig::$allowEdit):?>
@@ -98,17 +107,18 @@ THE SOFTWARE.
         {
             return $.i18n._(str);
         }
+        
         $(function() {        	            
             var filemanager = new PGRFileManager({
-            	sId : "<?=session_id()?>", 
-                rootDir : "<?=PGRFileManagerConfig::$urlPath?>", 
-                allowedExtension : "<?=$PGRUploaderExtension?>", 
-                fileDescription : "<?=$PGRUploaderDescription?>", 
-                filesType : "<?=$PGRUploaderType?>",
-                fileMaxSize : "<?=PGRFileManagerConfig::$fileMaxSize?> B",
-                lang: "<?=$PGRLang?>",
-                ckEditorFuncNum: "<?=$ckEditorFuncNum?>",
-                allowEdit: <?=PGRFileManagerConfig::$allowEdit?'true':'false'?>
+            	sId 				: "<?=session_id()?>", 
+                rootDir 			: "<?=PGRFileManagerConfig::$urlPath?>", 
+                allowedExtension 	: "<?=$PGRUploaderExtension?>", 
+                fileDescription 	: "<?=$PGRUploaderDescription?>", 
+                filesType 			: "<?=$PGRUploaderType?>",
+                fileMaxSize 		: "<?=PGRFileManagerConfig::$fileMaxSize?> B",
+                lang 				: "<?=$PGRLang?>",
+                ckEditorFuncNum 	: "<?=$ckEditorFuncNum?>",
+                allowEdit 			: <?=PGRFileManagerConfig::$allowEdit?'true':'false'?>
             });
             filemanager.init();
         });    

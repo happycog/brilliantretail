@@ -32,9 +32,35 @@
 						<span id="spanDownloadPlaceholder"></span></span>
 						<input type="hidden" name="require_download" title="<?=lang('br_details').' - '.lang('br_download_file_required').' '.lang('br_is_required')?>" id="sub_type_req_4"  value="1" class="{required:true} sub_type_req" />
 					</div>
-					<div id="download_browse_button" >
-						<?=lang('br_browse');?>
-					</div></td>
+					<?php
+						if(count($imports) > 0){
+					?>
+							<div id="download_browse_button" >
+								<?=lang('br_browse')?>
+							</div>
+							<div style="clear:both"></div>
+							<div id="download_options_wrap">
+								<div id="download_options_header">
+									<?=lang('br_filename')?>
+								</div>
+								<div id="download_options">
+									<table width="100%" cellspacing="0" border="0">
+										<?php
+											foreach($imports as $fl){
+												echo '	<tr>
+															<td>
+																'.$fl.'</td>
+															<td align="right">
+																<a href="#" data-filename="'.$fl.'|'.$fl.'|'.$fl.'" class="download_options_add">'.lang('br_add').'</a></td>
+														</tr>';
+											}
+										?>					
+									</table>
+								</div></td>
+							</div>
+					<?php
+						}
+					?></td>
 			</tr>
 			<tr>
 				<th><?=lang('br_title')?></th>
@@ -44,7 +70,7 @@
 				<th><?=lang('br_download_version')?></th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="download_file">
 		<?php
 			if(isset($products[0]["download"])){
 				$a = $products[0]["download"][0];
@@ -52,6 +78,7 @@
 							<td>
 								<input type="text" name="download_title" value="'.$a['title'].'" style="width:96%" /></td>
 								<td>
+									<input type="hidden" name="download_import" value="0" />
 									<input type="hidden" name="download_filenm" value="'.$a['filenm'].'" />
 									<input type="hidden" name="download_filenm_orig" value="'.$a['filenm_orig'].'" />'.$a['filenm_orig'].'</td> 
 								<td>
@@ -101,20 +128,7 @@
 											 $('#showPercent').html(percent);
 										}, 
 			upload_success_handler : function uploadSuccess(file,serverData){
-															var a = serverData.split('|');
-																$('#download_selected tbody tr:eq(0)').remove();
-																$(	'<tr>'+
-																		'<td><input type="text" name="download_title" value="'+a[0]+'" style="width:96%" /></td>'+
-																		'<td><input type="hidden" name="download_filenm" value="'+a[2]+'" /><input type="hidden" name="download_filenm_orig" value="'+a[1]+'" />'+a[1]+'</td>'+
-																		'<td><input type="text" name="download_limit" value="0" style="width:30px" /> *</td>'+
-																		'<td><input type="text" name="download_length" value="0" style="width:30px" /> *</td>'+
-																		'<td><input type="text" name="download_version" value="1.0" style="width:30px" /></td>'+
-																	'<tr>').appendTo($('#download_selected'));
-																$('.remove_img').unbind('click').bind('click',function(){
-																	$(this).parent().parent().remove();
-																	return false;
-																});
-																$('#sub_type_req_4').val(1);
+																update_download(serverData,0);
 															},
 			upload_complete_handler : function uploadComplete(file,serverData){
 											if (this.getStats().files_queued > 0) {
@@ -143,5 +157,39 @@
 			// Debug Settings
 			debug: false
 			});
+			
+			// We also need to account for 
+				$('#download_browse_button').bind('click',function(){
+					$('#download_options_wrap').slideToggle();
+					return false;
+				});
+				
+				$('.download_options_add').bind('click',function(){
+					var serverData = $(this).attr('data-filename');
+					update_download(serverData,1);
+					$('#download_options_wrap').slideUp();
+					return false;
+				});
+			
 		});
+		
+		function update_download(serverData,b){
+			var a = serverData.split('|');
+			$('#download_selected tbody#download_file tr').remove();
+			$(	'<tr>'+
+					'<td><input type="text" name="download_title" value="'+a[0]+'" style="width:96%" /></td>'+
+					'<td> 	<input type="hidden" name="download_import" value="'+b+'" />'+
+					'		<input type="hidden" name="download_filenm" value="'+a[2]+'" />'+
+					'		<input type="hidden" name="download_filenm_orig" value="'+a[1]+'" />'+a[1]+'</td>'+
+					'<td><input type="text" name="download_limit" value="0" style="width:30px" /> *</td>'+
+					'<td><input type="text" name="download_length" value="0" style="width:30px" /> *</td>'+
+					'<td><input type="text" name="download_version" value="1.0" style="width:30px" /></td>'+
+				'<tr>').appendTo($('#download_selected tbody#download_file'));
+			$('.remove_img').unbind('click').bind('click',function(){
+			$(this).parent().parent().remove();
+				return false;
+			});
+			$('#sub_type_req_4').val(1);
+
+		}
 </script>

@@ -931,7 +931,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 																);
 						}
 					}else{
-						echo $f["field_type"];
+						echo 'Unsupported fieldtype: <b>'.$f["field_type"].'</b>';
 						exit;
 					}
 				}
@@ -2969,6 +2969,21 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									6 => 'subscription', 
 									7 => 'donation'
 									);
+									
+					// Its downloadable! Lets try to get some uploaded files if they are available
+						if($type == 4){
+							// We need to get a list of possible 
+							$fl = read_dir_files($this->_config["media_dir"].'import');
+							
+							$this->vars["has_import"] 	= FALSE;
+							$this->vars["imports"]		= array();
+							
+							if(count($fl) > 0){
+								$this->vars["has_import"] = TRUE;
+								$this->vars["imports"] = $fl;
+							}
+						}
+
 					$str = $this->EE->load->view('product/sub_types/'.$file[$type],$this->vars,TRUE);
 					$str .= "	<script type=\"text/javascript\">
 									$(function(){

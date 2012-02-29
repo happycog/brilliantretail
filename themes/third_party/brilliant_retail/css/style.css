@@ -1836,6 +1836,36 @@ input#delete {
 	padding: 10px;
 }
 
+#download_options_wrap {
+	margin: 		0 5px 5px;
+	display: 		none;
+}
+
+#download_options_header {
+	font-weight: 	bold;
+	background:		url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
+	border: 		#E7E7E7 solid;
+	border-width: 	1px 1px 0 1px;
+	color:			#666;
+	padding: 		6px 10px 4px;
+	text-align: 	left;
+}
+
+
+#download_options {
+	height: 		125px;
+	overflow: 		auto;
+	border: 		1px #E7E7E7 solid;
+	background: 	#FFF;
+}
+
+#download_options td {
+	background-color:	#FFFFFF;
+	border-bottom: 		0;
+	border-top:			1px #E7E7E7 solid;
+	border-right-width: 0;
+}
+
 #download_add_button, 
 #img_upload_button {
 	float: left;
@@ -2634,6 +2664,7 @@ download_selected td,
 }
 
 #imageTable tr th,
+#download_options tr th, 
 #download_selected tr th, 
 #bundle_selected tr th {
 	background:		url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;

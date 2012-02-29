@@ -51,7 +51,9 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 							</div>
 							<div id="img_browse_button" >
 								<?=lang('br_browse');?>
-							</div></td>
+							</div>
+							<div style="clear:both"></div>
+							<iframe src="" id="image_browse_frame" width="100%" style="height:452px;display:none;border:0"></iframe></td>
 					</tr>
 					<tr id="image_header">
 						<th width="120"><b><?=lang('br_image')?></b></th>
@@ -100,9 +102,30 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 
 
 <script type="text/javascript">
+	
+	var browse_window_show = false;
+	
 	$(function(){
 		_restripe_images();
 		create_image_uploader();
+		
+		$('#img_browse_button').bind('click',function(){
+			// Well lets go ahead and initiate the Image only browser then. 
+				if(!browse_window_show){
+					$('#image_browse_frame')
+						.slideDown()
+						.attr(	'src',
+								'<?=URL_THIRD_THEMES?>brilliant_retail/script/ckeditor/plugins/pgrfilemanager/PGRFileManager.php?langCode=en&type=Image&browser=hidden');
+					browse_window_show = true;
+				}else{
+					$('#image_browse_frame')
+						.slideUp()
+						.attr('src','');
+					browse_window_show = false;
+				}
+				return false;
+		});
+		
 	});
 function create_image_uploader(){
 	// Create the image 
@@ -134,28 +157,7 @@ function create_image_uploader(){
 											/* var percent = Math.ceil((loaded / total) * 100); */
 										}, 
 			upload_success_handler : function uploadSuccess(file,serverData){
-																var img = serverData.split('|');
-																$('	<tr>'+ 
-																	'	<td><img src="<?=$media_url?>products/thumb/'+img[1]+'" class="thumb" />'+
-																	'		<input type="hidden" name="cImg_name['+img[0]+']" value="'+img[1]+'" /></td>'+
-																	'	<td><input type="text" name="cImg_title['+img[0]+']" /></td>'+
-																	'	<td><input type="radio" name="cImg_large" value="'+img[0]+'" /></td>'+
-																	'	<td><input type="radio" name="cImg_thumb" value="'+img[0]+'" /></td>'+
-																	'	<td><input type="checkbox" name="cImg_exclude['+img[0]+']"  value="'+img[1]+'" /></td>'+
-																	'	<td class="move_image_row"><img src="<?=$theme?>images/icon_move.png" /></td>'+
-																	'	<td><a href="#" class="remove_img"><?=lang('delete')?></a></td>'+
-																	'</tr>').appendTo($('#imageTable tbody'));
-																	
-																	// Make sure the header is showing
-																		$('#image_header').show();
-																		
-																	// Make sure that at least one radio button is selected
-																	// For the large and the thumbnail image
-																		_set_image_radio();
-																	
-																	// Restrip things and set the delete buttons
-																		_restripe_images();
-																	
+																_add_image_row(serverData);
 															},
 			upload_complete_handler :  function uploadComplete(file) {
 											try {
@@ -192,6 +194,40 @@ function create_image_uploader(){
 			// Debug Settings
 			debug: false  
 		});
+}
+
+function SetUrl(txt){
+	$('#image_browse_frame').slideUp(function(){
+		var fl = txt.replace(/^\/|\/$/g,'');
+		var a = fl.split('.');
+		_add_image_row(a[0]+'|'+fl);
+		$(this).attr('src','');
+		browse_window_show = false;
+	});		
+}
+
+function _add_image_row(serverData){
+	var img = serverData.split('|');
+	$('	<tr>'+ 
+		'	<td><img src="<?=$media_url?>products/thumb/'+img[1]+'" class="thumb" />'+
+		'		<input type="hidden" name="cImg_name['+img[0]+']" value="'+img[1]+'" /></td>'+
+		'	<td><input type="text" name="cImg_title['+img[0]+']" /></td>'+
+		'	<td><input type="radio" name="cImg_large" value="'+img[0]+'" /></td>'+
+		'	<td><input type="radio" name="cImg_thumb" value="'+img[0]+'" /></td>'+
+		'	<td><input type="checkbox" name="cImg_exclude['+img[0]+']"  value="'+img[1]+'" /></td>'+
+		'	<td class="move_image_row"><img src="<?=$theme?>images/icon_move.png" /></td>'+
+		'	<td><a href="#" class="remove_img"><?=lang('delete')?></a></td>'+
+		'</tr>').appendTo($('#imageTable tbody'));
+		
+		// Make sure the header is showing
+			$('#image_header').show();
+			
+		// Make sure that at least one radio button is selected
+		// For the large and the thumbnail image
+			_set_image_radio();
+		
+		// Restrip things and set the delete buttons
+			_restripe_images();
 }
 
 function _set_image_radio(){

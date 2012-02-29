@@ -925,6 +925,8 @@ function PGRFileManager(options)
 		} else if(window.opener && window.opener.CKEDITOR) { 
 			window.opener.CKEDITOR.tools.callFunction(options.ckEditorFuncNum, options.rootDir + currentDir + "/" + obj.attr("filename"));
 			window.close() ;	
+		} else if(window.parent.SetUrl){
+			window.parent.SetUrl(currentDir + "/" + obj.attr("filename")) ;
 		}else {
 			preview();
 		}

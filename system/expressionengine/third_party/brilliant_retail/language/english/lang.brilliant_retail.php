@@ -195,6 +195,7 @@ $lang = array(
 	'br_save_continue' 	=> 'Save & Continue',
 	'br_upload'			=> 'Upload',
 	'br_browse'			=> 'Browse', 
+	'br_filename'		=> 'Filename',
 	
 	// Labels
 	'br_required' => 'Required Field', 

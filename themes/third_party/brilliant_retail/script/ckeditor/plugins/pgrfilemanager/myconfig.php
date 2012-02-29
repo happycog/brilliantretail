@@ -36,14 +36,14 @@ if($_SESSION["filemanager"] != true){
 //i.e  PGRFileManagerConfig::$rootPath = '/home/user/htdocs/userfiles'
 //you can check your absoulte path using
 
-PGRFileManagerConfig::$rootPath = rtrim($_SESSION["media_dir"],'/');
+PGRFileManagerConfig::$rootPath = rtrim($_SESSION["media_dir"],'/').'/products';
 
 //url path to root directory
 //this path is using to display images and will be returned to ckeditor with relative path to selected file
 //i.e http://my-super-web-page/gallery
 //i.e /gallery
 
-PGRFileManagerConfig::$urlPath = rtrim($_SESSION["media_url"],'/');
+PGRFileManagerConfig::$urlPath = rtrim($_SESSION["media_url"],'/').'/products';
 
 
 //    !!!How to determine rootPath and urlPath!!!

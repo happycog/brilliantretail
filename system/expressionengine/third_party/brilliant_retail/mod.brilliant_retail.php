@@ -1324,7 +1324,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 											ship_to = $('#ship_same_address');
 											
 											/* Add a timeout to refresh totals so the session stays alive */
-											setInterval('_update_cart_totals()',600);
+											setInterval('_update_cart_totals()',600000);
 											
 											$('#checkoutform').validate({'ignore' : ':hidden'}); 
 											
@@ -2747,6 +2747,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$path = $this->_config["media_dir"].'download/'.$downloads[0]["filenm"];
 					$name = $downloads[0]["filenm_orig"];
 					force_download($name, $path);
+					exit;
 		}
 
 		function customer_subscriptions(){
