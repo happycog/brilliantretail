@@ -206,7 +206,7 @@ var PGRFileManagerDict = {
 		"Cancel"					: "Cancel",
 		"Ok"						: "Ok",
 		//new version 1.5.2
-		"root"						: "Products",
+		"root"						: "Media",
 		"choose"					: "choose",
 		"create a thumb"			: "create a thumb",
 		"Create a thumb"			: "Create a thumb",

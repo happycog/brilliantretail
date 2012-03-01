@@ -105,6 +105,17 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 	
 	var browse_window_show = false;
 	
+	var setBrowseUrl = function(txt){
+		top.$('#image_browse_frame').slideUp(function(){
+			var fl = txt.replace(/^\/|\/$/g,'');
+			var a = fl.split('.');
+			top._add_image_row(a[0]+'|'+fl);
+			$(this).attr('src','');
+			top.browse_window_show = false;
+		});
+	}
+	
+	
 	$(function(){
 		_restripe_images();
 		create_image_uploader();
@@ -115,7 +126,7 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 					$('#image_browse_frame')
 						.slideDown()
 						.attr(	'src',
-								'<?=URL_THIRD_THEMES?>brilliant_retail/script/ckeditor/plugins/pgrfilemanager/PGRFileManager.php?langCode=en&type=Image&browser=hidden');
+								'<?=URL_THIRD_THEMES?>brilliant_retail/script/ckeditor/plugins/pgrfilemanager/PGRBrowseImage.php?langCode=en&type=Image');
 					browse_window_show = true;
 				}else{
 					$('#image_browse_frame')
@@ -194,16 +205,6 @@ function create_image_uploader(){
 			// Debug Settings
 			debug: false  
 		});
-}
-
-function SetUrl(txt){
-	$('#image_browse_frame').slideUp(function(){
-		var fl = txt.replace(/^\/|\/$/g,'');
-		var a = fl.split('.');
-		_add_image_row(a[0]+'|'+fl);
-		$(this).attr('src','');
-		browse_window_show = false;
-	});		
 }
 
 function _add_image_row(serverData){

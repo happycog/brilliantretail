@@ -22,7 +22,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-include_once dirname(__FILE__) . '/init.php';
+
+if(isset($_REQUEST["imageBrowse"])){
+	include_once dirname(__FILE__) . '/init_browse.php';
+}else{
+	include_once dirname(__FILE__) . '/init.php';
+}
+
 include_once dirname(__FILE__) . '/utils.php';
 
 //get dir from post

@@ -22,8 +22,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+	// Set a flag that we can use in files.php and folders.php to select the 
+	// proper includes
+		$imageBrowse = TRUE;
 
-    include_once dirname(__FILE__) . '/php/init.php';
+    include_once dirname(__FILE__) . '/php/init_browse.php';
     $PGRUploaderExtension = "";
     if (PGRFileManagerConfig::$allowedExtensions == "") $PGRUploaderExtension = "*.*";
     else
@@ -54,7 +57,7 @@ THE SOFTWARE.
   <script type="text/javascript" src="js/PGRUploader.js"></script>
   <script type="text/javascript" src="js/PGRContextMenu.js"></script>
   <script type="text/javascript" src="js/PGRSelectable.js"></script>
-  <script type="text/javascript" src="js/PGRFileManager.js"></script>
+  <script type="text/javascript" src="js/PGRBrowseImage.js"></script>
   <script type="text/javascript" src="js/PGRFileManagerContent.js"></script>
   
   </head>
@@ -75,7 +78,7 @@ THE SOFTWARE.
         </select>
       </div>
       <div id="content" class="">
-        <div id="leftColumn">
+        <div style="display:none" id="leftColumn">
           <div id="folderList">
           </div>
           <?php if (PGRFileManagerConfig::$allowEdit):?>

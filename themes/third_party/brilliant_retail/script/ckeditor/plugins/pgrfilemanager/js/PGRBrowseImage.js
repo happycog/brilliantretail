@@ -221,7 +221,7 @@ function PGRFileManager(options)
 			        }
 			    });      
 			},
-			ondblclick: sendUrl
+			ondblclick: setBrowseUrl
 		});
 		
 		$("#fileList").PGRContextMenu({
@@ -325,7 +325,7 @@ function PGRFileManager(options)
 	    folderLoading.setLoadingPanel();
 	    folderLoading.bindLoadingPanel();
 		
-		$.post("php/folders.php", {fun:""}, function(res){
+		$.post("php/folders.php?imageBrowse=true", {fun:""}, function(res){
 			if (res.res == "OK") {
 				$("#folderList").html(prepareFoldersContent(res.folders));
 				
@@ -349,7 +349,7 @@ function PGRFileManager(options)
 	    folderLoading.setLoadingPanel();
 	    folderLoading.bindLoadingPanel();
 			    
-		$.post("php/folders.php", {fetchDir:dirname}, function(res){
+		$.post("php/folders.php?imageBrowse=true", {fetchDir:dirname}, function(res){
 			if (res.res == "OK") {
 				initSubFolders($folder, res.folders);
 				self.initFolders($folder.find("ul"));
@@ -396,7 +396,7 @@ function PGRFileManager(options)
 	    fileLoading.setLoadingPanel();
 	    fileLoading.bindLoadingPanel();
 	    
-		$.post("php/files.php?type=" + options.filesType, {dir:currentDir}, function(res){
+		$.post("php/files.php?imageBrowse=true&type=" + options.filesType, {dir:currentDir}, function(res){
 			if (res.res == "OK") {			
 				$("#fileList").html(prepareFilesContent(res.files, fileListType));			
 				self.initFiles();
@@ -736,7 +736,7 @@ function PGRFileManager(options)
 			fileLoading.setLoadingPanel();
 			fileLoading.bindLoadingPanel();
 				
-			$.post("php/folders.php", {fun:"addDir", dirname:dirname, newDirname:newDirname, fetchDir:dirname}, function(res){
+			$.post("php/folders.php?imageBrowse=true", {fun:"addDir", dirname:dirname, newDirname:newDirname, fetchDir:dirname}, function(res){
 				if (res.res == "OK") {
 				    initSubFolders($folder, res.folders);
 					resetFolderTree($folder);
@@ -808,7 +808,7 @@ function PGRFileManager(options)
 			    var $parentFolder = dir.parents("li").eq(1);
 			    var parentFolderName = $parentFolder.find("span.selectee").attr("directory");
 				
-				$.post("php/folders.php", {fun:"renameDir", dirname:dir.attr("directory"), newDirname:newDirname, fetchDir:parentFolderName}, function(res){
+				$.post("php/folders.php?imageBrowse=true", {fun:"renameDir", dirname:dir.attr("directory"), newDirname:newDirname, fetchDir:parentFolderName}, function(res){
 					if (res.res == "OK") {
 					    initSubFolders($parentFolder, res.folders);
 						resetFolderTree($parentFolder);
@@ -857,7 +857,7 @@ function PGRFileManager(options)
 	    var $parentDir = $dir.parents("li").eq(1);
 	    var dropDirName = $dropDir.attr("directory"); 
 	    	    					    
-		$.post("php/folders.php", {fun:"moveDir", dir:$dir.attr("directory"),dirname:$dir.attr("dirname"),toDir:dropDirName,fetchDir:dropDirName}, function(res){
+		$.post("php/folders.php?imageBrowse=true", {fun:"moveDir", dir:$dir.attr("directory"),dirname:$dir.attr("dirname"),toDir:dropDirName,fetchDir:dropDirName}, function(res){
 			if (res.res == "OK") {
 				if ($dir.parents("ul").eq(0).find("li").length == 1) $dir.parents("ul").eq(0).remove();
 				else $dir.parents("li").eq(0).remove(); 
@@ -895,7 +895,7 @@ function PGRFileManager(options)
 	    	return;
 	    }
 	    
-		$.post("php/folders.php", {fun:"deleteDir", dirname:$dir.attr("directory")}, function(res){
+		$.post("php/folders.php?imageBrowse=true", {fun:"deleteDir", dirname:$dir.attr("directory")}, function(res){
 			if (res.res == "OK") {			
 				var $parent
 				if ($dir.parents("ul").eq(0).find("li").length == 1) $dir.parents("ul").eq(0).remove();
@@ -916,18 +916,9 @@ function PGRFileManager(options)
 		}, "json");			    	
 	}
 	
-	function sendUrl(e, obj)
+	function setBrowseUrl(e, obj)
 	{
-		//For fckeditor
-		if (window.opener && window.opener.SetUrl) {
-			window.opener.SetUrl(options.rootDir + currentDir + "/" + obj.attr("filename")) ;
-			window.close() ;	
-		} else if(window.opener && window.opener.CKEDITOR) { 
-			window.opener.CKEDITOR.tools.callFunction(options.ckEditorFuncNum, options.rootDir + currentDir + "/" + obj.attr("filename"));
-			window.close() ;	
-		}else {
-			preview();
-		}
+		top.setBrowseUrl(currentDir + "/" + obj.attr("filename")) ;
 	}
 	
 	function preview()
