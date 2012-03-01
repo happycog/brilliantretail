@@ -57,10 +57,14 @@ Updated the related product tag to properly request the _get_product core method
 Updated USPS to Rates v3 API
 Updated control panel report method to use the read_system_files helper to build file list
 Updated product bundle search field
+Updated jQuery to XXXX
+Updated jQuery UI to XXXX
+Updated system JavaScript to display before closing body tag
 Fixed issue with USPS First Class International Package rate
 Fixed issue with checkout create downloads (check for bug report)
 Fixed issue when download products are contained within bundles
 Fixed issue with shipping key "county" in get_totals ajax post 
+Added js method to add template javascript to session cache for including above the closing body tag
 Added option_count to product > option tag pair
 Added has_options tag (TRUE/FALSE)
 Added on_sale flag to the product tag

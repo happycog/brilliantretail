@@ -2067,21 +2067,14 @@ class Brilliant_retail_core {
 		// If we didn't build js then its possibly sold out
 		if($js == ''){
 			if(count($config) == 0){
-				$js = '	Product Is Currently Sold Out
-						<script type="text/javascript">
-							$(function(){
-								$(\'.btn,.fancybox\').hide();
-							});
-						</script>';
+				$js = "$(function(){ $('.btn,.fancybox').hide(); });";
 			}
 		}else{
-			$js = '	<script type="text/javascript">
-						$(function(){
+			$js = '	$(function(){
 						var configOpts = new DynamicOptionList('.join(',',$list).');
 						'.$js.'
 						initDynamicOptionLists();
-						});
-					</script>';
+					});';
 		}
 		$config_opts = array(	
 								'js' => $js,

@@ -1,4 +1,4 @@
-{!--
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -21,4 +21,11 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-!--}
+
+## ----------------------------
+##  New BR Ext Stuff
+## ----------------------------
+	$sql[] = "	INSERT INTO exp_extensions  
+					(class,method,hook,settings,priority,version,enabled) 
+				VALUES
+					('Brilliant_retail_ext', 'br_template_post_parse', 'template_post_parse', '', '10', '1.0.4.7', 'y')";

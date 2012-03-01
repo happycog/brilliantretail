@@ -96,77 +96,78 @@ body {
 	
 /* End Alerts & Messages */
 
-#header {
+header {
 	background: #fff; }    /* Choose color for your header */
 
-#header .wrapper {
+header .wrapper {
 	padding: 1px 0 0; }
 	
 
-#header #topbar {
+header #topbar {
 	padding: 1px 0 0; }
 
-#header #topbar table {
+header #topbar table {
 	width: 100%;
 	border-collapse: collapse;
 	border-spacing: 0; }
 
-#header #topbar table td {
+header #topbar table td {
 	vertical-align: middle; }
 
-#header #topbar table td.col_left {
+header #topbar table td.col_left {
 	width: 50%;
 	height: 60px;
 	text-align: left; }
 
-#header #topbar table td.col_right {
+header #topbar table td.col_right {
 	padding: 10px 0 0;
 	width: 50%;
 	font-size: 14px;
 	color: #666;
 	text-align: right; }
 
-#header #topbar table td.col_right span.cart_total {
+header #topbar table td.col_right span.cart_total {
 	font-size:12px;
 }
 
-#header #topbar table td p {
+header #topbar table td p {
 	font-size: 14px;
 	color: #666;
 	text-align: right;
 	line-height: 24px; }
 
-#header #topbar table td.col_right img {
+header #topbar table td.col_right img {
 	vertical-align: middle;  }
 
-#header #topbar table td.col_right a {
+header #topbar table td.col_right a {
 	color: #666; }
 
-#header #topbar table td.col_right span.logout a {
+header #topbar table td.col_right span.logout a {
 	color: #1165cc; }
 
-#header #topbar table td.col_right a:hover, #header #topbar table td.col_right a.active {
-	color: #1165cc; }
-	
-	
+header #topbar table td.col_right a:hover, 
+header #topbar table td.col_right a.active {
+	color: #1165cc; 
+}
 
-#header #main_menu {
+header #main_menu {
 	float: left;
 	display: inline;
 	padding: 2px 0 0;
 	height: 35px; }
 
-#header #main_menu #nav, #header #main_menu #nav ul {
+header #main_menu #nav, 
+header #main_menu #nav ul {
 	list-style: none; }
 
-#header #main_menu #nav a {
+header #main_menu #nav a {
 	display: block;
 	color: #666; }
 
-#header #main_menu #nav a:hover {
+header #main_menu #nav a:hover {
 	color: #1165cc; }
 
-#header #main_menu #nav li {
+header #main_menu #nav li {
 	float: left;
 	margin: 0 3px 0 0;
 	padding: 4px 10px 0;
@@ -176,16 +177,16 @@ body {
 	font-weight: bold;
 	line-height: 1.25em; }
 
-#header #main_menu #nav li.active {
+header #main_menu #nav li.active {
 	color: #1165cc; }
 
-#header #main_menu #nav li.active a {
+header #main_menu #nav li.active a {
 	color: #1165cc; }
 
-#header #main_menu #nav li.active li a {
+header #main_menu #nav li.active li a {
 	color: #1165cc; }
 
-#header #main_menu #nav li li {
+header #main_menu #nav li li {
 	float: none;
 	margin: 0;
 	padding: 5px 0;
@@ -196,16 +197,16 @@ body {
 	font-weight: normal;
 	line-height: 1; }
 
-#header #main_menu #nav li li a {
+header #main_menu #nav li li a {
 	width: 10em;
 	color: #666; }
 
-#header #main_menu #nav li li a:hover {
+header #main_menu #nav li li a:hover {
 	color: #1165cc;
 	text-decoration: underline; }
 
 
-#header #main_menu #nav li ul {
+header #main_menu #nav li ul {
     position: absolute;
 	z-index: 9999;
 	padding: 5px 10px;
@@ -216,56 +217,56 @@ body {
 	border-bottom: 2px solid #9b9b9b;
 	border-left: 1px solid #cdcdcd; }
 	
-#header #main_menu #nav li:hover ul {
+header #main_menu #nav li:hover ul {
 	left: auto;
 	margin: 5px 0 0 -10px; }
 
-#header #main_menu #nav li:hover ul, #header #main_menu #nav li.sfhover ul {
+header #main_menu #nav li:hover ul, header #main_menu #nav li.sfhover ul {
     left: auto;
 	margin: 5px 0 0 -10px; }
 
 
-#header #main_menu #nav li:hover ul ul {
+header #main_menu #nav li:hover ul ul {
 	margin: -1.6em 0 0 10em; }
 
-#header #main_menu #nav li:hover ul ul, #header #main_menu #nav li.sfhover ul ul {
+header #main_menu #nav li:hover ul ul, header #main_menu #nav li.sfhover ul ul {
     margin: -1.6em 0 0 10em; }
 
 
-#header #main_menu #nav li ul ul {
+header #main_menu #nav li ul ul {
     margin: -1.6em 0 0 10em; }
 
-#header #main_menu #nav, #header #main_menu #nav ul {
+header #main_menu #nav, header #main_menu #nav ul {
     list-style: none; 
     line-height: 1; }
 
-#header #main_menu #nav li:hover ul ul, #header #main_menu #nav li.sfhover ul ul {
+header #main_menu #nav li:hover ul ul, header #main_menu #nav li.sfhover ul ul {
     left: -999em; }
 
-#header #main_menu #nav li:hover ul,
-#header #main_menu #nav li li:hover ul,
-#header #main_menu #nav li.sfhover ul,
-#header #main_menu #nav li li.sfhover ul {
+header #main_menu #nav li:hover ul,
+header #main_menu #nav li li:hover ul,
+header #main_menu #nav li.sfhover ul,
+header #main_menu #nav li li.sfhover ul {
     left: auto; }
 
 
-#header #main_menu #nav li:hover ul ul,
-#header #main_menu #nav li:hover ul ul ul,
-#header #main_menu #nav li.sfhover ul ul,
-#header #main_menu #nav li.sfhover ul ul ul {
+header #main_menu #nav li:hover ul ul,
+header #main_menu #nav li:hover ul ul ul,
+header #main_menu #nav li.sfhover ul ul,
+header #main_menu #nav li.sfhover ul ul ul {
     left: -999em; }
 	
-#header #main_menu #nav li:hover ul,
-#header #main_menu #nav li li:hover ul,
-#header #main_menu #nav li li li:hover ul,
-#header #main_menu #nav li.sfhover ul,
-#header #main_menu #nav li li.sfhover ul,
-#header #main_menu #nav li li li.sfhover ul {
+header #main_menu #nav li:hover ul,
+header #main_menu #nav li li:hover ul,
+header #main_menu #nav li li li:hover ul,
+header #main_menu #nav li.sfhover ul,
+header #main_menu #nav li li.sfhover ul,
+header #main_menu #nav li li li.sfhover ul {
     left: auto; }
 
 	
 
-#header #main_search {
+header #main_search {
 	float: right;
 	display: inline;
 	margin: 3px 0 0;
@@ -276,7 +277,7 @@ body {
 	overflow: hidden;
 	background: url(../images/main_search.jpg) 0 0 no-repeat; }
 
-#header #main_search .search_txt {
+header #main_search .search_txt {
 	float: left;
 	margin: 3px 0 0;
 	padding: 0;
@@ -289,7 +290,7 @@ body {
 	background: none;
 	border: none; }
 
-#header #main_search .search_btn {
+header #main_search .search_btn {
 	float: right;
 	padding: 1px 0 0;
 	width: 17px;

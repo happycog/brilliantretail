@@ -62,8 +62,27 @@
     </div>
 </div> <!-- footer -->
 <!-- end of Footer -->
+<script type="text/javascript" src="{theme}/js/jquery.js"></script>
+<script type="text/javascript" src="{theme}/js/jqueryui.js"></script>
+<script type="text/javascript" src="{theme}/js/jquery-metadata.js"></script>
+<script type="text/javascript" src="{theme}/js/jquery-validate.js"></script>
+<script type="text/javascript" src="{theme}/js/plugins.js"></script>
+<script type="text/javascript" src="{theme}/js/script.js"></script>
+<script type="text/javascript" src="{theme}/js/promo.js"></script>
 <script type="text/javascript">
 <!--
+	$(function(){
+		$('.search_txt','#main_search')
+			.bind('click',function(){
+				$(this).val('');
+			})
+			.bind('blur',function(){
+				var a = $(this);
+				if(a.val() == ''){
+					a.val('search products');
+				}
+		});
+	});
 	sfHover = function() {
 		var sfEls = document.getElementById("nav").getElementsByTagName("LI");
 		for (var i=0; i<sfEls.length; i++) {
@@ -78,5 +97,13 @@
 	if (window.attachEvent) window.attachEvent("onload", sfHover);
 //-->
 </script>
+
+<script>
+var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
 </body>
 </html>

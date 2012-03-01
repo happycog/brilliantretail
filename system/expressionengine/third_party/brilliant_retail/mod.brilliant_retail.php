@@ -25,12 +25,15 @@ include_once(PATH_THIRD.'brilliant_retail/core/class/core.brilliant_retail.php')
 
 class Brilliant_retail extends Brilliant_retail_core{
 	
-	var $return_data 	= '';
-	var $range 			= '';
-	var $switch_cnt 	= 0;
-	
+	public $return_data 		= '';
+	public $range 				= '';
+	public $switch_cnt 			= 0;
+
 	function __construct(){
 		parent::__construct();
+		if(!isset($this->EE->session->cache['br_output_js'])){
+			$this->EE->session->cache['br_output_js'] = '';
+		}
 	}
 
 	/**
@@ -146,6 +149,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 			// Parse Tags	
 				$tagdata = preg_replace($pattern,"",$tagdata);
+				
+				if($products[0]["configurable_js"] != ''){
+					// lets push the js from the product array into 
+					// the session cache so that we can append it 
+					// to the bottom of the page
+						$this->EE->session->cache['br_output_js'] .= $products[0]["configurable_js"];
+						$products[0]["configurable_js"] = '';
+				}
+
 				$output = $this->EE->TMPL->parse_variables($tagdata, $products);
 				
 				// We should add a configuration variable to remove the 
@@ -166,15 +178,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$output = 	'<form id="form_'.$products[0]["product_id"].'" action="'.$action.'" method="post">
 									'.$hidden.' 
 									'.$output.'
-								</form>
-								<script type="text/javascript">
-									$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});
-								</script>';
+								</form>';
+
+					$this->EE->session->cache['br_output_js'] .= '$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});';
 				}
 			
 			$this->switch_cnt = 0;
 			$output = preg_replace_callback('/'.LD.'image_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output);
-			return $this->return_data = $output;
+			return $output;
 		}
 		
 	/*
@@ -1317,158 +1328,157 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$this->EE->load->library('javascript');
 					$countries = $this->EE->product_model->get_countries();
 					$map = $this->EE->javascript->generate_json($this->EE->product_model->get_states($countries));
-					$output = $output."<script type=\"text/javascript\">
-										var ship_to;
-										var ship_note;
-										$(function(){
-											ship_to = $('#ship_same_address');
-											
-											/* Add a timeout to refresh totals so the session stays alive */
-											setInterval('_update_cart_totals()',600000);
-											
-											$('#checkoutform').validate({'ignore' : ':hidden'}); 
-											
-											_bind_payment_options();
-											 
-											$('#ship_same_address').bind('click',function(){
-												var a = $(this);
-												var b = $('#shipping_address');
-												if(a.is(':checked')){
-													b.slideUp();
-												}else{
-													b.slideDown();
-												}
-											});
-											
-											$('#br_billing_zip,#br_shipping_zip,#br_billing_country,#br_shipping_country,#br_billing_state,#br_shipping_state').bind('change',function(){
-												var ship_to = $('#ship_same_address');
-												if(ship_to.is(':checked')){
-													_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());	
-												}else{
-													_get_shipping_quote($('#br_shipping_zip').val(),$('#br_shipping_country').val(),$('#br_shipping_state').val());	
-												}
-											});
-											
-											if($('#br_billing_zip').val() != ''){
-												_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());
-											}
-											$('#get_shipping_rates').bind('click',function(){
-												var ship_to = $('#ship_same_address');
-												if(	$('#br_billing_zip').val() == '' || 
-													$('#br_billing_country').val() == '' || 
-													$('#br_billing_state').val() == ''){
-													
-													alert('Please enter your shipping information before calculating rates');
-													
-												}else{
-													if(ship_to.is(':checked')){
-														_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());	
-													}else{
-														_get_shipping_quote($('#br_shipping_zip').val(),$('#br_shipping_country').val(),$('#br_shipping_state').val());	
-													}
-												}
-												return false;
-											});
-										
-											// get all tied selects
-											var selects = $('select[data-br_country]'),
-												country_state_map = ".$map.";
-											
-											selects.each(function() {
-												var select = $(this),
-													country = $( '#'+select.data('br_country') );
-												
-												// when the country changes, populate the states
-												// trigger the first change right away to update
-												country.change(function() {
-													var str = '<option value=\"\">".lang('br_select_a_state')."</option>',
-														country = this.options[this.selectedIndex].text;
-													
-													$.each(country_state_map[country], function(k, v) {
-														str += '<option value=\"'+k+'\">'+v+'</option>';
-													});
-													
-													select.empty().append(str);
-													select.val(select.data('br_selected'));
-													
-												}).triggerHandler('change');
-											});
-									
-										});
-									
-										function _bind_payment_options(){
-											var first = $('.payment_form:eq(0)');
-											if(first.html() != ''){
-												first.show();
-											}
-											
-											$('.gateway').unbind().bind('click',function(){
-												$('.payment_form:visible').hide();
-												var a = $(this).parent().parent();
-												var b = $('.payment_form',a);
-												if(b.html() != ''){
-													b.show();
-												} 
-											});
-										}
-										
-										function _get_shipping_quote(zip,country,state){
-											var url = '".$shipping_action."';
-											var params = {	
-															'zip': zip,
-														 	'state': state,
-														 	'country': country 
-														 }
-											var contain = $('#shipping_options div#options');
-											
-											ship_note = contain.html();
-											contain.html('&nbsp;Calculating Rates<br /><img src=\"".$this->_config["media_url"]."img/loading.gif\" />');
-									
-											$.post(url,params,function(data){
-									   			$('#shipping_options div#options').html(data);
-										 		_update_cart_totals();
-									 			$('input.shipping').bind('change',_update_cart_totals);
-									 		});
-									 	}
-										function _update_cart_totals(){
-											var url = '".$total_action."';
-											$('#checkout_btn').hide();
-											$('#tax_container,#shipping_container,#total_container').html(' - ');
-											if(ship_to.is(':checked')){
-												var zip 		= $('#br_billing_zip').val();
-												var country 	= $('#br_billing_country').val();
-												var state 		= $('#br_billing_state').val();
-												var address1 	= $('#br_billing_address1').val();
-												var address2 	= $('#br_billing_address2').val();
-											}else{
-												var zip 		= $('#br_shipping_zip').val();
-												var country 	= $('#br_shipping_country').val();
-												var state 		= $('#br_shipping_state').val();
-												var address1 	= $('#br_shipping_address1').val();
-												var address2	= $('#br_shipping_address2').val();
-											}
-											
-											$.post(	url,	
-														{
-															'zip':zip,
-															'country':country,
-															'state':state,
-															'address1':address1,
-															'address2':address2,
-															'shipping':$('input.shipping:checked').val()
-														},
-														function(returndata){
-															var data = $.parseJSON(returndata);
-															$('#tax_container').html(data[0].tax);
-															$('#shipping_container').html(data[0].shipping);
-															$('#payment_container').html(data[0].payment);
-															_bind_payment_options();
-															$('#total_container').html(data[0].total);
-															$('#checkout_btn').show();						
-														});
-										}
-									</script>";
-													
+					
+					// Add the JavaScript to the output cache
+						$this->EE->session->cache['br_output_js'] .= "	var ship_to;
+																		var ship_note;
+																		$(function(){
+																			ship_to = $('#ship_same_address');
+																			
+																			/* Add a timeout to refresh totals so the session stays alive */
+																			setInterval('_update_cart_totals()',600000);
+																			
+																			$('#checkoutform').validate({'ignore' : ':hidden'}); 
+																			
+																			_bind_payment_options();
+																			 
+																			$('#ship_same_address').bind('click',function(){
+																				var a = $(this);
+																				var b = $('#shipping_address');
+																				if(a.is(':checked')){
+																					b.slideUp();
+																				}else{
+																					b.slideDown();
+																				}
+																			});
+																			
+																			$('#br_billing_zip,#br_shipping_zip,#br_billing_country,#br_shipping_country,#br_billing_state,#br_shipping_state').bind('change',function(){
+																				var ship_to = $('#ship_same_address');
+																				if(ship_to.is(':checked')){
+																					_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());	
+																				}else{
+																					_get_shipping_quote($('#br_shipping_zip').val(),$('#br_shipping_country').val(),$('#br_shipping_state').val());	
+																				}
+																			});
+																			
+																			if($('#br_billing_zip').val() != ''){
+																				_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());
+																			}
+																			$('#get_shipping_rates').bind('click',function(){
+																				var ship_to = $('#ship_same_address');
+																				if(	$('#br_billing_zip').val() == '' || 
+																					$('#br_billing_country').val() == '' || 
+																					$('#br_billing_state').val() == ''){
+																					
+																					alert('Please enter your shipping information before calculating rates');
+																					
+																				}else{
+																					if(ship_to.is(':checked')){
+																						_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());	
+																					}else{
+																						_get_shipping_quote($('#br_shipping_zip').val(),$('#br_shipping_country').val(),$('#br_shipping_state').val());	
+																					}
+																				}
+																				return false;
+																			});
+																		
+																			// get all tied selects
+																			var selects = $('select[data-br_country]'),
+																				country_state_map = ".$map.";
+																			
+																			selects.each(function() {
+																				var select = $(this),
+																					country = $( '#'+select.data('br_country') );
+																				
+																				// when the country changes, populate the states
+																				// trigger the first change right away to update
+																				country.change(function() {
+																					var str = '<option value=\"\">".lang('br_select_a_state')."</option>',
+																						country = this.options[this.selectedIndex].text;
+																					
+																					$.each(country_state_map[country], function(k, v) {
+																						str += '<option value=\"'+k+'\">'+v+'</option>';
+																					});
+																					
+																					select.empty().append(str);
+																					select.val(select.data('br_selected'));
+																					
+																				}).triggerHandler('change');
+																			});
+																	
+																		});
+																	
+																		function _bind_payment_options(){
+																			var first = $('.payment_form:eq(0)');
+																			if(first.html() != ''){
+																				first.show();
+																			}
+																			
+																			$('.gateway').unbind().bind('click',function(){
+																				$('.payment_form:visible').hide();
+																				var a = $(this).parent().parent();
+																				var b = $('.payment_form',a);
+																				if(b.html() != ''){
+																					b.show();
+																				} 
+																			});
+																		}
+																		
+																		function _get_shipping_quote(zip,country,state){
+																			var url = '".$shipping_action."';
+																			var params = {	
+																							'zip': zip,
+																						 	'state': state,
+																						 	'country': country 
+																						 }
+																			var contain = $('#shipping_options div#options');
+																			
+																			ship_note = contain.html();
+																			contain.html('&nbsp;Calculating Rates<br /><img src=\"".$this->_config["media_url"]."images/loading.gif\" />');
+																	
+																			$.post(url,params,function(data){
+																	   			$('#shipping_options div#options').html(data);
+																		 		_update_cart_totals();
+																	 			$('input.shipping').bind('change',_update_cart_totals);
+																	 		});
+																	 	}
+																		function _update_cart_totals(){
+																			var url = '".$total_action."';
+																			$('#checkout_btn').hide();
+																			$('#tax_container,#shipping_container,#total_container').html(' - ');
+																			if(ship_to.is(':checked')){
+																				var zip 		= $('#br_billing_zip').val();
+																				var country 	= $('#br_billing_country').val();
+																				var state 		= $('#br_billing_state').val();
+																				var address1 	= $('#br_billing_address1').val();
+																				var address2 	= $('#br_billing_address2').val();
+																			}else{
+																				var zip 		= $('#br_shipping_zip').val();
+																				var country 	= $('#br_shipping_country').val();
+																				var state 		= $('#br_shipping_state').val();
+																				var address1 	= $('#br_shipping_address1').val();
+																				var address2	= $('#br_shipping_address2').val();
+																			}
+																			
+																			$.post(	url,	
+																						{
+																							'zip':zip,
+																							'country':country,
+																							'state':state,
+																							'address1':address1,
+																							'address2':address2,
+																							'shipping':$('input.shipping:checked').val()
+																						},
+																						function(returndata){
+																							var data = $.parseJSON(returndata);
+																							$('#tax_container').html(data[0].tax);
+																							$('#shipping_container').html(data[0].shipping);
+																							$('#payment_container').html(data[0].payment);
+																							_bind_payment_options();
+																							$('#total_container').html(data[0].total);
+																							$('#checkout_btn').show();						
+																						});
+																		}";
 				}
 				
 				// Clear any form errors from session if they exist
@@ -2569,35 +2579,33 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$this->EE->load->library('javascript');
 						$countries = $this->EE->product_model->get_countries();
 						$map = $this->EE->javascript->generate_json($this->EE->product_model->get_states($countries));
-						$output = $output."<script type=\"text/javascript\">
-												$(function(){
-													$('#profile_edit').validate();
-													
-													// get all tied selects
-													var selects = $('select[data-br_country]'),
-														country_state_map = ".$map.";
-													
-													selects.each(function() {
-														var select = $(this),
-															country = $( '#'+select.data('br_country') );
-														
-														// when the country changes, populate the states
-														// trigger the first change right away to update
-														country.change(function() {
-															var str = '',
-																country = this.options[this.selectedIndex].text;
-															
-															$.each(country_state_map[country], function(k, v) {
-																str += '<option value=\"'+k+'\">'+v+'</option>';
-															});
-															
-															select.empty().append(str);
-															select.val(select.data('br_selected'));
-															
-														}).triggerHandler('change');
-													});
-												});
-											</script>";
+						$this->EE->session->cache['br_output_js'] .= "	$(function(){
+																			$('#profile_edit').validate();
+																			
+																			// get all tied selects
+																			var selects = $('select[data-br_country]'),
+																				country_state_map = ".$map.";
+																			
+																			selects.each(function() {
+																				var select = $(this),
+																					country = $( '#'+select.data('br_country') );
+																				
+																				// when the country changes, populate the states
+																				// trigger the first change right away to update
+																				country.change(function() {
+																					var str = '',
+																						country = this.options[this.selectedIndex].text;
+																					
+																					$.each(country_state_map[country], function(k, v) {
+																						str += '<option value=\"'+k+'\">'+v+'</option>';
+																					});
+																					
+																					select.empty().append(str);
+																					select.val(select.data('br_selected'));
+																					
+																				}).triggerHandler('change');
+																			});
+																		});";
 					}
 				
 				
@@ -3123,7 +3131,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 				return '';
 			}
 		}
-		
+	/* 
+	*/
+	
+	function js(){
+		$this->EE->session->cache['br_output_js'] = $this->EE->TMPL->tagdata;
+	}
 	
 	/* Get Url
 	 * 
@@ -3174,7 +3187,24 @@ class Brilliant_retail extends Brilliant_retail_core{
 					return $this->EE->functions->create_url($src);
 				}
 		}
-		
+	
+	/**
+	 * _output_js
+	 *
+	 * @param 
+	 * @return 
+	 */
+		public function _output_js($tmp,$sub)
+		{	
+			if(strpos($tmp,'</body>') !== false){
+				$script = '';
+				$a = explode('</body>',$tmp);
+				$output = $a[0].$script.'</body>'.$a[1];
+				return $output;
+			}else{
+				return $tmp;
+			}
+		}	
 	/*
 	* Helper function for parsing internal switches 
 	*/	

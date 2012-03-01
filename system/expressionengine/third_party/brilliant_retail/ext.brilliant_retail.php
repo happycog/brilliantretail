@@ -22,6 +22,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 include_once(PATH_THIRD.'brilliant_retail/mcp.brilliant_retail.php');
+include_once(PATH_THIRD.'brilliant_retail/mod.brilliant_retail.php');
 
 class Brilliant_retail_ext {
 	
@@ -30,7 +31,7 @@ class Brilliant_retail_ext {
 	public $docs_url		= 'http://www.brilliantretail.com';
 	public $name			= 'Brilliant Retail';
 	public $settings_exist	= 'n';
-	public $version			= '1.0.4.6';
+	public $version			= '1.0.4.7';
 	public $site_id 		= 1;
 	public $base_url 		= '';
 	public $nav_menu 		= array();
@@ -46,8 +47,10 @@ class Brilliant_retail_ext {
 		$this->EE =& get_instance();
 		$this->settings = $settings;
 		
-		$this->site_id = $this->EE->config->item('site_id');				
-		$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module=brilliant_retail';
+		if(defined('BASE')){
+			$this->site_id = $this->EE->config->item('site_id');				
+			$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module=brilliant_retail';
+		}
 	}// ----------------------------------------------------------------------
 	
 	/**
@@ -178,6 +181,28 @@ class Brilliant_retail_ext {
 		return $filter;
 	}
 	
+	/**
+	 * br_hidden_channel_entries
+	 *
+	 * @param 
+	 * @return 
+	 */
+	public function br_template_post_parse($tmp,$sub)
+	{	
+		if(strpos($tmp,'</body>') !== false){
+			$script = $this->EE->session->cache['br_output_js'];
+			if($script != ''){
+				$script = "<script type=\"text/javascript\">\n".$script."\n</script>\n";
+				$this->EE->session->cache['br_output_js'] = '';
+			}
+			$a = explode('</body>',$tmp);
+			$output = trim($a[0].$script.'</body>'.$a[1]);
+			return $output;
+		}else{ 
+			return $tmp;
+		}
+	}
+	
 	// ----------------------------------------------------------------------
 
 	/**
@@ -205,6 +230,27 @@ class Brilliant_retail_ext {
 	 */
 	function update_extension($current = '')
 	{
+		$data = array();
+		
+		// convert version to raw int 
+			$v = (int) str_replace(".","",$current);
+		
+		// Run any updates
+			if($v < 1047){
+				$data[] = array(
+					'class'		=> __CLASS__,
+					'method'	=> 'br_template_post_parse',
+					'hook'		=> 'template_post_parse',
+					'settings'	=> serialize($this->settings),
+					'version'	=> $this->version,
+					'enabled'	=> 'y'
+				);
+			}
+		
+			foreach($data as $d){
+				$this->EE->db->insert('extensions', $d);			
+			}
+		
 		if ($current == '' OR $current == $this->version)
 		{
 			return FALSE;

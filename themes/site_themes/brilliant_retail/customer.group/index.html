@@ -27,7 +27,7 @@
 <body>
 
 <!-- Header -->
-<div id="header">
+<header>
     <div class="wrapper">
 
 			{embed='_assets/topbar'}    
@@ -40,7 +40,7 @@
         <div class="clearboth"><!-- --></div>
     
     </div>
-</div> <!-- header -->
+</header> <!-- header -->
 <!-- end of Header -->
 
 <!-- Account -->
@@ -170,7 +170,7 @@
 </div> 
 <!-- account -->
 <!-- end of Account Page -->
-<script type="text/javascript">
+{exp:brilliant_retail:js}
 	$(function(){
 		$('#profile_edit').validate();
 		$('#change_pw_link').bind('click',function(){
@@ -179,5 +179,5 @@
 			return false;
 		});
 	});
-</script>
+{/exp:brilliant_retail:js}
 {embed="_assets/footer"}

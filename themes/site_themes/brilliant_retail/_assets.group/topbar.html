@@ -52,17 +52,3 @@
         </tr>
     </table>
 </div> <!-- topbar -->
-<script type="text/javascript">
-	$(function(){
-		$('.search_txt','#main_search')
-			.bind('click',function(){
-				$(this).val('');
-			})
-			.bind('blur',function(){
-				var a = $(this);
-				if(a.val() == ''){
-					a.val('search products');
-				}
-		});
-	});
-</script>
