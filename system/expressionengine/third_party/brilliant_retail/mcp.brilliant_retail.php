@@ -355,7 +355,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
-				if($print == 'TRUE'){
+				if($print == TRUE){
 					$this->vars["site_name"] = $this->EE->config->item('site_name');
 					$this->vars["company"] = $this->_config["store"][$this->site_id];
 					$this->vars["print_css"] = $this->_theme('css/print.css');

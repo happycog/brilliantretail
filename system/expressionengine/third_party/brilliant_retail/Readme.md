@@ -60,6 +60,7 @@ Updated product bundle search field
 Fixed issue with USPS First Class International Package rate
 Fixed issue with checkout create downloads (check for bug report)
 Fixed issue when download products are contained within bundles
+Fixed issue with shipping key "county" in get_totals ajax post 
 Added option_count to product > option tag pair
 Added has_options tag (TRUE/FALSE)
 Added on_sale flag to the product tag

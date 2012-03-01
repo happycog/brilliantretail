@@ -1451,7 +1451,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 											$.post(	url,	
 														{
 															'zip':zip,
-															'county':country,
+															'country':country,
 															'state':state,
 															'address1':address1,
 															'address2':address2,
@@ -2117,7 +2117,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		function checkout_total()
 		{
-			$country = $this->EE->input->post("county",TRUE);
+			$country = $this->EE->input->post("country",TRUE);
 			$shipping = $this->EE->input->post("shipping",TRUE);
 			$state = $this->EE->input->post("state",TRUE);
 			$zip = $this->EE->input->post("zip",TRUE);
