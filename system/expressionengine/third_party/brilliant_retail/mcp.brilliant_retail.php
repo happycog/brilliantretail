@@ -2961,6 +2961,21 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 			
+			
+			// Its downloadable or new! Lets try to get some uploaded files if they are available
+				if($type == '' || $type == 4){
+					// We need to get a list of possible 
+					$fl = read_dir_files($this->_config["media_dir"].'import');
+					
+					$this->vars["has_import"] 	= FALSE;
+					$this->vars["imports"]		= array();
+					
+					if(count($fl) > 0){
+						$this->vars["has_import"] = TRUE;
+						$this->vars["imports"] = $fl;
+					}
+				}
+			
 			if($type != ''){
 				if($type == 2 || $type == 3 || $type == 4 || $type == 6 || $type == 7){
 					$file = array(
@@ -2971,20 +2986,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									7 => 'donation'
 									);
 									
-					// Its downloadable! Lets try to get some uploaded files if they are available
-						if($type == 4){
-							// We need to get a list of possible 
-							$fl = read_dir_files($this->_config["media_dir"].'import');
-							
-							$this->vars["has_import"] 	= FALSE;
-							$this->vars["imports"]		= array();
-							
-							if(count($fl) > 0){
-								$this->vars["has_import"] = TRUE;
-								$this->vars["imports"] = $fl;
-							}
-						}
-
 					$str = $this->EE->load->view('product/sub_types/'.$file[$type],$this->vars,TRUE);
 					$str .= "	<script type=\"text/javascript\">
 									$(function(){
