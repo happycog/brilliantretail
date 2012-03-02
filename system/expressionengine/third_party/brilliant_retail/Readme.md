@@ -6,6 +6,7 @@ Just some little notes for me. Since I'm the only one looking these days.
 ### Need to install notifications
 ### Need to update copyright throughout from 2011 to 2010-2012 
 ### Category expand/collapse: http://checkboxtree.googlecode.com/svn/tags/checkboxtree-0.5.2/index.html
+### Need to finish _local view loader method in the the mcp file. 
 
 ### Price Display 
 
@@ -64,6 +65,7 @@ Fixed issue with USPS First Class International Package rate
 Fixed issue with checkout create downloads (check for bug report)
 Fixed issue when download products are contained within bundles
 Fixed issue with shipping key "county" in get_totals ajax post 
+Added drag & drop sorting to category edit form 
 Added js method to add template javascript to session cache for including above the closing body tag
 Added option_count to product > option tag pair
 Added has_options tag (TRUE/FALSE)

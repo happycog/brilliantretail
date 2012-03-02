@@ -128,8 +128,9 @@
         	<td style="vertical-align:middle;">
         		<?= $items['title'] ?>
         	</td>
-        	<td style="text-align:right;">
-	        	<input name="items[<?= $items['id']?>]" value="<?= $items['sort_order'] ?>" type="text" style="width:25px;" /></td>
+        	<td class="move_image_row">
+	        	<img src="<?=$theme?>images/icon_move.png">
+	        	<input name="items[<?= $items['id']?>]" value="<?= $items['sort_order'] ?>" type="hidden" /></td>
 	    </tr>
 	<?php } ?>
 	</tbody>
@@ -149,6 +150,22 @@ $(function() {
 			$('#category_update_order').submit();
 		}
 	});
+	$('#product_sort_tbl tbody').sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
+						helper:function(e, ui) {
+							ui.children().each(function() {
+								$(this).width($(this).width());
+							});		
+							return ui;
+						},
+						update: function(){
+							var i = 0;
+							$('#product_sort_tbl input').each(function(){
+								$(this).val(i);
+								i++;
+							});	
+						}
+					});
+
 });
 -->
 </script>

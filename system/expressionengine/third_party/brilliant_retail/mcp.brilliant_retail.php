@@ -717,7 +717,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Add the ajax url
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_ajax';
 		
-			return $this->EE->load->view('product/product', $this->vars, TRUE);	
+			$output = $this->_view('product/product', $this->vars);
+			return $output;
 		}
 
 		function product_ajax()
@@ -3273,7 +3274,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $can_subscribe;
 		}
 	
-	
+		function _view($view,$vars){
+			if(file_exists(PATH_THIRD.'_local/brilliant_retail/views/'.trim($view).'.php')){
+				$this->EE->load->add_package_path(PATH_THIRD.'_local/brilliant_retail');
+				$output = $this->EE->load->view($view,$vars,TRUE);	
+				$this->EE->load->remove_package_path();
+			}else{
+				$output = $this->EE->load->view($view,$vars,TRUE);	
+			}
+			return $output;
+		}
+		
 	# Thanks Brandon Kelly for this Cross-compatible between ExpressionEngine 2.0 and 2.4
 	# Referenced: https://gist.github.com/1671737
 		function _get_upload_preferences($group_id = NULL, $id = NULL)
