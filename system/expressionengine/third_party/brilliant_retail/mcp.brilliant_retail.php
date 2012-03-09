@@ -1302,6 +1302,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$_POST["channel_id"]	= $this->br_channel_id;
 					$_POST["entry_date"]	= time();
 	
+					$id = array();
+					
 					foreach($data as $key => $val){
 						if(	substr($key,0,6) == 'field_'){
 							$a = explode("_",$key);
