@@ -23,15 +23,31 @@
 /************************************************************/
 
 // Begin the pricing tab
+?>
 
+<div class="publish_field" id="hold_br_sale_price">
+
+	<label class="hide_field">
+		<span>
+			<em class="required">*</em> <?=lang('br_sale_price')?>
+		</span>
+	</label>
+
+	<div id="sub_hold_br_sale_price">
+		<fieldset class="holder">
+<?php
 	$hide_header = (count($products[0]["sale_matrix"]) == 0) ? 'style="display:none"' : '';
 	
 	$sale_price_matrix = '	<table id="sale_price_table" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
 								<thead>
 									<tr>
-										<th colspan="6">
-											'.lang('br_sale_price').'</th>
-									</tr>	
+										<th><strong>'.lang('br_member_group').'</strong></th>
+										<th><strong>'.lang('br_sale_price').'</strong></th>
+										<th><strong>'.lang('br_start_dt').'</strong></th>
+										<th><strong>'.lang('br_end_dt').'</strong></th>
+										<th>&nbsp;</th>
+										<th>&nbsp;</th>
+									</tr>
 								</thead>
 								<tfoot>
 									<tr class="nodrag no drop">
@@ -41,15 +57,7 @@
 											</span></td>
 									</tr>
 								<tfoot>
-								<tbody>
-								<tr class="nodrag nodrop" id="sale_header" '.$hide_header.'>
-									<td><strong>'.lang('br_member_group').'</strong></td>
-									<td><strong>'.lang('br_sale_price').'</strong></td>
-									<td><strong>'.lang('br_start_dt').'</strong></td>
-									<td><strong>'.lang('br_end_dt').'</strong></td>
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-								</tr>';
+								<tbody>';
 	
 	$i=0;
 	foreach($products[0]["sale_matrix"] as $m){
@@ -114,10 +122,15 @@
 							</table>';
 
 	echo $sale_price_matrix;
-		
-		
-// We setup up these clone blocks for the javascript to 
-// dynamically create rows. 
+?>
+
+		</fieldset>
+	</div> <!-- /sub_hold_field -->
+</div>
+
+<?php		
+	// We setup up these clone blocks for the javascript to 
+	// dynamically create rows. 
 
 	$group = '	<select name="sale_price_group[]">
 							<option value="0" selected="selected">'.lang('br_all_groups').'</option>';

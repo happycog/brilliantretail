@@ -29,26 +29,34 @@
 $option = 10000;
 
 ?>
-<table id="optionTable" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
-	<thead>
-		<tr class="nodrag nodrop">
-			<th colspan="5">
-				<?=lang('br_options')?></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr class="nodrag nodrop">
-			<td colspan="5">
-				<span class="button" style="float: right; margin: 0pt;">
-					<a class="submit" href="#" id="addoption" style="color:#fff"><?=lang('br_add_option')?></a>
-				</span></td>
-		</tr>
-		<tr class="nodrag nodrop" id="option_header">
-			<td><b><?=lang('br_title')?></b></td>
-			<td><b><?=lang('br_type')?></b></td>
-			<td><b><?=lang('br_sort')?></b></td>
-			<td><b><?=lang('delete')?></b></td>
-		</tr>	
+
+<div class="publish_field" id="hold_br_options">
+
+	<label class="hide_field">
+		<span>
+			<?=lang('br_options')?>
+		</span>
+	</label>
+
+	<div id="sub_hold_br_options">
+		<fieldset class="holder">
+		
+		<table id="optionTable" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
+			<thead>
+				<tr>
+					<td colspan="4" align="left" style="text-align:left;border-bottom:0">
+						<span class="button" style="float: right; margin: 0pt;">
+							<a class="submit" href="#" id="addoption" style="color:#fff"><?=lang('br_add_option')?></a>
+						</span></td>
+				</tr>
+				<tr class="nodrag nodrop" id="option_header">
+					<th><b><?=lang('br_title')?></b></th>
+					<th><b><?=lang('br_type')?></b></th>
+					<th><b><?=lang('br_sort')?></b></th>
+					<th><b><?=lang('delete')?></b></th>
+				</tr>	
+			</thead>
+			<tbody>
 <?php
 	$i = 0;
 	if(isset($options)){
@@ -129,6 +137,12 @@ $option = 10000;
 ?>
 	</tbody>
 </table>
+			
+			
+		</fieldset>
+	</div> <!-- /sub_hold_field -->
+
+</div>
 
 <?php
 // We setup up these clone blocks for the javascript to 
@@ -239,21 +253,11 @@ $option = 10000;
 	});
 	
 	function _set_option_bind(){
-	
+
 		_remove_drop_opt();
 		
-		$('#optionTable tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
-							helper:function(e, ui) {
-								ui.children().each(function() {
-									$(this).width($(this).width());
-								});		
-								return ui;
-							},
-							update: _option_related
-							});
-		
-				
-		$('#optionTable tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
+		$('#optionTable tbody').not('.nodrag').sortable({axis:'y', cursor:'move', opacity:0.6, 
+													handle:'.move_option_row',
 													helper:function(e, ui) {
 														ui.children().each(function() {
 															$(this).width($(this).width());

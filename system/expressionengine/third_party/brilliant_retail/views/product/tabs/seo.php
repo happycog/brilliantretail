@@ -26,11 +26,19 @@
 /* SEO Tab			*/
 /********************/
 ?>
+<div class="publish_field" id="hold_br_seo">
+
+	<label class="hide_field">
+		<span>
+			<em class="required">*</em> <?=lang('br_seo')?>
+		</span>
+	</label>
+
+	<div id="sub_hold_br_seo">
+		
+		<fieldset class="holder">
+		
 <table cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
-	<tr>
-		<th colspan="2">
-			<?=lang('br_seo')?></th>
-	</tr>
 	<tr>
 		<td><?=lang('br_meta_title')?></td>
 		<td><?=form_input(array('name' => 'meta_title', 
@@ -49,3 +57,9 @@
 									'class' => 'br_textarea'))?></td>
 	</tr>	
 </table>
+
+
+
+		</fieldset>
+	</div> <!-- /sub_hold_field -->
+</div>

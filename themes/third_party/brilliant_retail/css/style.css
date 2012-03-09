@@ -2534,15 +2534,18 @@ table#relatedTable .tDnD_whileDrag td a{
 	display: none;
 }
 
+#mainContent table#optionTable tr.image-state-highlight,
 #mainContent table#imageTable tr.image-state-highlight {
 	height: 120px;
 	background-color: green;
 }
 
+#optionTable thead td,
 #imageTable thead td {
 	padding: 4px;
 }
 
+#optionTable td,
 #imageTable td {
 	vertical-align: top;
 	text-align: center;
@@ -2551,18 +2554,22 @@ table#relatedTable .tDnD_whileDrag td a{
 	border-right: 1px #E7E7E7 solid;
 }
 
+#optionTable td img.thumb,
 #imageTable td img.thumb {
 	border: 1px #E7E7E7 solid;
 }
 
+#optionTable tbody.ui-sortable td,
 #imageTable tbody.ui-sortable td {
 	background-color: #fff;
 }
 
+#optionTable td input[type="text"],
 #imageTable td input[type="text"] {
 	width: 90%;
 }
 
+#optionTable, 
 #imageTable {
 	padding-top: 				4px;
 	border: 					1px #BBB solid;
@@ -2607,7 +2614,6 @@ table#relatedTable .tDnD_whileDrag td a{
 	background: #F4F6F6; 
 	padding: 1px 3px;
 }
-
 #download_selected {
 	border: 0;
 	background: #FFF;
@@ -2663,6 +2669,7 @@ download_selected td,
 	border: 		none;
 }
 
+#optionTable tr th, 
 #imageTable tr th,
 #download_options tr th, 
 #download_selected tr th, 

@@ -22,11 +22,19 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
+<div class="publish_field" id="hold_br_related">
+
+	<label class="hide_field">
+		<span>
+			<em class="required">*</em> <?=lang('br_related')?>
+		</span>
+	</label>
+
+	<div id="sub_hold_br_related">
+		
+		<fieldset class="holder">
+		
 <table id="relatedTable" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
-	<tr>
-		<th>
-			<?=lang('br_related')?></th>
-	</tr>
 	<tr class="even">
 		<td style="padding:0">
 			<div class="br_fieldtype" style="padding-top:5px;margin:0;border-width:0">
@@ -82,6 +90,9 @@
 </table>
 
 
+		</fieldset>
+	</div> <!-- /sub_hold_field -->
+</div>
 
 <script type="text/javascript">
 	$(function(){

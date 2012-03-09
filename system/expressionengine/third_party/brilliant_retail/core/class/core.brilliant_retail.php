@@ -1847,7 +1847,7 @@ class Brilliant_retail_core {
 		foreach($vars[0]["results"] as $key => $val){
 			// Check the price setup 
 				$amt = $this->_check_product_price($val);
-				$vars[0]["results"][$key]["price_html"] = $amt["label"];
+				$vars[0]["results"][$key]["price_html"] = $amt["price_html"];
 
 			// Set default images
 			 	if($vars[0]["results"][$key]["image_large"] == ''){
@@ -1880,38 +1880,46 @@ class Brilliant_retail_core {
 
 			 		$amt = array(
 							'on_sale' 		=> FALSE, 
-							'label' 		=> $price["price"],
 							'base' 			=> $price["price"],
 							'price' 		=> $price["price"],
 							'price_html'	=> '<p class="price">'.$this->_config["currency_marker"].$price["price"].'</p>'  							
 						);
 			 	}
 			 }
-
-			foreach($p["sale_matrix"] as $sale){
-				$valid = 1;
-				$start = date("U",strtotime($sale["start_dt"]));
-				$end = date("U",strtotime($sale["end_dt"]));
-				if(time() < $start){
-					$valid = 0;
-				}
-				if($end != 0 && time() > $end){
-					$valid = 0;
-				}
-			 
-			 	if(($valid == 1) && ($sale["group_id"] == 0 || $sale["group_id"] == $group_id) && ($amt["price"] > $sale["price"]))
-			 	{
-			 		$amt = array(
-							'on_sale' 		=> TRUE, 
-							'base' 			=> $amt["price"], 
-							'label'			=> $sale["price"],
-							'price' 		=> $sale["price"],
-							'price_html' 	=> '<p class="price"><span class="original">'.$this->_config["currency_marker"].$amt["price"].'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>',  
-							'sale_price' 	=> $sale["price"]
-						);
-				}
-			}
 			
+			foreach($p["sale_matrix"] as $sale){
+				
+				$valid 	= 1;
+				
+				// Check Start time
+					if($sale["start_dt"] == "0000-00-00 00:00:00" && $sale["start_dt"] == "")
+					{
+						$start 	= date("U",strtotime($sale["start_dt"]));
+						if(time() < $start){
+							$valid = 0;
+						}
+					}
+				// Check End Time 
+					if($sale["end_dt"] == "0000-00-00 00:00:00" && $sale["end_dt"] == "")
+					{
+						$end 	= date("U",strtotime($sale["end_dt"]));
+						if($end != 0 && time() > $end){
+							$valid = 0;
+						}
+					}
+				
+				// Setup a sale price if valid		 
+				 	if(($valid == 1) && ($sale["group_id"] == 0 || $sale["group_id"] == $group_id) && ($amt["price"] > $sale["price"]))
+				 	{
+				 		$amt = array(
+								'on_sale' 		=> TRUE, 
+								'base' 			=> $amt["price"], 
+								'price' 		=> $sale["price"],
+								'price_html' 	=> '<p class="price"><span class="original">'.$this->_config["currency_marker"].$amt["price"].'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>',  
+								'sale_price' 	=> $sale["price"]
+							);
+					}
+			}
 			
 			// Insert Check Product 
 			if($this->EE->extensions->active_hook('br_check_product_price_end') === TRUE){

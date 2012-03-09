@@ -24,11 +24,27 @@
 
 // Begin the pricing tab
 ?>
+<div class="publish_field" id="hold_br_price">
+
+	<label class="hide_field">
+		<span>
+			<em class="required">*</em> <?=lang('br_price')?>
+		</span>
+	</label>
+
+	<div id="sub_hold_br_price">
+		<fieldset class="holder">
+		
 <table id="price_table" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
 	<thead>
 		<tr>
-			<th colspan="7">
-				<?=lang('br_price')?></th>
+			<th><b><?=lang('br_member_group')?></b></th>
+			<th><b><?=lang('br_price')?></b></th>
+			<th><b><?=lang('br_start_dt')?></b></th>
+			<th><b><?=lang('br_end_dt')?></b></th>
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+		</tr>
 	</thead>
 	<tfoot>
 		<tr class="nodrag no drop">
@@ -39,14 +55,6 @@
 		</tr>
 	</tfoot>
 	<tbody>
-		<tr class="nodrag nodrop">
-			<td><b><?=lang('br_member_group')?></b></td>
-			<td><b><?=lang('br_price')?></b></td>
-			<td><b><?=lang('br_start_dt')?></b></td>
-			<td><b><?=lang('br_end_dt')?></b></td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
 <?php
 	$i=0;
 	foreach($products[0]["price_matrix"] as $m){
@@ -116,6 +124,11 @@
 ?>
 				</tbody>
 			</table>
+
+		</fieldset>
+	</div> <!-- /sub_hold_field -->
+</div>
+			
 <?php
 
 // We setup up these clone blocks for the javascript to 
@@ -162,6 +175,7 @@
 			</div>';
 
 ?>
+
 <script type="text/javascript">
 	$(function(){
 		

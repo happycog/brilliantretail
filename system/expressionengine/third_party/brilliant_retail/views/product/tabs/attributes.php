@@ -26,11 +26,23 @@
 /* Attributes	*/
 /****************/
 ?>
-	<table id="product_attributes_tbl" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
-		<tr>
-			<th colspan="2">
-				<?=lang('br_custom_attributes')?></th>
-		</tr>
+
+<div class="publish_field" id="hold_br_custom_attributes">
+
+	<label class="hide_field">
+		<span>
+			<?=lang('br_custom_attributes')?>
+		</span>
+	</label>
+
+	<div id="sub_hold_br_custom_attributes">
+		<fieldset class="holder">
+
+			<table id="product_attributes_tbl" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
+				<tr>
+					<th colspan="2">
+						</th>
+				</tr>
 <?php
 	if($products[0]["attribute_set_id"] == 0){
 		// Add a table header just for
@@ -57,16 +69,28 @@
 		</tr>
 <?
 		}else{
+			$i = 0;
 			foreach($attrs as $a){
 				$req = ($a["required"] == 1) ? ' *' : '';
 				echo '	<tr>
-							<td>'.$a['title'].$req.'</td>
-							<td>'.$a['input'].'</td>
+							<td>';
+				if($i == 0){
+					echo '<input type="hidden" name="attribute_set_id" value="'.$products[0]["attribute_set_id"].'" />';
+				}				
+				echo 			$a['title'].$req.'</td>
+							<td>
+								'.$a['input'].'</td>
 						</tr>';
+				$i++;
 			}
 		}
 ?>
-	</table>
+			</table>
+
+		</fieldset>
+	</div> <!-- /sub_hold_field -->
+</div>
+
 <script type="text/javascript">
 	$(function(){
 		$('#addCustomAttribute').bind('click',function(){
@@ -75,7 +99,10 @@
 		});
  
 		$('#optionSelect').bind('click',function(){
-			$.post('<?=$add_attributes?>',{set_id:$('#attributeOptions').val()},function(resp){
+			$.post('<?=$add_attributes?>',{
+											set_id:$('#attributeOptions').val(), 
+											product_id:<?=$hidden["product_id"]?>
+											},function(resp){
 				$(resp).appendTo($('#product_attributes_tbl'));
 				$('#attributeContainer').parent().parent().remove();
 			});

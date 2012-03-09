@@ -151,10 +151,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$tagdata = preg_replace($pattern,"",$tagdata);
 				
 				if($products[0]["configurable_js"] != ''){
+					// IF THERE IS A CALL TO {configurable_js}
 					// lets push the js from the product array into 
 					// the session cache so that we can append it 
-					// to the bottom of the page
-						$this->EE->session->cache['br_output_js'] .= $products[0]["configurable_js"];
+					// to the bottom of the page. 
+						if(strpos(strtolower($tagdata),'{configurable_js}') != FALSE){
+							$this->EE->session->cache['br_output_js'] .= $products[0]["configurable_js"];
+						}
 						$products[0]["configurable_js"] = '';
 				}
 
@@ -507,6 +510,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		public function catalog()
 		{ 
 			$key = $this->EE->TMPL->fetch_param('url_title');
+			
 			if($key == ''){
 				$this->EE->TMPL->log_item('BrilliantRetail: No url_title provided. segment_2 assigned');
 				$key = $this->EE->uri->segment(2);
@@ -516,7 +520,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Not a valid catalog page
 				$this->EE->functions->redirect($this->EE->functions->create_url($this->EE->config->item('site_404')));
 			}
-
+			
 			// Lets do some price checking magic! 
 				$i = 0;
 				foreach($category[0]["products"] as $p){
@@ -524,7 +528,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						unset($category[0]["products"][$i]);
 					}
 				}
-		
+			
 			// Get our category image
 				$img = (trim($category[0]['image']) != '') ? $this->_config["media_url"].'images/'.$category[0]['image'] : '';
 			
@@ -866,7 +870,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 							if($subscription["trial_occur"] >= 1){
 								$amt["base"]  = $subscription["trial_price"];
 								$amt["price"] = $subscription["trial_price"];
-								$amt["label"] = $subscription["trial_price"];
+								$amt["price_html"] = $subscription["trial_price"];
 								$options .= '<label>'.lang('br_trial_price').':</label> 
 											'.$this->_config["currency_marker"].$this->_currency_round($subscription["trial_price"]).'<br />
 											<label>'.lang('br_trial_length').':</label> 
@@ -889,7 +893,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$price = $this->_currency_round($price);
 					$amt["base"]  = $price;
 					$amt["price"] = $price;
-					$amt["label"] = '<p class="price">'.$price.'</p>';
+					$amt["price_html"] = '<p class="price">'.$price.'</p>';
 	
 					// Are we going to setup a recurring profile?
 					if($product[0]["donation"][0]["allow_recurring"] == 1){
@@ -954,7 +958,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									'quantity'  		=> 	$data["quantity"], 
 									'image_large' 		=> 	$product[0]["image_large"],
 									'image_thumb' 		=> 	$product[0]["image_thumb"],
-									'price_html' 		=> 	$amt["label"],
+									'price_html' 		=> 	$amt["price_html"],
 									'base'   			=> 	$this->_currency_round($amt["base"]),
 									'price'   			=> 	$this->_currency_round($amt["price"]),
 									'cost' 				=> 	$product[0]["cost"], 

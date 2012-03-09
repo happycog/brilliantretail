@@ -25,9 +25,10 @@ require_once('assets/stripe/Stripe.php');
 
 class Gateway_stripe extends Brilliant_retail_gateway {
 	// Required variables
-	public $title 	= 'Stripe';
-	public $label 	= 'Credit Card Payment (Stripe)';
-	public $descr 	= 'Accept credit cards directly from your site with a stripe gateway account.';
+	public $title 			= 'Stripe';
+	public $label 			= 'Credit Card Payment (Stripe)';
+	public $descr 			= 'Accept credit cards directly from your site with a stripe gateway account.';
+	public $instructions 	= 'Accept credit cards directly from your site with a stripe gateway account.';
 	public $enabled = true;
 	public $version = 1.0;
 	
@@ -148,7 +149,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 						'code'		=> 'api_key', 
 						'type' 		=> 'text',
 						'value'		=> '',
-						'descr'		=> 'Your API Username which can be located in your PayLeap merchant interface',
+						'descr'		=> '',
 						'sort' 		=> 0
 						);	
 		$data[] = array(
@@ -157,7 +158,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 						'code'		=> 'test_api_key', 
 						'type' 		=> 'text',
 						'value'		=> '',
-						'descr'		=> 'Your API Username which can be located in your PayLeap merchant interface',
+						'descr'		=> '',
 						'sort' 		=> 1
 						);	
 		$data[] = array(

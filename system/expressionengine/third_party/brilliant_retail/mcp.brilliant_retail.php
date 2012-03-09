@@ -1175,8 +1175,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function product_add_atributes()
 		{
 			$set_id = $this->EE->input->post('set_id');
-			$attr = $this->_product_attrs($set_id);
-			$i = 0;
+			$product_id = $this->EE->input->post('product_id');
+
+			$attr = $this->_product_attrs($set_id,$product_id);			$i = 0;
+
 			foreach($attr as $a){
 				$req = ($a["required"] == 1) ? ' *' : '';
 				echo '	<tr>

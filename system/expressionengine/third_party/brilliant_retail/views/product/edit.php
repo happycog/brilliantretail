@@ -22,6 +22,11 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
+<style type="text/css">
+.publish_field {
+	border-right: 1px #D0D7DF solid;
+}
+</style>
 <div id="b2retail">
 
 	<?=$br_header?>
@@ -51,50 +56,23 @@
 							</div>
 					<?php
 						$tabs = array(
-										'br_publish' 	=> array(
-															'details' 		=> $tab_detail,
-															'attributes' 	=> $tab_attributes,
-															'images' 		=> $tab_image,
-															'options' 		=> $tab_option 
-														),
-										'br_price' 		=> array(
-																'pricing' 		=> $tab_price,
-																'sale_pricing' 	=> $tab_sale_price,
-														),
-										'br_categories'	=> array(
-																'categories' 	=> $tab_category,
-															),
-										'br_crosssell' 	=> array(
-																#'addon' 		=> $tab_addon, // Not quite ready for prime time - dpd
-																'related' 		=> $tab_related,
-															), 				
-										'br_seo' 		=> array(
-																'seo' 			=> $tab_seo,
-																'feed' 			=> $tab_feed
-															) 				
+										'details' 		=> $tab_detail,
+										'attributes' 	=> $tab_attributes,
+										'images' 		=> $tab_image,
+										'options' 		=> $tab_option, 
+										'pricing' 		=> $tab_price,
+										'sale_pricing' 	=> $tab_sale_price,
+										'categories' 	=> $tab_category,
+										#'addon' 		=> $tab_addon, // Not quite ready for prime time - dpd
+										'related' 		=> $tab_related,
+										'seo' 			=> $tab_seo,
+										'feed' 			=> $tab_feed
 										);
-						/*
-						echo '<ul class="tab_menu" id="tab_menu_tabs">';
-						foreach($tabs as $key=>$val){
-							echo '	<li id="menu_d" title="'.$key.'" class="content_tab">
-										<a href="#" title="menu_'.$key.'" class="menu_'.$key.'">'.lang($key).'</a>&nbsp;
-									</li>';							
-						}
-						echo '</ul>
-								<div class="holder">';
-						*/
 						$i = 0;
 						foreach($tabs as $key=>$val){
-							#$js_hide = ($i != 0) ? 'js_hide' : '' ; 
-							#echo '<div class="main_tab '.$js_hide.'" id="'.$key.'">';
-							foreach($val as $k=>$v){
-								echo $v;
-								echo '<p>&nbsp;</p>';
-							}
-							#echo '</div>';
+							echo $val;
 							$i++;
 						}
-						#echo '</div>';
 					?>
 							<ul id="publish_submit_buttons">
 								<li><?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?></li>
