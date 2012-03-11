@@ -1,52 +1,17 @@
-# Davids working list. 
+# BUG REPORT CHANGE LOG # 
 
-Just some little notes for me. Since I'm the only one looking these days. 
-
-### Need to add a browse function for download files that are present in media/uploads
-### Need to install notifications
-### Need to update copyright throughout from 2011 to 2010-2012 
-### Category expand/collapse: http://checkboxtree.googlecode.com/svn/tags/checkboxtree-0.5.2/index.html
-### Need to finish _local view loader method in the the mcp file. 
-
-### Price Display 
-
-* Handle non-existing pricing for member groups to products. 
-
-### Channel Fields
-
-* Create field group per site and add the group id to new channels
-* Create channel per site and add channel_id to the store configuration array
-* Need to add product_entry table to install upd file. 
-* Need to add product_entry rows to install upd file. 
-
-### Product Edit Page
-
-* Delete product needs to remove entries from:
-	
-	* br_product_feeds 
-	* br_product_configurable 
-	* br_product_price 
-	* br_product_entry
-	* channel_titles
-	* channel_data
-	
-* Add an edit page to hide or order product detail page entry fields
- 
-### Order Overview
-
-* Update status
-* Batch Print
-
-### State / Country
-
-* Need to update changes sent in ticket system
-
-### Hidden Variables
-
-* br_hide_blank_option - Remove the blank option from the configurable / option dropdowns
-* br_filter_power - Adjust the power on the price range buckets 
-
-# Changelog
+* Added cart discounts to promos. [#0000122]
+* Added New BR Poe Fieldtype [#0000118]
+* Fixed Discount error when logged in as super admin [#0000138]
+* Fixed WYSIWYG Editor Image Error [#0000114]
+* Fixed checkout "email you entered doesn't appear to be valid" [#0000136]
+* Fixed Site ID missing from get_product_collection [#0000133]
+* Fixed Disabled Promo Still Working. [#0000130]
+* Fixed Search error if my search contains less than 3 characters. [#0000127]
+* Fixed Zero subtotal with tax // shipping cost still shows no_payment gateway. [#0000123]
+* Fixed Email validation errors (dpdexter) - resolved. [#0000117]
+* Updated Rename fieldtype to BrilliantRetail Products. [#0000116]
+* Updated CKEditor to the latest release. [#0000115]
 
 Removed _clean_search_term in favor of ExpressionEngine native sanitize_search_terms() method
 Updated model > order_model > get_order_collection method with proper left join to remove existing member requirement. 
@@ -65,6 +30,11 @@ Fixed issue with USPS First Class International Package rate
 Fixed issue with checkout create downloads (check for bug report)
 Fixed issue when download products are contained within bundles
 Fixed issue with shipping key "county" in get_totals ajax post 
+Added method to automagically create channel per site and add channel_id to the store configuration array
+Added method to automagically create field group per site
+Added method to automagically add the group id to new channels
+Added browse button for images that exist in the media/product directory
+Added browse button to downloadable products for files the exist in the media/import directory 
 Added drag & drop sorting to category edit form 
 Added js method to add template javascript to session cache for including above the closing body tag
 Added option_count to product > option tag pair
