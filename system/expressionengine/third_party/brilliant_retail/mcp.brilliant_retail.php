@@ -959,9 +959,42 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 				$products = $this->EE->product_model->get_products($product_id,1);
 				
+				// Since we are now allowing product type changing 
+				// we need to set some defaults on the edit form as 
+				// well. We should probably match both instances (new/edit) 
+				// but lets just get it started to test it out. -dpd
+					if(!isset($products[0]["donation"][0]))
+					{
+						// some defaults for donations 
+							$products[0]["donation"][0] = array(
+																	'min_donation' 			=> 10,
+																	'allow_recurring' 		=> 0
+																);
+					}
+					if(!isset($products[0]["subscription"][0]))
+					{
+						// some defaults for subscriptions 
+							$products[0]["subscription"][0] = array(
+																		'length' 			=> 1,
+																		'period' 			=> 2,
+																		'trial_price' 		=> '',
+																		'trial_period' 		=> 1, 
+																		'trial_occur' 		=> 1,
+																		'group_id' 			=> 0,  
+																		'cancel_group_id' 	=> 0
+																	);
+					}				
+				
 				// We know the type
 					
-					$this->vars["type"] = $this->vars['product_type'][$products[0]['type_id']];
+					$options = '<select id="type_id" name="type_id">';
+					foreach($this->vars['product_type'] as $key => $val){
+						$sel = ($products[0]['type_id'] == $key) ? 'selected' : ''; 
+						$options .= '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';
+					}
+					$options .= '</select>';
+					
+					$this->vars["type"] = $options;
 					
 					$fields = array();
 					
@@ -1042,6 +1075,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 				$this->vars["groups"] = $groups;
 			
+			$this->vars["config_opts"] = $this->EE->product_model->get_attribute_config();
+			$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
+
 			$this->vars["sub_type"] = $this->_get_sub_type($this->vars['products'][0]['type_id']);
 			$this->vars["attrs"] = $this->_product_attrs($this->vars['products'][0]["attribute_set_id"],$this->vars['products'][0]["product_id"]);
 			$this->vars["attribute_sets"] = $this->EE->product_model->get_attribute_sets();
@@ -2989,11 +3025,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									6 => 'subscription', 
 									7 => 'donation'
 									);
-									
-					$str = $this->EE->load->view('product/sub_types/'.$file[$type],$this->vars,TRUE);
+					$str = '';				
+					foreach($file as $f){
+						$str .= $this->EE->load->view('product/sub_types/'.$f,$this->vars,TRUE);
+					}
 					$str .= "	<script type=\"text/javascript\">
 									$(function(){
-										$('.subtypes').show();
+										$('#sub_type_".$type."').show();
 									})
 								</script>";
 				}
@@ -3004,7 +3042,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$a["subscription"] = $this->EE->load->view('product/sub_types/subscription',$this->vars,TRUE);
 				$a["donation"] = 	$this->EE->load->view('product/sub_types/donation',$this->vars,TRUE);
 				$str = 	$a["bundle"].$a["configurable"].$a["downloadable"].$a["subscription"].$a["donation"];
-				$str .= "	<script type=\"text/javascript\">
+			}
+			
+			$str .= "	<script type=\"text/javascript\">
 								$(function(){
 									$('#type_id').bind('change',function(){
 										var a = $(this).val();
@@ -3019,7 +3059,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									});
 								})
 							</script>"; 
-			}
+			
 			return $str;
 		}
 		

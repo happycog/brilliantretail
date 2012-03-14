@@ -38,6 +38,12 @@
 <table id="price_table" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
 	<thead>
 		<tr>
+			<td colspan="6" align="right">
+				<span class="button" style="float: right; margin: 0pt;">
+					<a class="submit" href="#" id="price_add_option" style="color:#fff"><?=lang('br_add_option')?></a>
+				</span></td>
+		</tr>
+		<tr>
 			<th><b><?=lang('br_member_group')?></b></th>
 			<th><b><?=lang('br_price')?></b></th>
 			<th><b><?=lang('br_start_dt')?></b></th>
@@ -46,14 +52,6 @@
 			<th>&nbsp;</th>
 		</tr>
 	</thead>
-	<tfoot>
-		<tr class="nodrag no drop">
-			<td colspan="7">
-				<span class="button" style="float: right; margin: 0pt;">
-					<a class="submit" href="#" id="price_add_option" style="color:#fff"><?=lang('br_add_option')?></a>
-				</span></td>
-		</tr>
-	</tfoot>
 	<tbody>
 <?php
 	$i=0;
@@ -192,7 +190,10 @@
 		$(".datepicker").removeClass('hasDatepicker').unbind().datepicker();
 		$('#price_table tr').removeClass('even');
 		$('#price_table tr:even').addClass('even');
-		$('#price_table tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
+		$('#price_table tbody').sortable({
+							axis:'y', 
+							items: "tr:gt(0)", 
+							cursor:'move', opacity:0.6,
 							helper:function(e, ui) {
 								ui.children().each(function() {
 									$(this).width($(this).width());

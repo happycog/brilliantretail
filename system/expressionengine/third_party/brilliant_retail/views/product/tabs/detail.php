@@ -34,6 +34,8 @@
 						</span>
 					</label>
 	
+					<div class="b2r_clearboth"><!-- --></div>
+					
 					<div id="sub_hold_title">
 						<fieldset class="holder custom_field">
 							<?=$sub_type?>

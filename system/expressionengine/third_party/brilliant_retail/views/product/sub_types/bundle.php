@@ -51,19 +51,21 @@
 		</thead>
 		<?php
 			$i = 1;
-			foreach($products[0]["bundle"] as $b){
-				$class = ($i % 2 == 0) ? 'even' : 'odd' ;
-				echo '	<tr class="'.$class.'">
-							<td width="60%" style="width:auto;">
-								'.$b["title"].'</td>
-							<td>
-								'.$product_type[$b["type_id"]].'</td>
-							<td width="10%" class="move_related_row" style="text-align:center"><img src="'.$theme.'images/icon_move.png" /></td>
-							<td width="10%">
-								<a class="remove_bundle" href="#">'.lang('remove').'</a><input type="hidden" value="'.$b["product_id"].'" name="bundle[]">
-							</td>
-						</tr>';
-				$i++;
+			if(isset($products[0]["bundle"])){
+				foreach($products[0]["bundle"] as $b){
+					$class = ($i % 2 == 0) ? 'even' : 'odd' ;
+					echo '	<tr class="'.$class.'">
+								<td width="60%" style="width:auto;">
+									'.$b["title"].'</td>
+								<td>
+									'.$product_type[$b["type_id"]].'</td>
+								<td width="10%" class="move_related_row" style="text-align:center"><img src="'.$theme.'images/icon_move.png" /></td>
+								<td width="10%">
+									<a class="remove_bundle" href="#">'.lang('remove').'</a><input type="hidden" value="'.$b["product_id"].'" name="bundle[]">
+								</td>
+							</tr>';
+					$i++;
+				}
 			}
 		?>
 	</table>

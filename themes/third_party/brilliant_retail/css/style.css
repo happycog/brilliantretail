@@ -366,6 +366,9 @@ hr {
 	padding: 0;
 	zoom: 1; }
 
+#b2r_main a:hover {
+	text-decoration: none;
+}
 
 #b2r_store_logo {
 	margin: 0;
@@ -893,10 +896,6 @@ table#b2r_db_performance_bot td img {
 /* end of tooltip */
 
 /* Product */
-
-.publish_field fieldset.holder select {
-	min-width:125px;
-}
 
 div.arrow_open{
 	width: 15px;
@@ -2531,7 +2530,8 @@ table#relatedTable .tDnD_whileDrag td a{
 /* SUBTYPES */
 
 .subtypes {
-	display: none;
+	margin-top: 8px;
+	display: 	none;
 }
 
 #mainContent table#optionTable tr.image-state-highlight,
@@ -2570,7 +2570,8 @@ table#relatedTable .tDnD_whileDrag td a{
 }
 
 #optionTable, 
-#imageTable {
+#imageTable,
+#price_table {
 	padding-top: 				4px;
 	border: 					1px #BBB solid;
 	border-top-left-radius:		4px;
@@ -2673,13 +2674,24 @@ download_selected td,
 #imageTable tr th,
 #download_options tr th, 
 #download_selected tr th, 
-#bundle_selected tr th {
+#bundle_selected tr th,  
+#price_table tr th {
 	background:		url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
 	border-top: 	1px #CCC solid;
 	border-bottom: 	1px #AAA solid;
 	color:			#666;
 	padding: 		6px 10px 4px;
 	text-align: 	left;
+}
+
+#price_table tr th,
+#bundle_selected tr th {
+	border-left: none;
+	border-right: none;
+}
+
+table#price_table td {
+	border:none;
 }
 
 #download_selected tr.odd td,
