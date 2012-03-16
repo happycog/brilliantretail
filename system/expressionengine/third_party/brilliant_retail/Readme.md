@@ -30,6 +30,7 @@ Fixed issue with USPS First Class International Package rate
 Fixed issue with checkout create downloads (check for bug report)
 Fixed issue when download products are contained within bundles
 Fixed issue with shipping key "county" in get_totals ajax post 
+Added expand/collapse function to category tree in product edit form
 Added method to automagically create channel per site and add channel_id to the store configuration array
 Added method to automagically create field group per site
 Added method to automagically add the group id to new channels

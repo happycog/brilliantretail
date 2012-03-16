@@ -1976,18 +1976,13 @@ input#delete {
 #config_icon {
 	float: right;
 }
+#mainContent .pageContents #b2r_panel table#config_selected,
 #mainContent .pageContents #b2r_panel table#configurable_form {
 	border: solid #D0D7DF;
-	border-width: 0 0 0 1px;
+	border-width: 0 1px 1px;
 	border-spacing: 0;
 	width: 100%;
 	margin-bottom: 10px;
-}
-
-#configurable_form td {}
-
-#configurable_form td input {
-	width: 50px;
 }
 
 /* Orders */
@@ -2526,6 +2521,39 @@ table#relatedTable .tDnD_whileDrag td a{
 	font-weight: bold;
 }
 
+#product_category_tree li {
+    list-style-type: none;
+	padding: 7px 0 0 10px;
+	margin: auto;
+}
+#product_category_tree ul {
+	display:none;
+}
+#product_category_tree li span{
+    list-style-type: none;
+	padding: 0 4px;
+	margin: auto;
+}
+#product_category_tree li span.anchor {
+	background: url(../images/d.gif) -1px -3px no-repeat;
+	height: 	20px;
+	cursor: 	default;
+	position: 	relative;
+	top: 		0px;
+	left: 		0px;
+	cursor: 	pointer;
+}
+#product_category_tree li span.anchor_show {
+	background:	url(../images/d.gif) -19px -3px no-repeat;
+}
+#product_category_tree li span.anchor_empty {
+	height: 	20px;
+	cursor: 	default;
+	position: 	relative;
+	top: 		0px;
+	left: 		0px;
+	cursor: 	pointer;
+}
 
 /* SUBTYPES */
 
@@ -2541,17 +2569,37 @@ table#relatedTable .tDnD_whileDrag td a{
 }
 
 #optionTable thead td,
-#imageTable thead td {
+#imageTable thead td,
+#price_table thead td, 
+#sale_price_table thead td,
+#configurable_form thead td,
+#config_selected thead td {
 	padding: 4px;
 }
 
 #optionTable td,
-#imageTable td {
+#imageTable td,
+#price_table td,
+#sale_price_table td {
 	vertical-align: top;
 	text-align: center;
 	padding: 8px 4px;
+	border-top: none;
+	border-left: none;
 	border-bottom: 1px #E7E7E7 solid;
 	border-right: 1px #E7E7E7 solid;
+}
+
+#configurable_form td,
+#config_selected td {
+	vertical-align: top;
+	text-align: left;
+	padding: 8px 4px;
+	border-top: none;
+	border-left: none;
+	border-bottom: 1px #E7E7E7 solid;
+	border-right: 1px #E7E7E7 solid;
+	background: #FFF;
 }
 
 #optionTable td img.thumb,
@@ -2560,23 +2608,38 @@ table#relatedTable .tDnD_whileDrag td a{
 }
 
 #optionTable tbody.ui-sortable td,
-#imageTable tbody.ui-sortable td {
+#imageTable tbody.ui-sortable td,
+#price_table tbody.ui-sortable td,
+#sale_price_table tbody.ui-sortable td,
+#configurable_form tbody.ui-sortable td,
+#config_selected tbody.ui-sortable td {
 	background-color: #fff;
 }
 
 #optionTable td input[type="text"],
-#imageTable td input[type="text"] {
+#imageTable td input[type="text"],
+#price_table td input[type="text"],
+#sale_price_table td input[type="text"],
+#config_selected td input[type="text"] {
 	width: 90%;
 }
 
 #optionTable, 
 #imageTable,
-#price_table {
+#price_table,
+#sale_price_table {
 	padding-top: 				4px;
 	border: 					1px #BBB solid;
 	border-top-left-radius:		4px;
 	border-top-right-radius:	4px;
 	background: 				#F4F6F6;
+}
+
+#categoryTable {
+	border: 					1px #BBB solid;
+	border-top-left-radius:		4px;
+	border-top-right-radius:	4px;
+	background: 				#FFF;
 }
 
 #sub_type_4 {
@@ -2675,7 +2738,10 @@ download_selected td,
 #download_options tr th, 
 #download_selected tr th, 
 #bundle_selected tr th,  
-#price_table tr th {
+#price_table tr th,
+#sale_price_table tr th,
+#configurable_form tr th,
+#config_selected tr th {
 	background:		url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
 	border-top: 	1px #CCC solid;
 	border-bottom: 	1px #AAA solid;
@@ -2684,14 +2750,27 @@ download_selected td,
 	text-align: 	left;
 }
 
+#categoryTable tr th {
+	background:		url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
+	border-bottom: 	1px #AAA solid;
+	color:			#666;
+	padding: 		6px 10px 4px;
+	text-align: 	left;
+}
+
+#categoryTable tr th,
 #price_table tr th,
-#bundle_selected tr th {
+#sale_price_table tr th,
+#bundle_selected tr th,
+#configurable_form tr th,
+#config_selected tr th {
 	border-left: none;
 	border-right: none;
 }
 
-table#price_table td {
-	border:none;
+#categoryTable td {
+	background: #FFF;
+	padding: 10px 0 15px;
 }
 
 #download_selected tr.odd td,

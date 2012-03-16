@@ -41,7 +41,7 @@ $option = 10000;
 	<div id="sub_hold_br_options">
 		<fieldset class="holder">
 		
-		<table id="optionTable" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
+		<table id="optionTable" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<thead>
 				<tr>
 					<td colspan="4" align="left" style="text-align:left;border-bottom:0">
@@ -84,26 +84,29 @@ $option = 10000;
 							
 			echo '			<div style="'.$style.'">
 								<table class="subTable dropOptions" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
-									<tr>
-										<th colspan="4">
-											'.lang('br_dropdown_values').'</th>	
-									</tr>
-									<tr>
-										<td colspan="4">
-											<span class="button" style="float: right; margin: 0pt;">
-												<a class="submit addDropOption" data-add="'.$i.'" href="#" style="color:#fff">'.lang('br_add_option').'</a>
-											</span></td>
-									</tr>
-									<tr>
-										<td>
-											<b>'.lang('br_title').'</b></td>
-										<td>
-											<b>'.lang('br_price').'</b></td>
-										<td>	
-											<b>'.lang('br_sort').'</b></td>
-										<td>	
-											&nbsp;</td>
-									</tr>';
+									<thead>
+										<tr>
+											<th colspan="4">
+												'.lang('br_dropdown_values').'</th>	
+										</tr>
+										<tr>
+											<td colspan="4">
+												<span class="button" style="float: right; margin: 0pt;">
+													<a class="submit addDropOption" data-add="'.$i.'" href="#" style="color:#fff">'.lang('br_add_option').'</a>
+												</span></td>
+										</tr>
+										<tr>
+											<td>
+												<b>'.lang('br_title').'</b></td>
+											<td>
+												<b>'.lang('br_price_adjust').'</b></td>
+											<td>	
+												<b>'.lang('br_sort').'</b></td>
+											<td>	
+												&nbsp;</td>
+										</tr>
+									</thead>
+									<tbody>';
 			
 			if($opt["type"] == 'dropdown'){
 				if(isset($opt["opts"])){
@@ -115,7 +118,8 @@ $option = 10000;
 										'.form_input(array('name' => 'cOptions_opt_price['.$i.']['.$option.']','style' => 'width:70px;', 'title' => 'price','value' => $d["price"])).'
 										<input type="hidden" name="cOptions_opt_type['.$i.']['.$option.']" title="type" value="fixed" /></td>
 									<td class="move_drop_option_row">
-										<input type="text" name="cOptions_opt_sort['.$i.']['.$option.']" title="sort" value="'.$d["sort"].'" /></td> 
+										<input type="hidden" name="cOptions_opt_sort['.$i.']['.$option.']" title="sort" value="'.$d["sort"].'" />
+										<img src="'.$theme.'images/icon_move.png" /></td> 
 									<td>
 										<a href="#" class="removeDropOpt">'.lang('delete').'</a></td>
 								</tr>';				
@@ -124,7 +128,8 @@ $option = 10000;
 				}
 			}						
 
-			echo '				</table></td>
+			echo '					</tbody>
+								</table></td>
 							</div>
 						<td class="move_option_row">
 							<img src="'.$theme.'images/icon_move.png" /></td>
@@ -171,26 +176,30 @@ $option = 10000;
 
 								<div style="display:none">
 									<table class="dropOptions" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
-										<tr>
-											<th colspan="4">
-												'.lang('br_dropdown_values').'</th>	
-										</tr>
-										<tr>
-											<td colspan="4">
-												<span class="button" style="float: right; margin: 0pt;">
-													<a class="submit addDropOption" data-add="'.$i.'" href="#" style="color:#fff">'.lang('br_add_option').'</a>
-												</span></td>
-										</tr>
-										<tr>
-											<td>
-												<b>'.lang('br_title').'</b></td>
-											<td>
-												<b>'.lang('br_price').'</b></td>
-											<td>	
-												<b>'.lang('br_sort').'</b></td>
-											<td>	
-												&nbsp;</td>
-										</tr>
+										<thead>
+											<tr>
+												<th colspan="4">
+													'.lang('br_dropdown_values').'</th>	
+											</tr>
+											<tr>
+												<td colspan="4">
+													<span class="button" style="float: right; margin: 0pt;">
+														<a class="submit addDropOption" data-add="'.$i.'" href="#" style="color:#fff">'.lang('br_add_option').'</a>
+													</span></td>
+											</tr>
+											<tr>
+												<th>
+													<b>'.lang('br_title').'</b></th>
+												<th>
+													<b>'.lang('br_price_adjust').'</b></th>
+												<th>	
+													<b>'.lang('br_sort').'</b></th>
+												<th>	
+													&nbsp;</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
 									</table></td>
 								</div>
 							<td class="move_option_row">
@@ -208,7 +217,8 @@ $option = 10000;
 								'.form_input(array('name' => 'cOptions_opt_dropPrice','style' => 'width:70px;', 'title' => 'price','value' => 0)).'
 								<input type="hidden" name="cOptions_opt_dropType" title="type" value="fixed" /></td>
 							<td class="move_drop_option_row">
-								<input type="text" name="cOptions_opt_dropSort" title="sort" value="0" /></td> 
+								<input type="hidden" name="cOptions_opt_dropSort" title="sort" value="0" />
+								<img src="'.$theme.'images/icon_move.png" /></td> 
 							<td>
 								<a href="#" class="removeDropOpt">'.lang('delete').'</a></td>
 						</tr>
@@ -267,6 +277,24 @@ $option = 10000;
 													update: _option_related
 												});
 	
+		$('.dropOptions tbody').sortable({	axis:'y', 
+											cursor:'move', opacity:0.6, 
+											handle:'.move_drop_option_row',
+													helper:function(e, ui) {
+														ui.children().each(function() {
+															$(this).width($(this).width());
+														});		
+														return ui;
+													},
+													update: function(){
+														var i = 0;
+														$(this).find('.move_drop_option_row input').each(function(){
+															$(this).val(i);
+															i++;
+														});
+													}
+												});
+		
 		// bind the remove button																								
 		$('.remove').unbind().bind('click',function(){
 														$(this)	.parent()
@@ -295,7 +323,7 @@ $option = 10000;
 		// bind the add drop down option button
 		$('.addDropOption').unbind().bind('click',function(){
 																var add = $(this).attr('data-add');
-																var a = $(this).parent().parent().parent().parent();
+																var a = $(this).parent().parent().parent().parent().parent().find('tbody');
 																var b = $('#optionClone #dropOptions table tr:first').clone();
 
 																$('#option_header').show();

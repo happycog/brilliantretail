@@ -38,25 +38,23 @@
 <?php
 	$hide_header = (count($products[0]["sale_matrix"]) == 0) ? 'style="display:none"' : '';
 	
-	$sale_price_matrix = '	<table id="sale_price_table" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
+	$sale_price_matrix = '	<table id="sale_price_table" cellspacing="0" cellpadding="0" border="0" width="100%">
 								<thead>
-									<tr>
-										<th><strong>'.lang('br_member_group').'</strong></th>
-										<th><strong>'.lang('br_sale_price').'</strong></th>
-										<th><strong>'.lang('br_start_dt').'</strong></th>
-										<th><strong>'.lang('br_end_dt').'</strong></th>
-										<th>&nbsp;</th>
-										<th>&nbsp;</th>
-									</tr>
-								</thead>
-								<tfoot>
 									<tr class="nodrag no drop">
 										<td colspan="6">
 											<span class="button" style="float: right; margin: 0pt;">
 												<a class="submit" href="#" id="sale_price_add_option" style="color:#fff">'.lang('br_add_option').'</a>
 											</span></td>
 									</tr>
-								<tfoot>
+									<tr>
+										<th width="20%"><strong>'.lang('br_member_group').'</strong></th>
+										<th width="20%"><strong>'.lang('br_sale_price').'</strong></th>
+										<th width="20%"><strong>'.lang('br_start_dt').'</strong></th>
+										<th width="20%"><strong>'.lang('br_end_dt').'</strong></th>
+										<th width="10%">&nbsp;</th>
+										<th width="10%">&nbsp;</th>
+									</tr>
+								</thead>
 								<tbody>';
 	
 	$i=0;
@@ -164,7 +162,7 @@
 											).'</td>
 							<td class="move_sale_price_row">
 								<img src="'.$theme.'images/icon_move.png" /></td>
-							<td style=\"text-align:center;padding-top:18px;\">
+							<td style=\"text-align:center;\">
 								<a href="#delete" class="remove_sale_price_row">'.lang('delete').'</a></td>
 						</tr>			
 					</table>
@@ -188,7 +186,8 @@
 		$(".datepicker").removeClass('hasDatepicker').unbind().datepicker();
 		$('#sale_price_table tr').removeClass('odd');
 		$('#sale_price_table tr:odd').addClass('odd');
-		$('#sale_price_table tbody').unbind().sortable({axis:'y', cursor:'move', opacity:0.6,
+		
+		$('#sale_price_table tbody').sortable({axis:'y', cursor:'move', opacity:0.6,
 							helper:function(e, ui) {
 								ui.children().each(function() {
 									$(this).width($(this).width());

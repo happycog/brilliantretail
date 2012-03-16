@@ -167,6 +167,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
+						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.checkboxtree.min.js').'"></script>');
 						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css').'" />');
 							
 					// Set our admin theme 	
@@ -987,14 +988,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 				// We know the type
 					
-					$options = '<select id="type_id" name="type_id">';
-					foreach($this->vars['product_type'] as $key => $val){
-						$sel = ($products[0]['type_id'] == $key) ? 'selected' : ''; 
-						$options .= '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';
-					}
-					$options .= '</select>';
-					
-					$this->vars["type"] = $options;
 					
 					$fields = array();
 					
@@ -1037,7 +1030,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						if($products[0]["type_id"] == 3){
 							$this->vars["config_products"] = $this->_build_configurable_form($fields,$values);
 						}	
-						
+					
 					$product_feeds = $this->EE->product_model->get_feed_id_by_product($product_id);
 			
 			if($products[0]["sale_start"] == '0000-00-00 00:00:00'){
@@ -1066,7 +1059,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 														'entry_id'		=> $entry_id  
 													);
 			
-			
 			// Get the available member groups
 				$qry = $this->EE->member_model->get_member_groups();
 				$groups = array();
@@ -1075,10 +1067,31 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 				$this->vars["groups"] = $groups;
 			
-			$this->vars["config_opts"] = $this->EE->product_model->get_attribute_config();
-			$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
+			if($this->vars['products'][0]['type_id'] != 3){
+				$this->vars["config_opts"] = $this->EE->product_model->get_attribute_config();
+				$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
+			}
+			
+			// Experimental! 
+			//
+			// This will allow you to switch the product type on the edit 
+			// form? -dpd 
+			// 
+				if($this->EE->config->item('br_product_edit_type') === TRUE){
+					$options = '<select id="type_id" name="type_id">';
+					foreach($this->vars['product_type'] as $key => $val){
+						$sel = ($products[0]['type_id'] == $key) ? 'selected' : ''; 
+						$options .= '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';
+					}
+					$options .= '</select>';
+					
+					$this->vars["type"] = $options;
+					$this->vars["sub_type"] = $this->_get_sub_type($this->vars['products'][0]['type_id']);
+				}else{
+					$this->vars["type"] = $this->_config['product_type'][$this->vars['products'][0]['type_id']];
+					$this->vars["sub_type"] = '';
+				}
 
-			$this->vars["sub_type"] = $this->_get_sub_type($this->vars['products'][0]['type_id']);
 			$this->vars["attrs"] = $this->_product_attrs($this->vars['products'][0]["attribute_set_id"],$this->vars['products'][0]["product_id"]);
 			$this->vars["attribute_sets"] = $this->EE->product_model->get_attribute_sets();
 			$this->vars['add_attributes'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_add_atributes');
@@ -3002,22 +3015,20 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 			
 			
-			// Its downloadable or new! Lets try to get some uploaded files if they are available
-				if($type == '' || $type == 4){
-					// We need to get a list of possible 
-					$fl = read_dir_files($this->_config["media_dir"].'import');
-					
-					$this->vars["has_import"] 	= FALSE;
-					$this->vars["imports"]		= array();
-					
-					if(count($fl) > 0){
-						$this->vars["has_import"] = TRUE;
-						$this->vars["imports"] = $fl;
-					}
+			// Its downloadable or new! Lets try to get some uploaded files 
+			// if they are available we need to get a list of possible 
+
+				$fl = read_dir_files($this->_config["media_dir"].'import');
+				
+				$this->vars["has_import"] 	= FALSE;
+				$this->vars["imports"]		= array();
+				
+				if(count($fl) > 0){
+					$this->vars["has_import"] = TRUE;
+					$this->vars["imports"] = $fl;
 				}
 			
 			if($type != ''){
-				if($type == 2 || $type == 3 || $type == 4 || $type == 6 || $type == 7){
 					$file = array(
 									2 => 'bundle',
 									3 => 'configurable',
@@ -3034,7 +3045,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 										$('#sub_type_".$type."').show();
 									})
 								</script>";
-				}
 			}else{
 				$a["bundle"] = $this->EE->load->view('product/sub_types/bundle',$this->vars,TRUE);
 				$a["configurable"] = $this->EE->load->view('product/sub_types/configurable',$this->vars,TRUE);
@@ -3273,9 +3283,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function _build_configurable_form($fields,$values = '')
 		{
 			$str = '<input id="config_attr" name="config_attr" type="hidden" value="'.join($fields,',').'" />
+					<h4 style="margin-bottom:5px">'.lang('br_create_config_options').'</h4>
 					<table id="configurable_form" class="subTable" cellpadding="0" cellpacing="0">
 						<tr>
-							<th colspan="2">
+							<th>
+								'.lang('br_title').'</th>
+							<th>
 								'.lang('br_create_config_options').'</th>
 						</tr>';
 			$headings = '';

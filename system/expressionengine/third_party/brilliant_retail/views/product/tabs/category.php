@@ -38,17 +38,51 @@
 		
 		<fieldset class="holder">
 
-			<table cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">
+			<table id="categoryTable" cellspacing="0" cellpadding="0" border="0" width="100%">
+				<thead>
 					<tr>
 						<th>	
 							<?=lang('br_categories')?></th>
 					</tr>
+				</thead>
+				<tbody>
 					<tr>
 						<td id="category_options">
 							<?=$categories?></td>
 					</tr>
+				</tbody>
 			</table>
 
 		</fieldset>
 	</div> <!-- /sub_hold_field -->
 </div>
+<script type="text/javascript">
+	$(function(){
+		$('#product_category_tree li').each(function(){
+			var a = $(this);
+			var b = a.find('ul');
+			if(b.size() >= 1){
+				$('<span class="anchor">&nbsp;</span>').prependTo(a);
+			}else{
+				$('<span class="anchor_empty">&nbsp;</span>').prependTo(a);
+			}
+		});
+
+		$('#product_category_tree li.expanded').each(function(){
+			var a = $(this);
+			a.find('.anchor:eq(0)').addClass('anchor_show');
+			a.find('ul:eq(0)').show();		
+		});
+
+		$('.anchor').bind('click',function(){
+			var a = $(this);
+			if(a.hasClass('anchor_show')){
+				a.removeClass('anchor_show');
+				a.parent().find('ul:eq(0)').slideUp();
+			}else{
+				a.addClass('anchor_show');
+				a.parent().find('ul:eq(0)').slideDown();
+			}
+		});		
+	});
+</script>

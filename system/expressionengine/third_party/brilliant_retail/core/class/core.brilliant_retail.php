@@ -616,20 +616,29 @@ class Brilliant_retail_core {
 			
 			function _product_category_tree($arr,$cat,$level,$selected = ''){
 				foreach($arr as $key => $val){
-					$sel = isset($selected[$key]) ? 'checked="checked"' : ''; 
-					if($this->cat_count == 0 ){
-						$validate = 'class="required" title="'.lang('br_categories').' - '.lang('br_category_selection_error').'"';
-						$this->cat_count = 1;
-					}else{
-						$validate = '';
+					$sel 	= '';
+					$state 	= 'collapsed';
+					if(isset($selected[$key]))
+					{
+						$sel 	= 'checked="checked"';
+						$state 	= 'expanded';
 					}
-					$this->cats .= '<div style="padding:4px '.($level*25).'px" class="tree_level_'.$level.'"><input id="product_cat_'.$val["category_id"].'" class="level_'.$level.' parent_'.$val["parent_id"].'" name="category_title[]" value="'.$key.'" type="checkbox"  '.$validate.$sel.' />&nbsp;' . $val['title'].'</div>';
+					 
+					if($this->cat_count == 0 ){
+						$this->cats = '<ul id="product_category_tree">';
+						$this->cat_count = 1;
+					}
+					$this->cats .= '<li class="'.$state.'">
+										<input id="product_cat_'.$val["category_id"].'" name="category_title[]" value="'.$key.'" type="checkbox"  '.$sel.' /><span>'.$val['title'].'</span>';
 					if(isset($cat[$key])){
 						$level++;
-						$this->_product_category_tree($cat[$key],$cat,$level,$selected);	
+						$this->cats .= '<ul>';
+							$this->_product_category_tree($cat[$key],$cat,$level,$selected);	
 						$level--;
 					}
+					$this->cats .= '</li>';
 				}
+				$this->cats .= '</ul>';
 				return $this->cats;
 			}
 
