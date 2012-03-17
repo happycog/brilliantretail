@@ -3,8 +3,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -62,26 +62,53 @@
 			var a = $(this);
 			var b = a.find('ul');
 			if(b.size() >= 1){
-				$('<span class="anchor">&nbsp;</span>').prependTo(a);
+				var leaf = 'collapse';
+				if(a.hasClass('expand'))
+				{
+					leaf = 'expand';		
+				}
+				
+				$('<span class="anchor anchor_'+leaf+'">&nbsp;</span>').prependTo(a);
 			}else{
-				$('<span class="anchor_empty">&nbsp;</span>').prependTo(a);
+				$('<span class="anchor anchor_empty">&nbsp;</span>').prependTo(a);
 			}
 		});
 
 		$('#product_category_tree li.expanded').each(function(){
 			var a = $(this);
-			a.find('.anchor:eq(0)').addClass('anchor_show');
-			a.find('ul:eq(0)').show();		
+			var b = a.find('ul:eq(0)');
+			var c = a.find('.anchor:eq(0)');
+			
+			// Show the first matched ul element
+				b.show();
+				c.removeClass('anchor_collapse').addClass('anchor_expand');
+
+			// Walk up the tree to make sure 
+			// we open non-expanded parents
+				a.parents('li').each(function(){
+					var d = $(this);
+					// Open the ul
+						d.find('ul:eq(0)').show();
+					// Show the expanded anchor  
+						d.find('span.anchor:eq(0)')
+							.removeClass('anchor_collapse')
+							.addClass('anchor_expand');
+				});
 		});
 
 		$('.anchor').bind('click',function(){
 			var a = $(this);
-			if(a.hasClass('anchor_show')){
-				a.removeClass('anchor_show');
-				a.parent().find('ul:eq(0)').slideUp();
-			}else{
-				a.addClass('anchor_show');
-				a.parent().find('ul:eq(0)').slideDown();
+			if(a.hasClass('anchor_expand'))
+			{
+				a.removeClass('anchor_expand')
+					.addClass('anchor_collapse')
+					.parent().find('ul:eq(0)').slideUp();
+			}
+			else if(a.hasClass('anchor_collapse'))
+			{
+				a.addClass('anchor_expand')
+					.removeClass('anchor_collapse')
+					.parent().find('ul:eq(0)').slideDown();
 			}
 		});		
 	});

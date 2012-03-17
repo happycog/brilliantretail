@@ -3,8 +3,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -710,11 +710,13 @@ class Product_model extends CI_Model {
 			
 			// Create a list of the default attributes. Some third_party fieldtypes
 			// caused problems so we had to sanatize the post - dpd
-				$allowed_attr = array("site_id","type_id","title","url",
-											"detail","enabled","sku","shippable",
-											"weight","featured","quantity","taxable",
-											"cost","meta_title","meta_keyword","meta_descr");
-			
+				$allowed_attr = array(	
+										"site_id","type_id","title","url",
+										"attribute_set_id","detail","enabled","sku","shippable",
+										"weight","featured","quantity","taxable",
+										"cost","meta_title","meta_keyword","meta_descr"
+									);
+
 			// Break the inputs into fields which we can 
 			// update individually
 					

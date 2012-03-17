@@ -4,7 +4,7 @@
 ========================================================
 Plugin Snippet Version 2.1
 --------------------------------------------------------
-Copyright: David Dexter (Brilliant2.com) 
+Copyright: David Dexter (BrilliantRetail.com) 
 License: Absolutely Freeware - Use It and Abuse It.... 
 http://www.GetEE.com 
 --------------------------------------------------------

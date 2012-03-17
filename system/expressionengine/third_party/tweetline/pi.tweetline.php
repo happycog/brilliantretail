@@ -3,9 +3,9 @@
 ========================================================
 Plugin TweetLine Version 2.3
 --------------------------------------------------------
-Copyright: David Dexter (Brilliant2.com) 
+Copyright: David Dexter (BrilliantRetail.com) 
 License: Absolutely Freeware - Use It and Abuse It.... 
-http://www.brilliant2.com 
+http://www.BrilliantRetail.com 
 --------------------------------------------------------
 This addon may be used free of charge. Should you have 
 the opportunity to use it for commercial projects then 
@@ -31,7 +31,7 @@ OR OTHER DEALINGS IN THE SOFTWARE.
 $plugin_info = array(  	'pi_name' => 'TweetLine',
 					    'pi_version' => '2.3',
 					    'pi_author' => 'David Dexter',
-					    'pi_author_url' => 'http://www.brilliant2.com',
+					    'pi_author_url' => 'http://www.BrilliantRetail.com',
 					    'pi_description' => 'TweetLine returns a set of status tweets for a given user. Developed for EE 2.0+ (Requires Curl on the server)',
 					    'pi_usage' => tweetline::usage());
 
@@ -50,7 +50,7 @@ class Tweetline
 			}
 		
 		// Get the username
-			$username = ( ! $this->EE->TMPL->fetch_param('username')) ? 'brilliant2' :  strtolower($this->EE->TMPL->fetch_param('username'));
+			$username = ( ! $this->EE->TMPL->fetch_param('username')) ? 'brilliantretail' :  strtolower($this->EE->TMPL->fetch_param('username'));
         	if($username == ''){
 	        	$username = 'brilliantretail';
         	}
@@ -254,7 +254,7 @@ class Tweetline
 ?>
 Example:
 ----------------
-{exp:tweetline username="brilliant2" limit="5" mentions="false" retweets="false"}
+{exp:tweetline username="brilliantretail" limit="5" mentions="false" retweets="false"}
 	<p>
 		<a href="{link}" target="_blank">{post}</a><br />
 		{date format="%M %d, %Y %g:%i%a"} {rel_date}

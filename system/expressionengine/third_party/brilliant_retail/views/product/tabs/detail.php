@@ -3,8 +3,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011-2012, Brilliant2.com		*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -26,6 +26,20 @@
 /* Details Tab	*/
 /****************/
 ?>
+<style type="text/css">
+	#url_display {
+		font-size: 11px;
+		padding: 3px;
+	}
+	#url_display span {
+		font-size: 		11px;
+		font-weight: 	bold;
+		cursor: 		pointer;
+	}
+	#url_input {
+		display: none;
+	}
+</style>
 				<div class="publish_field" id="hold_br_title">
 
 					<label class="hide_field">
@@ -60,29 +74,18 @@
 												'value' => $products[0]["title"],
 												'class' => '{required:true}',
 												'title' => lang('br_details').' - '.lang('br_product_title').' '.lang('br_is_required'))
-									)?></fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-
-				<div class="publish_field" id="hold_br_url_title">
-
-					<label class="hide_field">
-						<span>
-							<em class="required">*</em> <?=lang('br_url_title')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_url_title">
-						<fieldset class="holder">
-							<?=form_input(
-								array(	'name' => 'url', 
-										'id' => 'url',
-										'value' => $products[0]["url"],
-										'class' => '',
-										'title' => lang('br_details').' - '.lang('br_url_title').' '.lang('br_is_required'))
-								)?>
-														</fieldset>
+									)?>
+							<div id="url_display">
+								<?=strtolower(lang('br_url_title'))?>: <span><?=$products[0]["url"]?></span>
+								<span id="url_input">
+									<input 	type="text"
+											name="url" 
+											id="url"  
+											value="<?=$products[0]["url"]?>" 
+											style="width:200px;" /> 
+								</span>
+							</div>
+						</fieldset>
 					</div> <!-- /sub_hold_field -->
 
 				</div>
@@ -338,7 +341,29 @@
 <div><!-- End Cap !--></div>
 <script type="text/javascript">
 	$(function(){
-
+		
+		// Bind the url title click
+		$('#url_display span:eq(0)').bind('click',function(){
+			$(this).hide();
+			$('#url_input').show();
+			$('#url_input input').focus().bind('keyup',function(){
+				var a = $(this);
+				var str = a.val().toLowerCase();
+				str = clean_url_title(str);
+				$('#url_display span:eq(0)').html(str);
+			});
+		});
+		$('#url_input input').bind('blur',function(){
+			var a = $(this);
+			var b = a.parent();
+			var str = a.val().toLowerCase();
+			str = clean_url_title(str);
+			a.val(str);
+			b.hide();
+			b.prev().show();
+				
+		});
+		
 	    if (typeof CKEDITOR == 'undefined'){
 	        window.CKEDITOR_BASEPATH = '<?=$detail_ckeditor_path?>';
 	        $.getScript('<?=$detail_ckeditor_url?>',function(){
@@ -359,88 +384,11 @@
 				$('#title').bind('keyup',function(){
 					var a = $(this);
 					var str = a.val().toLowerCase();
-					var sep = "-";
-					var tmp = '';
-					for(var pos=0; pos < str.length; pos++)
-					{
-						var c = str.charCodeAt(pos);
-						
-						if (c >= 32 && c < 128)
-						{
-							tmp += str.charAt(pos);
-						}
-						else
-						{
-							if (c == '223') {tmp += 'ss'; continue;}
-							if (c == '224') {tmp += 'a'; continue;}
-							if (c == '225') {tmp += 'a'; continue;}
-							if (c == '226') {tmp += 'a'; continue;}
-							if (c == '229') {tmp += 'a'; continue;}
-							if (c == '227') {tmp += 'ae'; continue;}
-							if (c == '230') {tmp += 'ae'; continue;}
-							if (c == '228') {tmp += 'ae'; continue;}
-							if (c == '231') {tmp += 'c'; continue;}
-							if (c == '232') {tmp += 'e'; continue;}
-							if (c == '233') {tmp += 'e'; continue;}
-							if (c == '234') {tmp += 'e'; continue;}
-							if (c == '235') {tmp += 'e'; continue;}
-							if (c == '236') {tmp += 'i'; continue;}
-							if (c == '237') {tmp += 'i'; continue;}
-							if (c == '238') {tmp += 'i'; continue;}
-							if (c == '239') {tmp += 'i'; continue;}
-							if (c == '241') {tmp += 'n'; continue;}
-							if (c == '242') {tmp += 'o'; continue;}
-							if (c == '243') {tmp += 'o'; continue;}
-							if (c == '244') {tmp += 'o'; continue;}
-							if (c == '245') {tmp += 'o'; continue;}
-							if (c == '246') {tmp += 'oe'; continue;}
-							if (c == '249') {tmp += 'u'; continue;}
-							if (c == '250') {tmp += 'u'; continue;}
-							if (c == '251') {tmp += 'u'; continue;}
-							if (c == '252') {tmp += 'ue'; continue;}
-							if (c == '255') {tmp += 'y'; continue;}
-							if (c == '257') {tmp += 'aa'; continue;}
-							if (c == '269') {tmp += 'ch'; continue;}
-							if (c == '275') {tmp += 'ee'; continue;}
-							if (c == '291') {tmp += 'gj'; continue;}
-							if (c == '299') {tmp += 'ii'; continue;}
-							if (c == '311') {tmp += 'kj'; continue;}
-							if (c == '316') {tmp += 'lj'; continue;}
-							if (c == '326') {tmp += 'nj'; continue;}
-							if (c == '353') {tmp += 'sh'; continue;}
-							if (c == '363') {tmp += 'uu'; continue;}
-							if (c == '382') {tmp += 'zh'; continue;}
-							if (c == '256') {tmp += 'aa'; continue;}
-							if (c == '268') {tmp += 'ch'; continue;}
-							if (c == '274') {tmp += 'ee'; continue;}
-							if (c == '290') {tmp += 'gj'; continue;}
-							if (c == '298') {tmp += 'ii'; continue;}
-							if (c == '310') {tmp += 'kj'; continue;}
-							if (c == '315') {tmp += 'lj'; continue;}
-							if (c == '325') {tmp += 'nj'; continue;}
-							if (c == '352') {tmp += 'sh'; continue;}
-							if (c == '362') {tmp += 'uu'; continue;}
-							if (c == '381') {tmp += 'zh'; continue;}
-						}
-					}
-		    		
-					var multiReg = new RegExp(sep + '{2,}', 'g');
 					
-					str = tmp;
-					
-					str = str.replace('/<(.*?)>/g', '');
-					str = str.replace(/\s+/g, sep);
-					str = str.replace(/\//g, sep);
-					str = str.replace(/[^a-z0-9\-\._]/g,'');
-					str = str.replace(/\+/g, sep);
-					str = str.replace(multiReg, sep);
-					str = str.replace(/-$/g,'');
-					str = str.replace(/_$/g,'');
-					str = str.replace(/^_/g,'');
-					str = str.replace(/^-/g,'');
-					str = str.replace(/\.+$/g,'');
+					str = clean_url_title(str);
 			
 					$('#url').val(str);
+					$('#url_display span:eq(0)').html(str);
 				});
 		<?php	
 			}
@@ -451,4 +399,88 @@
 		CKEDITOR.replace( 'detail' );
 	}
 	
+	function clean_url_title(str){
+		var sep = "-";
+		var tmp = '';
+		for(var pos=0; pos < str.length; pos++)
+		{
+			var c = str.charCodeAt(pos);
+			
+			if (c >= 32 && c < 128)
+			{
+				tmp += str.charAt(pos);
+			}
+			else
+			{
+				if (c == '223') {tmp += 'ss'; continue;}
+				if (c == '224') {tmp += 'a'; continue;}
+				if (c == '225') {tmp += 'a'; continue;}
+				if (c == '226') {tmp += 'a'; continue;}
+				if (c == '229') {tmp += 'a'; continue;}
+				if (c == '227') {tmp += 'ae'; continue;}
+				if (c == '230') {tmp += 'ae'; continue;}
+				if (c == '228') {tmp += 'ae'; continue;}
+				if (c == '231') {tmp += 'c'; continue;}
+				if (c == '232') {tmp += 'e'; continue;}
+				if (c == '233') {tmp += 'e'; continue;}
+				if (c == '234') {tmp += 'e'; continue;}
+				if (c == '235') {tmp += 'e'; continue;}
+				if (c == '236') {tmp += 'i'; continue;}
+				if (c == '237') {tmp += 'i'; continue;}
+				if (c == '238') {tmp += 'i'; continue;}
+				if (c == '239') {tmp += 'i'; continue;}
+				if (c == '241') {tmp += 'n'; continue;}
+				if (c == '242') {tmp += 'o'; continue;}
+				if (c == '243') {tmp += 'o'; continue;}
+				if (c == '244') {tmp += 'o'; continue;}
+				if (c == '245') {tmp += 'o'; continue;}
+				if (c == '246') {tmp += 'oe'; continue;}
+				if (c == '249') {tmp += 'u'; continue;}
+				if (c == '250') {tmp += 'u'; continue;}
+				if (c == '251') {tmp += 'u'; continue;}
+				if (c == '252') {tmp += 'ue'; continue;}
+				if (c == '255') {tmp += 'y'; continue;}
+				if (c == '257') {tmp += 'aa'; continue;}
+				if (c == '269') {tmp += 'ch'; continue;}
+				if (c == '275') {tmp += 'ee'; continue;}
+				if (c == '291') {tmp += 'gj'; continue;}
+				if (c == '299') {tmp += 'ii'; continue;}
+				if (c == '311') {tmp += 'kj'; continue;}
+				if (c == '316') {tmp += 'lj'; continue;}
+				if (c == '326') {tmp += 'nj'; continue;}
+				if (c == '353') {tmp += 'sh'; continue;}
+				if (c == '363') {tmp += 'uu'; continue;}
+				if (c == '382') {tmp += 'zh'; continue;}
+				if (c == '256') {tmp += 'aa'; continue;}
+				if (c == '268') {tmp += 'ch'; continue;}
+				if (c == '274') {tmp += 'ee'; continue;}
+				if (c == '290') {tmp += 'gj'; continue;}
+				if (c == '298') {tmp += 'ii'; continue;}
+				if (c == '310') {tmp += 'kj'; continue;}
+				if (c == '315') {tmp += 'lj'; continue;}
+				if (c == '325') {tmp += 'nj'; continue;}
+				if (c == '352') {tmp += 'sh'; continue;}
+				if (c == '362') {tmp += 'uu'; continue;}
+				if (c == '381') {tmp += 'zh'; continue;}
+			}
+		}
+		
+		var multiReg = new RegExp(sep + '{2,}', 'g');
+		
+		str = tmp;
+		
+		str = str.replace('/<(.*?)>/g', '');
+		str = str.replace(/\s+/g, sep);
+		str = str.replace(/\//g, sep);
+		str = str.replace(/[^a-z0-9\-\._]/g,'');
+		str = str.replace(/\+/g, sep);
+		str = str.replace(multiReg, sep);
+		str = str.replace(/-$/g,'');
+		str = str.replace(/_$/g,'');
+		str = str.replace(/^_/g,'');
+		str = str.replace(/^-/g,'');
+		str = str.replace(/\.+$/g,'');
+		
+		return str;
+	}
 </script>

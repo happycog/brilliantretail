@@ -3,8 +3,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -26,29 +26,44 @@
 /* SEO Tab			*/
 /********************/
 ?>
-<table cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
-	<tr>
-		<th colspan="2">
-			<?=lang('nav_br_config_feeds')?></th>
-	</tr>
-<?php
+<div class="publish_field" id="hold_br_feeds">
 
-	if ( count($feeds) > 0 ){
-	  	$c=0;
-	  	foreach($feeds as $f)
-	  	{
-	  		$sel='';
-	  		foreach($product_feeds as $f1)
-	  		{
-	  			if ($f1['feed_id']==$f['feed_id']) {$sel='checked="checked"';}
-	  		}
-			
-			echo '	<tr>
-						<td>'.$f['feed_title'].'</td>
-				    	<td><input type="checkbox" name="feed_id['.$c.']" value="'.$f['feed_id'].'"'. $sel .' /></td>
-				    </tr>';
-	  		$c++;
-	  	}	  
-	}
-?>
-</table>
+	<label class="hide_field">
+		<span>
+			<?=lang('nav_br_config_feeds')?>
+		</span>
+	</label>
+
+	<div id="sub_hold_br_feeds">
+		<fieldset class="holder">
+			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+				<thead>
+					<tr>
+						<th>
+							<?=lang('br_title')?></th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					if ( count($feeds) > 0 ){
+					  	$c=0;
+					  	foreach($feeds as $f)
+					  	{
+					  		$sel='';
+					  		foreach($product_feeds as $f1)
+					  		{
+					  			if ($f1['feed_id']==$f['feed_id']) {$sel='checked="checked"';}
+					  		}
+							
+							echo '	<tr>
+										<td><input type="checkbox" name="feed_id['.$c.']" value="'.$f['feed_id'].'"'. $sel .' />&nbsp;'.$f['feed_title'].'</td>
+								    </tr>';
+					  		$c++;
+					  	}	  
+					}
+				?>
+				</tbody>
+			</table>
+		</fieldset>
+	</div>
+</div>

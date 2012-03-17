@@ -3,9 +3,9 @@
 ========================================================
 Plugin Shortee Version 1.0
 --------------------------------------------------------
-Copyright: David Dexter (Brilliant2.com) 
+Copyright: David Dexter (BrilliantRetail.com) 
 License: Absolutely Freeware - Use It and Abuse It.... 
-http://www.brilliant2.com 
+http://www.BrilliantRetail.com
 --------------------------------------------------------
 This addon may be used free of charge. Should you have 
 the opportunity to use it for commercial projects then 
@@ -31,7 +31,7 @@ OR OTHER DEALINGS IN THE SOFTWARE.
 $plugin_info = array(  	'pi_name' => 'Shortee',
 					    'pi_version' => '1.0',
 					    'pi_author' => 'David Dexter',
-					    'pi_author_url' => 'http://www.brilliant2.com',
+					    'pi_author_url' => 'http://www.BrilliantRetail.com',
 					    'pi_description' => 'Shortee caches returns an http://is.gd url. Developed for EE 2.0+ (Requires Curl)',
 					    'pi_usage' => Shortee::usage());
 

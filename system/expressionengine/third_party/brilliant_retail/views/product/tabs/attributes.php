@@ -3,8 +3,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -37,14 +37,12 @@
 
 	<div id="sub_hold_br_custom_attributes">
 		<fieldset class="holder">
-
-			<table id="product_attributes_tbl" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form" style="margin-top:5px;">
-				<tr>
-					<th colspan="2">
-						</th>
-				</tr>
+			<table id="product_attributes_tbl" cellspacing="0" cellpadding="0" border="0" width="100%">
+				<thead>
+					<th><?=lang('br_title')?></th>
+					<th><?=lang('br_value')?></th>
 <?php
-	if($products[0]["attribute_set_id"] == 0){
+
 		// Add a table header just for
 		// the custom attributes
 								
@@ -61,14 +59,16 @@
 							 
 ?>
 
-		<tr>
-			<td><?=lang('br_add_options')?></td>
-			<td><?php
-				echo '<div id="addCustomAttribute">'.lang('br_add_custom_attributes').'</div>'.$attrOptions;
-				?></td>
-		</tr>
+			<tr>
+				<td><?=lang('br_add_options')?></td>
+				<td><?php
+					echo '<div id="addCustomAttribute">'.lang('br_add_custom_attributes').'</div>'.$attrOptions;
+					?></td>
+			</tr>
+		</thead>
+		<tbody>
 <?
-		}else{
+		if($products[0]["attribute_set_id"] != 0){
 			$i = 0;
 			foreach($attrs as $a){
 				$req = ($a["required"] == 1) ? ' *' : '';
@@ -85,6 +85,8 @@
 			}
 		}
 ?>
+				</tbody>
+
 			</table>
 
 		</fieldset>
@@ -103,8 +105,10 @@
 											set_id:$('#attributeOptions').val(), 
 											product_id:<?=$hidden["product_id"]?>
 											},function(resp){
-				$(resp).appendTo($('#product_attributes_tbl'));
-				$('#attributeContainer').parent().parent().remove();
+				var a = $('#product_attributes_tbl tbody');
+				a.find('tr').remove();
+				$(resp).appendTo(a);
+				$('#product_attributes_tbl thead tr:eq(1)').hide();
 			});
 		});
 		$('#optionCancel').bind('click',function(){

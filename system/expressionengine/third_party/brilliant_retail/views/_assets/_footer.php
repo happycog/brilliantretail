@@ -3,8 +3,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -25,7 +25,7 @@
 <div id="b2r_botleft">
 	<a href="http://www.brilliantretail.com/" target="_blank"><img id="b2r_botleft_logo" src="<?=$theme?>images/0.gif" alt="Brilliant Retail" /></a>
     <p id="b2r_botleft_version"><?=$version?></p>
-    <a href="http://getsatisfaction.com/brilliantretail" target="_blank"><img id="b2r_botleft_con" src="<?=$theme?>images/0.gif" alt="Brilliant Retail" /></a>
+    <a href="http://support.brilliantretail.com" target="_blank"><img id="b2r_botleft_con" src="<?=$theme?>images/0.gif" alt="Brilliant Retail" /></a>
     <div class="b2r_clearboth"><!-- --></div>
 </div>
 <!-- b2r_botleft -->

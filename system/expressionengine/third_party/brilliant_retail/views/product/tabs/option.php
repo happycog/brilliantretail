@@ -3,8 +3,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2011, Brilliant2.com 			*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -50,10 +50,10 @@ $option = 10000;
 						</span></td>
 				</tr>
 				<tr class="nodrag nodrop" id="option_header">
-					<th><b><?=lang('br_title')?></b></th>
-					<th><b><?=lang('br_type')?></b></th>
-					<th><b><?=lang('br_sort')?></b></th>
-					<th><b><?=lang('delete')?></b></th>
+					<th width="20%"><b><?=lang('br_title')?></b></th>
+					<th width="60%"><b><?=lang('br_type')?></b></th>
+					<th width="10%"><b><?=lang('br_sort')?></b></th>
+					<th width="10%"><b><?=lang('delete')?></b></th>
 				</tr>	
 			</thead>
 			<tbody>

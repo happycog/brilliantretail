@@ -3,8 +3,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter 								*/
-/* 	@copyright	Copyright (c) 2010-2012 Brilliant2.com		*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -1085,10 +1085,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$options .= '</select>';
 					
 					$this->vars["type"] = $options;
-					$this->vars["sub_type"] = $this->_get_sub_type($this->vars['products'][0]['type_id']);
+					$this->vars["sub_type"] = $this->_get_sub_type($this->vars['products'][0]['type_id'],TRUE);
 				}else{
 					$this->vars["type"] = $this->_config['product_type'][$this->vars['products'][0]['type_id']];
-					$this->vars["sub_type"] = '';
+					$this->vars["sub_type"] = $this->_get_sub_type($this->vars['products'][0]['type_id']);
 				}
 
 			$this->vars["attrs"] = $this->_product_attrs($this->vars['products'][0]["attribute_set_id"],$this->vars['products'][0]["product_id"]);
@@ -1250,7 +1250,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$data[$key] = $this->EE->input->post($key);
 					}
 				}
-				
+
 				$continue = FALSE; // Go back to the product after update?
 				
 				if(isset($data["entry_id"])){
@@ -3007,7 +3007,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $products[$product_id];
 		}
 		
-		function _get_sub_type($type = '') 
+		function _get_sub_type($type = '',$allow_edit=FALSE) 
 		{
 			$str = '';
 
@@ -3036,8 +3036,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									7 => 'donation'
 									);
 					$str = '';				
-					foreach($file as $f){
-						$str .= $this->EE->load->view('product/sub_types/'.$f,$this->vars,TRUE);
+					// Show all options for edit. 
+					if($allow_edit == TRUE)
+					{
+						foreach($file as $f){
+							$str .= $this->EE->load->view('product/sub_types/'.$f,$this->vars,TRUE);
+						}
+					}else{
+						// Only show the type if it exists
+						if(isset($file[$type])){
+							$str .= $this->EE->load->view('product/sub_types/'.$file[$type],$this->vars,TRUE);
+						}
 					}
 					$str .= "	<script type=\"text/javascript\">
 									$(function(){

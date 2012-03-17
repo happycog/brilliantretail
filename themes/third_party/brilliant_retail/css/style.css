@@ -4,8 +4,8 @@
 /*	BrilliantRetail 										*/
 /*															*/
 /*	@package	BrilliantRetail								*/
-/*	@Author		Brilliant2.com 								*/
-/* 	@copyright	Copyright (c) 2010, Brilliant2.com 			*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright (c) 2010-2012						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /* 	@since		Version 1.0.0 Beta							*/
@@ -2534,8 +2534,8 @@ table#relatedTable .tDnD_whileDrag td a{
 	padding: 0 4px;
 	margin: auto;
 }
+
 #product_category_tree li span.anchor {
-	background: url(../images/d.gif) -1px -3px no-repeat;
 	height: 	20px;
 	cursor: 	default;
 	position: 	relative;
@@ -2543,9 +2543,15 @@ table#relatedTable .tDnD_whileDrag td a{
 	left: 		0px;
 	cursor: 	pointer;
 }
-#product_category_tree li span.anchor_show {
+
+#product_category_tree li span.anchor_collapse {
+	background: url(../images/d.gif) -1px -3px no-repeat;
+}
+
+#product_category_tree li span.anchor_expand {
 	background:	url(../images/d.gif) -19px -3px no-repeat;
 }
+
 #product_category_tree li span.anchor_empty {
 	height: 	20px;
 	cursor: 	default;
@@ -2575,6 +2581,14 @@ table#relatedTable .tDnD_whileDrag td a{
 #configurable_form thead td,
 #config_selected thead td {
 	padding: 4px;
+}
+
+#sale_price_table tfoot td {
+	text-align: left;
+	background: white;
+	padding: 5px 0 5px 10px;
+	font-style: italic;
+	color: #999;
 }
 
 #optionTable td,
@@ -2635,6 +2649,7 @@ table#relatedTable .tDnD_whileDrag td a{
 	background: 				#F4F6F6;
 }
 
+#product_attributes_tbl,
 #categoryTable {
 	border: 					1px #BBB solid;
 	border-top-left-radius:		4px;
@@ -2733,6 +2748,7 @@ download_selected td,
 	border: 		none;
 }
 
+#product_attributes_tbl tr th,
 #optionTable tr th, 
 #imageTable tr th,
 #download_options tr th, 
@@ -2758,6 +2774,7 @@ download_selected td,
 	text-align: 	left;
 }
 
+#product_attributes_tbl tr th,
 #categoryTable tr th,
 #price_table tr th,
 #sale_price_table tr th,
@@ -2768,6 +2785,7 @@ download_selected td,
 	border-right: none;
 }
 
+#product_attributes_tbl td, 
 #categoryTable td {
 	background: #FFF;
 	padding: 10px 0 15px;
