@@ -37,35 +37,64 @@
 
 	<div id="sub_hold_br_custom_attributes">
 		<fieldset class="holder">
-			<table id="product_attributes_tbl" cellspacing="0" cellpadding="0" border="0" width="100%">
+			<table id="product_attributes_tbl" class="product_edit" cellspacing="0" cellpadding="0" border="0" width="100%">
 				<thead>
-					<th><?=lang('br_title')?></th>
-					<th><?=lang('br_value')?></th>
-<?php
-
-		// Add a table header just for
-		// the custom attributes
-								
-		$attrOptions = '<div id="attributeContainer">
-								<select id="attributeOptions">';
-			foreach($attribute_sets	as $set){
-				$attrOptions .= '<option value="'.$set["attribute_set_id"].'">'.$set["title"].'</option>';
-			}	
-			$attrOptions .= '	</select>
-								<div class="b2r_clearboth"><!-- --></div>
-								<div id="optionSelect">'.lang('br_select_attribute_set').'</div>
-								<div id="optionCancel">'.lang('br_cancel').'</div>
-							</div>';
-							 
-?>
-
-			<tr>
-				<td><?=lang('br_add_options')?></td>
-				<td><?php
-					echo '<div id="addCustomAttribute">'.lang('br_add_custom_attributes').'</div>'.$attrOptions;
-					?></td>
-			</tr>
-		</thead>
+				<?php
+				
+					// Figure out if we are showing the 
+					// add button or the remove button 
+					// based on if one exists already
+						$show_attr_add 		= '';
+						$show_attr_remove 	= 'nodisplay';
+						
+						if($products[0]["attribute_set_id"] != 0){
+							$show_attr_add 		= 'nodisplay';
+							$show_attr_remove 	= '';
+						}
+						
+					// Add a table header just for
+					// the custom attributes
+											
+					$attrOptions = '<div id="attributeContainer">
+											<select id="attributeOptions">';
+					foreach($attribute_sets	as $set){
+						$attrOptions .= '<option value="'.$set["attribute_set_id"].'">'.$set["title"].'</option>';
+					}	
+					$attrOptions .= '	</select>
+										<div class="b2r_clearboth"><!-- --></div>
+										<div id="optionSelect">'.lang('br_select_attribute_set').'</div>
+										<div id="optionCancel">'.lang('br_cancel').'</div>
+									</div>';
+				?>
+					<tr class="<?=$show_attr_add?>">
+						<td colspan="2">
+							<?php
+							echo '<div id="addCustomAttribute">'.lang('br_add_custom_attributes').'</div>'.$attrOptions;
+							?></td>
+					</tr>
+					<tr class="<?=$show_attr_remove?>">
+						<td colspan="2" id="removeCustom">
+							<span class="button" style="float: right; margin: 0pt;">
+								<a class="submit" href="#" style="color:#fff"><?=lang('remove')?></a>
+							</span></td>
+					</tr>
+					<tr>
+						<th><?=lang('br_title')?></th>
+						<th><?=lang('br_value')?></th>
+					</tr>
+				</thead>
+				<?php
+					$show_attr_foot = 'nodisplay';
+					if($products[0]["attribute_set_id"] == 0){
+						$show_attr_foot = '';
+					}
+				?>
+				<tfoot class="<?=$show_attr_foot?>">
+					<tr>
+						<td colspan="2">
+							<?=lang('br_attribute_empty')?></td>
+					</tr>
+				</tfoot>
 		<tbody>
 <?
 		if($products[0]["attribute_set_id"] != 0){
@@ -95,6 +124,7 @@
 
 <script type="text/javascript">
 	$(function(){
+
 		$('#addCustomAttribute').bind('click',function(){
 			$('#attributeContainer').show();
 			$(this).hide();
@@ -108,9 +138,22 @@
 				var a = $('#product_attributes_tbl tbody');
 				a.find('tr').remove();
 				$(resp).appendTo(a);
-				$('#product_attributes_tbl thead tr:eq(1)').hide();
+				$('#product_attributes_tbl thead tr:eq(0)').hide();
+				$('#product_attributes_tbl tfoot').hide();
+				$('#removeCustom').show();
 			});
 		});
+		
+		$('#removeCustom .submit').bind('click',function(){
+			$('#removeCustom').hide();
+			$('#addCustomAttribute').show();
+			$('#attributeContainer').hide();
+			$('#product_attributes_tbl tbody tr').remove();
+			$('#product_attributes_tbl thead tr:eq(0)').show();
+			$('#product_attributes_tbl tfoot').show();
+			return false;
+		});
+		
 		$('#optionCancel').bind('click',function(){
 			$('#addCustomAttribute').show();
 			$('#attributeContainer').hide();

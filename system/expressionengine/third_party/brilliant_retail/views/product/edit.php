@@ -58,8 +58,8 @@
 						$tabs = array(
 										'details' 		=> $tab_detail,
 										'attributes' 	=> $tab_attributes,
-										'images' 		=> $tab_image,
 										'options' 		=> $tab_option, 
+										'images' 		=> $tab_image,
 										'pricing' 		=> $tab_price,
 										'sale_pricing' 	=> $tab_sale_price,
 										'categories' 	=> $tab_category,

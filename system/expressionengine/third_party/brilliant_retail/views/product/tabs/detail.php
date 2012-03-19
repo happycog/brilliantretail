@@ -44,29 +44,11 @@
 
 					<label class="hide_field">
 						<span>
-							<em class="required">*</em> <?=lang('br_product_type')?> - <?=$type?>
-						</span>
-					</label>
-	
-					<div class="b2r_clearboth"><!-- --></div>
-					
-					<div id="sub_hold_title">
-						<fieldset class="holder custom_field">
-							<?=$sub_type?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-				
-				<div class="publish_field" id="hold_br_title">
-
-					<label class="hide_field">
-						<span>
 							<em class="required">*</em> <?=lang('br_title')?>
 						</span>
 					</label>
 	
-					<div id="sub_hold_title">
+					<div id="sub_hold_br_title">
 						<fieldset class="holder">
 							<?=form_input(
 										array(	'name' => 'title', 
@@ -85,6 +67,24 @@
 											style="width:200px;" /> 
 								</span>
 							</div>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+
+				<div class="publish_field" id="hold_br_type">
+
+					<label class="hide_field">
+						<span>
+							<em class="required">*</em> <?=lang('br_product_type')?> - <?=$type?>
+						</span>
+					</label>
+	
+					<div class="b2r_clearboth"><!-- --></div>
+					
+					<div id="sub_hold_br_type">
+						<fieldset class="holder custom_field">
+							<?=$sub_type?>
 						</fieldset>
 					</div> <!-- /sub_hold_field -->
 
@@ -346,12 +346,28 @@
 		$('#url_display span:eq(0)').bind('click',function(){
 			$(this).hide();
 			$('#url_input').show();
-			$('#url_input input').focus().bind('keyup',function(){
-				var a = $(this);
-				var str = a.val().toLowerCase();
-				str = clean_url_title(str);
-				$('#url_display span:eq(0)').html(str);
-			});
+			$('#url_input input')
+				.focus()
+				.bind('keypress',function(e){
+					var code = (e.keyCode ? e.keyCode : e.which);
+					if(code == 13) { //Enter keycode
+						var a = $(this);
+						var b = a.parent();
+						var str = a.val().toLowerCase();
+						str = clean_url_title(str);
+						$('#url_display span:eq(0)').html(str);
+						a.val(str);
+						b.hide();
+						b.prev().show();
+						return false;
+					}
+				})
+				.bind('keyup',function(e){
+					var a = $(this);
+					var str = a.val().toLowerCase();
+					str = clean_url_title(str);
+					$('#url_display span:eq(0)').html(str);
+				});
 		});
 		$('#url_input input').bind('blur',function(){
 			var a = $(this);

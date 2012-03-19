@@ -22,23 +22,30 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
-<div id="sub_type_2" class="subtypes">
+<div id="sub_type_2" class="subtypes product_edit">
 	<div class="search">
 		<input type="text" id="bundle_search">
 	</div>
-	<div id="bundle_result" class="result_div">
-		<table id="bundle_results" width="100%" cellpadding="0" cellspacing="0">
+	<div class="result_div product_edit">
+		
+		<table id="bundle_result" width="100%" cellpadding="0" cellspacing="0">
 			<thead>
+				<tr>
+					<td colspan="3">
+						<?=lang('br_results')?></td>
+				</tr>
 				<tr>
 					<th><?=lang('nav_br_product')?></th>
 					<th><?=lang('br_type')?></th>
 					<th>&nbsp;</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tfoot>
 				<tr><td colspan="3" style="border-width:0"><?=lang('br_bundle_product_search')?></td></tr>
-			</tbody>
+			</tfoot>
+			<tbody></tbody>
 		</table>
+	
 	</div>
 	<table id="bundle_selected" width="100%" cellpadding="0" cellspacing="0">
 		<thead>
@@ -61,7 +68,7 @@
 									'.$product_type[$b["type_id"]].'</td>
 								<td width="10%" class="move_related_row" style="text-align:center"><img src="'.$theme.'images/icon_move.png" /></td>
 								<td width="10%">
-									<a class="remove_bundle" href="#">'.lang('remove').'</a><input type="hidden" value="'.$b["product_id"].'" name="bundle[]">
+									<a class="remove_bundle" href="#">'.lang('delete').'</a><input type="hidden" value="'.$b["product_id"].'" name="bundle[]">
 								</td>
 							</tr>';
 					$i++;
@@ -89,10 +96,13 @@
 			}
 			$.getJSON("<?=$product_search?>",{'type':'bundle','term':term},
 	        	function(data){
-	            	brResult.find('body tr').remove();
-					$.each(data, function(i,item){
-	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><?=lang('br_add')?></a></td></tr>').appendTo(brResult);
+
+	            	$('#bundle_result tfoot').hide();
+	            	
+	            	$.each(data, function(i,item){
+	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><?=lang('br_add')?></a></td></tr>').appendTo($('#bundle_result tbody'));
 	            	});
+
 	            	$('.add_bundle').unbind('click').bind('click',function(){
 						_add_bundle($(this).metadata().product_id);
 						return false;
@@ -121,7 +131,7 @@
 		new_row.addClass('odd');
 		new_row.find('td:eq(2)').remove();
 		new_row.find('td:eq(0)').attr({'style':'width:auto','width':'60%'});
-		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/icon_move.png" /><input type="hidden" name="bundle[]" value="'+product_id+'"></td><td width="10%"><a href="#" class="remove_bundle"><?=lang('remove')?></a></td>').appendTo(new_row);
+		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/icon_move.png" /><input type="hidden" name="bundle[]" value="'+product_id+'"></td><td width="10%"><a href="#" class="remove_bundle"><?=lang('delete')?></a></td>').appendTo(new_row);
 		$(new_row).appendTo(bundleSelected);
 		row.remove();
 		_remove_bundle();

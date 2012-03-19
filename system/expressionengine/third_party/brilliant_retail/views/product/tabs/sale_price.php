@@ -38,7 +38,7 @@
 <?php
 	$hide_header = (count($products[0]["sale_matrix"]) == 0) ? 'style="display:none"' : '';
 	
-	$sale_price_matrix = '	<table id="sale_price_table" cellspacing="0" cellpadding="0" border="0" width="100%">
+	$sale_price_matrix = '	<table id="sale_price_table" class="product_edit" cellspacing="0" cellpadding="0" border="0" width="100%">
 								<thead>
 									<tr class="nodrag no drop">
 										<td colspan="6">
@@ -47,12 +47,12 @@
 											</span></td>
 									</tr>
 									<tr>
-										<th width="20%"><strong>'.lang('br_member_group').'</strong></th>
-										<th width="20%"><strong>'.lang('br_sale_price').'</strong></th>
-										<th width="20%"><strong>'.lang('br_start_dt').'</strong></th>
-										<th width="20%"><strong>'.lang('br_end_dt').'</strong></th>
-										<th width="10%">&nbsp;</th>
-										<th width="10%">&nbsp;</th>
+										<th width="25%">'.lang('br_member_group').'</th>
+										<th width="20%">'.lang('br_sale_price').'</th>
+										<th width="20%">'.lang('br_start_dt').'</th>
+										<th width="20%">'.lang('br_end_dt').'</th>
+										<th width="5%">'.lang('br_sort').'</th>
+										<th width="10%">'.lang('delete').'</th>
 									</tr>
 								</thead>
 								<tfoot>
@@ -189,6 +189,14 @@
 	});
 
 	function _sale_price_restripe(){
+		
+		var rows = $('#sale_price_table tbody tr').size();
+		if(rows == 0){
+			$('#sale_price_table tfoot').show();
+		}else{
+			$('#sale_price_table tfoot').hide();
+		}
+		
 		$(".datepicker").removeClass('hasDatepicker').unbind().datepicker();
 		$('#sale_price_table tr').removeClass('odd');
 		$('#sale_price_table tr:odd').addClass('odd');

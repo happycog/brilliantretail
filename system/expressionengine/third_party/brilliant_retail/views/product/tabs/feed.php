@@ -26,7 +26,7 @@
 /* SEO Tab			*/
 /********************/
 ?>
-<div class="publish_field" id="hold_br_feeds">
+<div class="publish_field" id="hold_br_feeds" style="border-bottom:1px solid #D1D5DE">
 
 	<label class="hide_field">
 		<span>
@@ -36,7 +36,7 @@
 
 	<div id="sub_hold_br_feeds">
 		<fieldset class="holder">
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<table cellspacing="0" cellpadding="0" border="0"  class="product_edit" width="100%">
 				<thead>
 					<tr>
 						<th>

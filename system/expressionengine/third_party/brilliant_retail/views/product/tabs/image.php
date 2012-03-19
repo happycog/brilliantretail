@@ -38,7 +38,7 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 
 	<div id="sub_hold_title">
 		<fieldset class="holder custom_field">
-			<table id="imageTable" cellspacing="0" cellpadding="0" border="0" width="100%">
+			<table id="imageTable" class="product_edit" cellspacing="0" cellpadding="0" border="0" width="100%">
 				<thead>
 					<tr>
 						<td colspan="7" align="left" style="text-align:left;border-bottom:0">
@@ -55,16 +55,29 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 							<div style="clear:both"></div>
 							<iframe src="" id="image_browse_frame" width="100%" style="height:452px;display:none;border:0"></iframe></td>
 					</tr>
-					<tr id="image_header">
-						<th width="120"><b><?=lang('br_image')?></b></th>
-						<th width="*"><b><?=lang('br_title')?></b></th>
-						<th width="65"><b><?=lang('br_large')?></b></th>
-						<th width="65"><b><?=lang('br_thumbnail')?></b></th>
-						<th width="65"><b><?=lang('br_exclude')?></b></th>
-						<th width="10">&nbsp;</th>
-						<th width="30">&nbsp;</th>
+					<tr>
+						<th width="25%"><?=lang('br_image')?></th>
+						<th width="20%"><?=lang('br_title')?></th>
+						<th width="15%"><?=lang('br_large')?></th>
+						<th width="15%"><?=lang('br_thumbnail')?></th>
+						<th width="10%"><?=lang('br_exclude')?></th>
+						<th width="5%"><?=lang('br_sort')?></th>
+						<th width="10%"><?=lang('delete')?></th>
 					</tr>
 				</thead>
+				<?php
+					// Show the footer?
+						$show_footer = '';
+						if(count($images) > 0 ){
+							$show_footer = 'nodisplay';
+						}
+				?>
+				<tfoot class="<?=$show_footer?>">
+					<tr>
+						<td colspan="7">
+							<?=lang('br_image_empty')?></td>
+					</tr>
+				</tfoot>
 				<tbody>
 			<?php
 				$cnt = 0;
@@ -209,6 +222,10 @@ function create_image_uploader(){
 
 function _add_image_row(serverData){
 	var img = serverData.split('|');
+	
+	// Hide the footer message
+		$('#imageTable tfoot').hide();
+	
 	$('	<tr>'+ 
 		'	<td><img src="<?=$media_url?>products/thumb/'+img[1]+'" class="thumb" />'+
 		'		<input type="hidden" name="cImg_name['+img[0]+']" value="'+img[1]+'" /></td>'+
@@ -265,6 +282,11 @@ function _restripe_images(){
 							
 	$('.remove_img').unbind('click').bind('click',function(){
 																		$(this).parent().parent().remove();
+																		
+																		if($('#imageTable tbody tr').size() == 0){
+																			$('#imageTable tfoot').show();
+																		}
+
 																		_set_image_radio();
 																		_restripe_images();
 																		return false;

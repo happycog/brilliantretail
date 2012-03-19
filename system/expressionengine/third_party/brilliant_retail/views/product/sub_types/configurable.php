@@ -31,20 +31,32 @@
 	?>
 		
 		<div id="config_opts_container">
-			<div id="config_opts_instructions">
-				<?=lang('br_config_opts_instructions')?>
-			</div>
-			<select id="config_opts" multiple="multiple" name="config_opts[]" title="<?=lang('br_select_attributes')?>">
-				<?php
-					foreach($config_opts as $opts){
-						echo '<option value="'.$opts["attribute_id"].'">'.$opts["title"].'</option>'; 
-					}
-				?>
-				
-			</select>
-			<p>
-				<div id="create_config" class="add_btn"><?=lang('create')?></div>
-			</p>
+			<table width="100%" cellpadding="0" cellspacing="0" class="product_edit">
+				<tr>
+					<td>
+						<div id="config_opts_instructions">
+							<?=lang('br_config_opts_instructions')?>
+						</div></td>
+				</tr>
+				<tr>
+					<th>
+						<?=lang('br_attribute_set')?></th>
+				</tr>
+				<tr>
+					<td>
+						<select id="config_opts" multiple="multiple" name="config_opts[]" title="<?=lang('br_select_attributes')?>">
+							<?php
+								foreach($config_opts as $opts){
+									echo '<option value="'.$opts["attribute_id"].'">'.$opts["title"].'</option>'; 
+								}
+							?>
+							
+						</select>
+						<p>
+							<div id="create_config" class="add_btn"><?=lang('create')?></div>
+						</p></td>
+				</tr>
+			</table>
 		</div>
 		<div id="config_form_container"></div>
 				<script type="text/javascript">
@@ -109,11 +121,12 @@
 			for(i=0;i<attr.length;i++){
 				tmp += '<td><input type="hidden" name="config_attr_'+attr[i]+'[]" value="'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'" />'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'</td>';
 			}
-			tmp += 	'<td class="w50"><input type="text" name="config_sku[]" /></td><td class="w50"><input type="text" name="config_qty[]" value="0" /></td><td>'+
+			tmp += 	'<td><input type="text" name="config_sku[]" /></td>'+
+					'<td><input type="text" name="config_qty[]" value="0" /></td><td>'+
 					'<select style="display:none" name="config_adjust_type[]"><option>fixed</option><option>percent</option></select>'+
-					'<input type="text" name="config_adjust[]" /></td>'+
+					'<input type="text" name="config_adjust[]" value="0.00" /></td>'+
 					'<td class="move_config_row"><img src="<?=$theme?>images/icon_move.png" /></td>'+
-					'<td class="w50"><a href="#" class="config_item_remove"><?=lang('delete')?></a></td></tr>';
+					'<td><a href="#" class="config_item_remove"><?=lang('delete')?></a></td></tr>';
 			$(tmp).prependTo($('#config_selected tbody'));
 
 			// reset the dnd for the rows

@@ -39,6 +39,10 @@ hr {
 	display:none;
 }
 
+.publish_field a.submit:link {
+	text-decoration: none;
+}
+
 .w50 {
 	width: 50px;
 }
@@ -918,12 +922,14 @@ div.arrow_close{
 }
 
 
-.move_sale_price_row,
-.move_price_row,  
+#price_table td.move_price_row,  
+#sale_price_table td.move_sale_price_row,
+#optionTable td.move_option_row,
 .move_image_row, 
 .move_related_row,
-.move_config_row, 
-.move_option_row {
+#config_selected td.move_config_row,
+#optionTable table.product_edit td.move_drop_option_row {
+	text-align: center;
 	cursor: move;
 }
 
@@ -1059,11 +1065,6 @@ div#error p{
 	background-position: 15px 5px;
 	background-repeat: no-repeat;
 }
-
-.dropOptions div {
-	padding: 5px 10px 5px 35px;
-	background: url(../images/indent_title.gif) 15px 5px no-repeat #FFF; 
-}	
 
 #b2r_page {
 	-moz-border-radius:5px;
@@ -1306,13 +1307,7 @@ table.b2r_product_tbl tr.b2r_active td {
 }
 
 #b2r_page table.b2r_product_tbl a,
-#bundle_results a,
-#bundle_selected a,
-#imageTable a,
-#addon_selected a, 
-#addon_results a,
-#related_selected a, 
-#related_results a {
+.product_edit a {
 	color: #0581A7;
 	font-weight:bold;
 	text-decoration: none; 
@@ -1887,8 +1882,9 @@ input#delete {
 #showDownloadProgress, 
 #showprogress {
 	display: none;
-	margin-left: 200px;
-	position:absolute;
+	margin-left: 215px;
+	position: absolute;
+	margin-top: 5px;
 }	
 
 /* end of Settings */
@@ -1900,6 +1896,11 @@ input#delete {
 	border: #E4E4E1 solid;
 	border-width: 0 0 0 1px;
 }
+
+#config_selected input[type="text"]{
+	width:90%;
+}
+
 .asmContainer {
 	/* container that surrounds entire asmSelect widget */
 }
@@ -2574,27 +2575,32 @@ table#relatedTable .tDnD_whileDrag td a{
 	background-color: green;
 }
 
-#optionTable thead td,
-#imageTable thead td,
-#price_table thead td, 
-#sale_price_table thead td,
-#configurable_form thead td,
-#config_selected thead td {
+.product_edit thead td {
+	background: transparent;
 	padding: 4px;
 }
 
-#sale_price_table tfoot td {
+.product_edit tfoot td {
 	text-align: left;
 	background: white;
 	padding: 5px 0 5px 10px;
 	font-style: italic;
-	color: #999;
+	color: #666;
+	font-size: 11px;
 }
 
-#optionTable td,
-#imageTable td,
-#price_table td,
-#sale_price_table td {
+.product_edit td {
+	vertical-align: top;
+	text-align: left;
+	padding: 8px 4px;
+	border-top: none;
+	border-left: none;
+	border-bottom: 1px #E7E7E7 solid;
+	border-right: 1px #E7E7E7 solid;
+}
+
+#imageTable tbody td,
+#sale_price_table tbody td {
 	vertical-align: top;
 	text-align: center;
 	padding: 8px 4px;
@@ -2621,40 +2627,20 @@ table#relatedTable .tDnD_whileDrag td a{
 	border: 1px #E7E7E7 solid;
 }
 
-#optionTable tbody.ui-sortable td,
-#imageTable tbody.ui-sortable td,
-#price_table tbody.ui-sortable td,
-#sale_price_table tbody.ui-sortable td,
-#configurable_form tbody.ui-sortable td,
-#config_selected tbody.ui-sortable td {
+.product_edit tbody.ui-sortable td{
 	background-color: #fff;
 }
 
-#optionTable td input[type="text"],
-#imageTable td input[type="text"],
-#price_table td input[type="text"],
-#sale_price_table td input[type="text"],
-#config_selected td input[type="text"] {
+.product_edit td input[type="text"]{
 	width: 90%;
 }
 
-#optionTable, 
-#imageTable,
-#price_table,
-#sale_price_table {
+.product_edit {
 	padding-top: 				4px;
 	border: 					1px #BBB solid;
 	border-top-left-radius:		4px;
 	border-top-right-radius:	4px;
 	background: 				#F4F6F6;
-}
-
-#product_attributes_tbl,
-#categoryTable {
-	border: 					1px #BBB solid;
-	border-top-left-radius:		4px;
-	border-top-right-radius:	4px;
-	background: 				#FFF;
 }
 
 #sub_type_4 {
@@ -2665,21 +2651,16 @@ table#relatedTable .tDnD_whileDrag td a{
 	background: 				#F4F6F6;
 }
 
-#sub_type_2 {
-	padding-top: 				4px;
-	border: 					1px #BBB solid;
-	border-top-left-radius:		4px;
-	border-top-right-radius:	4px;
-	background: 				 url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
-}
-
+.related_search, 
 #sub_type_2 .search {
-	margin-left: 4px;
+	margin: 3px 8px 0;
 	background: url(../images/bg_fieldtype_search.png) repeat-x transparent;
 	float: none;
 	width: 216px;
 	height: 25px;
 }
+
+.related_search input, 
 #sub_type_2 .search input {
 	background: transparent;
 	margin-left: 20px;
@@ -2693,25 +2674,7 @@ table#relatedTable .tDnD_whileDrag td a{
 	background: #F4F6F6; 
 	padding: 1px 3px;
 }
-#download_selected {
-	border: 0;
-	background: #FFF;
-}
 
-#download_selected th, 
-#bundle_results th {
-	background:	#F4F6F6;
-	border-bottom: #BBB 1px solid;
-	padding: 	4px;
-	text-align: left;
-}
-
-download_selected td, 
-#bundle_results td {
-	padding: 	4px;
-	border-bottom: 1px #E7E7E7 solid;
-	border-right: 1px #E7E7E7 solid;
-}
 .subtypes .search {
 	float: right;
 	padding-bottom: 5px;
@@ -2748,7 +2711,7 @@ download_selected td,
 	border: 		none;
 }
 
-#product_attributes_tbl tr th,
+.product_edit tr th,
 #optionTable tr th, 
 #imageTable tr th,
 #download_options tr th, 
@@ -2766,7 +2729,7 @@ download_selected td,
 	text-align: 	left;
 }
 
-#categoryTable tr th {
+.product_edit tr th {
 	background:		url(../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
 	border-bottom: 	1px #AAA solid;
 	color:			#666;
@@ -2774,8 +2737,7 @@ download_selected td,
 	text-align: 	left;
 }
 
-#product_attributes_tbl tr th,
-#categoryTable tr th,
+.product_edit tr th,
 #price_table tr th,
 #sale_price_table tr th,
 #bundle_selected tr th,
@@ -2785,24 +2747,26 @@ download_selected td,
 	border-right: none;
 }
 
-#product_attributes_tbl td, 
-#categoryTable td {
+.product_edit tbody td {
 	background: #FFF;
-	padding: 10px 0 15px;
+	padding: 10px 10px 15px;
 }
 
 #download_selected tr.odd td,
+#related_selected tr td,
 #bundle_selected tr.odd td,
 #bundle_selected tr.even td {
 	background: #fff;
-	border-top: 1px #E7E7E7 solid;
-	border-right: 1px #E7E7E7 solid;
 	padding: 4px 10px;
 }
 
 #addon_selected, 
 #related_selected {
-	margin-top:40px;
+	margin-top:4px;
+}
+
+#related_selected tfoot {
+	border: 0;
 }
 
 #addon_results, 
@@ -2811,8 +2775,7 @@ download_selected td,
 	border-width: 0 0 1px 1px;
 }
 
-#addon_results tr td , 
-#related_results tr td {
+#addon_results tr td {
 	background: #F7F7F7;
 	border: #CCC solid;
 	border-width: 1px 0 0 0;

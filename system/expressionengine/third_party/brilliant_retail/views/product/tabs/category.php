@@ -38,7 +38,7 @@
 		
 		<fieldset class="holder">
 
-			<table id="categoryTable" cellspacing="0" cellpadding="0" border="0" width="100%">
+			<table id="categoryTable" class="product_edit" cellspacing="0" cellpadding="0" border="0" width="100%">
 				<thead>
 					<tr>
 						<th>	
@@ -81,8 +81,14 @@
 			
 			// Show the first matched ul element
 				b.show();
-				c.removeClass('anchor_collapse').addClass('anchor_expand');
+				c.removeClass('anchor_collapse');
 
+				// Make sure we aren't at the end 
+				// end of a branch 
+					if(c.parent().find('ul').size() > 0){
+						c.addClass('anchor_expand');
+					}
+				
 			// Walk up the tree to make sure 
 			// we open non-expanded parents
 				a.parents('li').each(function(){

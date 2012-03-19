@@ -38,24 +38,32 @@
 		
 		<fieldset class="holder">
 		
-<table cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
-	<tr>
-		<td><?=lang('br_meta_title')?></td>
-		<td><?=form_input(array('name' => 'meta_title', 
-								'value' => $products[0]["meta_title"]))?></td>
-	</tr>
-	<tr>
-		<td><?=lang('br_meta_keyword')?></td>
-		<td><?=form_textarea(array(	'name' => 'meta_keyword', 
-									'value' => $products[0]["meta_keyword"],
-									'class' => 'br_textarea'))?></td>
-	</tr>
-	<tr>
-		<td><?=lang('br_meta_descr')?></td>
-		<td><?=form_textarea(array(	'name' => 'meta_descr', 
-									'value' => $products[0]["meta_descr"],
-									'class' => 'br_textarea'))?></td>
-	</tr>	
+<table cellspacing="0" cellpadding="0" border="0" width="100%" class="product_edit">
+	<thead>
+		<tr>
+			<th><?=lang('br_title')?></th>
+			<th><?=lang('br_value')?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><?=lang('br_meta_title')?></td>
+			<td><?=form_input(array('name' => 'meta_title', 
+									'value' => $products[0]["meta_title"]))?></td>
+		</tr>
+		<tr>
+			<td><?=lang('br_meta_keyword')?></td>
+			<td><?=form_textarea(array(	'name' => 'meta_keyword', 
+										'value' => $products[0]["meta_keyword"],
+										'class' => 'br_textarea'))?></td>
+		</tr>
+		<tr>
+			<td><?=lang('br_meta_descr')?></td>
+			<td><?=form_textarea(array(	'name' => 'meta_descr', 
+										'value' => $products[0]["meta_descr"],
+										'class' => 'br_textarea'))?></td>
+		</tr>	
+	</tbody>
 </table>
 
 

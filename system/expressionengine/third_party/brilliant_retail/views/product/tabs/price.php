@@ -35,7 +35,7 @@
 	<div id="sub_hold_br_price">
 		<fieldset class="holder">
 		
-<table id="price_table" cellspacing="0" cellpadding="0" border="0" width="100%">
+<table id="price_table" class="product_edit" cellspacing="0" cellpadding="0" border="0" width="100%">
 	<thead>
 		<tr>
 			<td colspan="6" align="right">
@@ -44,12 +44,12 @@
 				</span></td>
 		</tr>
 		<tr>
-			<th width="20%"><b><?=lang('br_member_group')?></b></th>
+			<th width="25%"><b><?=lang('br_member_group')?></b></th>
 			<th width="20%"><b><?=lang('br_price')?></b></th>
 			<th width="20%"><b><?=lang('br_start_dt')?></b></th>
 			<th width="20%"><b><?=lang('br_end_dt')?></b></th>
-			<th width="10%">&nbsp;</th>
-			<th width="10%">&nbsp;</th>
+			<th width="5%"><b><?=lang('br_sort')?></b></th>
+			<th width="10%"><b><?=lang('delete')?></b></th>
 		</tr>
 	</thead>
 	<tbody>

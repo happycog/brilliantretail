@@ -742,7 +742,7 @@ class Brilliant_retail_core {
 				if(trim($values["file"]) != ''){
 					$link = '<div id="div_cAttribute_'.$attribute_id.'">
 								<a href="'.$this->_config["media_url"].'file/'.$values["file"].'" target="_blank">'.$values["file"].'</a>&nbsp;
-							 	<a href="#" onclick="$(\'#cAttribute_'.$attribute_id.'\').val(\'\');$(\'#div_cAttribute_'.$attribute_id.'\').remove();return false">[x]</a>
+							 	<a href="#" onclick="$(\'#cAttribute_'.$attribute_id.'\').val(\'\');$(\'#div_cAttribute_'.$attribute_id.'\').remove();return false">(<b>'.strtolower(lang('delete')).'</b>)</a>
 							 	<br />
 							 </div>';
 				}

@@ -41,7 +41,7 @@ $option = 10000;
 	<div id="sub_hold_br_options">
 		<fieldset class="holder">
 		
-		<table id="optionTable" cellspacing="0" cellpadding="0" border="0" width="100%">
+		<table id="optionTable" class="product_edit" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<thead>
 				<tr>
 					<td colspan="4" align="left" style="text-align:left;border-bottom:0">
@@ -49,13 +49,25 @@ $option = 10000;
 							<a class="submit" href="#" id="addoption" style="color:#fff"><?=lang('br_add_option')?></a>
 						</span></td>
 				</tr>
-				<tr class="nodrag nodrop" id="option_header">
+				<tr>
 					<th width="20%"><b><?=lang('br_title')?></b></th>
-					<th width="60%"><b><?=lang('br_type')?></b></th>
-					<th width="10%"><b><?=lang('br_sort')?></b></th>
+					<th width="65%"><b><?=lang('br_type')?></b></th>
+					<th width="5%"><b><?=lang('br_sort')?></b></th>
 					<th width="10%"><b><?=lang('delete')?></b></th>
 				</tr>	
 			</thead>
+<?php
+// do we show or hide the 
+// footer message?
+$style = '';
+if(isset($options) && count($options) > 0){
+	$style = 'display:none';
+}
+?>
+			<tfoot style="<?=$style?>">
+				<td colspan="4">
+					<?=lang('br_option_empty')?></td>
+			</tfoot>
 			<tbody>
 <?php
 	$i = 0;
@@ -83,12 +95,8 @@ $option = 10000;
 			$style = ($opt["type"] != 'dropdown') ? 'display:none' : '';
 							
 			echo '			<div style="'.$style.'">
-								<table class="subTable dropOptions" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
+								<table class="product_edit dropOptions" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
 									<thead>
-										<tr>
-											<th colspan="4">
-												'.lang('br_dropdown_values').'</th>	
-										</tr>
 										<tr>
 											<td colspan="4">
 												<span class="button" style="float: right; margin: 0pt;">
@@ -96,14 +104,14 @@ $option = 10000;
 												</span></td>
 										</tr>
 										<tr>
-											<td>
-												<b>'.lang('br_title').'</b></td>
-											<td>
-												<b>'.lang('br_price_adjust').'</b></td>
-											<td>	
-												<b>'.lang('br_sort').'</b></td>
-											<td>	
-												&nbsp;</td>
+											<th width="65%">
+												<b>'.lang('br_title').'</b></th>
+											<th width="20%">
+												<b>'.lang('br_price_adjust').'</b></th>
+											<th width="5%">
+												<b>'.lang('br_sort').'</b></th>
+											<th width="10%">	
+												&nbsp;</th>
 										</tr>
 									</thead>
 									<tbody>';
@@ -175,12 +183,8 @@ $option = 10000;
 								).'
 
 								<div style="display:none">
-									<table class="dropOptions" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
+									<table class="dropOptions product_edit" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
 										<thead>
-											<tr>
-												<th colspan="4">
-													'.lang('br_dropdown_values').'</th>	
-											</tr>
 											<tr>
 												<td colspan="4">
 													<span class="button" style="float: right; margin: 0pt;">
@@ -188,13 +192,13 @@ $option = 10000;
 													</span></td>
 											</tr>
 											<tr>
-												<th>
-													<b>'.lang('br_title').'</b></th>
-												<th>
-													<b>'.lang('br_price_adjust').'</b></th>
-												<th>	
-													<b>'.lang('br_sort').'</b></th>
-												<th>	
+												<th width="65%">
+													'.lang('br_title').'</th>
+												<th width="20%">
+													'.lang('br_price_adjust').'</th>
+												<th width="5%">	
+													'.lang('br_sort').'</th>
+												<th width="10%">	
 													&nbsp;</th>
 											</tr>
 										</thead>
@@ -250,6 +254,10 @@ $option = 10000;
 													$('#opt_'+field+' .addDropOption').each(function(){
 																								$(this).attr('data-add',field);
 																							});
+													
+													// Hide the footer message
+													$('#optionTable tfoot').hide();
+													
 													_set_option_bind();
 													
 													field++;
@@ -299,10 +307,12 @@ $option = 10000;
 		$('.remove').unbind().bind('click',function(){
 														$(this)	.parent()
 																.parent().remove();
-																if($('#optionTable tbody tr').size() == 2){
-																	$('#option_header').hide();
+																// Do a test for the size of the tbody 
+																// element and if we are down to 0 
+																// lets show an empty message
+																if($('#optionTable tbody tr').size() == 0){
+																	$('#optionTable tfoot').show();
 																}
-																
 																return false;
 													});
 		// bind the type select 
@@ -348,7 +358,7 @@ $option = 10000;
 	function _remove_drop_opt(){
 		$('.removeDropOpt').unbind().bind('click',function(){
 																$(this).parent().parent().remove();
-																return false
+																return false;
 															});
 	}
 	

@@ -1003,9 +1003,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							
 							// Basic inputs
 							
-							$values .= '	<td class="w50">
+							$values .= '	<td>
 												<input type="text" name="config_sku[]" value="'.$c["sku"].'" /></td>
-											<td class="w50">
+											<td>
 												<input type="text" name="config_qty[]" value="'.$c["qty"].'" /></td>
 											<td>
 												<select style="display:none" name="config_adjust_type[]">';
@@ -1016,10 +1016,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 													$values .= '<option '.$sel.'>percent</option>';
 			
 							$values .= '		</select>
-												<input type="text" name="config_adjust[]" style="width:50px" value="'.$c["adjust"].'" /></td>
+												<input type="text" name="config_adjust[]" value="'.$c["adjust"].'" /></td>
 											<td class="move_config_row">
 												<img src="'.$this->_theme('images/icon_move.png').'" /></td>
-											<td class="w50">
+											<td>
 												<a href="#" class="config_item_remove">'.lang('delete').'</a></td>
 										</tr>';
 						}
@@ -3319,8 +3319,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						'	<th>'.lang('br_sku').'</th>
 							<th>'.lang('br_quantity').'</th>
 							<th>'.lang('br_price_adjust').'</th>
-							<th>&nbsp;</th>
-							<th>&nbsp;</th>';
+							<th>'.lang('br_sort').'</th>
+							<th>'.lang('delete').'</th>';
 												
 			$str .= '			</thead><tbody>'.$values.'</tbody></table>';
 			return $str;
