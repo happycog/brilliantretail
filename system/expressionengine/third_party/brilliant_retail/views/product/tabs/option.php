@@ -98,20 +98,20 @@ if(isset($options) && count($options) > 0){
 								<table class="product_edit dropOptions" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
 									<thead>
 										<tr>
-											<td colspan="4">
+											<td colspan="4" style="background:transparent;padding:4px">
 												<span class="button" style="float: right; margin: 0pt;">
 													<a class="submit addDropOption" data-add="'.$i.'" href="#" style="color:#fff">'.lang('br_add_option').'</a>
 												</span></td>
 										</tr>
 										<tr>
 											<th width="65%">
-												<b>'.lang('br_title').'</b></th>
+												'.lang('br_title').'</th>
 											<th width="20%">
-												<b>'.lang('br_price_adjust').'</b></th>
+												'.lang('br_price_adjust').'</th>
 											<th width="5%">
-												<b>'.lang('br_sort').'</b></th>
+												'.lang('br_sort').'</th>
 											<th width="10%">	
-												&nbsp;</th>
+												'.lang('delete').'</th>
 										</tr>
 									</thead>
 									<tbody>';
@@ -123,7 +123,7 @@ if(isset($options) && count($options) > 0){
 									<td>
 										'.form_input(array('name' => 'cOptions_opt_title['.$i.']['.$option.']','style' => 'width:150px;','title' => 'title','value'=>$d["title"])).'</td>
 									<td>					
-										'.form_input(array('name' => 'cOptions_opt_price['.$i.']['.$option.']','style' => 'width:70px;', 'title' => 'price','value' => $d["price"])).'
+										'.form_input(array('name' => 'cOptions_opt_price['.$i.']['.$option.']','style' => 'width:50px;', 'title' => 'price','value' => $d["price"])).'
 										<input type="hidden" name="cOptions_opt_type['.$i.']['.$option.']" title="type" value="fixed" /></td>
 									<td class="move_drop_option_row">
 										<input type="hidden" name="cOptions_opt_sort['.$i.']['.$option.']" title="sort" value="'.$d["sort"].'" />
@@ -186,7 +186,7 @@ if(isset($options) && count($options) > 0){
 									<table class="dropOptions product_edit" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:10px;">
 										<thead>
 											<tr>
-												<td colspan="4">
+												<td colspan="4" style="background:transparent;padding:4px">
 													<span class="button" style="float: right; margin: 0pt;">
 														<a class="submit addDropOption" data-add="'.$i.'" href="#" style="color:#fff">'.lang('br_add_option').'</a>
 													</span></td>
@@ -199,7 +199,7 @@ if(isset($options) && count($options) > 0){
 												<th width="5%">	
 													'.lang('br_sort').'</th>
 												<th width="10%">	
-													&nbsp;</th>
+													'.lang('delete').'</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -218,7 +218,7 @@ if(isset($options) && count($options) > 0){
 							<td>
 								'.form_input(array('name' => 'cOptions_opt_dropTitle','style' => 'width:150px;','title' => 'title')).'</td>
 							<td>					
-								'.form_input(array('name' => 'cOptions_opt_dropPrice','style' => 'width:70px;', 'title' => 'price','value' => 0)).'
+								'.form_input(array('name' => 'cOptions_opt_dropPrice','style' => 'width:50px;', 'title' => 'price','value' => 0)).'
 								<input type="hidden" name="cOptions_opt_dropType" title="type" value="fixed" /></td>
 							<td class="move_drop_option_row">
 								<input type="hidden" name="cOptions_opt_dropSort" title="sort" value="0" />

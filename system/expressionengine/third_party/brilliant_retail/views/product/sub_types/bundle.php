@@ -31,10 +31,6 @@
 		<table id="bundle_result" width="100%" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
-					<td colspan="3">
-						<?=lang('br_results')?></td>
-				</tr>
-				<tr>
 					<th><?=lang('nav_br_product')?></th>
 					<th><?=lang('br_type')?></th>
 					<th>&nbsp;</th>

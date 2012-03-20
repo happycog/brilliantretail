@@ -81,7 +81,10 @@ class Brilliant_retail_core {
 
 			$this->_load_lang_files();
 
+			$this->site_id = $this->EE->config->item('site_id');
+
 		// Get the BR _config variable & Set the site_id
+
 			$sites 	= $this->EE->core_model->get_sites();
 			$stores = $this->EE->core_model->get_stores();
 			
@@ -96,13 +99,21 @@ class Brilliant_retail_core {
 			}
 			
 			$this->_config = $this->EE->core_model->get_config();
-
+			
+			// Check for local configuration of path / url settings
+				$local_config_opts = array('br_media_url','br_secure_url','br_media_dir');
+				foreach($local_config_opts as $opts){
+					$c = $this->EE->config->item($opts);
+					if($c != ''){
+						$this->_config["store"][$this->site_id][ltrim($opts,'br_')] = $c;
+					}
+				}
+			
 			// Lets check to makes sure each site/store has 
 			// a channel setup!
 
 			$this->_check_store_channel();
 
-			$this->site_id = $this->EE->config->item('site_id');
 			$this->br_channel_id = $this->_config["store"][$this->site_id]["channel_id"];
 
 			$this->_config["currency"] 			= $this->_config["store"][$this->site_id]["currency"];

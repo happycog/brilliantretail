@@ -1989,6 +1989,7 @@ input#delete {
 /* Orders */
 
 	#order_table td{
+		padding: 		5px;
 		vertical-align: top;
 	}
 
@@ -2599,6 +2600,10 @@ table#relatedTable .tDnD_whileDrag td a{
 	border-right: 1px #E7E7E7 solid;
 }
 
+.product_edit tbody td {
+	background: #FFF;
+}
+
 #imageTable tbody td,
 #sale_price_table tbody td {
 	vertical-align: top;
@@ -2660,7 +2665,7 @@ table#relatedTable .tDnD_whileDrag td a{
 	height: 25px;
 }
 
-.related_search input, 
+.related_search input[type='text'], 
 #sub_type_2 .search input {
 	background: transparent;
 	margin-left: 20px;
@@ -2747,11 +2752,6 @@ table#relatedTable .tDnD_whileDrag td a{
 	border-right: none;
 }
 
-.product_edit tbody td {
-	background: #FFF;
-	padding: 10px 10px 15px;
-}
-
 #download_selected tr.odd td,
 #related_selected tr td,
 #bundle_selected tr.odd td,
@@ -2763,20 +2763,4 @@ table#relatedTable .tDnD_whileDrag td a{
 #addon_selected, 
 #related_selected {
 	margin-top:4px;
-}
-
-#related_selected tfoot {
-	border: 0;
-}
-
-#addon_results, 
-#related_results {
-	border: #CCC solid;
-	border-width: 0 0 1px 1px;
-}
-
-#addon_results tr td {
-	background: #F7F7F7;
-	border: #CCC solid;
-	border-width: 1px 0 0 0;
 }
