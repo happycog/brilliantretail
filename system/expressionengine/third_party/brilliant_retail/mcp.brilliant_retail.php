@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.4.7'; 
+		public $version			= '1.0.4.8'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -535,7 +535,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			if(isset($_FILES)){
 				$attachment = $this->vars["media_dir"].'attachments';
 				if(!file_exists($attachment)){
-					mkdir($attachment);
+					mkdir($attachment,DIR_WRITE_MODE,TRUE);
 				}
 				$config['upload_path'] 	= $attachment;
 				$config['allowed_types'] = $this->_config["allowed_filetypes"];
@@ -2828,7 +2828,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$groups = $query->result_array();
 			$this->vars["groups"] = $groups;
 			
-			$this->vars["store"] = $this->EE->store_model->get_store_by_id($this->site_id);
+			$this->vars["store"] = $this->_config["store"][$this->site_id];
+			
 			$this->vars["currencies"] = $this->EE->store_model->get_currencies();
 			$this->vars["countries"] = $this->EE->product_model->get_countries(0);
 			$this->vars["content"] = $this->EE->load->view('config/site_edit', $this->vars, TRUE);

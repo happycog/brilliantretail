@@ -37,7 +37,7 @@
 			<div class="product_edit">
 				
 				<div class="related_search">
-					<input id="related_search" type="text" />
+					<input id="related_search" autocomplete="off" type="text" />
 				</div>
 				
 				<div class="result_div product_edit">

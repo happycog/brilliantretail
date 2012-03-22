@@ -24,7 +24,7 @@
 ?>
 <div id="sub_type_2" class="subtypes product_edit">
 	<div class="search">
-		<input type="text" id="bundle_search">
+		<input type="text" id="bundle_search" autocomplete="off" />
 	</div>
 	<div class="result_div product_edit">
 		

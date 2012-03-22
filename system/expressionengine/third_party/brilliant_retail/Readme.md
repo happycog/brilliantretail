@@ -26,6 +26,7 @@ Updated product bundle search field
 Updated jQuery to XXXX
 Updated jQuery UI to XXXX
 Updated system JavaScript to display before closing body tag
+Updated the mkdir function throughout BrilliantRetail to better set the permissions with ExpressionEngine Constants
 Fixed issue with USPS First Class International Package rate
 Fixed issue with checkout create downloads (check for bug report)
 Fixed issue when download products are contained within bundles

@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.4.7';
+	public $version	= '1.0.4.8';
 	
 	function Brilliant_retail_upd()
 	{
@@ -4028,7 +4028,11 @@ class Brilliant_retail_upd {
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (2962,245, 'Matabeleland North', 'MN')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (2963,245, 'Matabeleland South', 'MS')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (2964,245, 'Midlands', 'MI')";
-
+		
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'Hong Kong','HK')";
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'Kowloon','KLN')";
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'New Territories','NT')";
+		
 ## ----------------------------
 ##  Table structure for exp_br_store
 ## ----------------------------

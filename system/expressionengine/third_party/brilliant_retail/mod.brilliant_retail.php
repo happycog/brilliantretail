@@ -346,7 +346,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Where do we cache images? 
 				$cache = $this->_config["media_dir"].'cache/';
 				if(!file_exists($cache)){
-					mkdir($cache);
+					mkdir($cache,DIR_WRITE_MODE,TRUE);
 				}
 			
 			// Get params 
@@ -3011,6 +3011,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$url = $this->EE->uri->uri_to_assoc();
 						$hash = $url["id"];
 						$vars = $this->_filter_results($vars,$hash);
+					
 						if($vars[0]["total_results"] == 0){
 							$no_result = true;
 						}else{

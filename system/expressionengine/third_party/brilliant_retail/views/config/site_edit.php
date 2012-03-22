@@ -33,7 +33,7 @@
 							array(
 								lang('br_site_logo'),
 								'	<input type="hidden" name="max_file_size" value="10000000" />  
-									<img src="'.rtrim($store[0]["media_url"],'/').'/'.$store[0]['logo'].'" style="border:1px #ccc solid;margin-bottom:10px" /><br />'.
+									<img src="'.rtrim($store["media_url"],'/').'/'.$store['logo'].'" style="border:1px #ccc solid;margin-bottom:10px" /><br />'.
 									form_upload('logo')
 								)
 						);
@@ -45,7 +45,7 @@
 							form_input(
 										array(	'name' => $f, 
 												'id' => $f,
-												'value' => $store[0][$f],
+												'value' => $store[$f],
 												'class' => '',
 												'title' => lang('br_site_'.$f))
 										)
@@ -61,7 +61,7 @@
 								form_dropdown(
 												'currency_id', 
 												$options, 
-												$store[0]["currency_id"]).'<br /><br />'.lang('br_currency_instructions')
+												$store["currency_id"]).'<br /><br />'.lang('br_currency_instructions')
 							));
 							
 	    $options = array(
@@ -72,7 +72,7 @@
 								form_dropdown(
 												'guest_checkout', 
 												$options, 
-												$store[0]["guest_checkout"])
+												$store["guest_checkout"])
 							));
 							
 		foreach($groups as $g){
@@ -83,7 +83,7 @@
 								form_dropdown(
 												'register_group', 
 												$options, 
-												$store[0]["register_group"])
+												$store["register_group"])
 							));
 							
 		$options = array();
@@ -117,7 +117,7 @@
 								form_input(
 											array(	'name' => $f, 
 													'id' => $f,
-													'value' => $store[0][$f],
+													'value' => $store[$f],
 													'class' => '{required:true}',
 													'title' => lang('br_'.$f))
 											)
@@ -143,7 +143,7 @@
 								form_dropdown(
 												'subscription_enabled', 
 												$options, 
-												$store[0]["subscription_enabled"]))
+												$store["subscription_enabled"]))
 							);
 
       		/*
@@ -153,7 +153,7 @@
 									form_input(
 												array(	'name' => $f, 
 														'id' => $f,
-														'value' => $store[0][$f],
+														'value' => $store[$f],
 														'class' => '{required:true}',
 														'title' => lang($f))
 												)
@@ -177,7 +177,7 @@
 								form_input(
 											array(	'name' => $f, 
 													'id' => $f,
-													'value' => $store[0][$f],
+													'value' => $store[$f],
 													'class' => '',
 													'title' => lang('br_site_'.$f))
 											)
@@ -189,7 +189,7 @@
 									form_textarea(
 											array(	'name' => 'meta_descr', 
 													'id' => 'meta_descr',
-													'value' => $store[0]['meta_descr'],
+													'value' => $store['meta_descr'],
 													'class' => '',
 													'title' => lang('br_meta_descr'))
 											)

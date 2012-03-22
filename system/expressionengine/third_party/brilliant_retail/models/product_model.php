@@ -739,7 +739,13 @@ class Product_model extends CI_Model {
 							}
 						}
 					}
-
+					
+					// Lets reset the attribute set id to zero 
+					// if one didn't come through. 
+						if(!isset($attr["attribute_set_id"])){
+							$attr["attribute_set_id"] = 0;
+						}
+					
 					// Clean up the options 
 						$option = $this->_build_opts($option);
 	
@@ -757,7 +763,7 @@ class Product_model extends CI_Model {
 				if(isset($_FILES)){
 					$file = rtrim($media_dir,'/').'/file';
 					if(!file_exists($file)){
-						mkdir($file);
+						mkdir($file,DIR_WRITE_MODE,TRUE);
 					}
 					foreach($_FILES as $key => $f){
 						// Lets only deal with our files uploads. Others might want 
@@ -946,18 +952,29 @@ class Product_model extends CI_Model {
 	}
 	
 	function delete_product($product_id){
+		
+		$entry_id = $this->get_product_entry($product_id);
+		
 		$this->db->delete('br_product', array('product_id' => $product_id));
+		$this->db->delete('br_product_addon', array('parent_id' => $product_id)); 
 		$this->db->delete('br_product_attributes', array('product_id' => $product_id)); 
 		$this->db->delete('br_product_bundle', array('parent_id' => $product_id)); 
 		$this->db->delete('br_product_category', array('product_id' => $product_id)); 
 		$this->db->delete('br_product_configurable', array('product_id' => $product_id)); 
-		#$this->db->delete('br_product_download', array('product_id' => $product_id)); 
-		$this->db->delete('br_product_images', array('product_id' => $product_id)); 
+		# DO NOT DELETE THIS 
+		# $this->db->delete('br_product_images', array('product_id' => $product_id)); 
+		$this->db->delete('br_product_entry', array('product_id' => $product_id)); 
+		$this->db->delete('br_product_feeds', array('product_id' => $product_id)); 
 		$this->db->delete('br_product_options', array('product_id' => $product_id)); 
-		$this->db->delete('br_product_addon', array('parent_id' => $product_id)); 
+		$this->db->delete('br_product_price', array('product_id' => $product_id)); 
 		$this->db->delete('br_product_related', array('parent_id' => $product_id)); 
 		$this->db->delete('br_product_subscription', array('product_id' => $product_id)); 
-		
+
+		// Added 1.1 
+		// To remove the 
+			$this->db->delete('channel_titles', array('entry_id' => $entry_id)); 
+			$this->db->delete('channel_data', array('entry_id' => $entry_id)); 
+
 		// Clear from cache
 			remove_from_cache('product_'.$product_id);
 		return true;

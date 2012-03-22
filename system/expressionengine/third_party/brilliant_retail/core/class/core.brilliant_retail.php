@@ -101,7 +101,7 @@ class Brilliant_retail_core {
 			$this->_config = $this->EE->core_model->get_config();
 			
 			// Check for local configuration of path / url settings
-				$local_config_opts = array('br_media_url','br_secure_url','br_media_dir');
+				$local_config_opts = array('br_media_url','br_secure_url','br_media_dir','br_license');
 				foreach($local_config_opts as $opts){
 					$c = $this->EE->config->item($opts);
 					if($c != ''){
@@ -413,9 +413,12 @@ class Brilliant_retail_core {
 				}
 
 			// Build the price html
-				$amt = $this->_check_product_price($products[0]);
-				foreach($amt as $key => $val){
-					$products[0][$key] = $val;	
+				if($amt = $this->_check_product_price($products[0])){
+					foreach($amt as $key => $val){
+						$products[0][$key] = $val;	
+					}
+				}else{
+					return false;
 				}
 			
 			// Configurable product selectors
@@ -968,7 +971,7 @@ class Brilliant_retail_core {
 			
 			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.'search';
 			if(!file_exists($path)){
-				mkdir($path);
+				mkdir($path,DIR_WRITE_MODE,TRUE);
 			}
 
 			$index = Zend_Search_Lucene::create($path);
@@ -1214,7 +1217,7 @@ class Brilliant_retail_core {
 	}
 
 	/* 
-	*  Create the pirce range size and buckets 
+	*  Create the price range size and buckets 
 	 * 
 	 * @param array product 
 	 * @return array amount 
@@ -1275,11 +1278,12 @@ class Brilliant_retail_core {
 		}
 
 		foreach($product as $p){
-			$amt = $this->_check_product_price($p);
-			$prices[] = $amt["price"];
-			foreach($p["categories"] as $cat){
-				if(isset($children[$cat])){
-					$children[$cat]["cnt"]++;
+			if($amt = $this->_check_product_price($p)){
+				$prices[] = $amt["price"];
+				foreach($p["categories"] as $cat){
+					if(isset($children[$cat])){
+						$children[$cat]["cnt"]++;
+					}
 				}
 			}
 		}
@@ -1599,6 +1603,14 @@ class Brilliant_retail_core {
 				
 				}
 	
+		// Filter if there was no price for the member group
+			foreach($vars[0]["results"] as $key => $val){
+				$amt = $this->_check_product_price($val);
+				if($amt === FALSE){
+					unset($vars[0]["results"][$key]);	
+				}
+			}		
+				
 		// Filter down quantities 
 			foreach($vars[0]["results"] as $key => $val){
 				if($val["type_id"] == 1){
@@ -1653,8 +1665,9 @@ class Brilliant_retail_core {
 			}
 			if(isset($_SESSION[$hash]["range"])){
 				foreach($vars[0]["results"] as $p){
-					$amt = $this->_check_product_price($p);
-					$prices[] = $amt["price"];
+					if($amt = $this->_check_product_price($p)){
+						$prices[] = $amt["price"];
+					}
 				}				
 				
 				$price = $this->_price_range($prices,$hash);
@@ -1663,13 +1676,16 @@ class Brilliant_retail_core {
 				$upper = ($_SESSION[$hash]["range"] * $price["range"]) + $price["range"];
 				$i=0;
 				$tmp = array();
+				
 				foreach($vars[0]["results"] as $r){
-					$amt = $this->_check_product_price($r);
-					if($amt["price"] >= $lower && $amt["price"] < $upper){
-						$tmp[$i] = $r;
-						$i++;
+					if($amt = $this->_check_product_price($r)){
+						if($amt["price"] >= $lower && $amt["price"] < $upper){
+							$tmp[$i] = $r;
+							$i++;
+						}
 					}
 				}
+				
 				unset($vars[0]["results"]);
 				$vars[0]["results"] = $tmp;
 				
@@ -1866,9 +1882,9 @@ class Brilliant_retail_core {
 		
 		foreach($vars[0]["results"] as $key => $val){
 			// Check the price setup 
-				$amt = $this->_check_product_price($val);
-				$vars[0]["results"][$key]["price_html"] = $amt["price_html"];
-
+				if($amt = $this->_check_product_price($val)){
+					$vars[0]["results"][$key]["price_html"] = $amt["price_html"];
+				}
 			// Set default images
 			 	if($vars[0]["results"][$key]["image_large"] == ''){
 			 		$vars[0]["results"][$key]["image_large"] = 'products/noimage.jpg';
@@ -1945,6 +1961,11 @@ class Brilliant_retail_core {
 			if($this->EE->extensions->active_hook('br_check_product_price_end') === TRUE){
 				$amt = $this->EE->extensions->call('br_check_product_price_end', $amt); 
 			}
+			
+			if(!isset($amt["price"])){
+				return false;
+			}
+			
 			return $amt;		
 		}
 

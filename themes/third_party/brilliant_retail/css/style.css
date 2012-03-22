@@ -953,12 +953,6 @@ div#error p{
 	padding-bottom:5px;
 }
 
-#addCustomAttribute {
-	cursor: pointer;
-	color: #0581A7; 
-	font-weight: bold;
-}
-
 #attributeContainer {
 	display: none;
 }
@@ -1865,6 +1859,20 @@ input#delete {
 	float: left;
 	margin-right: 5px;
 }
+
+#addCustomAttribute {
+	float: left;
+	cursor: pointer;
+	background: url(../images/btn-add.png) top left no-repeat;
+	width: 100px;
+	height: 19px;
+	font-size: 12px;
+	font-weight: bold;
+	padding-left: 25px;
+	padding-top: 6px;
+	color: #666;
+}
+
 #download_browse_button, 
 #img_browse_button {
 	float:			left;

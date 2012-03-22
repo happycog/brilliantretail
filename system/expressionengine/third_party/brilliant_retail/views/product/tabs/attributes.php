@@ -69,11 +69,11 @@
 					<tr class="<?=$show_attr_add?>">
 						<td colspan="2">
 							<?php
-							echo '<div id="addCustomAttribute">'.lang('br_add_custom_attributes').'</div>'.$attrOptions;
+							echo '<div id="addCustomAttribute">'.lang('br_add').'</div>'.$attrOptions;
 							?></td>
 					</tr>
-					<tr class="<?=$show_attr_remove?>">
-						<td colspan="2" id="removeCustom">
+					<tr class="<?=$show_attr_remove?>" id="removeCustom">
+						<td colspan="2">
 							<span class="button" style="float: right; margin: 0pt;">
 								<a class="submit" href="#" style="color:#fff"><?=lang('remove')?></a>
 							</span></td>
