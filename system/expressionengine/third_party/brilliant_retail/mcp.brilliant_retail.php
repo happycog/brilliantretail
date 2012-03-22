@@ -254,7 +254,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 			$this->vars["help"] = $this->EE->load->view('_assets/_help', $this->vars, TRUE);
 			$this->vars["br_menu"] = $this->EE->load->view('_assets/_menu', $this->vars, TRUE);
-			
+			$this->vars["status"] = $this->_config["status"];			
+				
 			$this->EE->cp->set_breadcrumb($this->base_url.'&method=orders', 'BrilliantRetail '.lang('nav_br_order'));
 		
 			// Add the create product button
@@ -476,14 +477,37 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->EE->load->view('order/order_entry', $this->vars, TRUE);	
 		}
 		function order_batch(){
-			var_dump($_POST);
+			
+			$data = array();
+			$data["status_id"] = $this->EE->input->post('status_id');
+			
+			// Are we going to notify
+				if(isset($_POST["notify"])){
+					$data["notify"] = 'on';
+				}
+			
+				foreach($_POST["batch"] as $key => $val){
+					$data["order_id"] = $key;
+					
+					// Update the order status
+						$this-> order_update_status($data,FALSE);
+				}
+				
+				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 		}
 		
-		function order_update_status()
+		function order_update_status($data='',$redirect=TRUE)
 		{
-			// Get the parameters 
-				foreach($_POST as $key => $val){
-					$data[$key] = $this->EE->input->post($key);
+
+			// Are we coming from a form post or 
+			// from the batch process? Batch passes 
+			// the data in a variable. Form sends it
+			// as a $_POST. 
+				if($data == ''){
+					// Get the parameters 
+						foreach($_POST as $key => $val){
+							$data[$key] = $this->EE->input->post($key);
+						}
 				}
 			// Is the notify flag set?
 				$notify = FALSE;
@@ -491,7 +515,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$notify = TRUE;
 					unset($data["notify"]);
 				}
-			
+
 			// Update the order status		
 				
 				// Hook before we update the order
@@ -520,10 +544,26 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					$this->_send_email('customer-order-status', $eml);
 				}
+		
+			// Add a system note to the order
+				$note = array(
+							'order_note' 	=> lang('br_order_status_updated_to').' '.$this->_config["status"][$data["status_id"]],
+							'created'		=> time(),
+							'member_id'		=> 0,
+							'order_id' 		=> $data["order_id"], 
+							'isprivate'		=> 2
+						);
+				$this->EE->order_model->create_order_note($note);	
+				
 			// Set the message and relocate	
 				$_SESSION["message"] = lang('br_order_status_success');
-				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
-				exit();
+			
+			// Redirect if set to TRUE
+				if($redirect === TRUE)
+				{
+					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+					exit();
+				}
 		}
 		
 		function order_add_note()

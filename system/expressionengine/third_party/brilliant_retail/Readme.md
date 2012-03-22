@@ -51,4 +51,6 @@ Added support for custom report files in the _local directory
 Added multiple modes to image tag (matte,scale,fit)
 Added watermark parameter to image tag (optional)
 Added reflection parameter to image tag (optional)
+Added system messages to order detail notes
+Added a method for batch updating statuses from the order detail page 
 Removed _clean_search_term in favor of ExpressionEngine native sanitize_search_terms() method

@@ -112,7 +112,7 @@ class Order_model extends CI_Model {
 				if($private === FALSE){
 					$this->db->where('br_order_note.isprivate',0);
 				}
-			$this->db->join('members', 'members.member_id = br_order_note.member_id') 
+			$this->db->join('members', 'members.member_id = br_order_note.member_id','left') 
 					->order_by('br_order_note.created','desc');
 			
 			$query = $this->db->get();
@@ -123,6 +123,7 @@ class Order_model extends CI_Model {
 				$order["notes"][$i]["order_created"] = $val["created"]; 
 				$i++;
 			}	
+
 		return $order;
 	}
 	function get_order_collection($start_date='',$end_date='',$limit=0,$search='',$offset=0,$sort=0,$dir='',$prefix='exp_'){
@@ -169,15 +170,19 @@ class Order_model extends CI_Model {
 					$_SESSION["fl_lname"] = $fl_lname;
 				}
 								
-			// Create a SQL statement
+			// Create a SQL statement.
+			// DPD _ Dont reorder the fields in the select 
+			// statement. They correspond to the sort column
+			// sent in the ajax call. 			
+
 			$sql = "SELECT 
 						SQL_CALC_FOUND_ROWS 
 						o.order_id,
 						o.created, 
 						CONCAT(d.".$fl_fname.", ' ', d.".$fl_lname.") as customer,  
-						CONCAT(a.billing_fname, ' ', a.billing_lname) as billing_customer, 
 						(o.base + o.shipping + o.tax - o.discount) as total,
 						o.status_id,
+						CONCAT(a.billing_fname, ' ', a.billing_lname) as billing_customer, 
 						o.base,
 						o.tax,
 						o.shipping,

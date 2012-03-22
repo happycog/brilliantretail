@@ -302,20 +302,32 @@
                             							if(isset($n["order_note"])){
 	                            							if($n["isprivate"] == 1){
 	                            								$class = 'private_note';
+	                            							}elseif($n["isprivate"] == 2){
+	                            								$class = 'system_note';
 	                            							}else{
-	                            								$class = ($i % 2 == 0) ? 'even' : 'odd';
+	                            								$class = 'order_note';
 	                            							}
+	                            							
 	                            							$note = $n["order_note"];
 	                            							if($n["filenm"] != ''){
 	                            								$note .= '<br /><a href="/media/attachments/'.$n["filenm"].'" target="_blank">'.lang('br_attachment').'</a>';
 	                            							}
+	                            							
+	                            							if($n["member_id"] == ''){
+	                            								$by 	= date('n/d/y g:i:s a',$n["created"]);
+	                            								$remove = '';
+	                            							}else{
+	                            								$by 	= lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.date('n/d/y g:i:s a',$n["created"]);
+	                            								$remove = '<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'">'.lang('remove').'</a>';
+	                            							}
+	                            							
 	                            							echo '	<table width="100%" cellspacing="0">
 		                            									<thead>
 		                            										<tr>
 		                            											<th>
-		                            												'.lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.date('n/d/y g:i:s a',$n["created"]).'</th>
-		                            											<th width="10%">
-		                            												<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'">'.lang('remove').'</a></th>
+		                            												'.$by.'</th>
+		                            											<th width="10%" style="text-align:right">
+		                            												'.$remove.'</th>
 		                            										</tr>
 		                            									</thead>
 		                            									<tbody>

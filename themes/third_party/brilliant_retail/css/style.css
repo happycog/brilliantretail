@@ -2120,9 +2120,12 @@ input#delete {
 	#order_notes table tr.private_note td {
 		background-image: url(../images/bg_private.jpg);
 	}
-	
-	#order_notes td.order_note {
-		border-bottom: 1px #DDD solid;
+	#order_notes table tr.system_note td {
+		background-image: url(../images/bg_system.jpg);
+	}	
+
+	#order_notes table tr.order_note td {
+		background: 	#FFF;
 	}
 	#order_table .subscription_options {
 		padding-left: 15px;

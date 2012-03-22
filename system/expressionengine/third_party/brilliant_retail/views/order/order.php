@@ -78,19 +78,21 @@ $content = $this->table->generate();
 
                         	<?=$content?>
 
-							<?php
-							/*
-                        	<div id="header_buttons">
-                        		<select id="action" name="action">
-                            		<option value="">------------</option> 
-                            		<option value="0"><?=lang('br_delete_selected_products')?></option>
-                            		<option value="1"><?=lang('br_enable_selected_products')?></option>
-                            		<option value="2"><?=lang('br_disable_selected_products')?></option>
-                            	</select>
-                            	<?=form_submit(array('name' => 'submit', 'value' => lang('submit'), 'class'=>'submit', 'id' => 'batch_submit'))?>
-                        	</div>
-                			*/
-                			?>
+							<div id="order_status_id">
+								<select name="status_id" id="status_id">
+								<?php 
+									ksort($status);
+									foreach($status as $key => $val){
+										$sel = ($key == $order["status_id"]) ? 'selected="selected"' : '';
+										echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
+									}
+								?>
+								</select><input type="submit" class="update" value="<?=lang('update')?>" />
+								<br />
+								<div style="margin:5px 0">
+									<input type="checkbox" name="notify" style="float:left;" />&nbsp;<?=lang('br_status_notify')?>
+								</div>
+							</div>
                 			<div class="b2r_clearboth"><!-- --></div>
         				
         				</div>
