@@ -761,6 +761,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 	
 		function cart_add()
 		{
+			// If its an image submit remove the x/y values
+				if(isset($_POST["x"])){ unset($_POST["x"]); }
+				if(isset($_POST["y"])){ unset($_POST["y"]); }
+			
 			// We get a post of inputs that are 
 			// prepended with the product_id 
 			// lets fancy magic it into a usable post array

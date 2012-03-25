@@ -213,7 +213,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 
 			// Get the sales report
-				$dir = rtrim(dirname(__FILE__),'/').'/core/report/report.sales.php';
+				$dir = PATH_THIRD.'brilliant_retail/core/report/report.sales.php';
 				include_once($dir);
 		
 				$report = new Report_sales();
