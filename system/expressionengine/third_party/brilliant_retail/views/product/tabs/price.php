@@ -122,6 +122,30 @@
 ?>
 				</tbody>
 			</table>
+			<style type="text/css">
+				#cost_display {
+					font-size: 11px;
+					padding: 3px;
+				}
+				#cost_display span {
+					font-size: 		11px;
+					font-weight: 	bold;
+					cursor: 		pointer;
+				}
+				#cost_input {
+					display: none;
+				}
+			</style>
+			<div id="cost_display">
+				<?=lang('br_cost')?>: <span><?=$products[0]["cost"]?></span>
+				<span id="cost_input">
+					<input 	type="text"
+							name="cost" 
+							id="cost"  
+							value="<?=$products[0]["cost"]?>" 
+							style="width:200px;" /> 
+				</span>
+			</div>
 
 		</fieldset>
 	</div> <!-- /sub_hold_field -->
@@ -211,4 +235,54 @@
 	}		
 </script>	
 	
+<script type="text/javascript">
+	$(function(){
+		
+		// Bind the url title click
+		$('#cost_display span:eq(0)').bind('click',function(){
+			$(this).hide();
+			$('#cost_input').show();
+			$('#cost_input input')
+				.focus()
+				.bind('keypress',function(e){
+					var code = (e.keyCode ? e.keyCode : e.which);
+					if(code == 13) { //Enter keycode
+						var a = $(this);
+						var b = a.parent();
+						var str = a.val();
+						if (isNaN(parseFloat(str)))
+						{
+							str = 0.00;
+						}
+						$('#cost_display span:eq(0)').html(str);
+						a.val(str);
+						b.hide();
+						b.prev().show();
+						return false;
+					}
+				})
+				.bind('keyup',function(e){
+					var a = $(this);
+					if (isNaN(parseFloat(str)))
+					{
+						str = 0.00;
+					}
+					$('#cost_display span:eq(0)').html(str);
+				});
+		});
+		$('#cost_input input').bind('blur',function(){
+			var a = $(this);
+			var b = a.parent();
+			var str = a.val() * 1;
+			if (isNaN(parseFloat(str)))
+			{
+				str = 0.00;
+			}
+			a.val(str);
+			b.hide();
+			b.prev().show();
+		});
+	
+	});
+</script>
 	

@@ -10,8 +10,11 @@
 * Fixed Search error if my search contains less than 3 characters. [#0000127]
 * Fixed Zero subtotal with tax // shipping cost still shows no_payment gateway. [#0000123]
 * Fixed Email validation errors (dpdexter) - resolved. [#0000117]
+* Fixed the product file fieldtype to not validate the file input as 'required' when a selection exists [#0000162]
 * Updated Rename fieldtype to BrilliantRetail Products. [#0000116]
 * Updated CKEditor to the latest release. [#0000115]
+
+
 
 Updated product edit form to allow users to change product type. 
 Updated model > order_model > get_order_collection method with proper left join to remove existing member requirement. 

@@ -41,7 +41,7 @@
 <table cellspacing="0" cellpadding="0" border="0" width="100%" class="product_edit">
 	<thead>
 		<tr>
-			<th><?=lang('br_title')?></th>
+			<th width="20%"><?=lang('br_title')?></th>
 			<th><?=lang('br_value')?></th>
 		</tr>
 	</thead>

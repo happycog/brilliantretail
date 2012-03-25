@@ -729,6 +729,8 @@ class Brilliant_retail_core {
 			return $this->cats;
 		}
 	
+	// Product Type Attribute Fields
+	
 		function _producttype_text($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
@@ -743,28 +745,34 @@ class Brilliant_retail_core {
 		}
 		
 		function _producttype_file($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
-			$class = ($required == 1) ? 'required' : '' ;
+			$class = ($required == 1) ? '{required:true}' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
 			// Values  
-				$title = '';
-				$link = '';
+				$title 	= '';
+				$link 	= '';
 				$values = unserialize($val);
-			
+				$contain	= '';
+				 
 			if(isset($values)){
 				$title = $values["title"];
 				if(trim($values["file"]) != ''){
-					$link = '<div id="div_cAttribute_'.$attribute_id.'">
+					$link = '<span id="div_cAttribute_'.$attribute_id.'">
 								<a href="'.$this->_config["media_url"].'file/'.$values["file"].'" target="_blank">'.$values["file"].'</a>&nbsp;
-							 	<a href="#" onclick="$(\'#cAttribute_'.$attribute_id.'\').val(\'\');$(\'#div_cAttribute_'.$attribute_id.'\').remove();return false">(<b>'.strtolower(lang('delete')).'</b>)</a>
+							 	<a href="#" onclick="$(\'#cAttribute_'.$attribute_id.'\').val(\'\');$(\'#div_cAttribute_'.$attribute_id.'\').remove();$(\'#div_cAttribute_'.$attribute_id.'_file_contain\').show();return false">(<b>'.strtolower(lang('delete')).'</b>)</a>
 							 	<br />
-							 </div>';
+							 </span>';
+					$contain = 'nodisplay';
 				}
 			}
 			return 	'	<input name="'.$product_id.'_cAttribute_'.$attribute_id.'" id="cAttribute_'.$attribute_id.'" value=\''.$val.'\' type="hidden" />
-						<label>'.lang('br_title').': </label><br /><input name="'.$product_id.'_cAttribute_'.$attribute_id.'_title" value="'.$title.'" type="text" class="'.$class.'" style="width:50%" />
-						<br /><br />'.$link.'
-						<label>'.lang('br_file').': </label><br /><input name="'.$product_id.'_cAttribute_'.$attribute_id.'_file" type="file" class="'.$class.'" />';
+						'.lang('br_title').': <input name="'.$product_id.'_cAttribute_'.$attribute_id.'_title" value="'.$title.'" type="text" class="'.$class.'" style="width:50%" />
+						<br />
+						<br />
+						'.lang('br_file').': '.$link.'
+						<span id="div_cAttribute_'.$attribute_id.'_file_contain" class="'.$contain.'"> 
+							<input name="'.$product_id.'_cAttribute_'.$attribute_id.'_file" type="file" class="'.$class.'" />
+						</span>';
 		}
 		
 		function _producttype_textarea($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
@@ -772,6 +780,7 @@ class Brilliant_retail_core {
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			return '<textarea name="'.$product_id.'_cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'.$val.'</textarea>';
 		}
+		
 		function _producttype_dropdown($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
@@ -924,6 +933,8 @@ class Brilliant_retail_core {
 			return $options;
 		}
 		
+	// End Product Type Fields 
+	
 		function _configurable_dropdown($attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;

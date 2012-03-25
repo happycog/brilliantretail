@@ -921,7 +921,8 @@ div.arrow_close{
 }
 
 
-#price_table td.move_price_row,  
+#sel_attribute td.move_attr_row,  
+#price_table td.move_price_row,
 #sale_price_table td.move_sale_price_row,
 #optionTable td.move_option_row,
 .move_image_row, 
@@ -933,8 +934,12 @@ div.arrow_close{
 }
 
 div#error {
-	background:none repeat scroll 0 0 #FFFFFF;
-	padding:15px;
+	background-image: url(../images/bg_system.jpg);
+	padding: 15px;
+	border: #DDD solid;
+	margin-left: 1px;
+	border-width: 1px;
+	margin-bottom: 10px;
 }
 
 div#error label.error{
@@ -2626,6 +2631,7 @@ table#relatedTable .tDnD_whileDrag td a{
 	border-right: 1px #E7E7E7 solid;
 }
 
+#sel_attribute tbody td,
 #configurable_form td,
 #config_selected td {
 	vertical-align: top;
@@ -2727,7 +2733,10 @@ table#relatedTable .tDnD_whileDrag td a{
 	border: 		none;
 }
 
-.product_edit tr th,
+table.mainTable .product_edit tr :last-child{
+	border-right: none;
+}
+
 #optionTable tr th, 
 #imageTable tr th,
 #download_options tr th, 

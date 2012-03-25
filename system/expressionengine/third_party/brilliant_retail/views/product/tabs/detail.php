@@ -113,8 +113,8 @@
 				</div>
 
 
-				<div class="publish_field" id="hold_br_status">
-
+				<div class="publish_field" id="hold_br_details">
+					
 					<label class="hide_field">
 						<span>
 							<?=lang('status').' *'?>
@@ -123,146 +123,92 @@
 	
 					<div id="sub_hold_br_featured">
 						<fieldset class="holder">
-							<?=form_dropdown('enabled', array(1 => lang('br_enabled'), 0 => lang('br_disabled')), $products[0]["enabled"])?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-
-				<div class="publish_field" id="hold_br_sku">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_product_sku').' *'?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_featured">
-						<fieldset class="holder">
-							<?=form_input(
-										array(	'name' => 'sku', 
-												'value' => $products[0]["sku"],
-												'class' => '{required:true}',
-												'title' => lang('br_details').' - '.lang('br_product_sku').' '.lang('br_is_required'))
-										)?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-
-				<div class="publish_field" id="hold_br_shippable">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_shippable')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_featured">
-						<fieldset class="holder">
-							<?=form_dropdown('shippable', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["shippable"])?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-				<div class="publish_field" id="hold_br_weight">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_product_weight')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_featured">
-						<fieldset class="holder">
-							<?=form_input(	array(	'name' => 'weight', 
+							<table cellspacing="0" cellpadding="0" border="0" width="100%" class="product_edit">
+								<thead>
+									<tr>
+										<th width="20%"><?=lang('br_title')?></th>
+										<th><?=lang('br_value')?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<?=lang('status').' *'?></td>
+										<td>
+											<?=form_dropdown('enabled', array(1 => lang('br_enabled'), 0 => lang('br_disabled')), $products[0]["enabled"])?></td>
+									</tr>
+									<tr>
+										<td>
+											<?=lang('br_product_sku').' *'?></td>
+										<td>
+											<?=form_input(
+															array(	'name' => 'sku', 
+																	'value' => $products[0]["sku"],
+																	'class' => '{required:true}',
+																	'title' => lang('br_details').' - '.lang('br_product_sku').' '.lang('br_is_required'))
+															)?></td>
+									</tr>
+									<tr>
+										<td>
+											<?=lang('br_quantity')?></td>
+										<td>
+											<?=form_input(
+												array(	'name' => 'quantity', 
+														'value' => $products[0]["quantity"],
+														'title' => lang('br_details').' - '.lang('br_quantity'))
+												)?></td>
+									</tr>
+									<tr>
+										<td>
+											<?=lang('br_taxable')?></td>
+										<td>
+											<?=form_dropdown(	
+																'taxable', 
+																array(	1 => lang('br_yes'), 
+																		0 => lang('br_no')), 
+																$products[0]["taxable"])
+															?></td>
+									</tr>
+									<tr>
+										<td>
+											<?=lang('br_shippable')?></td>
+										<td>
+											<?php
+												// Setup a rule for showing or hiding 
+												// the weight label and input 
+												// if the product is not shippable
+												
+												$wClass = ($products[0]["shippable"] == 0) ? 'shipping_opts nodisplay' : 'shipping_opts';
+											?>
+											<table border="0" cellspacing="0" cellpadding="0">
+												<tr>
+													<td style="padding:3px 0 0;border:0" id="has_shipping">
+														<?=form_dropdown('shippable', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["shippable"])?></td>
+													<td style="padding:5px 5px 0;border:0" class="<?=$wClass?>">
+														<?=lang('br_product_weight')?></td>
+													<td style="padding:0;border:0" class="<?=$wClass?>">
+														<?=form_input(	array(	'name' => 'weight', 
 																	'value' => $products[0]["weight"],
 																	'class' => '',
-																	'title' => lang('br_details').' - '.lang('br_product_weight'))
-															)?>
+																	'title' => lang('br_details').' - '.lang('br_product_weight'),
+																	'style'	=> 'width:100px;')
+															)?></td>
+												</tr>
+											</table></td>
+									</tr>
+									<tr>
+										<td>
+											<?=lang('br_featured')?></td>
+										<td>
+											<?=form_dropdown('featured', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["featured"])?></td>
+									</tr>
+								</tbody>
+							</table>
 						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
+					</div>
+					
 				</div>
 
-				<div class="publish_field" id="hold_br_taxable">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_featured')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_featured">
-						<fieldset class="holder">
-							<?=form_dropdown('featured', array(1 => lang('br_yes'), 0 => lang('br_no')), $products[0]["featured"])?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-
-				<div class="publish_field" id="hold_br_taxable">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_quantity')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_quantity">
-						<fieldset class="holder">
-							<?=form_input(
-								array(	'name' => 'quantity', 
-										'value' => $products[0]["quantity"],
-										'title' => lang('br_details').' - '.lang('br_quantity'))
-								)?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-
-
-				<div class="publish_field" id="hold_br_taxable">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_taxable')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_cost">
-						<fieldset class="holder">
-							<?=form_dropdown(	
-									'taxable', 
-									array(	1 => lang('br_yes'), 
-											0 => lang('br_no')), 
-									$products[0]["taxable"])
-								?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-
-
-				<div class="publish_field" id="hold_br_cost">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_cost')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_cost">
-						<fieldset class="holder">
-							<?=form_input(	array(	'name' => 'cost', 
-													'class' => '',
-													'title' => lang('br_cost'),
-													'value' => $products[0]["cost"])
-											)?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
 		<?php
 			foreach($custom as $c){
 		?>			
@@ -342,44 +288,86 @@
 <script type="text/javascript">
 	$(function(){
 		
-		// Bind the url title click
-		$('#url_display span:eq(0)').bind('click',function(){
-			$(this).hide();
-			$('#url_input').show();
-			$('#url_input input')
-				.focus()
-				.bind('keypress',function(e){
-					var code = (e.keyCode ? e.keyCode : e.which);
-					if(code == 13) { //Enter keycode
-						var a = $(this);
-						var b = a.parent();
-						var str = a.val().toLowerCase();
-						str = clean_url_title(str);
-						$('#url_display span:eq(0)').html(str);
-						a.val(str);
-						b.hide();
-						b.prev().show();
-						return false;
-					}
-				})
-				.bind('keyup',function(e){
+		// Lets do some stuff to make the url_title 
+		// edit a little less in your face
+	
+			// Bind the url title click
+				$('#url_display span:eq(0)').bind('click',function(){
+					$(this).hide();
+					$('#url_input').show();
+					$('#url_input input')
+						.focus()
+						.bind('keypress',function(e){
+							var code = (e.keyCode ? e.keyCode : e.which);
+							if(code == 13) { //Enter keycode
+								var a = $(this);
+								var b = a.parent();
+								var str = a.val().toLowerCase();
+								str = clean_url_title(str);
+								$('#url_display span:eq(0)').html(str);
+								a.val(str);
+								b.hide();
+								b.prev().show();
+								return false;
+							}
+						})
+						.bind('keyup',function(e){
+							var a = $(this);
+							var str = a.val().toLowerCase();
+							str = clean_url_title(str);
+							$('#url_display span:eq(0)').html(str);
+						});
+				});
+			
+				$('#url_input input').bind('blur',function(){
 					var a = $(this);
+					var b = a.parent();
 					var str = a.val().toLowerCase();
 					str = clean_url_title(str);
-					$('#url_display span:eq(0)').html(str);
+					a.val(str);
+					b.hide();
+					b.prev().show();
+						
 				});
-		});
-		$('#url_input input').bind('blur',function(){
-			var a = $(this);
-			var b = a.parent();
-			var str = a.val().toLowerCase();
-			str = clean_url_title(str);
-			a.val(str);
-			b.hide();
-			b.prev().show();
-				
-		});
-		
+
+			// Lets bind the keyup on the
+			// product naming of new products 
+			// so we can build a url_title 
+			// on the fly	
+					
+				<?php
+					if($hidden["product_id"] == 0){
+				?>
+						$('#title').bind('keyup',function(){
+							var a = $(this);
+							var str = a.val().toLowerCase();
+							
+							str = clean_url_title(str);
+					
+							$('#url').val(str);
+							$('#url_display span:eq(0)').html(str);
+						});
+				<?php	
+					}
+				?>
+
+	// We need to bind to the has_shipping input so we can 
+
+	 $('#has_shipping select').bind('change',
+	 								function()
+	 								{
+	 									var a = $('.shipping_opts');
+	 									if($(this).val() == 0){
+	 										a.hide();
+	 									}else{
+	 										a.show();
+	 									}
+	 								});
+	 
+	// Lets go ahead and initiate the
+	// our ckEditor. Thanks Brandon Kelly for 
+	// the insight into a lazy loading method… 
+	 
 	    if (typeof CKEDITOR == 'undefined'){
 	        window.CKEDITOR_BASEPATH = '<?=$detail_ckeditor_path?>';
 	        $.getScript('<?=$detail_ckeditor_url?>',function(){
@@ -394,21 +382,7 @@
 	    }else{
 	    	initCkeditorFields();
 		}
-		<?php
-			if($hidden["product_id"] == 0){
-		?>
-				$('#title').bind('keyup',function(){
-					var a = $(this);
-					var str = a.val().toLowerCase();
-					
-					str = clean_url_title(str);
-			
-					$('#url').val(str);
-					$('#url_display span:eq(0)').html(str);
-				});
-		<?php	
-			}
-		?>
+
 	});
 
 	function initCkeditorFields(){

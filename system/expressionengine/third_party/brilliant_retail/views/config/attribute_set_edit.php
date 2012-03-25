@@ -51,14 +51,30 @@
 	        		<?=lang('br_attributes')?></td>
 	        	<td>
 			    	<p><?=lang('br_attribute_set_instruction')?></p>
-			    	<ul id="sel_attribute">
-			    	<?php
-				    	foreach($attributes as $a){
-							$sel = ($a["selected"] == 1) ? 'checked' : '' ;
-							echo '<li><input type="checkbox" name="attr[]" value="'.$a["attribute_id"].'" '.$sel.' />&nbsp;'.$a["title"].'</li>';
-						}
-			    	?>
-			    	</ul></td>
+			    	<br />
+			    	<table id="sel_attribute" class="product_edit" cellpadding="0" cellspacing="0" width="100%">
+			    		<thead>
+			    			<tr>
+			    				<th width="90%">
+			    					<?=lang('br_attributes')?></th>
+			    				<th width="10%">
+			    					<?=lang('br_sort')?></th>
+			    			</tr>
+			    		</thead>
+						<tbody>
+					    	<?php
+						    	foreach($attributes as $a){
+									$sel = ($a["selected"] == 1) ? 'checked' : '' ;
+									echo '	<tr>
+												<td>
+													<input type="checkbox" name="attr[]" value="'.$a["attribute_id"].'" '.$sel.' />&nbsp;'.$a["title"].'</td>
+												<td class="move_attr_row">
+													<img src="'.$theme.'images/icon_move.png" /></td>
+											</tr>';
+								}
+					    	?>
+						</tbody>
+			    	</table></td>
 	        </tr>
 		</tbody>
     </table>
@@ -79,7 +95,22 @@
 <script type="text/javascript">
 	$(function(){
 		$('#attribute_set_edit').validate();
-		$('#sel_attribute').sortable({ axis: 'y' });
+		
+		
+		$('#sel_attribute tbody').sortable({
+										axis:'y', 
+										cursor:'move', opacity:0.6, handle:'.move_attr_row',
+										helper:function(e, ui) {
+											ui.children().each(function() {
+												$(this).width($(this).width());
+											});		
+											return ui;
+										},
+										update: function(){
+											_restripe_images() 
+										}
+									});
+		
 		$('#title').bind('click',function(){
 			var a = $(this);
 			if(a.val() == '<?=lang('br_new_attribute_set')?>'){
