@@ -31,7 +31,7 @@ class Brilliant_retail_ext {
 	public $docs_url		= 'http://www.brilliantretail.com';
 	public $name			= 'Brilliant Retail';
 	public $settings_exist	= 'n';
-	public $version			= '1.0.4.7';
+	public $version			= '1.0.4.8';
 	public $site_id 		= 1;
 	public $base_url 		= '';
 	public $nav_menu 		= array();
@@ -81,6 +81,15 @@ class Brilliant_retail_ext {
 			'class'		=> __CLASS__,
 			'method'	=> 'br_cp_menu_array',
 			'hook'		=> 'cp_menu_array',
+			'settings'	=> serialize($this->settings),
+			'version'	=> $this->version,
+			'enabled'	=> 'y'
+		);
+		
+		$data[] = array(
+			'class'		=> __CLASS__,
+			'method'	=> 'br_template_post_parse',
+			'hook'		=> 'template_post_parse',
 			'settings'	=> serialize($this->settings),
 			'version'	=> $this->version,
 			'enabled'	=> 'y'
