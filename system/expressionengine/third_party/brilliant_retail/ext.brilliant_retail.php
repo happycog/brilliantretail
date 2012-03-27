@@ -241,24 +241,9 @@ class Brilliant_retail_ext {
 	{
 		$data = array();
 		
-		// convert version to raw int 
-			$v = (int) str_replace(".","",$current);
-		
-		// Run any updates
-			if($v < 1047){
-				$data[] = array(
-					'class'		=> __CLASS__,
-					'method'	=> 'br_template_post_parse',
-					'hook'		=> 'template_post_parse',
-					'settings'	=> serialize($this->settings),
-					'version'	=> $this->version,
-					'enabled'	=> 'y'
-				);
-			}
-		
-			foreach($data as $d){
-				$this->EE->db->insert('extensions', $d);			
-			}
+		foreach($data as $d){
+			$this->EE->db->insert('extensions', $d);			
+		}
 		
 		if ($current == '' OR $current == $this->version)
 		{

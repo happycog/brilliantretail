@@ -109,11 +109,6 @@ class Brilliant_retail_core {
 					}
 				}
 			
-			// Lets check to makes sure each site/store has 
-			// a channel setup!
-
-			$this->_check_store_channel();
-
 			$this->br_channel_id = $this->_config["store"][$this->site_id]["channel_id"];
 
 			$this->_config["currency"] 			= $this->_config["store"][$this->site_id]["currency"];
@@ -2460,83 +2455,4 @@ class Brilliant_retail_core {
 				return FALSE;
 			}
 		}
-		
-	/** 
-	*	Method checks to see if there is a paired 
-	* 	channel_id for a store
-	*/
-	private function _check_store_channel(){
-
-		$this->EE->load->library('api'); 
-		$this->EE->api->instantiate('channel_structure');
-		$this->EE->api->instantiate('channel_entries');
-		$this->EE->api->instantiate('channel_fields');
-
-		$reset_config = FALSE;
-		
-		foreach($this->_config["store"] as $store){
-
-			if($store["channel_id"] == 0){
-			
-				// We will want to reset the _config variable 
-				// when we're all done. 
-					$reset_config = TRUE;
-			
-				// Create a field group for the site
-					$data = array(	
-									"site_id" 		=> $store["site_id"],
-									"group_name" 	=> "[BrilliantRetail]"
-								);
-					$this->EE->db->insert("field_groups",$data);
-					$field_group = $this->EE->db->insert_id();
-				
-				// Create a channel for the site
-					$channel = array(
-										"site_id"		=> $store["site_id"],
-										"field_group"	=> $field_group, 
-										"channel_title" => "[BrilliantRetail]",
-										"channel_name"	=> "brilliantretail_".$store["site_id"] 
-									);
-					
-					$channel_id = $this->EE->api_channel_structure->create_channel($channel);
-					
-					$this->EE->session->userdata['assigned_channels'][$channel_id] = $channel['channel_title'];
-				
-				// Create a matching channel entry for every product
-					$this->EE->db->from('br_product');
-					$this->EE->db->WHERE('site_id',$store["site_id"]);
-					$qry = $this->EE->db->get();
-					foreach($qry->result_array() as $rst){
-						$data = array(
-						        'title'         => $rst["title"],
-						        'entry_date'    => time() 
-						);
-						$this->EE->api_channel_entries->submit_new_entry($channel_id,$data);	
-						$qry = $this->EE->db->query("SELECT entry_id FROM exp_channel_titles ORDER BY entry_id DESC LIMIT 1");
-						$result = $qry->result_array();
-
-						$this->EE->db->query("	INSERT INTO 
-													exp_br_product_entry 
-												(product_id, entry_id) 
-													VALUES 
-												(".$rst["product_id"].",".$result[0]["entry_id"].")");
-					}
-
-				// Update the br_store table with the new 
-				// channel_id value	
-					$data = array(
-		               			'channel_id' => $channel_id
-		               		);
-					$this->EE->db->where('site_id', $store["site_id"]);
-					$this->EE->db->update('br_store', $data);
-
-			}
-		}
-		
-		if($reset_config == TRUE){
-			remove_from_cache('config');
-			$this->_config = $this->EE->core_model->get_config();
-		}
-
-	}
 }

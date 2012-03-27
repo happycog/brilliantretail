@@ -350,6 +350,9 @@ class Product_model extends CI_Model {
 				}
 				$this->session->cache['get_product_entry'] = $product;
 			}
+			if(!isset($product[$product_id])){
+				return 0;
+			}
 			return $product[$product_id];
 	}
 	
