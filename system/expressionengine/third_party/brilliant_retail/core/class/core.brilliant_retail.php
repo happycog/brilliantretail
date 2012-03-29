@@ -1208,11 +1208,11 @@ class Brilliant_retail_core {
 						$hash = md5($ship["code"].$q["rate"].$i.time());
 						$_SESSION["shipping"][$hash] = $q;
 						$_SESSION["shipping"][$hash]["method"] = $ship["code"];
-						$price = ($q["rate"] > 0) ? ' - '.$this->_config["currency_marker"].$q["rate"] : '' ;
+						$price = ($q["rate"] > 0) ? $this->_config["currency_marker"].$q["rate"].' - ' : '' ;
 						$chk = ($i == 0) ? 'checked="checked"' : '';
 						$output .= '<br />
 									<input type="radio" name="shipping" class="shipping" value="'.$hash.'" id="shipping_'.$i.'" '.$chk.' />&nbsp;'.
-									$q["label"].$price;
+									$price.$q["label"];
 						$i++;
 					}
 					$output .= '</p>';

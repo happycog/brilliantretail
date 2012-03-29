@@ -117,7 +117,7 @@
 					
 					<label class="hide_field">
 						<span>
-							<?=lang('status').' *'?>
+							<?=lang('br_details').' *'?>
 						</span>
 					</label>
 	

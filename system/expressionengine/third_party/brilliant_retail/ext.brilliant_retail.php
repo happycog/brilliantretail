@@ -199,7 +199,7 @@ class Brilliant_retail_ext {
 	public function br_template_post_parse($tmp,$sub)
 	{	
 		if(strpos($tmp,'</body>') !== false){
-			$script = $this->EE->session->cache['br_output_js'];
+			$script = isset($this->EE->session->cache['br_output_js']) ? $this->EE->session->cache['br_output_js'] : '';
 			if($script != ''){
 				$script = "<script type=\"text/javascript\">\n".$script."\n</script>\n";
 				$this->EE->session->cache['br_output_js'] = '';

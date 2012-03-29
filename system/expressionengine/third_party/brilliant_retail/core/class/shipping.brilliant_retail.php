@@ -23,21 +23,9 @@
 /************************************************************/
 
 class Brilliant_retail_shipping extends Brilliant_retail_core{
-	// Defaults
-		public $weight = 1;
-		public $weight_unit = "lb";
-		public $size_length = 4;
-		public $size_width = 8;
-		public $size_height = 2;
-		public $size_unit = "in";
-		public $rates;
-		public $from_zip;
-		public $from_state;
-		public $from_country;
-		public $to_zip;
-		public $to_stat;
-		public $to_country;
-
+	
+		public $rates = array(); 
+	
 		function __construct(){
 			$this->EE =& get_instance();
 		}	
@@ -100,4 +88,14 @@ class Brilliant_retail_shipping extends Brilliant_retail_core{
 			// Return New Size
 			return round($size,2);
 		}
+		
+		// Remove the shipping method
+			function remove($config_id){
+				return true;
+			}
+
+		// Update the shipping method		
+			function update($current = '',$config_id = ''){
+				return true;
+			}
 }
