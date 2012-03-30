@@ -15,7 +15,8 @@
 * Updated CKEditor to the latest release. [#0000115]
 
 
-
+Updated the USPS module to use the new USPS V4 API
+Updated the eWay Gateway to add the CVN input field
 Updated product edit form to allow users to change product type. 
 Updated model > order_model > get_order_collection method with proper left join to remove existing member requirement. 
 Updated model > order_model > get_order with proper right join to remove existing member requirement. 
@@ -38,6 +39,7 @@ Added expand/collapse function to category tree in product edit form
 Added method to automagically create channel per site and add channel_id to the store configuration array
 Added method to automagically create field group per site
 Added method to automagically add the group id to new channels
+Added Australian Post shipping method
 Added browse button for images that exist in the media/product directory
 Added browse button to downloadable products for files the exist in the media/import directory 
 Added drag & drop sorting to category edit form 

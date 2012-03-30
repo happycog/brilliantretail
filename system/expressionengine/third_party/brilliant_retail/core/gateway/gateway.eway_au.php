@@ -99,17 +99,17 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
 	// Create a inputs for the checkout form
 		function form(){
 			$form =  ' 	<div class="general">
-		                    <label>Card Holders Name *<br />
-		                    <input class="txtinp required" name="ewayau_cc_name" type="text" /></label>
+		                    <label>Card Holders Name *</label>
+		                    <input class="txtinp required" name="ewayau_cc_name" type="text" />
 		                </div>
 			
 						<div class="general">
-		                    <label>Credit Card Number *<br />
-		                    <input class="txtinp required creditcard" name="ewayau_cc_num" type="text" /></label>
+		                    <label>Credit Card Number *</label>
+		                    <input class="txtinp required creditcard" name="ewayau_cc_num" type="text" />
 		                </div>
 		                
 		                <div class="expdate_month">
-		                    <label>Expiration Date *<br />
+		                    <label>Expiration Date *</label>
 		                    <select name="ewayau_cc_month" class="required">
 		                      <option value="01">January</option>
 		                      <option value="02">February</option>
@@ -123,18 +123,25 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
 		                      <option value="10">October</option>
 		                      <option value="11">November</option>
 		                      <option value="12">December</option>
-		                    </select></label>
+		                    </select>
 		                </div>
 		                <div class="expdate_year">
-		                    <label>&nbsp;<br />
+		                    <label>&nbsp;</label>
 		                    <select name="ewayau_cc_year" class="required">';
 			$year = date("Y");
 			for($i=$year;$i<=($year+10);$i++){
 				$form .= '			<option value="'.$i.'">'.$i.'</option>';
 			}
-			$form .=  '   	</select></label>
+			$form .=  '   	</select>
 		                </div>
+
+						<div class="general">
+		                	<label>CVN Number</label>
+		                	<input class="txtinp required" name="ewayau_cvn" />
+		                </div>
+
 		                <div class="clearboth"><!-- --></div>';
+
 			return $form;
 	}
 	
@@ -183,23 +190,25 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
 	function set_array($data,$config){
 			$email = $this->EE->session->userdata["email"];
 			$td = array(
-						'ewayOption1'			=> '',
-						'ewayOption2'			=> '',
-						'ewayOption3'			=> '',
-						'ewayCustomerID'		=> $config["cmr_id"],
-						'ewayCustomerEmail' 	=> $email, 
-						'ewayCustomerFirstName'	=> $data["br_billing_fname"], 
-						'ewayCustomerLastName'	=> $data["br_billing_lname"],
-						'ewayCustomerAddress'	=> $data["br_billing_address1"].' '.$data["br_billing_address2"],
-						'ewayCustomerPostcode'	=> $data["br_billing_zip"],
-						'ewayCardNumber'		=> $data["ewayau_cc_num"],
-						'ewayCardHoldersName'	=> $data["ewayau_cc_name"],
-						'ewayTotalAmount'		=> (100 * $data["order_total"]),
-						'ewayCustomerInvoiceDescription' => $config["invoic_descr"], 
-						'ewayCustomerInvoiceRef' 	=> '',
-						'ewayTrxnNumber' 			=> '',
-						'ewayCardExpiryMonth'		=> $data["ewayau_cc_month"],
-						'ewayCardExpiryYear' 		=> $data["ewayau_cc_year"]);
+						'ewayOption1'						=> '',
+						'ewayOption2'						=> '',
+						'ewayOption3'						=> '',
+						'ewayCustomerID'					=> $config["cmr_id"],
+						'ewayCustomerEmail' 				=> $data["email"], 
+						'ewayCustomerFirstName'				=> $data["br_billing_fname"], 
+						'ewayCustomerLastName'				=> $data["br_billing_lname"],
+						'ewayCustomerAddress'				=> $data["br_billing_address1"].' '.$data["br_billing_address2"],
+						'ewayCustomerPostcode'				=> $data["br_billing_zip"],
+						'ewayCardNumber'					=> $data["ewayau_cc_num"],
+						'ewayCardHoldersName'				=> $data["ewayau_cc_name"],
+						'ewayTotalAmount'					=> (100 * $data["order_total"]),
+						'ewayCustomerInvoiceDescription' 	=> $config["invoic_descr"], 
+						'ewayCustomerInvoiceRef' 			=> '',
+						'ewayTrxnNumber' 					=> '',
+						'ewayCardExpiryMonth'				=> $data["ewayau_cc_month"],
+						'ewayCardExpiryYear' 				=> $data["ewayau_cc_year"],
+						'ewayCVN'							=> $data["ewayau_cvn"]
+						);
 			return $td;
 		}
 }

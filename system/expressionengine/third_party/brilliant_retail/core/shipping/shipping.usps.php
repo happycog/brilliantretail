@@ -103,7 +103,7 @@ class Shipping_usps extends Brilliant_retail_shipping {
 		// if Domestic
 			if($config["from_country"] == $data["to_country"]){
 				$isdomestic = 1;
-				$reqs = 'API=RateV3&XML=<RateV3Request USERID="'.$config["username"].'">';
+				$reqs = 'API=RateV4&XML=<RateV4Request USERID="'.$config["username"].'">';
 				foreach($domestic as $x => $c){
 					$reqs .= '	<Package ID="'.$x.'">
 									<Service>'.$c.'</Service>
@@ -111,11 +111,12 @@ class Shipping_usps extends Brilliant_retail_shipping {
 									<ZipDestination>'.$data["to_zip"].'</ZipDestination>
 									<Pounds>'.$lbs.'</Pounds>
 									<Ounces>'.$ozs.'</Ounces>
+									<Container></Container>
 									<Size>REGULAR</Size>
 									<Machinable>TRUE</Machinable>
 								</Package>';
 				}
-				$reqs .= '</RateV3Request>';
+				$reqs .= '</RateV4Request>';
 			}else{
 				$isdomestic = 0;
 				$reqs =	'<IntlRateRequest USERID="'.$config["username"].'" PASSWORD="'.$config["username"].'">'.
@@ -131,7 +132,7 @@ class Shipping_usps extends Brilliant_retail_shipping {
 			}		
 		// Curl
 			$results = $this->_curl($config["url"],$reqs);
-
+			
 			if($isdomestic == 1){ // Domestic 
 				// Domestic Rate(s)
 				preg_match_all('/<Package ID="([0-9]{1,3})">(.+?)<\/Package>/',$results,$packages);
@@ -183,11 +184,12 @@ class Shipping_usps extends Brilliant_retail_shipping {
 					} 
 				}
 			}
-			
-		krsort($this->rates);
+		if(count($this->rates) > 1){
+			usort($this->rates,array($this,'_rate_sort'));
+		}
 		return $this->rates;
 	}
-	
+
 	function install($config_id){
 		$data = array();
 
@@ -278,4 +280,9 @@ class Shipping_usps extends Brilliant_retail_shipping {
 	function update($current = '',$config_id = ''){
 		return true;
 	}
+
+	// Sort by rate key. 
+		function _rate_sort($a,$b){
+			return ($a["rate"] > $b["rate"]) ? +1 : -1;
+		}
 }
