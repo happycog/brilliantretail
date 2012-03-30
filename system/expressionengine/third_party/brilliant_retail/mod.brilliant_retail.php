@@ -897,7 +897,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$price = $this->_currency_round($price);
 					$amt["base"]  = $price;
 					$amt["price"] = $price;
-					$amt["price_html"] = '<p class="price">'.$price.'</p>';
+					$amt["price_html"] = '<p class="price">'.$this->_config["currency_marker"].$this->_currency_round($price).'</p>';
 	
 					// Are we going to setup a recurring profile?
 					if($product[0]["donation"][0]["allow_recurring"] == 1){

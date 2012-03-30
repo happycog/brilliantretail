@@ -448,13 +448,13 @@ class Brilliant_retail_core {
 						 	$selected = ($i == 0) ? 'checked' : '';
 						 	if(	$price["group_id"] == 0 || 
 						 		$price["group_id"] == $group_id){
-						 		$radio .= '	<li><input type="radio" '.$selected.' name="donation_price[]" id="donation_price_'.$i.'" value="'.$price["price"].'"  />
+						 		$radio .= '	<li><input type="radio" '.$selected.' name="'.$products[0]["product_id"].'_donation_price[]" id="donation_price_'.$i.'" value="'.$price["price"].'"  />
         										'.$this->_config["currency_marker"].$this->_currency_round($price["price"]).'</li>';
 						 	}
 							$i++;
 						}
 						$radio .= '		<li>
-											<input type="radio" name="donation_price[]" id="donation_price_'.$i.'" value="other"  /> '.lang('br_other').' '.$this->_config["currency_marker"].' <input type="text" name="donation_other" class="number" id="donation_other" />
+											<input type="radio" name="'.$products[0]["product_id"].'_donation_price[]" id="donation_price_'.$i.'" value="other"  /> '.lang('br_other').' '.$this->_config["currency_marker"].' <input type="text" name="'.$products[0]["product_id"].'_donation_other" class="number" id="donation_other" />
 											<em>'.$this->_config["currency_marker"].$this->_currency_round($products[0]["donation"][0]["min_donation"]).' '.lang('br_minimum').'</em></li>
 									</ul>';
 						
