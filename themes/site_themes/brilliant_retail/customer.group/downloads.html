@@ -32,7 +32,7 @@
 <body>
 
 <!-- Header -->
-<div id="header">
+<header>
     <div class="wrapper">
 
 			{embed='_assets/topbar'}    
@@ -45,7 +45,7 @@
         <div class="clearboth"><!-- --></div>
     
     </div>
-</div> <!-- header -->
+</header> <!-- header -->
 <!-- end of Header -->
 
 <!-- Account -->
@@ -65,7 +65,6 @@
                 	<tr>
                     	<th>Order</th>
                     	<th>Item</th>
-                    	<th>Link</th>
                     	<th>Status</th>
                     	<th>Remaining</th>
                     </tr>
@@ -76,10 +75,16 @@
 							<tr>
 		                    	<td class="col1">
 		                        	{order_id}</td>
-		                    	<td class="col2">
-		                        	{title}</td>
-		                        <td class="col3">
-		                        	License: {license}<br />
+		                    	<td class="col3">
+		                        	<h4>{title}</h4>
+		                        	<b>Notes:</b> {download_note} <a href="#">({if note}edit note{if:else}add note{/if})</a><br />
+		                        	<div>
+		                        		<form action="{download_note_action}" method="post">
+		                        			<textarea name="note">{download_note}</textarea>
+		                        			<button>save</button>
+		                        		</form>
+		                        	</div>
+		                        	<b>License:</b> {license}<br />
 		                        	{if {download_status_id} == 1}
 		                        		<a href="{download_link}" target="_blank">Download File</a>
 		                        		{!--
@@ -91,7 +96,7 @@
 		                        	{if:else}
 		                        		- 
 		                        	{/if}</td>
-		                        <td class="col4">
+		                        <td class="col5">
 		                        	{download_status}</td>
 		                        <td class="col5">
 		                        	{download_remaining}</td>

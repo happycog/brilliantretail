@@ -422,6 +422,10 @@ class Order_model extends CI_Model {
 		return true;
 	}
 	
+	function update_download_note(){
+	
+	}
+	
 	function create_order($order){
 		$this->db->insert('br_order',$order);
 		return $this->db->insert_id();

@@ -22,9 +22,6 @@
 		{
 			if( file_exists($path_to_image) && is_file($path_to_image) )
 			{
-				// Reserve memory allocation size
-				ini_set('memory_limit', ImageToolsInterface::ALLOCATE_MEMORY);
-				
 				// Check Type
 					$size = getimagesize($path_to_image); 
 					$ext = $size['mime'];

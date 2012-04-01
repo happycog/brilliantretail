@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.5.0'; 
+		public $version			= '1.0.5.1'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
