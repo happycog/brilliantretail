@@ -616,6 +616,7 @@ $lang = array(
 				'br_download_unlimited' 	=> "Unlimited", 
 				'br_download_length' 		=> "Length", 	
 				'br_download_version' 		=> "Version",
+				'br_download_note_updated'	=> 'Your order note has been updated.',
 				
 		// Cart Messages 
 			'br_checkout_shipping_error' 			=> "An error has occurred with the shipping method you selected. Please try again.", 

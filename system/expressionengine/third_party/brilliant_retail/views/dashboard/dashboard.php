@@ -109,6 +109,8 @@
 
                     </div> <!-- b2r_dashboard --> 
 
+					<div class="b2r_clearboth"><!-- --></div>
+
                 </div> <!-- b2r_panel_int -->
             </div> <!-- b2r_panel -->
 

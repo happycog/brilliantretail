@@ -443,7 +443,7 @@ hr {
 #b2r_panel_int {
 	zoom: 1;
 	margin: 0;
-	padding: 0px 10px;
+	padding: 0px 10px 40px;
 	min-height: 600px;
 	overflow: hidden;
 	background-color: #ECF1F4; 
@@ -1448,7 +1448,7 @@ table.b2r_bar td img {
 #b2r_settings {
 	background: #ECF1F4;
 	margin: 0;
-	padding: 0 0 30px;
+	padding: 0;
 }
 
 #b2r_settings textarea {
@@ -1582,7 +1582,7 @@ table#b2r_settings_bot td img {
 
 #b2r_settings .b2r_category {
 	margin: 0;
-	padding: 10px 0;
+	padding: 10px 0 0;
 	zoom: 1;
 	background: #ECF1F4; 
 }

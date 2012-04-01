@@ -2060,6 +2060,11 @@ text-align: right;
 	width: 10%;
 	text-align: right; }
 
+#account #subject table#orders td.col3 .download_note {
+	width: 		400px;
+	height: 	40px;
+	display: 	block;
+}
 
 #account #subject table#orders td table {
 	margin: 0;

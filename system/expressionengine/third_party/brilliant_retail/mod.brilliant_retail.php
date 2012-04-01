@@ -2725,10 +2725,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Set the not for the download to be prefixed and unset;
 					$downloads[$i]['download_note'] = $downloads[$i]['note'];
 					unset($downloads[$i]['note']);
+
 				// Create the note save action
-					$downloads[$i]['download_note_action'] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_download_note').'&id='.md5($downloads[$i]["order_download_id"]);
-				
-				
+					$downloads[$i]['download_note_action'] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_download_note').'&lic='.md5($downloads[$i]["license"]).'&id='.md5($downloads[$i]["order_download_id"]);
+
 				if($downloads[$i]["download_limit"] == 0){
 					$downloads[$i]["download_remaining"] = lang('br_download_unlimited');
 				}else{
@@ -2795,9 +2795,23 @@ class Brilliant_retail extends Brilliant_retail_core{
 		}
 
 		function customer_download_note(){
-			echo '<pre>';
-			var_dump($_POST);
-			echo '</pre>';	
+			$license 	= $this->EE->input->get('lic');
+			$id 		= $this->EE->input->get('id');
+			$note 		= $this->EE->input->post('note');
+			$ajax 		= $this->EE->input->post('ajax');
+			
+			$data = array('note' => $note);
+			
+			$this->EE->db->where('md5(order_download_id)',$id)
+						->where('md5(license)',$license)
+						->update('br_order_download',$data);
+			
+			if($ajax == TRUE){
+				return true;exit;
+			}else{
+				$_SESSION["br_message"] = lang('br_download_note_updated');
+				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+			}
 		}
 
 		function customer_subscriptions(){

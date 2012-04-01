@@ -77,13 +77,14 @@
 		                        	{order_id}</td>
 		                    	<td class="col3">
 		                        	<h4>{title}</h4>
-		                        	<b>Notes:</b> {download_note} <a href="#">({if note}edit note{if:else}add note{/if})</a><br />
-		                        	<div>
-		                        		<form action="{download_note_action}" method="post">
-		                        			<textarea name="note">{download_note}</textarea>
-		                        			<button>save</button>
-		                        		</form>
-		                        	</div>
+		                        	<b>Notes:</b> <br />
+	                        		<form action="{download_note_action}" method="post">
+	                        			<textarea name="note" class="download_note">{download_note}</textarea>
+	                        			<div class="btn">
+					                    	<input class="inpbtn" name="" type="submit" value="save">
+					                    </div>
+	                        		</form>
+	                        		<br />
 		                        	<b>License:</b> {license}<br />
 		                        	{if {download_status_id} == 1}
 		                        		<a href="{download_link}" target="_blank">Download File</a>

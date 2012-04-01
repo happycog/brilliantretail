@@ -82,6 +82,7 @@ class Brilliant_retail_upd {
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'subscription_update')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'subscription_cancel')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'wishlist_process')";
+			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'customer_download_note')";
 			
 		## ----------------------------
 		##  Records of exp_member_fields
@@ -458,6 +459,7 @@ class Brilliant_retail_upd {
 					download_length int(11) NOT NULL,
 					download_version varchar(50) DEFAULT NULL,
 					license varchar(100) NOT NULL,
+					note text, 
 					PRIMARY KEY (order_download_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 

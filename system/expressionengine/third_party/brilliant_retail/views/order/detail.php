@@ -342,16 +342,14 @@
                             						}
                             					?>
                             							</table>
-                            							<p>&nbsp;</p>
+
                             						</td>
                             					</tr>
                             				</table></td> 
                             		</tr>                          		
                             		
                             	</table>
-								<p>&nbsp;</p>
-								<p>&nbsp;</p>
-								<p>&nbsp;</p>
+
                         	<div class="b2r_clearboth"><!-- --></div>
 
                     </div> <!-- b2r_dashboard --> 
