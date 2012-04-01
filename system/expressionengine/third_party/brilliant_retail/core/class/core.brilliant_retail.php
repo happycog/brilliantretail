@@ -805,7 +805,7 @@ class Brilliant_retail_core {
 		function _producttype_table($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			// Create the table
 				$str = "<a href='#' id='add_row_".$attribute_id."'>".lang('br_add_row')."</a><br />
-						<table id='table_".$attribute_id."' cellpadding='0' cellspacing='0' class=\"ft_table\">
+						<table id='table_".$attribute_id."' cellpadding='0' cellspacing='0' width=\"100%\" class=\"ft_table\">
 							<thead>
 								<tr>
 									<th>&nbsp;</th>";
@@ -828,7 +828,7 @@ class Brilliant_retail_core {
 						$str .= "<tr>
 									<td class='dragHandle'>&nbsp;</td>";
 						foreach($r as $cell){
-							$str .= "<td><input type='text' name='cAttribute_".$attribute_id."[".$i."][]' value='".$cell."' /></td>";
+							$str .= "<td><input type='text' name='0_cAttribute_".$attribute_id."[".$i."][]' value='".$cell."' /></td>";
 						}
 						$str .= "	<td class='remove'>&nbsp;</td>
 								</tr>";
@@ -845,25 +845,41 @@ class Brilliant_retail_core {
 							var tbl_".$attribute_id." = $('#table_".$attribute_id."');
 							var col_size = $('#table_".$attribute_id." th').size();
 							
-							tbl_".$attribute_id.".tableDnD({
-							 	dragHandle: \"dragHandle\"
-							});
+							$('#table_".$attribute_id." tbody').sortable({
+																		axis:'y', 
+																		cursor:'move', opacity:0.6, handle:'.dragHandle',
+																		helper:function(e, ui) {
+																			ui.children().each(function() {
+																				$(this).width($(this).width());
+																			});		
+																			return ui;
+																		}
+																	});
+							
 							$('.remove', tbl_".$attribute_id.").bind('click',function(){
 								$(this).parent().remove();
 							});
 							$('#add_row_".$attribute_id."').bind('click',function(){
 								var str = '<tr><td class=\"dragHandle\">&nbsp;</td>';
 								for(i=1;i<(col_size-1);i++){
-									str += '<td><input type=\"text\" name=\"cAttribute_".$attribute_id."['+row_cnt+'][]\" /></td>';
+									str += '<td><input type=\"text\" name=\"0_cAttribute_".$attribute_id."['+row_cnt+'][]\" /></td>';
 								}
 								str += '<td class=\"remove\">&nbsp;</td></tr>';
 								
 								$(str).appendTo(tbl_".$attribute_id.");
 								
 								row_cnt++;
-								tbl_".$attribute_id.".unbind().tableDnD({
-								 	dragHandle: \"dragHandle\"
-								});
+								$('#table_".$attribute_id." tbody').sortable({
+																					axis:'y', 
+																					cursor:'move', opacity:0.6, handle:'.dragHandle',
+																					helper:function(e, ui) {
+																						ui.children().each(function() {
+																							$(this).width($(this).width());
+																						});		
+																						return ui;
+																					}
+																				});
+																
 								$('.remove', tbl_".$attribute_id.").unbind().bind('click',function(){
 									$(this).parent().remove();
 								});

@@ -97,6 +97,11 @@ class Shipping_fedex extends Brilliant_retail_shipping {
 								);
 			}
 		}
+
+		if(count($this->rates) > 1){
+			usort($this->rates,array($this,'_rate_sort'));
+		}
+
 		return $this->rates;
 	}
 	

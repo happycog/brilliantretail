@@ -89,6 +89,11 @@ class Brilliant_retail_shipping extends Brilliant_retail_core{
 			return round($size,2);
 		}
 		
+		// Sort by rate key. 
+		function _rate_sort($a,$b){
+			return ($a["rate"] > $b["rate"]) ? +1 : -1;
+		}
+		
 		// Remove the shipping method
 			function remove($config_id){
 				return true;

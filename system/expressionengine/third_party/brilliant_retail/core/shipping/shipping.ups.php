@@ -142,6 +142,10 @@ class Shipping_ups extends Brilliant_retail_shipping {
 				}
 			}
 
+		if(count($this->rates) > 1){
+			usort($this->rates,array($this,'_rate_sort'));
+		}
+
 		// Reture rates
 		return $this->rates;
 	}

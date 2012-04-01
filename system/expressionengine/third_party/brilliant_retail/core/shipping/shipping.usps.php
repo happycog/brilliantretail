@@ -280,9 +280,4 @@ class Shipping_usps extends Brilliant_retail_shipping {
 	function update($current = '',$config_id = ''){
 		return true;
 	}
-
-	// Sort by rate key. 
-		function _rate_sort($a,$b){
-			return ($a["rate"] > $b["rate"]) ? +1 : -1;
-		}
 }
