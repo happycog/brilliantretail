@@ -94,7 +94,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 													'radio', 
 													'rel', 
 													'select', 
-													'text'
+													'text', 
+													'textarea' 
 												);								
 
 	function __construct($switch = TRUE,$extended = FALSE)
@@ -157,6 +158,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					// BrilliantRetail Version Number
 						$this->vars['version'] = $this->version;
 	
+					// Make sure all emails are initiated
+						$this->_init_emails();
+
 					// Product Types
 						$this->vars['product_type'] = $this->_config['product_type'];	
 					
@@ -2237,42 +2241,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// templates in the DB for the site id
 				
 				$this->vars['cp_page_title'] = lang('nav_br_config_email');
-				
-				$path = PATH_THIRD.'brilliant_retail/core/notifications';
-				$files = read_dir_files($path);
-				
-				$list = $this->EE->email_model->get_emails_by_site_id($this->site_id);
-				$emails = array();
-			
-				foreach($files as $f){
-					$nm = substr($f,0,-4);
-					if(isset($list[$nm])){
-						$emails[$list[$nm]["title"]] = array(
-																'email_id' => $list[$nm]["email_id"], 
-																'title' => lang($nm),
-																'version' => $list[$nm]["version"] 
-															);
-					}else{
-						include_once(rtrim($path,"/")."/".$f);
-						$url = rtrim($this->EE->config->item('site_url'),"/");
-						$a = explode('/',$url);
-						$email = rtrim('contact@'.$a[count($a)-1]);
-						$data = array(
-										'site_id' => $this->EE->config->item('site_id'),
-										'title' => $nm,
-										'version' => $msg["version"],
-										'content' => $msg["content"],
-										'subject' => isset($msg["subject"]) ? $msg["subject"] : lang($nm),   
-										'from_name' => $this->EE->config->item('site_name'), 
-										'from_email' => $email 
-									);
-						$data["email_id"] = $this->EE->email_model->create_email($data);							
-						$emails[$nm] = $data;
-					}
-				}
-			// Send all templates to the view
-				$this->vars["emails"] = $emails;
 				$this->vars["sub_selected"] = 'config_email';
+			
+			// we used to 
+			
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
 				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
@@ -3036,6 +3008,49 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Create new URL
 			$this->ajax_url = $url.QUERY_MARKER.'ACT=';
 		}
+		
+		
+		private function _init_emails()
+		{
+			$path = PATH_THIRD.'brilliant_retail/core/notifications';
+			$files = read_dir_files($path);
+			
+			$list = $this->EE->email_model->get_emails_by_site_id($this->site_id);
+			$emails = array();
+		
+			foreach($files as $f){
+				$nm = substr($f,0,-4);
+				if(isset($list[$nm])){
+					$emails[$list[$nm]["title"]] = array(
+															'email_id' => $list[$nm]["email_id"], 
+															'title' => lang($nm),
+															'version' => $list[$nm]["version"] 
+														);
+				}else{
+					include_once(rtrim($path,"/")."/".$f);
+					$url = rtrim($this->EE->config->item('site_url'),"/");
+					$a = explode('/',$url);
+					$email = rtrim('contact@'.$a[count($a)-1]);
+					$data = array(
+									'site_id' => $this->EE->config->item('site_id'),
+									'title' => $nm,
+									'version' => $msg["version"],
+									'content' => $msg["content"],
+									'subject' => isset($msg["subject"]) ? $msg["subject"] : lang($nm),   
+									'from_name' => $this->EE->config->item('site_name'), 
+									'from_email' => $email 
+								);
+					$data["email_id"] = $this->EE->email_model->create_email($data);							
+					$emails[$nm] = $data;
+				}
+			}
+
+			// Send all templates to the view
+			$this->vars["emails"] = $emails;
+		}
+		
+		
+		
 		
 		function _product_entry_id($product_id){
 			if (isset($this->session->cache['product_entry_id'])){

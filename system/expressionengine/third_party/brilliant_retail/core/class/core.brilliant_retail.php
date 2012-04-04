@@ -1088,6 +1088,7 @@ class Brilliant_retail_core {
 	}
 	
 	function _payment_options($osc_enabled=TRUE,$tax=0,$shipping=0,$admin_order=FALSE){
+		
 		$output = '';
 		$this->EE->load->model('product_model'); 
 		$cart = $this->EE->product_model->cart_get();
@@ -1148,6 +1149,13 @@ class Brilliant_retail_core {
 			}
 		
 		}
+
+		// This will allow us to add stuff directly into the payment option response form
+		// Added 1.0.5.1 - dpd
+			if($this->EE->extensions->active_hook('br_payment_options_after') === TRUE){
+				$output = $this->EE->extensions->call('br_payment_options_after', $output,$osc_enabled=TRUE,$tax=0,$shipping=0,$admin_order=FALSE); 
+			}
+		
 		return $output;
 	}
 	
@@ -2327,22 +2335,34 @@ class Brilliant_retail_core {
 			
 			$this->EE->load->model('order_model');
 			
-			// Get the gateway code
-				$code = $this->EE->order_model->_get_gateway($data["gateway"]);
-			
-			// Config data for the given code
-				$config = array();
-				if(isset($this->_config["gateway"][$this->site_id][$code]["config_data"])){
-					$config_data = $this->_config["gateway"][$this->site_id][$code]["config_data"]; 
-					foreach($config_data as $c){
-						$config[$c["code"]] = $c["value"];
-					}
+			// Hook option to modify the $data array before the 
+			// payment is processed
+				if($this->EE->extensions->active_hook('br_process_payment_before') === TRUE){
+					$data = $this->EE->extensions->call('br_process_payment_before', $data); 
 				}
-								
-			// Process Gateway
-				$str = 'Gateway_'.$code;
-				$tmp = new $str();
-				$trans = $tmp->process($data,$config);
+		
+				// Get the gateway code
+					$code = $this->EE->order_model->_get_gateway($data["gateway"]);
+				
+				// Config data for the given code
+					$config = array();
+					if(isset($this->_config["gateway"][$this->site_id][$code]["config_data"])){
+						$config_data = $this->_config["gateway"][$this->site_id][$code]["config_data"]; 
+						foreach($config_data as $c){
+							$config[$c["code"]] = $c["value"];
+						}
+					}
+									
+				// Process Gateway
+					$str = 'Gateway_'.$code;
+					$tmp = new $str();
+					$trans = $tmp->process($data,$config);
+			
+			// Hook option to modify the $trans array after the 
+			// payment has been processed
+				if($this->EE->extensions->active_hook('br_process_payment_after') === TRUE){
+					$trans = $this->EE->extensions->call('br_process_payment_after', $trans); 
+				}
 
 			// Return Response
 				return $trans;

@@ -104,7 +104,6 @@
 												array(	'name' => 'detail', 
 														'value' => $products[0]["detail"],
 														'title' => lang('br_details').' - '.lang('br_description').' '.lang('br_is_required'),
-														'id' => 'ckeditor',
 														'style' => 'width:400px')
 											)?>
 						</fieldset>
@@ -285,6 +284,7 @@
 			}
 		?>
 <div><!-- End Cap !--></div>
+<script type="text/javascript" src="<?=$detail_ckeditor_url?>"></script>
 <script type="text/javascript">
 	$(function(){
 		
@@ -368,26 +368,12 @@
 	// our ckEditor. Thanks Brandon Kelly for 
 	// the insight into a lazy loading method… 
 	 
-	    if (typeof CKEDITOR == 'undefined'){
-	        window.CKEDITOR_BASEPATH = '<?=$detail_ckeditor_path?>';
-	        $.getScript('<?=$detail_ckeditor_url?>',function(){
-		        // wait for CKEditor to be loaded
-	        	var checkCkeditorInterval = setInterval(function() {
-	            	if (typeof CKEDITOR != 'undefined'){
-	            	    initCkeditorFields();
-		                clearInterval(checkCkeditorInterval);
-	        		}
-	        	}, 10);
-	        });
-	    }else{
-	    	initCkeditorFields();
-		}
+		window.CKEDITOR_BASEPATH = '<?=$detail_ckeditor_path?>';
 
+		CKEDITOR.replace('detail');
+	
 	});
 
-	function initCkeditorFields(){
-		CKEDITOR.replace( 'detail' );
-	}
 	
 	function clean_url_title(str){
 		var sep = "-";

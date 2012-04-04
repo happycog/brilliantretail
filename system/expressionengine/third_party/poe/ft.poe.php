@@ -72,16 +72,17 @@ class Poe_ft extends EE_Fieldtype {
 	function display_field($data)
 	{
 		$this->_set_theme();
-		$str 	= 	'<textarea name="'.$this->field_name.'" class="replace_ckeditor">'.$data.'</textarea>';
-		$str 	.=	$this->_create_js($this->settings["poe_toolbar"]);
+		$str 	= 	'<textarea id="'.$this->field_name.'" name="'.$this->field_name.'">'.$data.'</textarea>';
+		$str 	.=	$this->_create_js($this->field_name,$this->settings["poe_toolbar"]);
 		return $str;
 	}
 
 	function display_cell($data)
 	{
 		$this->_set_theme();
-		$str 	= 	'<textarea name="'.$this->cell_name.'" class="replace_ckeditor">'.$data.'</textarea>';
-		$str 	.=	$this->_create_js($this->settings["poe_toolbar"]);
+		$textarea_id = $this->cell_name;
+		$str 		 = '<textarea id="'.$textarea_id.'" name="'.$this->cell_name.'">'.$data.'</textarea>';
+		$str 		.=	$this->_create_js($textarea_id,$this->settings["poe_toolbar"]);
 		return $str;
 	}
 
@@ -91,6 +92,10 @@ class Poe_ft extends EE_Fieldtype {
 
 	function display_global_settings()
 	{
+	
+		// Not quite ready for prime time 
+		return '';
+		
 	    // Get the current settings
 	    	$val = array_merge($this->settings, $_POST);
 
@@ -281,13 +286,14 @@ class Poe_ft extends EE_Fieldtype {
 * END UPDATES
 */
 
-	function _create_js($toolbar=1){
-		if (isset($this->session->cache['br_poe_js'])){
-			return "<script type='text/javascript'>
-						$(function(){
-							initPoeCkeditorFields();
-						});
-					</script>";	
+	function _create_js($textarea,$toolbar=1){
+		$str = '';
+		if ( ! isset($this->session->cache['br_poe_js'])){
+			$str = "	<script type='text/javascript'>
+							window.CKEDITOR_BASEPATH = '".$this->theme."/script/ckeditor/';
+						</script>
+						<script type='text/javascript' src='".$this->theme."/script/ckeditor/ckeditor.js'></script>";	
+			$this->session->cache['br_poe_js'] = TRUE;
 		}
 		
 		if($toolbar == 1){
@@ -309,44 +315,15 @@ class Poe_ft extends EE_Fieldtype {
 					    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock']";
 		}
 
-		$str = "<script type='text/javascript'>
+		$str .= "<script type='text/javascript'>
 					$(function(){
-						if (typeof CKEDITOR == 'undefined'){
-					        window.CKEDITOR_BASEPATH = '".$this->theme."/script/ckeditor/';
-					        $.getScript('".$this->theme."/script/ckeditor/ckeditor.js',function(){
-						        var checkPoeCkeditor = setInterval(function() {
-					            	if (typeof CKEDITOR != 'undefined'){
-										initPoeCkeditorFields();
-					                	clearInterval(checkPoeCkeditor);
-					                }
-					        	}, 10);
-					        });
-					    }else{
-					    	initPoeCkeditorFields();
-						}
-					})
-					function initPoeCkeditorFields(){
-						var a = $('.replace_ckeditor');
-						if (a.length > 0){
-							$.each(a,function(index,value){
-								CKEDITOR.replace($(value).attr('name'),	{
+						CKEDITOR.replace('".$textarea."',{
 									toolbar :
 									[
 								    ".$config." 
 									]
 								});
-								$(value).removeClass('replace_ckeditor');
-							});
-							clearTimeout(setCKEditor);
-						}else{
-							clearInterval(setCKEditor);
-							var setCKEditor = setTimeout(function() {
-						    	if (typeof CKEDITOR != 'undefined'){
-						        	initPoeCkeditorFields();
-						        }
-					        }, 10);
-						}
-					}
+					});
 				</script>";	
 		
 		$this->session->cache['br_poe_js'] = TRUE;
