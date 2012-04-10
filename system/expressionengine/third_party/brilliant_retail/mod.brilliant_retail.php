@@ -1516,8 +1516,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		function checkout()
 		{
-			$this->EE->load->model('customer_model');
-			$this->EE->load->model('order_model');	
+				$this->EE->load->model('customer_model');
+				$this->EE->load->model('order_model');	
 
 			// For order email 
 				$has_donation 		= FALSE;

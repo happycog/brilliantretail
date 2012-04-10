@@ -22,7 +22,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-include_once('assets/itransact.php');
+include_once('assets/itransact/itransact.php');
 
 class Gateway_itransact extends Brilliant_retail_gateway {
 		// Required variables

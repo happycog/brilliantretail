@@ -22,7 +22,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-include_once('assets/alertpay.php');
+include_once('assets/alertpay/alertpay.php');
 
 class Gateway_alertpay extends Brilliant_retail_gateway {
 	public $title 	= 'AlertPay IPN v2';

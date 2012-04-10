@@ -21,7 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-include_once('assets/phpPayPal.php');
+include_once('assets/paypal/phpPayPal.php');
 
 class Gateway_paypal_pro extends Brilliant_retail_gateway {
 	public $title 	= 'Paypal Pro';

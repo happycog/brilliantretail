@@ -21,8 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-
-include_once('mod.brilliant_retail.php');
+include_once(PATH_THIRD.'brilliant_retail/mod.brilliant_retail.php');
 
 class Brilliant_retail_ft extends EE_Fieldtype {
 	
@@ -37,7 +36,6 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 	function Brilliant_retail_ft()
 	{
 		parent::EE_Fieldtype();
-		
 	}
 	
 	// --------------------------------------------------------------------

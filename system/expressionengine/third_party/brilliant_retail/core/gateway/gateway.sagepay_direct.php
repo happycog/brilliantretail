@@ -22,7 +22,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-include_once('assets/sagepay.php');
+include_once('assets/sagepay/sagepay.php');
 
 class Gateway_sagepay_direct extends Brilliant_retail_gateway {
 	

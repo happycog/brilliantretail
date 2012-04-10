@@ -21,7 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-include_once('assets/xmlrpc.inc');
+include_once('assets/paypoint/xmlrpc.inc');
 
 class Gateway_paypoint extends Brilliant_retail_gateway {
 	// Required variables

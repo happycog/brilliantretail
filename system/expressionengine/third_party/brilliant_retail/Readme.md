@@ -15,6 +15,7 @@
 * Updated CKEditor to the latest release. [#0000115]
 * Fixed issue with Cork loading in states when Ireland is selectd [#0000135]
 
+Updated the gateway asset directory so that each gateway has its own folder for file assets
 Updated the USPS module to use the new USPS V4 API
 Updated the eWay Gateway to add the CVN input field
 Updated product edit form to allow users to change product type. 

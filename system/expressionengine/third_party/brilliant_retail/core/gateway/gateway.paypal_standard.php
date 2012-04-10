@@ -21,7 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-include_once('assets/paypal.php');
+include_once('assets/paypal/paypal.php');
 
 class Gateway_paypal_standard extends Brilliant_retail_gateway {
 	public $title 	= 'Paypal Standard';
