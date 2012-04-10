@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.5.2'; 
+	public $version	= '1.0.5.3'; 
 	
 	function Brilliant_retail_upd()
 	{
@@ -2613,7 +2613,7 @@ class Brilliant_retail_upd {
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (1545,105, 'Cork', 'C')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (1546,105, 'Donegal', 'DL')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (1547,105, 'Dublin', 'D')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (1548,105, 'Galway', 'C')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (1548,105, 'Galway', 'G')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (1549,105, 'Kerry', 'KY')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (1550,105, 'Kildare', 'KE')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (1551,105, 'Kilkenny', 'KK')";

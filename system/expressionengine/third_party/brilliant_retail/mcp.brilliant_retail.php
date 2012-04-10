@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.5.2'; 
+		public $version			= '1.0.5.3'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -1645,7 +1645,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			$this->vars["categories"] = '';
 			if(isset($cat[0])){
-				$this->vars["categories"] = $this->_promo_category_tree($cat[0],$cat,0);
+				$this->vars["categories"] = $this->_product_category_tree($cat[0],$cat,0);
 			}
 			$this->vars["products"] = array();					
 
@@ -1709,7 +1709,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 
 			// Create a tree 
-				$this->vars["categories"] = $this->_promo_category_tree($cat[0],$cat,0,$selected);
+				$this->vars["categories"] = $this->_product_category_tree($cat[0],$cat,0,$selected);
+				
+				$categories = $this->_product_category_tree($cat[0],$cat,0,$selected);
+
 			
 			// Get the products 
 				$this->vars["products"] = array();

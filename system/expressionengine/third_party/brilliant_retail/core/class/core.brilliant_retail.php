@@ -651,20 +651,6 @@ class Brilliant_retail_core {
 				return $this->cats;
 			}
 
-			function _promo_category_tree($arr,$cat,$level,$selected = ''){
-				foreach($arr as $key => $val){
-					$sel = isset($selected[$key]) ? 'checked="checked"' : ''; 
-					$this->cats .= '<div style="padding:4px '.($level*25).'px"><input name="category_title[]" value="'.$key.'" type="checkbox"  '.$sel.' />&nbsp;' . $val['title'].'</div>';
-					if(isset($cat[$key])){
-						$level++;
-						$this->_product_category_tree($cat[$key],$cat,$level,$selected);	
-						$level--;
-					}
-				}
-				return $this->cats;
-			}			
-			
-			
 			function _config_category_tree($arr,$cat,$level,$selected = ''){
 				if(isset($arr)){
 					foreach($arr as $key => $val){

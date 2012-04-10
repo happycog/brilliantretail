@@ -13,7 +13,7 @@
 * Fixed the product file fieldtype to not validate the file input as 'required' when a selection exists [#0000162]
 * Updated Rename fieldtype to BrilliantRetail Products. [#0000116]
 * Updated CKEditor to the latest release. [#0000115]
-
+* Fixed issue with Cork loading in states when Ireland is selectd [#0000135]
 
 Updated the USPS module to use the new USPS V4 API
 Updated the eWay Gateway to add the CVN input field
