@@ -24,21 +24,15 @@
 
 class Brilliant_retail_gateway extends Brilliant_retail_core{
 
-	public $instructions 			= TRUE; 		# Description shown on the gateway settings page
+	public $instructions 			= ''; 			# Description shown on the gateway settings page
 	public $osc_enabled 			= TRUE;			# One step checkout enabled 
 	public $ipn_enabled 			= FALSE;		# Instant Payment Notification Enabled
 	public $ipn_url					= '';			# IPN Url
-
 	public $subscription_enabled 	= FALSE;		# Subscription Enabled (not ready for primetime)
-	
 	public $cart_button 			= FALSE;		# Show cart button
-	
 	public $zero_checkout 			= FALSE;		# Allow $0 checkout
-	
 	public $cart_total 				= 0;			# Cart total
-	
 	public $admin_order				= FALSE;		# Add a flag so we can differentiate admin / frontend orders
-
 
 	/* 
 	*	Construct  
@@ -77,18 +71,26 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 			return TRUE;
 		}
 
-	// Process IPN calls 
-		public function process_ipn()
-		{
-			return TRUE;
-		}
-	
 	// Create a inputs for the checkout form
 		public function form()
 		{
 			return TRUE;
 		}
+
+	// Install the gateway
+		public function install($config_id)
+		{
+			return TRUE;
+		}	
 	
+	// Remove the gateway 
+		function remove($config_id){
+			return true;		
+		}
+
+
+/** SUBSCRIPTION METHODS **/
+
 	// Create a new subscription
 		public function create_subscription($item,$data,$config)
 		{
@@ -96,7 +98,7 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 		}
 
 	// Update an existing subscription	
-		function update_subscription()
+		public function update_subscription()
 		{
 			return TRUE;
 		}
@@ -113,23 +115,38 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 			return TRUE;
 		}
 	
-	// Install the gateway
-		public function install($config_id)
-		{
-				return TRUE;
-		}
-	
 	// Update the gateway
 		public function update($config_id)
 		{
 			return TRUE;		
 		}
-		
-		
-	/* 
-	*
-	*/ 
-	public function ipn_create_order($merchant_id,$status)
+	
+/** IPN FUNCTIONS **/
+
+	public function start_ipn($data,$config)
+	{
+		return TRUE;
+	}
+	
+	public function gateway_ipn()
+	{
+		return TRUE;
+	}
+	
+	// Not used yet but I have plans for it when we start adding 
+	// pay from cart buttons to the system. 
+	public function process_ipn()
+	{
+		return TRUE;
+	}
+
+	// Here we create the hidden order. 
+	// David Phillip Dexter wtf were you doing? DRY! 
+	// Need to refactor this so that create_order is not 
+	// duplicated. Create_order should be abstracted to a 
+	// internal API method. 
+	
+	function ipn_create_order($merchant_id,$status)
 	{
 		// Load the extension library so we can get add our hooks
 			$this->EE->load->library('extensions');
@@ -157,23 +174,30 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 
 				$note = isset($order["notes"][0]["order_note"]) ? $order["notes"][0]["order_note"] : '';
 				
+				$has_item 			= false;
+				$has_subscription 	= false;
+				$has_donation 		= false;
+				
 				$vars[0] = array(
-								"fname" => $order["member"]["br_fname"],
-								"lname" => $order["member"]["br_lname"],
-								"email" => $order["email"], 
-								"address" => $order["address"],
-								"payment" => $order["payment"],
-								"order_id" => $order["order_id"], 
-								"order_num" => $order["order_id"], 
-								"order_note" => $note,
-								"delivery_method" => $order["shipment"][0]["method"], 
-								"delivery_label" => $order["shipment"][0]["label"], 
-								"items" => $order["items"], 
-								"order_subtotal" => $this->_currency_round($order["base"]), 
-								"discount_total" => $this->_currency_round($order["discount"]), 
-								"tax_total" => $this->_currency_round($order["tax"]), 
-								"shipping" 	=> $this->_currency_round($order["shipping"]), 
-								"order_total" => $this->_currency_round($order["total"]+$order["tax"]+$order["shipping"])
+								"fname" 			=> $order["member"]["br_fname"],
+								"lname" 			=> $order["member"]["br_lname"],
+								"email" 			=> $order["email"], 
+								"address" 			=> $order["address"],
+								"payment" 			=> $order["payment"],
+								"order_id"			=> $order["order_id"], 
+								"order_num" 		=> $order["order_id"], 
+								"order_note" 		=> $note,
+								"delivery_method" 	=> $order["shipment"][0]["method"], 
+								"delivery_label" 	=> $order["shipment"][0]["label"], 
+								"items" 			=> $order["items"], 
+								"order_subtotal" 	=> $this->_currency_round($order["base"]), 
+								"discount_total" 	=> $this->_currency_round($order["discount"]), 
+								"tax_total" 		=> $this->_currency_round($order["tax"]), 
+								"shipping" 			=> $this->_currency_round($order["shipping"]), 
+								"order_total" 		=> $this->_currency_round($order["total"]+$order["tax"]+$order["shipping"]),
+								"has_item"			=> $has_item, 
+								"has_subscription" 	=> $has_subscription,
+								"has_donation"		=> $has_donation
 							);
 				
 				$arr = array(
@@ -238,10 +262,9 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 			return;
 	}
 
-	/* 
-	*
-	*/
-	function _ipn_validate_order($merchant_id)
+	/** HELPER FUNCTION **/
+
+	private function _ipn_validate_order($merchant_id)
 	{
 		$this->EE->db->select('status_id,order_id')
 					->from('br_order')

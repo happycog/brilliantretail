@@ -25,12 +25,13 @@
 include_once('assets/alertpay/alertpay.php');
 
 class Gateway_alertpay extends Brilliant_retail_gateway {
-	public $title 	= 'AlertPay IPN v2';
-	public $label 	= 'AlertPay IPN v2';
-	public $descr 	= 'Accept payments via AlertPay IPN v2 Gateway';
-	public $enabled = true;
-	public $version = 1;
+	public $title 		= 'AlertPay IPN v2';
+	public $label 		= 'AlertPay IPN v2';
+	public $descr 		= 'Accept payments via AlertPay IPN v2 Gateway';
+	public $enabled 	= true;
+	public $version 	= 1;
 	public $ipn_enabled = true;
+	public $instructions = 'Accept payments via AlertPay IPN v2 Gateway';
 	
 		public function process($data,$config){
 		

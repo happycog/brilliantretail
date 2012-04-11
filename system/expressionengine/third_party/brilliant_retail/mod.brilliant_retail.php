@@ -2320,7 +2320,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($gateway["config_id"] == $gid){
 					// Prep the config code 
 						$config["config_id"] = $gid;
-						$config["ipn_url"] = rtrim($this->_secure_url(),'/').QUERY_MARKER.'ACT='.$this->EE->core_model->get_aid('Brilliant_retail', 'gateway_ipn').'&GID='.$gid;
+						$config["ipn_url"] = rtrim($this->_secure_url(''),'/').QUERY_MARKER.'ACT='.$this->EE->core_model->get_aid('Brilliant_retail', 'gateway_ipn').'&GID='.$gid;
 						foreach($gateway["config_data"] as $c){
 							$config[$c["code"]] = $c["value"];
 						}

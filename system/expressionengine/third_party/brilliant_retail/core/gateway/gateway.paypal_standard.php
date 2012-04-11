@@ -157,8 +157,6 @@ class Gateway_paypal_standard extends Brilliant_retail_gateway {
 			    	// Function handles both creating and updating from pending to complete
 			    	// just pass the merchant_id. For paypal standard it is in the custom field. 
 			 	   		$this->ipn_create_order($myPaypal->ipnData['custom'],$new_status);
-
-
 			    }
 			}
 			@header("HTTP/1.0 200 OK");

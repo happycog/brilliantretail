@@ -2492,8 +2492,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 				$code 		= $_GET["code"];
 				$config_id	= $_GET["config_id"];
-				
+			
+			// Create the file path
 				$str = 'Gateway_'.$code;
+				if(!class_exists($str)){
+					$local_path = PATH_THIRD.'_local/brilliant_retail/gateway/gateway.'.$_GET["code"].'.php';
+					if(file_exists($local_path)){
+						include_once($local_path);
+					}else{
+						include_once(PATH_THIRD.'brilliant_retail/core/gateway/gateway.'.$_GET["code"].'.php');
+					}
+				}	
 				$class = new $str();
 				$ipn_url = $class->ipn_url;
 				
@@ -2565,7 +2574,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$config_id = strtolower($this->EE->input->get("config_id",TRUE));
 			$code = strtolower($this->EE->input->get("code",TRUE));
-			$str = 'Gateway_'.$code;
+			
+			// Make sure the class file is loaded
+				$str = 'Gateway_'.$code;
+				if(!class_exists($str)){
+					$local_path = PATH_THIRD.'_local/brilliant_retail/gateway/gateway.'.$_GET["code"].'.php';
+					if(file_exists($local_path)){
+						include_once($local_path);
+					}else{
+						include_once(PATH_THIRD.'brilliant_retail/core/gateway/gateway.'.$_GET["code"].'.php');
+					}
+				}
 			$class = new $str();
 			$class->remove($config_id);
 			$this->EE->core_model->module_remove($_GET["config_id"]);

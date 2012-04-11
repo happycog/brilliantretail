@@ -198,7 +198,7 @@ class Gateway_brilliantretail extends Brilliant_retail_gateway {
 						'code' 		=> 'transaction_key',
 						'type' 		=> 'text', 
 						'descr' 	=> 'Your Transaction Key which can be located in your PayLeap merchant interface',
-						'sort' 		=> 3
+						'sort' 		=> 2
 						);
 		$data[] = array(
 						'config_id' => $config_id, 
@@ -208,7 +208,7 @@ class Gateway_brilliantretail extends Brilliant_retail_gateway {
 						'options' 	=> 'TRUE:True|FALSE:False',
 						'descr'		=> 'Select Test Mode. If you select FALSE, transactions will be live', 
 						'value' 	=> 'TRUE',
-						'sort' 		=> 2
+						'sort' 		=> 3
 						);
 		$data[] = array(
 						'config_id' => $config_id, 

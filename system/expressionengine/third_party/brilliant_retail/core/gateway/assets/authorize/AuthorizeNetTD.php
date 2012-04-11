@@ -126,6 +126,32 @@ class AuthorizeNetTD extends AuthorizeNetRequest
     }
     
     /**
+     * This function returns statistics about the settled batch specified by $batchId.
+     *
+     * @param int $batchId
+     *
+     * @return AuthorizeNetTD_Response
+     */
+    public function getBatchStatistics($batchId)
+    {
+        $this->_constructXml("getBatchStatisticsRequest");
+        $this->_xml->addChild("batchId", $batchId);
+        return $this->_sendRequest();
+    }
+    
+    /**
+     * This function returns the last 1000 unsettled transactions.
+     *
+     *
+     * @return AuthorizeNetTD_Response
+     */
+    public function getUnsettledTransactionList()
+    {
+        $this->_constructXml("getUnsettledTransactionListRequest");
+        return $this->_sendRequest();
+    }
+    
+    /**
      * @return string
      */
     protected function _getPostUrl()

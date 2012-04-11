@@ -225,13 +225,11 @@ class AuthorizeNetCIM extends AuthorizeNetRequest
      *
      * @param int                        $customerProfileId
      * @param AuthorizeNetCustomer       $customerProfile
-     * @param string                     $validationMode
      *
      * @return AuthorizeNetCIM_Response
      */
-    public function updateCustomerProfile($customerProfileId, $customerProfile, $validationMode = "none")
+    public function updateCustomerProfile($customerProfileId, $customerProfile)
     {
-        // $this->_validationMode = $validationMode;
         $this->_constructXml("updateCustomerProfileRequest");
         $customerProfile->customerProfileId = $customerProfileId;
         $profile = $this->_xml->addChild("profile");
@@ -249,9 +247,9 @@ class AuthorizeNetCIM extends AuthorizeNetRequest
      *
      * @return AuthorizeNetCIM_Response
      */
-    public function updateCustomerPaymentProfile($customerProfileId, $customerPaymentProfileId, $paymentProfile, $validationMode = "testMode")
+    public function updateCustomerPaymentProfile($customerProfileId, $customerPaymentProfileId, $paymentProfile, $validationMode = "none")
     {
-      //  $this->_validationMode = $validationMode;
+        $this->_validationMode = $validationMode;
         $this->_constructXml("updateCustomerPaymentProfileRequest");
         $this->_xml->addChild("customerProfileId", $customerProfileId);
         $paymentProfile->customerPaymentProfileId = $customerPaymentProfileId;
@@ -350,7 +348,11 @@ class AuthorizeNetCIM extends AuthorizeNetRequest
         if ($this->_extraOptions) {
             $this->_xml->addChild("extraOptions");
             $this->_post_string = str_replace("<extraOptions></extraOptions>",'<extraOptions><![CDATA[' . $this->_extraOptions . ']]></extraOptions>', $this->_xml->asXML());
+            $this->_extraOptions = false;
         }
+        // Blank out our validation mode, so that we don't include it in calls that
+        // don't use it.
+        $this->_validationMode = "none";
     }
     
     /**
