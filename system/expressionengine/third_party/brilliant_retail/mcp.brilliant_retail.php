@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.5.3'; 
+		public $version			= '1.0.5.4'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -1358,11 +1358,21 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// Lets play with adding custom channel fields to BR
 				
+				$prefix = $this->EE->db->dbprefix;
+
 				// Get the fields for the channel
 					$fields = $this->EE->api_channel_fields->setup_entry_settings($this->br_channel_id,array(),FALSE);
 					
-					$prefix = $this->EE->db->dbprefix;
-						
+				// Setup the list of custom fields that were posted in		
+					$id = array();
+
+					foreach($data as $key => $val){
+						if(	substr($key,0,6) == 'field_'){
+							$a = explode("_",$key);
+							$id[$a[2]] = $val;
+						}
+					}
+
 				// New Product 
 					if($data["product_id"] == 0){
 						// We'll create the new channel entry 
@@ -1370,6 +1380,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						        		'title'         => $data["title"],
 						       			'entry_date'    => time()
 										);
+						
+						// Add the field_id and field_ft values
+							foreach($id as $key => $val){
+								$entry["field_id_".$key] = $val;
+								$entry["field_ft_".$key] = $fields["field_id_".$key]["field_fmt"];
+							}
+						
 						if($this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$entry)){
 							$qry = $this->EE->db->query("SELECT entry_id FROM ".$prefix."channel_titles ORDER BY entry_id DESC LIMIT 1");
 							$result = $qry->result_array();
@@ -1398,20 +1415,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$_POST["channel_id"]	= $this->br_channel_id;
 					$_POST["entry_date"]	= time();
 	
-					$id = array();
-					
-					foreach($data as $key => $val){
-						if(	substr($key,0,6) == 'field_'){
-							$a = explode("_",$key);
-							$id[$a[2]] = $a[2];
-						}
-					}
-					foreach($id as $row){
-						$this->EE->api_channel_fields->setup_handler($row);
+					foreach($id as $key => $val){
+						$this->EE->api_channel_fields->setup_handler($key);
 						if($this->EE->api_channel_fields->apply('validate', array($_POST))){
 						}
 					}
-					$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
+					// Sent the entire post so that we have all fields that the 
+					// the fieldtype might send. 
+						$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
 								
 			// Feeds			
 				$prod_feed= array();

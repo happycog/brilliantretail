@@ -28,7 +28,7 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 	// Required variables
 		public $title 			= 'Google Checkout';
 		public $label 			= 'Credit Card Payment';
-		public $descr 			= '';
+		public $descr 			= 'Accept payments on your site with Google Checkout';
 		public $enabled 		= true;
 		public $version 		= '1.0';
 		public $instructions	= '';
