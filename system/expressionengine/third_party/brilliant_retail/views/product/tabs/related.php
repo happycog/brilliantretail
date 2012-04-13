@@ -26,7 +26,7 @@
 
 	<label class="hide_field">
 		<span>
-			<em class="required">*</em> <?=lang('br_related')?>
+			<?=lang('br_related')?>
 		</span>
 	</label>
 

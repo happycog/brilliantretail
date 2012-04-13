@@ -29,7 +29,7 @@
 
 	<label class="hide_field">
 		<span>
-			<em class="required">*</em> <?=lang('br_sale_price')?>
+			<?=lang('br_sale_price')?>
 		</span>
 	</label>
 

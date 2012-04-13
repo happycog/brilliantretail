@@ -30,7 +30,7 @@
 
 	<label class="hide_field">
 		<span>
-			<em class="required">*</em> <?=lang('br_seo')?>
+			<?=lang('br_seo')?>
 		</span>
 	</label>
 

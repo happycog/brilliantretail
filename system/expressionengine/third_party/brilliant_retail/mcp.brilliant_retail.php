@@ -1417,9 +1417,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	
 					foreach($id as $key => $val){
 						$this->EE->api_channel_fields->setup_handler($key);
-						if($this->EE->api_channel_fields->apply('validate', array($_POST))){
+							if($this->EE->api_channel_fields->apply('validate', array($_POST["field_id_".$key]))){
 						}
 					}
+
 					// Sent the entire post so that we have all fields that the 
 					// the fieldtype might send. 
 						$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
@@ -3433,7 +3434,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $can_subscribe;
 		}
 	
-function _view($view,$vars){
+		function _view($view,$vars){
 			if(file_exists(PATH_THIRD.'_local/brilliant_retail/views/'.trim($view).'.php')){
 				$this->EE->load->add_package_path(PATH_THIRD.'_local/brilliant_retail');
 				$output = $this->EE->load->view($view,$vars,TRUE);	

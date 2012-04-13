@@ -116,7 +116,7 @@
 					
 					<label class="hide_field">
 						<span>
-							<?=lang('br_details').' *'?>
+							<?=lang('br_details')?>
 						</span>
 					</label>
 	
@@ -132,13 +132,13 @@
 								<tbody>
 									<tr>
 										<td>
-											<?=lang('status').' *'?></td>
+											<?=lang('status')?> <em class="required">*</em> </td>
 										<td>
 											<?=form_dropdown('enabled', array(1 => lang('br_enabled'), 0 => lang('br_disabled')), $products[0]["enabled"])?></td>
 									</tr>
 									<tr>
 										<td>
-											<?=lang('br_product_sku').' *'?></td>
+											<?=lang('br_product_sku')?> <em class="required">*</em> </td>
 										<td>
 											<?=form_input(
 															array(	'name' => 'sku', 
@@ -149,7 +149,7 @@
 									</tr>
 									<tr>
 										<td>
-											<?=lang('br_quantity')?></td>
+											<?=lang('br_quantity')?> <em class="required">*</em> </td>
 										<td>
 											<?=form_input(
 												array(	'name' => 'quantity', 
