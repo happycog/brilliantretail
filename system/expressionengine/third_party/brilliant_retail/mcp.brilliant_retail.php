@@ -67,36 +67,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											"config_shipping_install","config_shipping_edit","config_shipping_remove",
 											"config_tax_new","config_tax_edit","subscription_ajax","subscription_update","subscription_detail");
 											
-			private $allowed_fieldtypes = array(
-													'channel_images',
-													'channel_files',
-													'channel_polls',
-													'channel_videos', 
-													'checkboxes',
-													'date',
-													'dropdate', 
-													'file',
-													'grid_lite',
-													'gmap', 
-													'matrix', 
-													'mega_upload', 
-													'multi_select', 
-													'mx_stars_field',
-													'mx_google_map', 
-													'playa',
-													'poe',
-													'pt_checkboxes', 
-													'pt_dropdown', 
-													'pt_multiselect',
-													'pt_pill',
-													'pt_radio_buttons', 
-													'pt_switch',
-													'radio', 
-													'rel', 
-													'select', 
-													'text', 
-													'textarea' 
-												);								
+			private $disallowed_fieldtypes = array('wygwam','Wyvern');								
 
 	function __construct($switch = TRUE,$extended = FALSE)
 	{
@@ -967,7 +938,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$i = 0;
 				foreach($fields as $f){
 					// We only want the custom fields for this channel
-					if(in_array($f["field_type"],$this->allowed_fieldtypes)){
+					if(in_array($f["field_type"],$this->disallowed_fieldtypes))
+					{
+						echo 'Unsupported fieldtype: <b>'.$f["field_type"].'</b>';
+						exit;
+					}else{
 						if(isset($f["field_name"])){
 							$this->EE->api_channel_fields->set_settings($f["field_type"],$f);
 							$this->EE->api_channel_fields->setup_handler($f["field_id"]);
@@ -979,9 +954,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 																'display_field' => $this->EE->api_channel_fields->apply('display_field', $param)
 																);
 						}
-					}else{
-						echo 'Unsupported fieldtype: <b>'.$f["field_type"].'</b>';
-						exit;
 					}
 				}
 
