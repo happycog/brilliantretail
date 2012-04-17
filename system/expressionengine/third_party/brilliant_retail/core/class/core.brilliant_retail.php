@@ -1944,7 +1944,7 @@ class Brilliant_retail_core {
 				$valid 	= 1;
 				
 				// Check Start time
-					if($sale["start_dt"] == "0000-00-00 00:00:00" && $sale["start_dt"] == "")
+					if($sale["start_dt"] != "0000-00-00 00:00:00" && $sale["start_dt"] != "")
 					{
 						$start 	= date("U",strtotime($sale["start_dt"]));
 						if(time() < $start){
@@ -1952,7 +1952,7 @@ class Brilliant_retail_core {
 						}
 					}
 				// Check End Time 
-					if($sale["end_dt"] == "0000-00-00 00:00:00" && $sale["end_dt"] == "")
+					if($sale["end_dt"] != "0000-00-00 00:00:00" && $sale["end_dt"] != "")
 					{
 						$end 	= date("U",strtotime($sale["end_dt"]));
 						if($end != 0 && time() > $end){

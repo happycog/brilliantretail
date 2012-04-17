@@ -1337,25 +1337,36 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					
 				// Setup the list of custom fields that were posted in		
 					$id = array();
-
+					
 					foreach($data as $key => $val){
 						if(	substr($key,0,6) == 'field_'){
 							$a = explode("_",$key);
-							$id[$a[2]] = $val;
+							// key 2 holds the id number
+							// key 1 holds the type (id or ft) 
+								$id[$a[2]][$a[1]] = $val;
 						}
 					}
-
+				
 				// New Product 
 					if($data["product_id"] == 0){
 						// We'll create the new channel entry 
 						$entry = array(
 						        		'title'         => $data["title"],
-						       			'entry_date'    => time()
+						       			'entry_date'    => time(),
+						       			'channel_id' 	=> $this->br_channel_id 
 										);
+						
+						// Default the fields
+							foreach($fields as $f){
+								if(isset($f["field_name"])){
+									$entry["field_id_".$f["field_id"]] = "";
+									$entry["field_ft_".$f["field_id"]] = $f["field_fmt"];
+								}	
+							}
 						
 						// Add the field_id and field_ft values
 							foreach($id as $key => $val){
-								$entry["field_id_".$key] = $val;
+								$entry["field_id_".$key] = $val["id"];
 								$entry["field_ft_".$key] = $fields["field_id_".$key]["field_fmt"];
 							}
 						
@@ -1364,6 +1375,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$result = $qry->result_array();
 							$entry_id = $result[0]["entry_id"];
 						}
+						
 					}else{
 						// Get the data for the entry_id 	
 						$sql = "SELECT 
@@ -1382,20 +1394,19 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 
 				// Check for custom fields
-					$_POST["url_title"]		= $data["url"];
-					$_POST["entry_id"] 		= $entry_id;
-					$_POST["channel_id"]	= $this->br_channel_id;
-					$_POST["entry_date"]	= time();
+					$data["url_title"]	= $data["url"];
+					$data["entry_id"] 	= $entry_id;
+					$data["channel_id"]	= $this->br_channel_id;
+					$data["entry_date"]	= time();
 	
 					foreach($id as $key => $val){
 						$this->EE->api_channel_fields->setup_handler($key);
-							if($this->EE->api_channel_fields->apply('validate', array($_POST["field_id_".$key]))){
+							if($this->EE->api_channel_fields->apply('validate', array($data["field_id_".$key]))){
 						}
 					}
-
-					// Sent the entire post so that we have all fields that the 
-					// the fieldtype might send. 
-						$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
+					
+				// Now we'll run the update entry
+					$this->EE->api_channel_entries->update_entry($entry_id, $data);
 								
 			// Feeds			
 				$prod_feed= array();
@@ -2165,15 +2176,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 				
 				$data = array(
-								"category_id" => $_POST["category_id"],
-								"title" => $_POST["title"], 
-								"detail" => $_POST["detail"],  
-					     		"url_title" => $_POST["url_title"], 
-					     		"enabled" => $_POST["enabled"], 
+								"category_id" 	=> $_POST["category_id"],
+								"title" 		=> $_POST["title"], 
+								"detail" 		=> $_POST["detail"],  
+					     		"url_title" 	=> $_POST["url_title"], 
+					     		"enabled" 		=> $_POST["enabled"], 
 					     		"template_path" => $_POST["template_path"],
-					     		"meta_title" => $_POST["meta_title"], 
-					     		"meta_descr" => $_POST["meta_descr"], 
-					     		"meta_keyword" => $_POST["meta_keyword"] 
+					     		"meta_title" 	=> $_POST["meta_title"], 
+					     		"meta_descr" 	=> $_POST["meta_descr"], 
+					     		"meta_keyword" 	=> $_POST["meta_keyword"] 
 							);
 				
 				// If the remove was passed remove it.

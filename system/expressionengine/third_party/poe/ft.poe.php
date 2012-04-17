@@ -94,7 +94,7 @@ class Poe_ft extends EE_Fieldtype {
 	{
 	
 		// Not quite ready for prime time 
-		return '';
+		#return '';
 		
 	    // Get the current settings
 	    	$val = array_merge($this->settings, $_POST);
