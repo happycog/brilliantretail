@@ -217,7 +217,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 						$items[$i] = $products[0];
 						$f_open = form_open($action,
 											array( "id" => "form_".$products[0]["product_id"]), 
-											array( "product_id" => $products[0]["product_id"])
+											array( $products[0]["product_id"]."_product_id" => $products[0]["product_id"])
 											);
 						$items[$i]['product_count'] = ($i+1);
 						$items[$i]['form_open']  = $f_open;

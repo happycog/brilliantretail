@@ -3192,7 +3192,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 	*/
 	
 	function js(){
-		$this->EE->session->cache['br_output_js'] = $this->EE->TMPL->tagdata;
+		$this->EE->session->cache['br_output_js'] .= $this->EE->TMPL->tagdata;
 	}
 	
 	/* Get Url

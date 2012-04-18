@@ -1,15 +1,34 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/************************************************************/
+/*	BrilliantRetail 										*/
+/*															*/
+/*	@package	BrilliantRetail								*/
+/*	@Author		David Dexter  								*/
+/* 	@copyright	Copyright © 2010-2012						*/
+/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@link		http://brilliantretail.com 					*/
+/*															*/
+/************************************************************/
+/* NOTICE													*/
+/*															*/
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
+/* DEALINGS IN THE SOFTWARE. 								*/	
+/************************************************************/
 
 	class ImageTools implements ImageToolsInterface
 	{
 		public $watermark_font_path;
 		
 		private $im;
-		
 		private $image_type;
-		
 		private $tmp_im;
-		
 		private $image_output_type;
 		
 		/**
@@ -18,6 +37,7 @@
 		 * @param $path_to_image - Image path
 		 */
 		 
+		
 		public function ImageTools($path_to_image)
 		{
 			if( file_exists($path_to_image) && is_file($path_to_image) )
