@@ -164,12 +164,14 @@ class Brilliant_retail_ext {
 
 		// Loop through and unset any BrilliantRetail Channel 
 		// Publish or Edit links
-			foreach($menu["content"]["publish"] as $key => $val){
-				if(in_array($key,$titles)){
-					unset($menu["content"]["publish"][$key]);
-					if(is_array($menu["content"]["edit"])){
-						if(isset($menu["content"]["edit"][$key])){
-							unset($menu["content"]["edit"][$key]);
+			if(isset($menu["content"]["publish"])){
+				foreach($menu["content"]["publish"] as $key => $val){
+					if(in_array($key,$titles)){
+						unset($menu["content"]["publish"][$key]);
+						if(is_array($menu["content"]["edit"])){
+							if(isset($menu["content"]["edit"][$key])){
+								unset($menu["content"]["edit"][$key]);
+							}
 						}
 					}
 				}

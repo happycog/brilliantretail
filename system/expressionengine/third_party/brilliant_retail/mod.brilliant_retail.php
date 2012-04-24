@@ -1068,7 +1068,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			// Simple function that adds the currency marker to the 
 			// cart total. 
-			return $this->_config["currency_marker"].$this->_get_cart_total();	
+			return $this->_config["currency_marker"].$this->_currency_round($this->_get_cart_total());	
 		}
 	
 		function cart_related()
@@ -1398,6 +1398,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 																			
 																			if($('#br_billing_zip').val() != ''){
 																				_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());
+																			}else{
+																				_get_shipping_quote();
 																			}
 																			
 																			$('#get_shipping_rates').bind('click',function(){
@@ -1417,8 +1419,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 																				}
 																				return false;
 																			});
-																			
-																			_get_shipping_quote();
 																			
 																		});
 																	
@@ -2591,6 +2591,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// By default we look for the logged in user 
 			// but we can also passs the member_id param
 				$member_id = ($this->EE->TMPL->fetch_param('member_id')) ? ($this->EE->TMPL->fetch_param('member_id')) : $this->EE->session->userdata["member_id"];
+				
+				// We don't have a member to get info for 
+					if($member_id == 0){return '';}
+				
+				
 				$this->EE->load->model('customer_model');
 				$member = $this->EE->customer_model->get_customer_profile($member_id);
 				if($member){

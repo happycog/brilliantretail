@@ -105,6 +105,10 @@ class Shipping_usps extends Brilliant_retail_shipping {
 				$isdomestic = 1;
 				$reqs = 'API=RateV4&XML=<RateV4Request USERID="'.$config["username"].'">';
 				foreach($domestic as $x => $c){
+					
+					// Update to First Class Code. 
+						if($c == 'FIRST CLASS'){ $c = 'First-Class Mail'; }
+					
 					$reqs .= '	<Package ID="'.$x.'">
 									<Service>'.$c.'</Service>
 									<ZipOrigination>'.$config["from_zip"].'</ZipOrigination>
@@ -273,6 +277,10 @@ class Shipping_usps extends Brilliant_retail_shipping {
 		return true;
 	}
 	
+	function _rate_sort($a,$b){
+		return ($a["rate"] > $b["rate"]) ? +1 : -1;
+	}
+		
 	function remove($config_id){
 		return true;
 	}
