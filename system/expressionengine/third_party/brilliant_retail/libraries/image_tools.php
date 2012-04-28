@@ -21,8 +21,10 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-
-	class ImageTools implements ImageToolsInterface
+	
+	include_once(PATH_THIRD.'brilliant_retail/libraries/imagetools/ImageTools.interface.php');
+				
+	class Image_tools implements ImageToolsInterface
 	{
 		public $watermark_font_path;
 		
@@ -37,8 +39,10 @@
 		 * @param $path_to_image - Image path
 		 */
 		 
+		public function __construct(){
+		}
 		
-		public function ImageTools($path_to_image)
+		public function create($path_to_image)
 		{
 			if( file_exists($path_to_image) && is_file($path_to_image) )
 			{
@@ -802,7 +806,8 @@
 				$valid_vpositions = array(self::IMAGE_POSITION_TOP, self::IMAGE_POSITION_CENTER, self::IMAGE_POSITION_BOTTOM);
 				$valid_hpositions = array(self::IMAGE_POSITION_LEFT, self::IMAGE_POSITION_CENTER, self::IMAGE_POSITION_RIGHT);
 				
-				$watermark = new ImageTools($image_path);
+				$watermark = new Image_tools();
+				$watermark->create($image_path);
 				
 				if( in_array($vertical_position, $valid_vpositions, true) && in_array($horizontal_position, $valid_hpositions, true) )
 				{

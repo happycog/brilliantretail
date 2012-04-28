@@ -338,11 +338,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 	* @return	string
 	*/		
 		public function image()
-		{
-			// Include the image manipulation class
-				include_once(PATH_THIRD.'brilliant_retail/libraries/imagetools/ImageTools.interface.php');
-				include_once(PATH_THIRD.'brilliant_retail/libraries/imagetools/ImageTools.class.php');
-	
+		{	
+			$this->EE->load->library('image_tools');
+			
 			// Where do we cache images? 
 				$cache = $this->_config["media_dir"].'cache/';
 				if(!file_exists($cache)){
@@ -351,9 +349,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			// Get params 
 				$src = $this->EE->TMPL->fetch_param('src');
-				if($src == ''){
+				if(!file_exists($this->_config["media_dir"].$src) || $src == ''){
+					$this->EE->TMPL->log_item('BrilliantRetail: IMAGE FILE SOURCE DOES NOT EXIST!');
 					return;
+				}else{
+					$this->EE->TMPL->log_item('BrilliantRetail: valid image source ('.$this->_config["media_dir"].$src.')');
 				} 
+					
 				// Image attributes & sizing
 					$title 			= $this->EE->TMPL->fetch_param('title');
 					$alt 			= $this->EE->TMPL->fetch_param('alt');
@@ -375,17 +377,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 						
 						// Vertical Spacing 
 							$vPos = array(
-											"TOP" 		=> ImageTools::IMAGE_POSITION_TOP,
-											"CENTER" 	=> ImageTools::IMAGE_POSITION_CENTER,
-											"BOTTOM" 	=> ImageTools::IMAGE_POSITION_BOTTOM
+											"TOP" 		=> image_tools::IMAGE_POSITION_TOP,
+											"CENTER" 	=> image_tools::IMAGE_POSITION_CENTER,
+											"BOTTOM" 	=> image_tools::IMAGE_POSITION_BOTTOM
 										);
 						// Horizontal Spacing	
 							$hPos = array(
-											"LEFT" 		=> ImageTools::IMAGE_POSITION_LEFT,
-											"CENTER" 	=> ImageTools::IMAGE_POSITION_CENTER,
-											"RIGHT" 	=> ImageTools::IMAGE_POSITION_RIGHT
+											"LEFT" 		=> image_tools::IMAGE_POSITION_LEFT,
+											"CENTER" 	=> image_tools::IMAGE_POSITION_CENTER,
+											"RIGHT" 	=> image_tools::IMAGE_POSITION_RIGHT
 										);
-
+										
 				// Output Settings 
 					$url_only 		= $this->EE->TMPL->fetch_param('url_only');
 				
@@ -451,47 +453,51 @@ class Brilliant_retail extends Brilliant_retail_core{
 							}
 						}
 					
-					$img = new ImageTools($this->_config["media_dir"].$src);
-
+						$this->EE->image_tools->create($this->_config["media_dir"].$src);
+					
 					// Do we have a relection?
 						if($reflect > 0){
-							$img->reflect($reflect, $reflect_bg, $reflect_space); // drop shadow percentage, background color, spacing
+							$this->EE->image_tools->reflect($reflect, $reflect_bg, $reflect_space); // drop shadow percentage, background color, spacing
 						}
 
 					// Do resize pre watermarking
+
 						if($mode == 'fit'){
 							// stretch the image to the exact specs 
 							// provided in the height and width fields 
-								$img->resizeOriginal($width,$height);		
+								$this->EE->image_tools->resizeOriginal($width,$height);		
 						}elseif($mode == 'scale'){
 							// scale to height or width. If both are provided then fit within the box
 							if($use_width === TRUE){
-								$img->resizeWidth($width); // new width
+								$this->EE->image_tools->resizeWidth($width); // new width
 							}else{
-								$img->resizeHeight($height); // new height
+								$this->EE->image_tools->resizeHeight($height); // new height
 							}
 						}else{
 							// scale and matte to size provided 
 							if($use_width === TRUE){
-								$img->resizeNewByWidth($width,$height,$n_width); // new width, new height
+								$this->EE->image_tools->resizeNewByWidth($width,$height,$n_width); // new width, new height
 							}else{
-								$img->resizeNewByHeight($width,$height,$n_height); // new width, new height
+								$this->EE->image_tools->resizeNewByHeight($width,$height,$n_height); // new width, new height
 							}
 						}
 						
 					// Set the image watermark 
 						if($use_watermark === TRUE){
-							$img->addWatermarkImage($this->_config["media_dir"].$watermark, $v, $h, 5); 
+							$this->EE->image_tools->addWatermarkImage($this->_config["media_dir"].$watermark, $v, $h, 5); 
 						}
 						
-					$img->save($this->_config["media_dir"].'cache/',$cache_file);
+					$this->EE->image_tools->save($this->_config["media_dir"].'cache/',$cache_file);
 					
 					if(strtolower($url_only) == "yes"){
+						$this->EE->TMPL->log_item('BrilliantRetail: returning newly created cached image file ('.$this->_config["media_url"].'cache/'.$cache_file.')');
 						return $this->_config["media_url"].'cache/'.$cache_file;
 					}else{
+						$this->EE->TMPL->log_item('BrilliantRetail: FAILED TO CREATE CACHED IMAGE');
 						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" />';
 					}
 				}else{
+					$this->EE->TMPL->log_item('BrilliantRetail: returning cached image file ('.$this->_config["media_url"].'cache/'.$cache_file.')');
 					if(strtolower($url_only) == "yes"){
 						return $this->_config["media_url"].'cache/'.$cache_file;
 					}else{
