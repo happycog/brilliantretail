@@ -726,15 +726,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$i = 0;
 			if(isset($cart["items"])){
 				foreach($cart["items"] as $key => $v){
-					$hash = md5($key);
-					$items[$i] = $v;
-					$items[$i]['hash'] = $hash;
-					$items[$i]['remove_link'] = $remove.'&id='.$hash;
-					$items[$i]['base'] 		= $this->_config["currency_marker"].$v['base'];
-					$items[$i]['price']		= $this->_config["currency_marker"].$v['price'];
-					$items[$i]['subtotal']	= $this->_config["currency_marker"].$v['subtotal'];
-					$items[$i]['discount'] 	= $this->_config["currency_marker"].$v['discount'];
-					$i++;
+					// We want the entry_id for the product
+						$p = $this->_get_product($v["product_id"]);
+						$entry_id = $p[0]["entry_id"];
+
+					// Build up the item array 
+						$hash = md5($key);
+						$items[$i] = $v;
+						$items[$i]['hash'] 			= $hash;
+						$items[$i]['product_id'] 	= $v["product_id"];
+						$items[$i]['entry_id'] 		= $entry_id;
+						$items[$i]['remove_link'] = $remove.'&id='.$hash;
+						$items[$i]['base'] 		= $this->_config["currency_marker"].$v['base'];
+						$items[$i]['price']		= $this->_config["currency_marker"].$v['price'];
+						$items[$i]['subtotal']	= $this->_config["currency_marker"].$v['subtotal'];
+						$items[$i]['discount'] 	= $this->_config["currency_marker"].$v['discount'];
+						$i++;
 				}
 			}
 			$vars[0] = array(
