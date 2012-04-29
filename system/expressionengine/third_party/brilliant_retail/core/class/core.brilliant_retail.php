@@ -1923,22 +1923,52 @@ class Brilliant_retail_core {
 		function _check_product_price($p)
 		{
 			$group_id = $this->EE->session->userdata["group_id"];
-			$amt = array();
+			$amt = array(
+							'on_sale' 			=> FALSE, 
+							'base' 				=> '',
+							'price' 			=> '',
+							'price_html'		=> '',
+							'price_start'		=> NULL,
+							'price_end'			=> NULL,
+							'sale_price_start'	=> NULL,
+							'sale_price_end'	=> NULL 
+						);
 
 			// Deal with our price matrix 
-			 foreach($p["price_matrix"] as $price){
-			 	if(	$price["group_id"] == 0 || 
-			 		$price["group_id"] == $group_id){
+				foreach($p["price_matrix"] as $price){
+				 	if(	$price["group_id"] == 0 || 
+				 		$price["group_id"] == $group_id){
 
-			 		$amt = array(
-							'on_sale' 		=> FALSE, 
-							'base' 			=> $price["price"],
-							'price' 		=> $price["price"],
-							'price_html'	=> '<p class="price">'.$this->_config["currency_marker"].$price["price"].'</p>'  							
-						);
-			 	}
-			 }
+						$valid 	= 1;
+						
+						// Check Start time
+							if($price["start_dt"] != "0000-00-00 00:00:00" && $price["start_dt"] != "")
+							{
+								$start 	= date("U",strtotime($price["start_dt"]));
+								if(time() < $start){
+									$valid = 0;
+								}
+							}
+						// Check End Time 
+							if($price["end_dt"] != "0000-00-00 00:00:00" && $price["end_dt"] != "")
+							{
+								$end 	= date("U",strtotime($price["end_dt"]));
+								if($end != 0 && time() > $end){
+									$valid = 0;
+								}
+							}
+						
+						if($valid == 1){
+							$amt['base'] 		= $price["price"];
+							$amt['price'] 		= $price["price"];
+							$amt['price_html']	= '<p class="price">'.$this->_config["currency_marker"].$price["price"].'</p>';
+				 			$amt['price_start'] = ($price["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["start_dt"]);
+				 			$amt['price_end'] 	= ($price["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["end_dt"]);
+				 		}
+				 	}
+				 }	
 			
+			// 
 			foreach($p["sale_matrix"] as $sale){
 				
 				$valid 	= 1;
@@ -1963,13 +1993,14 @@ class Brilliant_retail_core {
 				// Setup a sale price if valid		 
 				 	if(($valid == 1) && ($sale["group_id"] == 0 || $sale["group_id"] == $group_id) && ($amt["price"] > $sale["price"]))
 				 	{
-				 		$amt = array(
-								'on_sale' 		=> TRUE, 
-								'base' 			=> $amt["price"], 
-								'price' 		=> $sale["price"],
-								'price_html' 	=> '<p class="price"><span class="original">'.$this->_config["currency_marker"].$amt["price"].'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>',  
-								'sale_price' 	=> $sale["price"]
-							);
+				 		$amt['on_sale'] 	= TRUE; 
+						$amt['base'] 		= $amt["price"];
+						$amt['price'] 		= $sale["price"]; 
+						$amt['price_html'] 	= '<p class="price"><span class="original">'.$this->_config["currency_marker"].$amt["price"].'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>';  
+						$amt['sale_price'] 	= $sale["price"];
+						$amt['sale_price_start'] 	= ($sale["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["start_dt"]);
+			 			$amt['sale_price_end'] 		= ($sale["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["end_dt"]);
+			 		
 					}
 			}
 			
@@ -1981,7 +2012,7 @@ class Brilliant_retail_core {
 			if(!isset($amt["price"])){
 				return false;
 			}
-			
+
 			return $amt;		
 		}
 

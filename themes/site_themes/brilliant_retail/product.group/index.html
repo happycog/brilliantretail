@@ -104,7 +104,20 @@
         <div id="dright" class="right">
         	<div id="details">
                     {price_html}
-                    {if {type_id} != 6 AND {type_id} != 7}
+                    
+                    {!-- 
+                    	An on_sale flag is also available for if statements.
+                    	
+                    	Additional sale price/time tags are available. Sale/Price times 
+                    	accept the format parameter.
+						
+						Ex: 
+						{if on_sale}
+							{sale_start format="%d/%y"}
+						{/if}
+                    !--}
+                    
+                    {if {type_id} != 7}
                     	<label>Qty:</label>
                     	{quantity_select}
 					{if:else}
