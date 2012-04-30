@@ -631,6 +631,29 @@ class Brilliant_retail extends Brilliant_retail_core{
 				return $output;
 		}
 
+	/** 
+	*
+	*
+	*
+	*
+	*/
+		public function category(){
+			$category = array();
+			// By category_id is priority
+				$category_id 	= $this->EE->TMPL->fetch_param('category_id');
+				if($category_id != ''){
+					$category = $this->EE->product_model->get_category($category_id);
+				}
+			// By url_title is a secondary option 
+				$key = $this->EE->TMPL->fetch_param('url_title');
+				if($key != ''){
+					$category = $this->EE->product_model->get_category_by_key($key);
+				}
+				if($category == 0){ return; }
+
+				return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $category);
+		}
+	
 	/**
 	* Category Menu 
 	* 
