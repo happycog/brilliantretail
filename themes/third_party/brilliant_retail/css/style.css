@@ -1735,10 +1735,7 @@ p.b2r_save a b {
 	font-size: 12px;
 	color: #6b7f86;
 	text-align: left;
-	border-top: 1px solid #e7e7e7;
-	border-right: 2px solid #e7e7e7;
-	border-bottom: 2px solid #c5c5c5;
-	border-left: 2px solid #ececec; }
+}
 
 #b2r_settings .b2r_category table td p.b2r_note {
 	margin: 5px 0 0;

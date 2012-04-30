@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.0.5.8'; 
+	public $version	= '1.0.5.9'; 
 	
 	function Brilliant_retail_upd()
 	{
@@ -1732,22 +1732,22 @@ class Brilliant_retail_upd {
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (664,58, 'Central Bohemian', 'ST')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (665,58, 'Usti nad Labem', 'US')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (666,58, 'Zlin', 'ZL')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (667,82, 'Berlin (city-state)', 'BE')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (668,82, 'Brandenburg', 'BR')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (669,82, 'Baden-Württemberg', 'BW')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (670,82, 'Bavaria (Bayern)', 'BY')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (671,82, 'Bremen (city-state)', 'HB')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (672,82, 'Hes (Hesn)', 'HE')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (673,82, 'Hamburg (city-state)', 'HH')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (674,82, 'Mecklenburg-Western Pomerania (Mecklenburg-Vorpommern)', 'MV')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (675,82, 'Lower Saxony (Niedersachn)', 'NI')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (676,82, 'North Rhine-Westphalia (Nordrhein-Westfalen)', 'NW')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (677,82, 'Rhineland-Palatinate (Rheinland-Pfalz)', 'RP')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (678,82, 'Saxony-Anhalt (Sachn-Anhalt)', 'ST')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (679,82, 'Schleswig-Holstein', 'SH')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (680,82, 'Saarland', 'SL')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (681,82, 'Saxony (Sachn)', 'SN')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (682,82, 'Thuringia (Thüringen)', 'TH')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (667,82,'Berlin','BE')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (668,82,'Brandenburg','BR')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (669,82,'Baden-Württemberg','BW')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (670,82,'Bayern','BY')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (671,82,'Bremen','HB')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (672,82,'Hessen','HE')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (673,82,'Hamburg','HH')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (674,82,'Mecklenburg-Vorpommern','MV')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (675,82,'Niedersachsen','NI')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (676,82,'Nordrhein-Westfalen','NW')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (677,82,'Rheinland-Pfalz','RP')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (678,82,'Sachn-Anhalt','ST')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (679,82,'Schleswig-Holstein','SH')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (680,82,'Saarland','SL')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (681,82,'Sachsen','SN')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (682,82,'Thüringen','TH')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (683,61, 'Ali Sabiah', 'AS')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (684,61, 'Dikhil', 'DI')";
 		$sql[] = "INSERT INTO `exp_br_state` VALUES (685,61, 'Djibouti', 'DJ')";

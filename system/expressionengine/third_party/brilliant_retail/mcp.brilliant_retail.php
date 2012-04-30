@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.5.8'; 
+		public $version			= '1.0.5.9'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -1645,20 +1645,21 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["products"] = array();					
 
 			$this->vars["promo"][0] = array(
-											"promo_id" => 0,
-											"title" => '',
-										    "code" => '',
-										    "start_dt" => '',
-										    "end_dt" => '',
-										    "code_type" => 'fixed',
-										    "amount" => '',
-										    "enabled" => '1',
-										    "descr" => '',
-										    "category_list" => '',
-										    "product_list" => '',
-										    "min_subtotal" => '1.00',
-										    "min_quantity" => '1',
-										    "uses_per" => '0'
+												"promo_id" 		=> 0,
+												"discount_type" => 'fixed',
+												"title" 		=> '',
+											    "code" 			=> '',
+											    "start_dt" 		=> '',
+											    "end_dt" 		=> '',
+											    "code_type" 	=> 'fixed',
+											    "amount" 		=> '',
+											    "enabled" 		=> '1',
+											    "descr"	 		=> '',
+											    "category_list" => '',
+											    "product_list" 	=> '',
+											    "min_subtotal" 	=> '1.00',
+											    "min_quantity" 	=> '1',
+											    "uses_per" 		=> '0'
 										    );
 
 
