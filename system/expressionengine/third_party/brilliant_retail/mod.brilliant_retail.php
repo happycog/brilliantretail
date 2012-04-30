@@ -651,6 +651,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				if($category == 0){ return; }
 
+			// Is there a prefix in play? 
+				$prefix = $this->EE->TMPL->fetch_param('prefix');
+				if($prefix != ''){
+					foreach($category[0] as $key=>$val){
+						$tmp[$prefix.":".$key]=$val;
+					}
+					unset($category);
+					$category[0] = $tmp;
+				}
 				return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $category);
 		}
 	

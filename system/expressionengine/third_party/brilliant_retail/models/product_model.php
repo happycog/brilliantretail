@@ -1581,10 +1581,12 @@ class Product_model extends CI_Model {
 			foreach ($query->result_array() as $key => $val){
 				$cat[$key] = $val;
 			}
-
-			$cat[0]["products"] = $this->get_product_by_category($cat[0]["category_id"]);
-			$cat[0]["total_results"] = count($cat[0]["products"]);
-
+			
+			if(isset($cat[0]["category_id"])){
+				$cat[0]["products"] = $this->get_product_by_category($cat[0]["category_id"]);
+				$cat[0]["total_results"] = count($cat[0]["products"]);
+			}
+			
 			// Set it in session
 				$this->session->cache['get_category'][$category_id] = $cat;
 			// Return array
