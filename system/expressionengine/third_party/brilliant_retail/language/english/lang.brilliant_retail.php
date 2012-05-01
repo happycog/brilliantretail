@@ -543,6 +543,16 @@ $lang = array(
 		'br_label' 				=> 'Label', 
 		'rates_matrix' 			=> 'Rates Matrix',
 	
+		// Shipping  
+			'from_zip'					=> 'From Zip',	
+			'from_state'				=> 'From State',
+			'from_country'				=> 'From Country',
+			'aus_post_api_key'			=> 'API Key',
+			'aus_post_from_post_code' 	=> 'From Post Code',
+			'aus_post_height' 			=> 'Height',
+			'aus_post_width' 			=> 'Width',
+			'aus_post_length' 			=> 'Length',
+	
 	// Site 
 		'br_site_name' => 'Site Name',
 		'br_site_logo' => 'Logo',	
