@@ -90,7 +90,7 @@
     	</tr>	
 		<tr class="odd">
 			<th colspan="2">
-				<?=lang('br_category_settings')?></th>
+				<?=lang('br_meta_data')?></th>
 		</tr>
 		<tr class="odd">
         	<td>

@@ -58,7 +58,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											'config_email_update','config_gateway_update','config_permission_update',
 											'config_shipping_update','config_site_update','config_tax_update',
 											"order_ajax","customer_ajax","product_ajax","index_products","order_detail",
-											"order_detail_add_payment","order_detail_add_payment_process",
+											"order_detail_add_payment","order_detail_add_payment_process","order_entry","order_batch","order_license_manager", 
 											"customer_orders","product_edit", "product_new","promo_new","promo_edit",
 											"report_detail","config_feeds_edit","config_attribute_create","config_attribute_edit",
 											"config_attributeset_create","config_attributeset_edit","config_attributeset_delete",
@@ -1518,7 +1518,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/************************/
 	/* Subscriptions	 	*/
 	/************************/
-		
+
+/*		
+	Not quite ready for prime time. 
+	
 			function subscription()
 			{ 
 				// Get the products 
@@ -1595,6 +1598,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			}
 	
+*/
+
 	/************************/
 	/* Promotions Tab	 	*/
 	/************************/

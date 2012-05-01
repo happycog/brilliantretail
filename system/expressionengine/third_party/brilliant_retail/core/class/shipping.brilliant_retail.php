@@ -44,10 +44,8 @@ class Brilliant_retail_shipping extends Brilliant_retail_core{
 			}  
 			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 			$contents = curl_exec ($ch);
-			
-			return $contents;
-			
 			curl_close ($ch);
+			return $contents;
 		}
 
 		// Convert Weight

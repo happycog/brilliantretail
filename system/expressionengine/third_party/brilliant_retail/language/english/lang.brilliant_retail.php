@@ -578,8 +578,9 @@ $lang = array(
 		'br_site_product_url' => 'Product Template',
 		'br_countries' => 'Countries',
 		'br_product_config' => "Global Product Configuration",
+		'br_seo_config' => 'Global SEO Configuration',
 		'br_low_stock' => 'Low Stock Threshold (Basic Stock)',
-
+		
 	// Tax Settings 
 		'br_state' => 'State',
 		'br_rate' => 'Rate', 

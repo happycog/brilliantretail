@@ -168,7 +168,7 @@
 		// SEO TAB
 			$this->table->set_template($cp_pad_table_template);
 
-  			$this->table->set_heading(array('data' => lang('br_seo'), 
+  			$this->table->set_heading(array('data' => lang('br_seo_config'), 
 								'colspan' => 2));
 
 			$fields = array('meta_title','meta_keywords');
