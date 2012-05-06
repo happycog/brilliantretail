@@ -1558,7 +1558,8 @@ header #main_search .search_btn {
 
 
 #checkout .col1 .country {
-	padding: 15px 0 0;; }
+	padding: 15px 0 0; 
+}
 
 #checkout .col1 .country select {
 	margin: 3px 0 0;

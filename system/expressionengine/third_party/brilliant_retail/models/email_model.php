@@ -48,6 +48,9 @@ class Email_model extends CI_Model {
 		$this->db->where('site_id',$this->config->item('site_id'));
 		$query = $this->db->get();
 		$row = $query->result_array();
+		
+		#$this->EE->config->item('br_save_notificaion_files');	
+		
 		return $row[0];
 	}
 	function get_email_by_id($email_id){

@@ -31,7 +31,7 @@
 	
 	$this->table->set_heading(	
 								array('data' => '', 'style' => 'width:10px'), 
-								array('data' => lang('br_promo_name'), 'style' => 'width:150px'),
+								array('data' => lang('br_title'), 'style' => 'width:150px'),
 								array('data' => lang('br_promo_code'), 'style' => 'width:70px'),
 								array('data' => lang('br_promo_start_dt'), 'style' => 'width:70px'),
 								array('data' => lang('br_promo_end_dt'), 'style' => 'width:70px') 

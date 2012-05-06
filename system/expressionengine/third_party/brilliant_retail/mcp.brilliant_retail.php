@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.6.0'; 
+		public $version			= '1.0.6.1'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -1475,7 +1475,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			if($redirect==TRUE){
 				//Reindex product search
-					$this->_index_products();
+					$this->_index_products($data["product_id"]);
 					$_SESSION["message"] = lang('br_product_update_success');
 					if($continue == TRUE){
 						$this->EE->functions->redirect($this->base_url.'&method=product_edit&product_id='.$data["product_id"].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id);

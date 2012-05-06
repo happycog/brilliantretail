@@ -970,7 +970,7 @@ class Brilliant_retail_core {
 			exit();
 		}
 		
-		function _index_products(){
+		function _index_products($product_id=''){
 			$this->EE->load->model('product_model');
 			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
@@ -982,21 +982,39 @@ class Brilliant_retail_core {
 				mkdir($path,DIR_WRITE_MODE,TRUE);
 			}
 
-			$index = Zend_Search_Lucene::create($path);
-
-			$products = $this->EE->product_model->get_products();
-			foreach($products as $p){
-				$doc = new Zend_Search_Lucene_Document();
-				$doc->addField(Zend_Search_Lucene_Field::UnStored('title',$p["title"],'UTF-8'));
-				$doc->addField(Zend_Search_Lucene_Field::UnStored('detail',$p["detail"],'UTF-8'));
-				$doc->addField(Zend_Search_Lucene_Field::UnStored('keywords',$p["meta_keyword"],'UTF-8'));
-				$doc->addField(Zend_Search_Lucene_Field::UnStored('sku',$p["sku"],'UTF-8'));
-				$doc->addField(Zend_Search_Lucene_Field::UnIndexed('product_id',$p["product_id"],'UTF-8'));
-				$index->addDocument($doc);
-			}
-			$index->commit();
-			$index->optimize();
-			return TRUE;
+			// Lets open or create depending on the existance of the index
+				try
+				{
+				    $index = Zend_Search_Lucene::open($path);
+				}
+				catch (Zend_Search_Lucene_Exception $e)
+				{
+				    $index = Zend_Search_Lucene::create($path);
+				}
+				
+			// Give the index writable permissions
+				Zend_Search_Lucene_Storage_Directory_Filesystem::setDefaultFilePermissions(0755);
+			
+				$products = $this->EE->product_model->get_products($product_id);
+				$hits = $index->find('product_id:' . $products[0]["product_id"]);
+				foreach ($hits as $hit) {
+				   	$index->delete($hit->id);
+				}
+			
+			// Reindex the result set. If it was an update this will be a single 
+			// product_id. 
+				foreach($products as $p){
+					$doc = new Zend_Search_Lucene_Document();
+					$doc->addField(Zend_Search_Lucene_Field::UnStored('title',$p["title"],'UTF-8'));
+					$doc->addField(Zend_Search_Lucene_Field::UnStored('detail',$p["detail"],'UTF-8'));
+					$doc->addField(Zend_Search_Lucene_Field::UnStored('keywords',$p["meta_keyword"],'UTF-8'));
+					$doc->addField(Zend_Search_Lucene_Field::UnStored('sku',$p["sku"],'UTF-8'));
+					$doc->addField(Zend_Search_Lucene_Field::Keyword('product_id',$p["product_id"],'UTF-8'));
+					$index->addDocument($doc);
+				}
+				#$index->commit();
+				#$index->optimize();
+				return TRUE;
 		}
 
 		function _validate_license($lic){
@@ -1993,14 +2011,16 @@ class Brilliant_retail_core {
 				// Setup a sale price if valid		 
 				 	if(($valid == 1) && ($sale["group_id"] == 0 || $sale["group_id"] == $group_id) && ($amt["price"] > $sale["price"]))
 				 	{
-				 		$amt['on_sale'] 	= TRUE; 
-						$amt['base'] 		= $amt["price"];
-						$amt['price'] 		= $sale["price"]; 
-						$amt['price_html'] 	= '<p class="price"><span class="original">'.$this->_config["currency_marker"].$amt["price"].'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>';  
-						$amt['sale_price'] 	= $sale["price"];
-						$amt['sale_price_start'] 	= ($sale["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["start_dt"]);
-			 			$amt['sale_price_end'] 		= ($sale["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["end_dt"]);
-			 		
+						// Container for the original price
+				 			$original 					= $amt['price'];
+				 		// 
+					 		$amt['on_sale'] 			= TRUE; 
+							$amt['base'] 				= $amt["price"];
+							$amt['price'] 				= $sale["price"]; 
+							$amt['price_html'] 			= '<p class="price"><span class="original">'.$this->_config["currency_marker"].$original.'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>';  
+							$amt['sale_price'] 			= $sale["price"];
+							$amt['sale_price_start'] 	= ($sale["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["start_dt"]);
+				 			$amt['sale_price_end'] 		= ($sale["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["end_dt"]);
 					}
 			}
 			
@@ -2467,11 +2487,26 @@ class Brilliant_retail_core {
 				$vars[0]["currency_marker"] = $this->_config["currency_marker"];
 				
 			// Get the email 			
-				$email = $this->EE->email_model->get_email($temp);
-				$output = $this->EE->template->parse_variables($email["content"], $vars);
-				$subject = $this->EE->template->parse_variables($email["subject"], $vars);
-				$output = $this->EE->template->advanced_conditionals($output);
+				$email 		= $this->EE->email_model->get_email($temp);
+				$subject 	= $this->EE->template->parse_variables($email["subject"], $vars);
 				
+					// Do we allow locate notifications?
+						if($this->EE->config->item('br_save_notificaion_files') == TRUE){
+							// Do we have a local version?
+								$short_name = $this->EE->config->item("site_short_name");
+								$fl = PATH_THIRD.'_local/brilliant_retail/notifications/'.$short_name.'/'.$temp.'.html';
+								if(file_exists($fl)){
+									// File helper
+									$this->EE->load->helper('file');
+									$email["content"] = read_file($fl);
+								}
+						}
+				
+				$output 	= $this->EE->template->parse_variables($email["content"], $vars);
+				
+				// Pass output to parse method by reference 
+					$this->EE->template->parse(&$output);
+
 			// Add extension hook to manipulate emails before they are sent out
 				if($this->EE->extensions->active_hook('br_email_send_before') === TRUE){
 					$output = $this->EE->extensions->call('br_email_send_before', $output); 

@@ -195,13 +195,43 @@ class Brilliant_retail extends Brilliant_retail_core{
 	* Create a br wraper for displaying custom fields 
 	*/
 		function product_custom(){
-			$entry_id = $this->EE->TMPL->fetch_param('entry_id');
+			
+			// We should have access to the TMPL class 
+			// but if we run the product_custom parser 
+			// from an ACT we need to load it.
+				if(!isset($this->EE->TMPL)){
+					$tmp = new EE_Template();
+					$this->EE->TMPL = $tmp->EE->template;
+				}
+				
+				// If they passed in the entry then we are set
+					$entry_id = $this->EE->TMPL->fetch_param('entry_id');
+					$product_id = $this->EE->TMPL->fetch_param('product_id');
+				
+				// Ut oh. We need something to hold on too. 
+				if($entry_id == '' && $product_id == ''){
+					$this->EE->TMPL->log_item('BrilliantRetail: product_custom is a no go. We need an entry_id or product_id');	
+					return '';
+				}
+				
+				if($entry_id == ''){
+					$this->EE->TMPL->log_item('BrilliantRetail: product_custom has no entry_id. Trying to retrieve from product_id');
+					$entry_id = $this->EE->product_model->get_product_entry($product_id);
+				}
+
+			if($entry_id == ''){
+				$this->EE->TMPL->log_item('BrilliantRetail: product_custom is a no go. We have no entry_id to pair it too');	
+				return '';
+			}
+			
+			$this->EE->TMPL->log_item('BrilliantRetail: product_custom processing entry_id '.$entry_id);
+
 			include_once(APPPATH.'modules/channel/mod.channel.php');
 			$this->EE->TMPL->tagparams['entry_id'] 				= $entry_id;
 			$this->EE->TMPL->tagparams['limit'] 				= '1';
+			$this->EE->TMPL->tagparams['limit'] 				= '1';
 			$this->EE->TMPL->tagparams['dynamic'] 				= 'no';
 			$this->EE->TMPL->tagparams['show_future_entries'] 	= 'yes';
-			
 			$custom = new Channel();
 			$tagdata = $custom->entries();
 			return $tagdata;
