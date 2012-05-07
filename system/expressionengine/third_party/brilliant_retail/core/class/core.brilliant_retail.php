@@ -2505,7 +2505,7 @@ class Brilliant_retail_core {
 				$output 	= $this->EE->template->parse_variables($email["content"], $vars);
 				
 				// Pass output to parse method by reference 
-					$this->EE->template->parse(&$output);
+					$this->EE->template->parse($output);
 
 			// Add extension hook to manipulate emails before they are sent out
 				if($this->EE->extensions->active_hook('br_email_send_before') === TRUE){
