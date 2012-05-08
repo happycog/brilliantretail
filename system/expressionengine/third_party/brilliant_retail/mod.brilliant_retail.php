@@ -843,9 +843,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// We get a post of inputs that are 
 			// prepended with the product_id 
 			// lets fancy magic it into a usable post array
-				if(isset($_POST["product_id"]) && isset($_POST["quantity"])){
+				if(isset($_POST["product_id"])){
 					$post[0]["product_id"] 	= $_POST["product_id"];
-					$post[0]["quantity"] 	= $_POST["quantity"];
+					$post[0]["quantity"] 	= isset($_POST["quantity"]) ? $_POST["quantity"] : 1;
 				}else{
 					foreach($_POST as $key => $val){
 						if($key != 'product_id'){
@@ -1163,11 +1163,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 		/* Wishlist
 		 *
 		 * Display the wishlist items for the 
-		 * current displayed user. You can optionally pass in 
-		 * a public url_title for the 
-		 *
+		 * current displayed user. 
 		 */
-			
 			function wishlist(){
 				// Load the wishlist model
 					$this->EE->load->model('wishlist_model');

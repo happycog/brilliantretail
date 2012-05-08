@@ -1016,6 +1016,38 @@ class Brilliant_retail_core {
 				#$index->optimize();
 				return TRUE;
 		}
+		
+		// Remove a single product from the product index 
+		// Should refactor this under DRY.  
+			function _index_delete_product($product_id){
+				ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
+				include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
+				
+				Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive());
+				
+				$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.'search';
+				if(!file_exists($path)){
+					mkdir($path,DIR_WRITE_MODE,TRUE);
+				}
+	
+				// Lets open or create depending on the existance of the index
+					try
+					{
+					    $index = Zend_Search_Lucene::open($path);
+					}
+					catch (Zend_Search_Lucene_Exception $e)
+					{
+					    $index = Zend_Search_Lucene::create($path);
+					}
+					
+				// Give the index writable permissions
+					Zend_Search_Lucene_Storage_Directory_Filesystem::setDefaultFilePermissions(0755);
+				
+					$hits = $index->find('product_id:' . $product_id);
+					foreach ($hits as $hit) {
+					   	$index->delete($hit->id);
+					}
+			}
 
 		function _validate_license($lic){
 			if(uuid_validate($lic)){

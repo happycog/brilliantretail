@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.0.6.1'; 
+		public $version			= '1.0.6.2'; 
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -793,7 +793,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								}
 							// Log it
 								$this->EE->logger->log_action("Product #".$key." deleted by ".$this->EE->session->userdata["username"]." (member_id: ".$this->EE->session->userdata["member_id"].")");
-							
+							$this->_index_delete_product($data["product_id"]);
 							remove_from_cache('product_'.$key);
 						}
 						$_SESSION["message"] = lang('br_product_delete_success');
@@ -818,7 +818,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						}
 						$_SESSION["message"] = lang('br_product_update_success');
 				}
-				$this->_index_products();
 			}
 			$this->EE->functions->redirect($this->base_url.'&method=product');
 		}
