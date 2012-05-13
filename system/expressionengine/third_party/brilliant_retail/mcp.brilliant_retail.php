@@ -934,6 +934,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 				$fields = $this->_prep_field_wrapper($fields);
 
+				// Now that we support RTE lets load up the required js.
+					if(version_compare(APP_VER, '2.5', '>=')){
+						$rte_js = 	$this->EE->functions->fetch_site_index().QUERY_MARKER
+									.'ACT='.$this->EE->cp->fetch_action_id('Rte', 'get_js')
+									.'&amp;toolset_id=0'
+									.'&amp;cp=y'
+									.'&amp;selector='.urlencode(".rte");
+						$this->EE->cp->add_to_foot('<script type="text/javascript" src="'.$rte_js.'"></script>');
+						$this->EE->cp->add_to_head('<link href="'.$this->EE->config->item('theme_folder_url').'cp_themes/default/css/rte.css" rel="stylesheet" media="all" />');
+					}
+
 				$i = 0;
 				foreach($fields as $f){
 					// We only want the custom fields for this channel
@@ -948,14 +959,19 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							
 							// Either put in existing data or nothing on new product
 								$param[0] = ($new_product == FALSE) ? $data["field_id_".$f["field_id"]] : "";
-								$this->vars["custom"][] = array(
+								
+								// Hack added to deal with double encoding issue 
+								// from rte. Yuck but what can you do? - dpd 
+									$param[0] = form_prep($param[0], "field_id_".$f["field_id"]);
+								
+								$this->vars["custom"][$i] = array(
 																'settings' 		=> $f,
 																'display_field' => $this->EE->api_channel_fields->apply('display_field', $param)
 																);
+								$i++;
 						}
 					}
 				}
-
 			// Is there a gateway available to support subscriptions?
 				$this->vars["can_subscribe"] = $this->_can_subscribe();
 			
@@ -1087,7 +1103,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			if($this->vars['products'][0]['type_id'] != 3){
 				$this->vars["config_opts"] = $this->EE->product_model->get_attribute_config();
-				$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
+				$this->vars["config_opts_link"] =  $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
 			}
 			
 			// Experimental! 
@@ -1112,7 +1128,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$this->vars["attrs"] = $this->_product_attrs($this->vars['products'][0]["attribute_set_id"],$this->vars['products'][0]["product_id"]);
 			$this->vars["attribute_sets"] = $this->EE->product_model->get_attribute_sets();
-			$this->vars['add_attributes'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_add_atributes');
+			$this->vars['add_attributes'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_add_atributes');
 			$this->vars["options"] = $this->_product_options($this->vars['products'][0]["product_id"]);
 			
 			// Get the images 
@@ -1171,7 +1187,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 							// some defaults for configurable products 
 								$this->vars["config_opts"] = $this->EE->product_model->get_attribute_config();
-								$this->vars["config_opts_link"] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
+								$this->vars["config_opts_link"] =  $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_configurable_create_options');
 		
 							// some defaults for donations 
 								$this->vars["products"][0]["donation"][0] = array(
@@ -1193,7 +1209,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							
 						// No Attributes by default				
 						$this->vars["attribute_sets"] = $this->EE->product_model->get_attribute_sets();
-						$this->vars['add_attributes'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_add_atributes');
+						$this->vars['add_attributes'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_add_atributes');
 						$this->vars["attrs"] = '';
 						$this->vars["options"] = array();
 						$this->vars["images"] = array();
@@ -1627,7 +1643,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function promo_new()
 		{
 			// Search Url for selecting individual products
-			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
+			$this->vars['product_search'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 
 			$this->vars['cp_page_title'] = lang('nav_br_promotion');
 			
@@ -1680,7 +1696,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->session->set_flashdata('message_failure',lang('br_error_invalid_id'));
 				header('location: '.$this->base_url.'&method=config_promo');
 			}
-			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
+			$this->vars['product_search'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 
 			$this->vars['cp_page_title'] = lang('nav_br_promotion');
 			
@@ -3091,9 +3107,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function _get_sub_type($type = '',$allow_edit=FALSE) 
 		{
-			$str = '';
+			$str = ''; 
 
-			$this->vars['product_search'] = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
+			$this->vars['product_search'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 			
 			
 			// Its downloadable or new! Lets try to get some uploaded files 
