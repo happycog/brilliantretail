@@ -996,21 +996,23 @@ class Brilliant_retail_core {
 				Zend_Search_Lucene_Storage_Directory_Filesystem::setDefaultFilePermissions(0755);
 			
 				$products = $this->EE->product_model->get_products($product_id);
-				$hits = $index->find('product_id:' . $products[0]["product_id"]);
-				foreach ($hits as $hit) {
-				   	$index->delete($hit->id);
-				}
-			
-			// Reindex the result set. If it was an update this will be a single 
-			// product_id. 
-				foreach($products as $p){
-					$doc = new Zend_Search_Lucene_Document();
-					$doc->addField(Zend_Search_Lucene_Field::UnStored('title',$p["title"],'UTF-8'));
-					$doc->addField(Zend_Search_Lucene_Field::UnStored('detail',$p["detail"],'UTF-8'));
-					$doc->addField(Zend_Search_Lucene_Field::UnStored('keywords',$p["meta_keyword"],'UTF-8'));
-					$doc->addField(Zend_Search_Lucene_Field::UnStored('sku',$p["sku"],'UTF-8'));
-					$doc->addField(Zend_Search_Lucene_Field::Keyword('product_id',$p["product_id"],'UTF-8'));
-					$index->addDocument($doc);
+				if(count($products) >= 1){
+					$hits = $index->find('product_id:' . $products[0]["product_id"]);
+					foreach ($hits as $hit) {
+					   	$index->delete($hit->id);
+					}
+				
+					// Reindex the result set. If it was an update this will be a single 
+					// product_id. 
+					foreach($products as $p){
+						$doc = new Zend_Search_Lucene_Document();
+						$doc->addField(Zend_Search_Lucene_Field::UnStored('title',$p["title"],'UTF-8'));
+						$doc->addField(Zend_Search_Lucene_Field::UnStored('detail',$p["detail"],'UTF-8'));
+						$doc->addField(Zend_Search_Lucene_Field::UnStored('keywords',$p["meta_keyword"],'UTF-8'));
+						$doc->addField(Zend_Search_Lucene_Field::UnStored('sku',$p["sku"],'UTF-8'));
+						$doc->addField(Zend_Search_Lucene_Field::Keyword('product_id',$p["product_id"],'UTF-8'));
+						$index->addDocument($doc);
+					}
 				}
 				#$index->commit();
 				#$index->optimize();
@@ -1806,6 +1808,9 @@ class Brilliant_retail_core {
 			if(isset($tmp)){
 				$vars[0]["result_filter_set"] = $tmp;
 			}
+			
+			// Set a variable so we know if we have filters in place
+				$vars[0]["result_has_filter"] = (count($vars[0]["result_filter_set"]) == 0) ? 0 : 1;
 			
 		// Set the new total_results number 
 			$vars[0]["total_results"] = count($vars[0]["results"]);

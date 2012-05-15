@@ -43,16 +43,21 @@ class Product_model extends CI_Model {
 						return $this->session->cache['get_products'][$product_id];
 					}
 
-				// Try to return from cache	
-					if($str=read_from_cache('product_'.$product_id)){
-						$arr[0] = unserialize($str);
-						// only return enabled cached products
-							if($arr[0]["enabled"] == 1){
-								$this->session->cache['get_products'][$product_id] = $arr;
-								return $arr;
-							}
-					}
+				// Try to return from cache	unless it is disabeled in the 
+				// configuration file.
 				
+					$disable_cache = ($this->config->item('br_disable_product_cache') === TRUE) ? 1 : 0;
+					if($disable_cache == 0){
+						if($str=read_from_cache('product_'.$product_id)){
+							$arr[0] = unserialize($str);
+							// only return enabled cached products
+								if($arr[0]["enabled"] == 1){
+									$this->session->cache['get_products'][$product_id] = $arr;
+									return $arr;
+								}
+						}
+					}
+
 				// Get the specific product id
 					$this->db->where('product_id',$product_id);
 			}

@@ -249,19 +249,9 @@ class Paypal extends PaymentGateway
 	public function validateIpn()
 	{
 		// parse the paypal URL
-		$this->ipnResponse = $this->fsockopen_process($this->gatewayUrl);
-
-		if (eregi("VERIFIED", $this->ipnResponse))
-		{
-		 	// Valid IPN transaction.
-		 	return true;
-		}
-		else
-		{
-		 	// Invalid IPN transaction.  Check the log for details.
-			$this->lastError = "IPN Validation Failed . $urlParsed[path] : $urlParsed[host]\n\n".$this->ipnResponse."\n\n".$req;
-			return false;
-		}
+		// and set it into the response
+			$this->ipnResponse = $this->fsockopen_process($this->gatewayUrl);
+			return true;
 	}
 
 	function fsockopen_process($url){ 

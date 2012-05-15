@@ -117,12 +117,17 @@
 						{/if}
                     !--}
                     
-                    {if {type_id} != 7}
-                    	<label>Qty:</label>
-                    	{quantity_select}
-					{if:else}
-						<input type="hidden" name="{product_id}_quantity" value="1" />
-					{/if}
+                    {!--
+                    	type_id 7 is a donation product. We are hiding it 
+                    	in the code below.
+                    !--}
+
+	                    {if {type_id} != 7}
+	                    	<label>Qty:</label>
+	                    	{quantity_select}
+						{if:else}
+							<input type="hidden" name="{product_id}_quantity" value="1" />
+						{/if}
 
 					<div class="clearboth"><!-- --></div>
                     {!-- Insert Product Specific Selectors !--}
@@ -141,20 +146,10 @@
 		                    	{configurable_js}
 
                     	{!-- Donation Product Type !--}
-                    	
-                    	
+                    	                    	
 	                    	{donation}
 
 								{price_options}
-								
-								{!-- If you have a subscription supported gateway you can setup recurring donations !--}
-
-									{if allow_recurring}
-										<div id="donation_recurring">
-											<input type="checkbox" name="{product_id}_recurring" /> I would like to setup a 
-											recurring donation every month for the amount selected. 
-										</div>
-									{/if}
 
 	                    	{/donation}
                     	
@@ -231,9 +226,6 @@
     </div>
 </div> <!-- product -->
 <!-- end of Product Page -->
-
-	{!-- {embed='product/addon' product_id='{product_id}'} !--}
-
 
 {/exp:brilliant_retail:product}
 
