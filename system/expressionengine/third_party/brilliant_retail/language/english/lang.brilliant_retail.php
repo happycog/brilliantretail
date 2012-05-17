@@ -632,6 +632,7 @@ $lang = array(
 		// Cart Messages 
 			'br_checkout_shipping_error' 			=> "An error has occurred with the shipping method you selected. Please try again.", 
 			'br_no_shipping_required' 				=> "No shipping required", 
+			'br_no_shipping_options_available'		=> 'No Shipping Options Available', 
 			'br_product_configuration_required' 	=> "Product requires configuration.",
 			'br_discount_removed' 					=> "The discount code has been removed.",
 			'br_discount_invalid' 					=> "The discount code you entered <b>\"%s\"</b> is invalid.",

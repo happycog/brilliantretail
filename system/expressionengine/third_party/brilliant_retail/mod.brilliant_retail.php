@@ -2192,8 +2192,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 														"label" => "N/A", 
 														"method" => "N/A"
 													);
-				$opts = '<input type="radio" name="shipping" class="shipping" value="'.$hash.'" id="shipping_0" checked />'.
-						'&nbsp;'.lang('br_no_shipping_required');
+				$opts = '<p class="shipping">
+							<input type="radio" name="shipping" class="shipping" value="'.$hash.'" id="shipping_0" checked />'.
+							'&nbsp; '.lang('br_no_shipping_required').'</p>';
 			}else{
 				$data = array(
 							"to_zip" 		=> $this->EE->input->post('zip',TRUE),
@@ -2204,7 +2205,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						);
 				$opts = $this->_shipping_options($data);
 				if($opts == ''){
-					$opts = 'No Shipping Options Available';
+					$opts = lang('br_no_shipping_options_available');
 				}
 			}
 			echo $opts;
