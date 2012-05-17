@@ -22,16 +22,13 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-include_once(PATH_THIRD.'brilliant_retail/core/gateway/assets/authorize/AuthorizeNet.php');
-
 class Gateway_authorize extends Brilliant_retail_gateway {
 	// Required variables
-		public $title 			= 'Authorize.net';
-		public $label 			= 'Credit Card Payment (Authorize.net)';
-		public $descr 			= 'Accept credit cards directly from your site with an Authorize.net payment gateway account using the AIM method.';
-		public $enabled 		= true;
-		public $version 		= '1.0';
-		public $instructions 	= 'Accept credit cards directly from your site with an Authorize.net payment gateway account using the AIM method.';
+		public $title 	= 'Authorize.net';
+		public $label 	= 'Credit Card Payment (Authorize.net)';
+		public $descr 	= 'Accept credit cards directly from your site with an Authorize.net payment gateway account using the AIM method.';
+		public $enabled = true;
+		public $version = '1.0';
 		
 	// Some internal variables
 		protected $nice_keys = array (
@@ -53,8 +50,8 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 			"cardholder_last_name", "company", "billing_address", "city", "state",
 			"zip", "country", "phone", "fax", "email", "shipto_first_name", "shipto_last_name",
 			"shipto_company", "shipto_address", "shipto_city", "shipto_state",
-			"shipto_zip", "shipto_country", "taamount", "duty_amount", "freight_amount",
-			"taexempt_flag", "po_number", "hash", "cvv_response_code",
+			"shipto_zip", "shipto_country", "tax_amount", "duty_amount", "freight_amount",
+			"tax_exempt_flag", "po_number", "hash", "cvv_response_code",
 			"cavv_response_code"
 		);
 	
@@ -68,48 +65,47 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 		function process($data,$config){
 			
 			$member_id = $this->EE->session->userdata["member_id"];
-			$email = $this->EE->session->userdata["email"];
 			
 			$info = array(
-							'login'				=> $config["login"],
-							'currency_code' 	=> $this->_config["currency"],
-							'tran_key'			=> $config["tran_key"],
-							'test_request'		=> $config['test_request'],
-							'email_customer' 	=> $config["email_customer"], 
-							'version'			=> '3.1',
-							'delim_data'		=> 'TRUE',
-							'delim_char'		=> '|',
-							'url'				=> 'FALSE',
-							'type'				=> $config["type"],
-							'method'			=> 'CC',
-							'relay_response'	=> 'FALSE',
-							'encap_char'		=> '',
-							'invoice_num'		=> '', 
-							'cust_id'			=> $member_id,
-							'first_name'		=> $data["br_billing_fname"], 
-							'last_name'			=> $data["br_billing_lname"],
-							'company'			=> $data["br_billing_company"],
-							'address'			=> $data["br_billing_address1"].' '.$data["br_billing_address2"],
-							'city'				=> $data["br_billing_city"],
-							'state'				=> $data["br_billing_state"],
-							'zip'				=> $data["br_billing_zip"],
-							'country'			=> $data["br_billing_country"],
-							'email'				=> $config["email"],
-							'phone'				=> $data["br_billing_phone"],
-							'ship_to_first_name'=> $data["br_shipping_fname"],
-							'ship_to_last_name'	=> $data["br_shipping_lname"],
-							'ship_to_company'	=> $data["br_shipping_company"],
-							'ship_to_address'	=> $data["br_shipping_address1"].' '.$data["br_shipping_address2"],
-							'ship_to_city'		=> $data["br_shipping_city"],
-							'ship_to_state'		=> $data["br_shipping_state"],
-							'ship_to_zip'		=> $data["br_shipping_zip"],
-							'ship_to_country'	=> $data["br_shipping_country"],
-							'card_num'			=> $data["autho_cc_num"],
-							'amount'			=> $data["order_total"],
-							'description'		=> '',
-							'exp_date'			=> $data["autho_cc_month"].'-'.$data["autho_cc_year"],
-							'card_code'			=> $data["autho_cc_code"], 
-							'tax'				=> $data["cart_tax"]);
+							'x_login'			=> $config["x_login"],
+							'x_currency_code' 	=> $this->_config["currency"],
+							'x_tran_key'		=> $config["x_tran_key"],
+							'x_test_request'	=> $config['x_test_request'],
+							'x_email_customer' 	=> $config["x_email_customer"], 
+							'x_version'			=> '3.1',
+							'x_delim_data'		=> 'TRUE',
+							'x_delim_char'		=> '|',
+							'x_url'				=> 'FALSE',
+							'x_type'			=> $config["x_type"],
+							'x_method'			=> 'CC',
+							'x_relay_response'	=> 'FALSE',
+							'x_encap_char'		=> '',
+							'x_invoice_num'		=> '', 
+							'x_cust_id'			=> $data["member_id"],
+							'x_first_name'		=> $data["br_billing_fname"], 
+							'x_last_name'		=> $data["br_billing_lname"],
+							'x_company'			=> $data["br_billing_company"],
+							'x_address'			=> $data["br_billing_address1"].' '.$data["br_billing_address2"],
+							'x_city'			=> $data["br_billing_city"],
+							'x_state'			=> $data["br_billing_state"],
+							'x_zip'				=> $data["br_billing_zip"],
+							'x_country'			=> $data["br_billing_country"],
+							'x_email'			=> $data["email"],
+							'x_phone'			=> $data["br_billing_phone"],
+							'x_ship_to_first_name'	=> $data["br_shipping_fname"],
+							'x_ship_to_last_name'	=> $data["br_shipping_lname"],
+							'x_ship_to_company'	=> $data["br_shipping_company"],
+							'x_ship_to_address'	=> $data["br_shipping_address1"].' '.$data["br_shipping_address2"],
+							'x_ship_to_city'	=> $data["br_shipping_city"],
+							'x_ship_to_state'	=> $data["br_shipping_state"],
+							'x_ship_to_zip'		=> $data["br_shipping_zip"],
+							'x_ship_to_country'	=> $data["br_shipping_country"],
+							'x_card_num'		=> $data["autho_cc_num"],
+							'x_amount'			=> $data["order_total"],
+							'x_description'		=> '',
+							'x_exp_date'		=> $data["autho_cc_month"].'-'.$data["autho_cc_year"],
+							'x_card_code'		=> $data["autho_cc_code"], 
+							'x_tax'				=> $data["cart_tax"]);
 
 			// Format post string
 				$post_string = '';
@@ -119,7 +115,14 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 				$post_string = rtrim( $post_string, "&" );
 			
 			// Process 
-				$url = 'https://secure.authorize.net/gateway/transact.dll';
+				// You can run test transactions against the live transaction url 
+				// but if you want to use the developers sandbox you have to use 
+				// the url below. 
+					#$url = 'https://test.authorize.net/gateway/transact.dll';
+				
+				// Live URl
+					$url = 'https://secure.authorize.net/gateway/transact.dll';
+				
 				$ch = curl_init($url);
 				curl_setopt($ch, CURLOPT_HEADER, 0);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -206,7 +209,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Login ID', 
-							'code'		=> 'login', 
+							'code'		=> 'x_login', 
 							'type' 		=> 'password',
 							'required' 	=> true,
 							'sort' 		=> 1
@@ -214,7 +217,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Transaction Key', 
-							'code'		=> 'tran_key', 
+							'code'		=> 'x_tran_key', 
 							'type' 		=> 'password',
 							'required' 	=> true,
 							'sort' 		=> 2
@@ -223,7 +226,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Authorization Type', 
-							'code' 		=> 'type',
+							'code' 		=> 'x_type',
 							'type' 		=> 'dropdown', 
 							'options' 	=> 'AUTH_ONLY:Authorization Only|AUTH_CAPTURE:Authorization & Capture',
 							'value' 	=> 'AUTH_CAPTURE', 
@@ -233,7 +236,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Test Mode', 
-							'code' 		=> 'test_request',
+							'code' 		=> 'x_test_request',
 							'type' 		=> 'dropdown', 
 							'options' 	=> 'TRUE:True|FALSE:False (Transactions are Live)',
 							'descr'		=> '',
@@ -244,7 +247,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Email Customer<br />(Authorize.net Email)', 
-							'code'		=> 'email_customer', 
+							'code'		=> 'x_email_customer', 
 							'type' 		=> 'dropdown',
 							'options' 	=> 'FALSE|TRUE',
 							'value'   	=> 'FALSE',
@@ -260,46 +263,4 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 	function remove($config_id){
 		return true;		
 	}
-	
-	/* AUTHORIZE.NET HELPER FUNCTION */
-	
-		//function to send xml request via curl
-			function _send_request_via_curl($content,$config){
-				// Subscription keys 
-					$host = ($config['test_request'] == true) ? "apitest.authorize.net" : "api.authorize.net";
-					$path = "/xml/v1/request.api";
-
-				$posturl = "https://" . $host . $path;
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $posturl);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
-				curl_setopt($ch, CURLOPT_HEADER, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-				$response = curl_exec($ch);
-				return $response;
-			}
-
-		//function to parse Authorize.net response
-			function _parse_return($content){
-				$refId = $this->_substring_between($content,'<refId>','</refId>');
-				$resultCode = $this->_substring_between($content,'<resultCode>','</resultCode>');
-				$code = $this->_substring_between($content,'<code>','</code>');
-				$text = $this->_substring_between($content,'<text>','</text>');
-				$subscriptionId = $this->_substring_between($content,'<subscriptionId>','</subscriptionId>');
-				return array ($refId, $resultCode, $code, $text, $subscriptionId);
-			}
-		
-		//helper function for parsing response
-			function _substring_between($haystack,$start,$end){
-				if (strpos($haystack,$start) === false || strpos($haystack,$end) === false){
-					return false;
-				}else{
-					$start_position = strpos($haystack,$start)+strlen($start);
-					$end_position = strpos($haystack,$end);
-					return substr($haystack,$start_position,$end_position-$start_position);
-				}
-			}
 }

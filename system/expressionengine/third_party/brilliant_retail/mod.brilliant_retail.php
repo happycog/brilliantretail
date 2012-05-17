@@ -1849,10 +1849,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				
 			// Process the payment
-				$data["transaction_id"] = md5(time().rand(1000,1000000).time());
-				$data["email"] = $email;
-				
-				$data["payment"] = $this->_process_payment($data);
+				$data["transaction_id"] 	= md5(time().rand(1000,1000000).time());
+				$data["email"] 				= $email;
+				$data["member_id"] 			= $member_id;
+ 				$data["payment"] 			= $this->_process_payment($data);
 				
 				if(isset($data["payment"]["error"])){
 					$_SESSION["br_alert"] = $data["payment"]["error"];
