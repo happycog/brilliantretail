@@ -1138,13 +1138,30 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}
 			return $this->return_data;
 		}
-	
+
+		/**
+		* Check to see if a discount exits
+		* 
+		* @access	public
+		* @param	void
+		* @return	boolean 
+		*/
+			
+		public function cart_has_discount() {
+	        if(isset($_SESSION["discount"])){
+	            if($_SESSION["discount"]["code"] != ''){
+	                return ($this->_get_cart_discount() > 0);
+	            }
+	        }
+	        return FALSE; 
+	    }
+	 
 		function cart_total()
 		{
 			// Simple function that adds the currency marker to the 
 			// cart total. 
 			return $this->_config["currency_marker"].$this->_currency_round($this->_get_cart_total());	
-		}
+		} 
 	
 		function cart_related()
 		{
