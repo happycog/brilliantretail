@@ -1,0 +1,5 @@
+# David Dexter 
+
+* Added cart_has_discount method per Isaac's recommendation. 
+
+# Isaac Horton
