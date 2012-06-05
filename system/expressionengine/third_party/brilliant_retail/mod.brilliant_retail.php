@@ -1119,7 +1119,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				return $this->_currency_round($total);
 			}
 		}
-	
+		
 		/**
 		* Check to see if a discount exits
 		* 
@@ -1127,16 +1127,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 		* @param	void
 		* @return	boolean 
 		*/
-			
+				
 		public function cart_has_discount() {
-	        if(isset($_SESSION["discount"])){
-	            if($_SESSION["discount"]["code"] != ''){
-	                return ($this->_get_cart_discount() > 0);
-	            }
-	        }
-	        return FALSE; 
-	    }
-	
+			if(isset($_SESSION["discount"])){
+				if($_SESSION["discount"]["code"] != ''){
+					return ($this->_get_cart_discount() > 0);
+				}
+			}
+			return FALSE;
+		}
+		
 		function cart_discount()
 		{
 			$discount = 0;
