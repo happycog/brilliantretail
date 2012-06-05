@@ -229,9 +229,42 @@ class Brilliant_retail extends Brilliant_retail_core{
 			include_once(APPPATH.'modules/channel/mod.channel.php');
 			$this->EE->TMPL->tagparams['entry_id'] 				= $entry_id;
 			$this->EE->TMPL->tagparams['limit'] 				= '1';
-			$this->EE->TMPL->tagparams['limit'] 				= '1';
 			$this->EE->TMPL->tagparams['dynamic'] 				= 'no';
 			$this->EE->TMPL->tagparams['show_future_entries'] 	= 'yes';
+			
+			// We may need to name space the field if they are in a custom field
+				if(strpos($this->EE->TMPL->tagdata,'{br:') !== FALSE){
+					
+					$this->EE->TMPL->log_item('BrilliantRetail: found br: namespace in the product_custom tag for entry_id '.$entry_id);
+
+					$original 	= array(LD."br:",LD."/br:");
+					
+					// we need to do some magic on the tmpl data 
+						$this->EE->TMPL->tagdata = str_replace($original,LD,$this->EE->TMPL->tagdata);
+						$this->EE->TMPL->tagchunk = str_replace($original,LD,$this->EE->TMPL->tagdata);
+						foreach($this->EE->TMPL->tag_data as $key => $val)
+						{
+							$this->EE->TMPL->tag_data[$key]["block"] = str_replace($original,LD,$this->EE->TMPL->tag_data[$key]["block"]);
+							$this->EE->TMPL->tag_data[$key]["chunk"] = str_replace($original,LD,$this->EE->TMPL->tag_data[$key]["chunk"]);
+						}
+					// Strip any name spaced single vars			
+						foreach($this->EE->TMPL->var_single as $key => $val){
+							$tmp[str_replace('br:','',$key)] = str_replace('br:','',$val);
+						}
+						if(isset($tmp)){
+							$this->EE->TMPL->var_single = $tmp;
+							unset($tmp);
+						}
+					
+					// Strip any name spaced pair vars			
+						foreach($this->EE->TMPL->var_pair as $key => $val){
+							$tmp[str_replace('br:','',$key)] = str_replace('br:','',$val);
+						}
+						if(isset($tmp)){
+							$this->EE->TMPL->var_pair = $tmp;
+							unset($tmp);
+						}
+				}
 			$custom = new Channel();
 			$tagdata = $custom->entries();
 			return $tagdata;
@@ -1815,8 +1848,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 							$edata = $this->EE->extensions->call('member_member_register', $eml[0], $member_id);
 							if ($this->EE->extensions->end_script === TRUE) return;
 
-						// Send the email notice						
-							$this->_send_email('customer-account-new', $eml);
+						// Send the email notice
+						// Added a suppress flag in version 1.1.0.1						
+							if($this->EE->config->item('br_suppress_new_account_email') !== TRUE)
+							{
+								$this->_send_email('customer-account-new', $eml);
+							}
 				}
 			}
 			// Set the shipping automatically
