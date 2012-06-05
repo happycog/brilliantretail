@@ -1249,10 +1249,13 @@ class Brilliant_retail_core {
 	}
 	
 	function _shipping_options($data){
+		
 		$this->EE->load->model('product_model'); 
-		$cart = $this->EE->product_model->cart_get();
+		$cart 	= $this->EE->product_model->cart_get();
 		$output = '';
-		$i = 0;
+		$i 		= 0;
+		$rates 	= array();
+		
 		foreach($this->_config["shipping"][$this->site_id] as $ship){
 			
 			if($ship["enabled"] == 1){
@@ -1264,23 +1267,38 @@ class Brilliant_retail_core {
 				$class = new $str();	
 				$quote = $class->quote($data,$config);
 				if($quote){
-					$output .= '<p class="shipping">
-									<label>'.$ship["label"].'</label>';
-					foreach($quote as $q){
-						$hash = md5($ship["code"].$q["rate"].$i.time());
-						$_SESSION["shipping"][$hash] = $q;
-						$_SESSION["shipping"][$hash]["method"] = $ship["code"];
-						$price = ($q["rate"] > 0) ? $this->_config["currency_marker"].$q["rate"].' - ' : '' ;
-						$chk = ($i == 0) ? 'checked="checked"' : '';
-						$output .= '<br />
-									<input type="radio" name="shipping" class="shipping" value="'.$hash.'" id="shipping_'.$i.'" '.$chk.' />&nbsp;'.
-									$price.$q["label"];
-						$i++;
-					}
-					$output .= '</p>';
+					$rates[] = 	array(
+										'label' => $ship["label"], 
+										'code' 	=> $ship["code"],
+										'quote' => $quote
+									);
 				}
 			}
 		}
+	
+		// Adding a hook to modify the $rates array v1.1.0.1
+			if($this->EE->extensions->active_hook('br_cart_shipping_rate') === TRUE){
+				$rates = $this->EE->extensions->call('br_cart_shipping_rate', $rates); 
+			}
+		
+		foreach($rates as $q)
+		{
+			$output .= '<p class="shipping">
+							<label>'.$q["label"].'</label>';
+			foreach($q["quote"] as $q){
+				$hash = md5($ship["code"].$q["rate"].$i.time());
+				$_SESSION["shipping"][$hash] = $q;
+				$_SESSION["shipping"][$hash]["method"] = $ship["code"];
+				$price = ($q["rate"] > 0) ? $this->_config["currency_marker"].$q["rate"].' - ' : '' ;
+				$chk = ($i == 0) ? 'checked="checked"' : '';
+				$output .= '<br />
+							<input type="radio" name="shipping" class="shipping" value="'.$hash.'" id="shipping_'.$i.'" '.$chk.' />&nbsp;'.
+							$price.$q["label"];
+				$i++;
+			}
+			$output .= '</p>';
+		}
+
 		return $output;
 	}
 
