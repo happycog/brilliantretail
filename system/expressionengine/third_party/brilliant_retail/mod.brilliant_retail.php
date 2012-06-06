@@ -3079,6 +3079,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 							$discount = true;
 							// Check category list
 								if(isset($cats)){
+									$discount = false;
+									$cList = $this->EE->product_model->get_product_categories($val["product_id"]);
+									foreach($cList as $c){
+										if(in_array($c,$cats)){
+											$discount = true;
+											break;
+										}
+									}
 								}
 							// Check against product list			
 								if(isset($prods)){

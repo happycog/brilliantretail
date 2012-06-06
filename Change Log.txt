@@ -3,5 +3,6 @@
 * Added cart_has_discount method per Isaac's recommendation. 
 * Added br_suppress_new_account_email configuration 
 * Fixed an issue with custom fields in the BrilliantRetail fieldtype [0000187]
+* Fixed an issue with category restricted promotions
 
 # Isaac Horton
