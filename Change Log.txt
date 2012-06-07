@@ -6,3 +6,4 @@
 * Fixed an issue with category restricted promotions
 
 # Isaac Horton
+* Fixed language definitions in email views by prefixing them with br_
