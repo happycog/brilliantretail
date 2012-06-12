@@ -53,7 +53,7 @@ class Product {
 		$products[0]["meta_keyword"] 		= '';
 		$products[0]["meta_descr"] 			= '';
 		$products[0]["price"] 				= '';
-		$products[0]["cost"] 				= '';
+		$products[0]["cost"] 				= '0.00';
 		$products[0]["taxable"] 			= 0;
 		$products[0]["sale_price"] 			= '';
 		$products[0]["sale_start"] 			= '';

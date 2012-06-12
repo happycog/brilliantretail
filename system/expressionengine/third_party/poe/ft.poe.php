@@ -24,10 +24,10 @@
 /************************************************************/
 include_once(PATH_THIRD.'brilliant_retail/mcp.brilliant_retail.php');
 class Poe_ft extends EE_Fieldtype {
-	
+
 	public $has_array_data = TRUE;
 	public $theme = '';
-	
+
 	private $btn_options = array(
 									'Paste','PasteText','PasteFromWord','Undo','Redo',
 									'Find','Replace','SelectAll','RemoveFormat','Bold',
@@ -41,15 +41,15 @@ class Poe_ft extends EE_Fieldtype {
 		'name'		=> 'BrilliantRetail Poe',
 		'version'	=> '1.0.4'
 	);
-	
+
 	function Poe_ft()
 	{
 		parent::EE_Fieldtype();
 	}
-	
+
 	// --------------------------------------------------------------------
-	
-	
+
+
 	/*
 	* Install 
 	*/
@@ -59,8 +59,8 @@ class Poe_ft extends EE_Fieldtype {
 		$this->_create_config_table();
 		return TRUE;
 	}
-	
-	
+
+
 	/**
 	 * Display Field on Publish
 	 *
@@ -92,23 +92,23 @@ class Poe_ft extends EE_Fieldtype {
 
 	function display_global_settings()
 	{
-	
+
 		// Not quite ready for prime time 
 		#return '';
-		
+
 	    // Get the current settings
 	    	$val = array_merge($this->settings, $_POST);
 
 		// Get the theme from BrilliantRetail
 			$path = $this->EE->config->item('theme_folder_url').'third_party/brilliant_retail/script/';
 			$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$path.'ckeditor/skins/kama/editor.css" />');
-		
+
 		// Get the javascript for the control panel
 			$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$path.'poe/poe.js"></script>');
-		
+
 		// 
 			$unique = array('selectall','removeformat');				
-		
+
 		$this->EE->db->from('br_poe_config');
 		$rst = $this->EE->db->get();
 		$form = '	<style type="text/css">
@@ -135,16 +135,16 @@ class Poe_ft extends EE_Fieldtype {
 					$list .= '	<span id="cke_10" class="cke_toolbar" role="toolbar">
 									<span class="cke_toolbar_start"></span>
 									<span class="cke_toolgroup" style="background-image:none">';
-					
+
 					foreach($s as $f){
 						if($f != '-'){
-							
+
 							$icon = strtolower($f);
 							if(in_array($icon,$unique)){
 								$first = strtolower(substr($f,0,1));
 								$icon = $first.substr($f,1,(strlen($f)-1));
 							}
-							
+
 							$list .= '		<span class="cke_button">
 											<a class="poe_highlight cke_button_'.$icon.'">
 												<span class="cke_icon">&nbsp;</span>
@@ -152,10 +152,10 @@ class Poe_ft extends EE_Fieldtype {
 												<input type="hidden" value="y" name="poe_'.$f.'" />
 											</a>
 										</span>';
-					
+
 						}
 					}
-					
+
 					$list .= '		</span>
 									<span class="cke_toolbar_end"></span>
 								</span>';
@@ -187,12 +187,12 @@ class Poe_ft extends EE_Fieldtype {
 	 	$form .= '</table>';
 		return $form;
 	}
-	
+
 	function save_global_settings()
 	{
 		return array_merge($this->settings, $_POST);
 	}
-	
+
 	function display_settings($data)
 	{
 		$toolbar = isset($data["poe_toolbar"]) ? $data["poe_toolbar"] : 1;
@@ -209,14 +209,14 @@ class Poe_ft extends EE_Fieldtype {
 				<select>';
 		$this->EE->table->add_row('Toolbar',$sel);
 	}
-	
+
 	function save_settings()
 	{
 		return array(
 	        'poe_toolbar'  => $this->EE->input->post('poe_toolbar')
 	    );
 	}
-	
+
 	function display_cell_settings($data)
 	{
 		$toolbar = isset($data["poe_toolbar"]) ? $data["poe_toolbar"] : 1;
@@ -235,19 +235,19 @@ class Poe_ft extends EE_Fieldtype {
 			array(lang('toolbar'), $sel)
 		);
 	}
-	
+
 	function save_cell_settings($data)
 	{
 		return $data;
 	}	
-	
+
 	function update($from){
 		// If we don't have a configuration table then things are strange!	
 			if (! $this->EE->db->table_exists('br_poe_config')){
 				$this->_create_config_table();
 			}
 	}
-	
+
 	function _create_config_table(){
 		$this->EE->load->dbforge();
 		$this->EE->dbforge->add_field(array(
@@ -267,7 +267,7 @@ class Poe_ft extends EE_Fieldtype {
 		));
 		$this->EE->dbforge->add_key('config_id', TRUE);
 		$this->EE->dbforge->create_table('br_poe_config');
-		
+
 		// Default Settings
 			$data[]	= array(
 								'title' 	=> 'Default', 
@@ -295,7 +295,7 @@ class Poe_ft extends EE_Fieldtype {
 						<script type='text/javascript' src='".$this->theme."/script/ckeditor/ckeditor.js'></script>";	
 			$this->session->cache['br_poe_js'] = TRUE;
 		}
-		
+
 		if($toolbar == 1){
 			$config = "	['Paste','PasteText','PasteFromWord'],
 					    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
@@ -325,13 +325,13 @@ class Poe_ft extends EE_Fieldtype {
 								});
 					});
 				</script>";	
-		
+
 		$this->session->cache['br_poe_js'] = TRUE;
-		
+
 		return $str;		
 	}
 	// --------------------------------------------------------------------
-		
+
 	/**
 	 * Replace tag
 	 *
@@ -344,12 +344,12 @@ class Poe_ft extends EE_Fieldtype {
 	{
 		return $data;
 	}
-	
+
 	function save($data)
 	{
 		return $data;
 	}
-	
+
 	private function _set_theme(){
 		if($this->theme == ''){
 			$BR = new Brilliant_retail_mcp();

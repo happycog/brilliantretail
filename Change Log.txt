@@ -2,9 +2,11 @@
 
 * Added cart_has_discount method per Isaac's recommendation. 
 * Added br_suppress_new_account_email configuration 
+* Added currency_marker variable to checkout_thank tag
 * Fixed an issue with custom fields in the BrilliantRetail fieldtype [0000187]
 * Fixed an issue with category restricted promotions
-* Added currency_marker variable to checkout_thank tag
+* Updated new product to automatically set the 'cost' value to '0.00'
+* Updated image log message when returning a newly created cached image. 
 
 # Isaac Horton
 * Fixed language definitions in email views by prefixing them with br_

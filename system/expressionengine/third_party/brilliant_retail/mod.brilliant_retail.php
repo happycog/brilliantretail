@@ -556,7 +556,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$this->EE->TMPL->log_item('BrilliantRetail: returning newly created cached image file ('.$this->_config["media_url"].'cache/'.$cache_file.')');
 						return $this->_config["media_url"].'cache/'.$cache_file;
 					}else{
-						$this->EE->TMPL->log_item('BrilliantRetail: FAILED TO CREATE CACHED IMAGE');
+						$this->EE->TMPL->log_item('BrilliantRetail: returning newly created cached image file ('.$this->_config["media_url"].'cache/'.$cache_file.')');
 						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" />';
 					}
 				}else{
