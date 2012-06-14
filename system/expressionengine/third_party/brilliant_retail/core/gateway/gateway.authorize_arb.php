@@ -225,7 +225,7 @@ class Gateway_authorize_arb extends Brilliant_retail_gateway {
 			$email = $this->EE->session->userdata["email"];
 
 			// Set the start date
-				$start_dt = date('Y-n-d',strtotime('+'.$item["subscription"]["length"].' '.$unit));
+				$start_dt = date('Y-m-d',strtotime('+'.$item["subscription"]["length"].' '.$unit));
 			
 			// Check if there is a trial subscription 
 				$price 			= $item["subscription"]["price"];
@@ -284,6 +284,10 @@ class Gateway_authorize_arb extends Brilliant_retail_gateway {
 	
 		        // Create the request and send it.
 		        	$request = new AuthorizeNetARB;
+		        	// do we need to process in sandbox mode
+		        	if(array_key_exists("x_test_request", $config) && $config["x_test_request"] == 'TRUE') {
+			        	$request->setSandbox(TRUE);
+		        	}
 		        	$request->setRefId($refId);
 		        	$response = $request->createSubscription($subscription);
 					
