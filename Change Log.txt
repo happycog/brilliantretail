@@ -14,3 +14,4 @@
 
 # Isaac Horton
 * Fixed language definitions in email views by prefixing them with br_
+* Changed the subscription start date to include a leading zero on the month per the xml spec. Added sandbox mode checking.
