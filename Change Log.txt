@@ -13,5 +13,6 @@
 * Updated image log message when returning a newly created cached image. 
 
 # Isaac Horton
+* Added the order_id to the Authorize.net process_subscription method.
 * Fixed language definitions in email views by prefixing them with br_
 * Changed the subscription start date to include a leading zero on the month per the xml spec. Added sandbox mode checking.
