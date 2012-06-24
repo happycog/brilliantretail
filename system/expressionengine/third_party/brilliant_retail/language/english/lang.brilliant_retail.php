@@ -655,6 +655,8 @@ $lang = array(
 			'br_shipping_lname' 		=> 'Shipping Last Name', 
 			'br_shipping_address1' 		=> 'Shipping Address', 
 			'br_shipping_state' 		=> 'Shipping State', 
+			'br_shipping_city' 			=> 'Shipping City', 
+			'br_shipping_country' 		=> 'Shipping Country', 
 			'br_shipping_zip' 			=> 'Shipping Zip Code', 
 			'br_shipping_phone' 		=> 'Shipping Telephone',
 		
