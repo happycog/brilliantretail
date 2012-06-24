@@ -258,7 +258,7 @@ class Gateway_authorize_arb extends Brilliant_retail_gateway {
 		        $subscription->creditCardCardNumber 	= $data["autho_cc_num"];
 		        $subscription->creditCardExpirationDate = $data["autho_cc_year"].'-'.$data["autho_cc_month"];
 		        $subscription->creditCardCardCode 		= $data["autho_cc_code"];
-		        $subscription->orderInvoiceNumber 		= "";
+		        $subscription->orderInvoiceNumber 		= $data["order_id"];
 		        $subscription->orderDescription 		= "";
 		        $subscription->customerId 				= $member_id;
 		        $subscription->customerEmail 			= $email;
