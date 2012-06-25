@@ -3274,7 +3274,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				if(trim($data["sku"]) == ''){
 					$data["sku"] = str_replace(" ","-",strtolower($data["title"]));
 				}
-				$data["sku"] = strtolower(preg_replace('/[^A-Za-z0-9-_]/','',$data["sku"]));
+				$data["sku"] = preg_replace('/[^A-Za-z0-9-_]/','',$data["sku"]);
 				$count = $this->EE->product_model->_check_sku($data["sku"],$data["product_id"]);
 				if($count == 0){
 					return $data["sku"];

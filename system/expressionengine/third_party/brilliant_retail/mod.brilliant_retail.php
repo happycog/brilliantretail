@@ -1676,7 +1676,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 												'br_billing_phone'    	=> lang('br_billing_phone'),
 												'br_billing_address1' 	=> lang('br_billing_address1'),
 												'br_billing_city'     	=> lang('br_billing_city'),
-												'br_billing_state'    	=> lang('br_billing_state'),
+												//'br_billing_state'    	=> lang('br_billing_state'),
 												'br_billing_zip'      	=> lang('br_billing_zip'),
 												'br_billing_country'  	=> lang('br_billing_country')
 											);
