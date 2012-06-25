@@ -3,6 +3,7 @@
 * Added cart_has_discount method per Isaac's recommendation. 
 * Added br_suppress_new_account_email configuration 
 * Added currency_marker variable to checkout_thank tag
+* Added a _format_money method to BrilliantRetail core to handle price output display formatting. 
 * Fixed an issue with custom fields in the BrilliantRetail fieldtype [0000187]
 	- 	IMPORTANT: When using custom fields in the BR fieldtype you must namespace
 		them with a br: prefix. For example your custom fieldtype name maybe my_field. 
