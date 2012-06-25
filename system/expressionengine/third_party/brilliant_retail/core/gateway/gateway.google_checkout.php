@@ -32,42 +32,46 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 	public $osc_enabled = true;
 	public $cart_button = false;
 	
-	public function process($data,$config){
-		
-			// Process only builds a process shell and sets order status = 1
+	// Save the order to the database  
+		public function process($data,$config)
+		{
+			// Process only builds a process shell and sets order status = -1
 			
 			// Set the transaction details into 
 			// a serialized array for posting to
 			// the order
 				$details = array(
-									"Method" => "PayPal Standard" 
+									"Method" => "Google Checkout"
 								);
 
 			// Return the trans details 
 				$trans = array(
-									'status' => -1, 
-									'transaction_id' => $data["transaction_id"],
-									'payment_card' => "",
-									'payment_type' => 'PayPal Standard', 
-									'amount' => $data["order_total"],
-									'details' => serialize($details), 
-									'approval' => "" 
+									'status' 			=> -1, 
+									'transaction_id' 	=> $data["transaction_id"],
+									'payment_card' 		=> "",
+									'payment_type' 		=> 'Google Checkout',
+									'amount' 			=> $data["order_total"],
+									'details' 			=> serialize($details), 
+									'approval' 			=> "" 
 								);
 			return $trans;
 		}
 
-	// Start IPN Call
+	// Start IPN handoff to Google Checkout for payment
 		public function start_ipn($data,$config)
 		{
+		
 		}
 	
-	// Process IPN Calls 
-		public function gateway_ipn($config){
+	// Process IPN Calls which come back from Google 
+		public function gateway_ipn($config)
+		{
 		}
 	
 	// Create a inputs for the checkout form
-		public function form()
-		{
+		public function form(){
+			$form = '<img  src="https://checkout.google.com/buttons/checkout.gif?merchant_id=&w=168&h=44&style=trans&variant=text&loc=en_US" />';
+			return $form;
 		}
 	
 	// Install the gateway
