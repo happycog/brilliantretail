@@ -370,6 +370,11 @@ class Brilliant_retail_core {
 			return number_format($amt,2,'.','');
 		}
 		
+		function _format_money($amt)
+		{
+			return $this->_config["currency_marker"].number_format($amt,2);
+		}
+		
 		function _secure_url($path){
 			$str = rtrim($this->_config["store"][$this->site_id]["secure_url"],"/").'/'.$path;
 			return $str;
@@ -1972,7 +1977,7 @@ class Brilliant_retail_core {
 		foreach($vars[0]["results"] as $key => $val){
 			// Check the price setup 
 				if($amt = $this->_check_product_price($val)){
-					$vars[0]["results"][$key]["price_html"] = $amt["price_html"];
+					$vars[0]["results"][$key]["price_html"] = '<p class="price">'.$this->_format_money($amt["price_html"]).'</p>';
 				}
 			// Set default images
 			 	if($vars[0]["results"][$key]["image_large"] == ''){
@@ -2034,7 +2039,7 @@ class Brilliant_retail_core {
 						if($valid == 1){
 							$amt['base'] 		= $price["price"];
 							$amt['price'] 		= $price["price"];
-							$amt['price_html']	= '<p class="price">'.$this->_config["currency_marker"].$price["price"].'</p>';
+							$amt['price_html']	= '<p class="price">'.$this->_format_money($price["price"]).'</p>';
 				 			$amt['price_start'] = ($price["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["start_dt"]);
 				 			$amt['price_end'] 	= ($price["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["end_dt"]);
 				 		}
@@ -2072,7 +2077,10 @@ class Brilliant_retail_core {
 					 		$amt['on_sale'] 			= TRUE; 
 							$amt['base'] 				= $amt["price"];
 							$amt['price'] 				= $sale["price"]; 
-							$amt['price_html'] 			= '<p class="price"><span class="original">'.$this->_config["currency_marker"].$original.'</span><span class="sale">'.$this->_config["currency_marker"].$sale["price"].'</span></p>';  
+							$amt['price_html'] 			= '	<p class="price">
+																<span class="original">'.$this->_format_money($original).'</span>
+																<span class="sale">'.$this->_format_money($sale["price"]).'</span>
+															</p>';  
 							$amt['sale_price'] 			= $sale["price"];
 							$amt['sale_price_start'] 	= ($sale["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["start_dt"]);
 				 			$amt['sale_price_end'] 		= ($sale["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["end_dt"]);

@@ -832,10 +832,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$items[$i]['product_id'] 	= $v["product_id"];
 						$items[$i]['entry_id'] 		= $entry_id;
 						$items[$i]['remove_link'] = $remove.'&id='.$hash;
-						$items[$i]['base'] 		= $this->_config["currency_marker"].$v['base'];
-						$items[$i]['price']		= $this->_config["currency_marker"].$v['price'];
-						$items[$i]['subtotal']	= $this->_config["currency_marker"].$v['subtotal'];
-						$items[$i]['discount'] 	= $this->_config["currency_marker"].$v['discount'];
+						$items[$i]['base'] 		= $this->_format_money($v['base']);
+						$items[$i]['price']		= $this->_format_money($v['price']);
+						$items[$i]['subtotal']	= $this->_format_money($v['subtotal']);
+						$items[$i]['discount'] 	= $this->_format_money($v['discount']);
 						$i++;
 				}
 			}
@@ -984,7 +984,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 								$amt["price"] = $subscription["trial_price"];
 								$amt["price_html"] = $subscription["trial_price"];
 								$options .= '<label>'.lang('br_trial_price').':</label> 
-											'.$this->_config["currency_marker"].$this->_currency_round($subscription["trial_price"]).'<br />
+											'.$this->_format_money($subscription["trial_price"]).'<br />
 											<label>'.lang('br_trial_length').':</label> 
 											'.$subscription["trial_occur"].' '.$length;
 							}
@@ -1005,7 +1005,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$price = $this->_currency_round($price);
 					$amt["base"]  = $price;
 					$amt["price"] = $price;
-					$amt["price_html"] = '<p class="price">'.$this->_config["currency_marker"].$this->_currency_round($price).'</p>';
+					$amt["price_html"] = '<p class="price">'.$this->_format_money($price).'</p>';
 	
 					// Are we going to setup a recurring profile?
 					if($product[0]["donation"][0]["allow_recurring"] == 1){
@@ -1080,7 +1080,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									'weight' 			=> 	$product[0]["weight"],  
 									'shippable' 		=> 	$product[0]["shippable"],  
 									'options' 			=> 	$options,
-									'subtotal' 			=> 	$this->_currency_round(($amt["price"] * $data["quantity"])) 
+									'subtotal' 			=> 	$this->_currency_round($amt["price"] * $data["quantity"]) 
 					          	);
 				$content = serialize($content);
 				$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
@@ -1193,7 +1193,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			// Simple function that adds the currency marker to the 
 			// cart total. 
-			return $this->_config["currency_marker"].$this->_currency_round($this->_get_cart_total());	
+			return $this->_format_money($this->_get_cart_total());	
 		} 
 	
 		function cart_related()
@@ -2301,10 +2301,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$total_rate 	= $this->_currency_round(($tax + $rate + $sub_total - $discount));
 			
 			$arr = array(	
-							"marker" 	=> $this->_config["currency_marker"],
-							"tax" 		=> $tax_rate,
-							"shipping" 	=> $shipping_rate,
-							"total" 	=> $total_rate,
+							"marker" 	=> '',
+							"tax" 		=> $this->_format_money($tax_rate),
+							"shipping" 	=> $this->_format_money($shipping_rate),
+							"total" 	=> $this->_format_money($total_rate),
 							"payment"	=> $this->_payment_options(true,$tax,$shipping));
 			echo "[".json_encode($arr)."]";
 			exit();
