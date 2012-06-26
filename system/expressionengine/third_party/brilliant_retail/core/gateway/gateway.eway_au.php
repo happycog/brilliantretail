@@ -41,18 +41,18 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
     					}
        					
        					$xmlRequest .= "</ewaygateway>";
-
+						
        					$xmlResponse = $this->sendTransactionToEway($xmlRequest,$config['x_test_request']);
 
-						if(isset($xmlResponse["error"])){
-							$trans = array('error' => $xmlResponse["error"]);
-							return $trans;
+						if($xmlResponse!=""){
+							$responseFields 	= simplexml_load_string($xmlResponse);
+							$responseArray 		= objectsIntoArray($responseFields);
 						}
-	
+
 						if(trim($responseArray['ewayTrxnStatus']) != "True"){
 							$trans = array(
-								'error' => $responseArray['ewayTrxnError']
-								);
+												'error' => $responseArray['ewayTrxnError']
+											);
 						}else{
 	   						$details = array(
 											"Method" => "eWay",
@@ -61,15 +61,15 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
 											"Transaction Info" => $responseArray['ewayTrxnError']
 										);
 
-						// Return the trans details 
-						$trans = array(
-											'status' => 3, 
-											'transaction_id' => $responseArray['ewayTrxnNumber'],
-											'payment_type' => 'eWay', 
-											'amount' => $data["order_total"],
-											'details' => serialize($details), 
-											'approval' => $responseArray['ewayTrxnStatus'] 
-										);
+							// Return the trans details 
+								$trans = array(
+													'status' => 3, 
+													'transaction_id' => $responseArray['ewayTrxnNumber'],
+													'payment_type' => 'eWay', 
+													'amount' => $data["order_total"],
+													'details' => serialize($details), 
+													'approval' => $responseArray['ewayTrxnStatus'] 
+												);
 						}
 						return $trans;
 	}
