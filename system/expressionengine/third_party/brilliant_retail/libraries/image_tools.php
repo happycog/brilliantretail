@@ -27,7 +27,8 @@
 	class Image_tools implements ImageToolsInterface
 	{
 		public $watermark_font_path;
-		
+		public $extension;
+
 		private $im;
 		private $image_type;
 		private $tmp_im;
@@ -50,14 +51,14 @@
 					$size = getimagesize($path_to_image); 
 					$ext = $size['mime'];
 					if($ext == 'image/png'){
-						$extension = 'PNG';
+						$this->extension = 'PNG';
 					}elseif($ext == 'image/gif'){
-						$extension = 'GIF';
+						$this->extension = 'GIF';
 					}else{
-						$extension = 'JPG';
+						$this->extension = 'JPG';
 					}
-
-				switch( $extension )
+					 
+				switch( $this->extension )
 				{
 					case "PNG":
 						$this->image_type = $this->image_output_type = "PNG";
@@ -82,7 +83,7 @@
 				
 				if( ! $this->image_type )
 				{
-					$this->parseError("Invalid image type ($extension) :: $path_to_image");
+					$this->parseError("Invalid image type ($this->extension) :: $path_to_image");
 				}
 			}
 			else
@@ -888,9 +889,6 @@
 		{
 			if( file_exists($path) )
 			{
-				$split = explode(".", $name);
-				$extension = strtoupper( $split[ count($split) - 1 ] );
-				
 				if( !is_numeric($quality) || $quality < 0 || $quality > 100 )
 					$quality = 90;
 				
@@ -900,7 +898,7 @@
 				}
 				else
 				{
-					switch( $extension )
+					switch( $this->extension )
 					{
 						case "PNG":
 							imagepng($this->im, $path . $name);
