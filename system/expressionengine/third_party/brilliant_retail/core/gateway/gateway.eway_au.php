@@ -30,7 +30,7 @@ class Gateway_eway_au extends Brilliant_retail_gateway {
 		public $enabled = true;
 		public $version = 1.0;
 		
-		function process($data,$config){
+		function process($data,$config){ 
 		
 						$myTransactionData = $this->set_array($data,$config);
 							
