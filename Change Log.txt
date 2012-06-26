@@ -18,3 +18,5 @@
 * Fixed language definitions in email views by prefixing them with br_
 * Changed the subscription start date to include a leading zero on the month per the xml spec. Added sandbox mode checking.
 * Added missing language defs for 'br_shipping_city' and 'br_shipping_country'
+* Updated to leave product SKU's case sensitive.
+* Updated the requirements for the State/Province to support international purchases.
