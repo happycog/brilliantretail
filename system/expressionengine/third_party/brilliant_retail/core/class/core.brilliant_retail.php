@@ -1982,7 +1982,7 @@ class Brilliant_retail_core {
 		foreach($vars[0]["results"] as $key => $val){
 			// Check the price setup 
 				if($amt = $this->_check_product_price($val)){
-					$vars[0]["results"][$key]["price_html"] = '<p class="price">'.$this->_format_money($amt["price_html"]).'</p>';
+					$vars[0]["results"][$key]["price_html"] = '<p class="price">'.$amt["price_html"].'</p>';
 				}
 			// Set default images
 			 	if($vars[0]["results"][$key]["image_large"] == ''){
