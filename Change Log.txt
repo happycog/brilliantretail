@@ -1,7 +1,9 @@
 # David Dexter 
 
-* Added cart_has_discount method per Isaac's recommendation. 
+* Added cart_has_discount tag to detect if a discount is present. 
 * Added br_suppress_new_account_email configuration 
+* Added br_display_out_of_stock configuration setting to display out of stock items.
+* Added in_stock variable (TRUE/FALSE) to catalog results pair and product tag. 
 * Added currency_marker variable to checkout_thank tag
 * Added a _format_money method to BrilliantRetail core to handle price output display formatting. 
 * Fixed an issue with custom fields in the BrilliantRetail fieldtype [0000187]
@@ -12,8 +14,10 @@
 * Fixed an issue with category restricted promotions
 * Updated new product to automatically set the 'cost' value to '0.00'
 * Updated image log message when returning a newly created cached image. 
+* Updated catalog index and product index templates in the demo theme with in_stock example code.
 
 # Isaac Horton
+
 * Added the order_id to the Authorize.net process_subscription method.
 * Fixed language definitions in email views by prefixing them with br_
 * Changed the subscription start date to include a leading zero on the month per the xml spec. Added sandbox mode checking.

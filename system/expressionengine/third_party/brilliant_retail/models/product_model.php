@@ -142,36 +142,41 @@ class Product_model extends CI_Model {
 					}
 				
 				// Product Addon 
-					$products[$i]["addon"] 	= ''; #$this->get_product_addon($row["product_id"]);
+					$products[$i]["addon"] 		= ''; #$this->get_product_addon($row["product_id"]);
 					
 				// Product Related 
-					$products[$i]["related"] = $this->get_product_related($row["product_id"]);
+					$products[$i]["related"] 	= $this->get_product_related($row["product_id"]);
 	
 				// Product Options 
-					$products[$i]["options"] = $this->get_product_options($row["product_id"]);
+					$products[$i]["options"] 	= $this->get_product_options($row["product_id"]);
 				
-				if($row["type_id"] == 2){
-					$products[$i]["bundle"] = $this->get_product_bundle($row["product_id"]);
-				}
+				// Bundle Product Type
+					if($row["type_id"] == 2){
+						$products[$i]["bundle"] 	= $this->get_product_bundle($row["product_id"]);
+					}
 				
-				if($row["type_id"] == 3){
-					$products[$i]["configurable"] = $this->get_product_configurable($row["product_id"]);
-				}
+				// Configurable Product Type
+					if($row["type_id"] == 3){
+						$products[$i]["configurable"] = $this->get_product_configurable($row["product_id"]);
+					}
 				
-				if($row["type_id"] == 4){
-					$products[$i]["download"] = $this->get_product_download($row["product_id"]);
-				}
+				// Download Product Type
+					if($row["type_id"] == 4){
+						$products[$i]["download"] = $this->get_product_download($row["product_id"]);
+					}
 				
-				if($row["type_id"] == 6){
-					$products[$i]["subscription"] = $this->get_product_subscription($row["product_id"]);
-				}
+				// Subscription Product Type
+					if($row["type_id"] == 6){
+						$products[$i]["subscription"] = $this->get_product_subscription($row["product_id"]);
+					}
 				
-				if($row["type_id"] == 7){
-					$products[$i]["donation"] = $this->get_product_donation($row["product_id"]);
-				}
+				// Donation Product Type
+					if($row["type_id"] == 7){
+						$products[$i]["donation"] = $this->get_product_donation($row["product_id"]);
+					}
 				
-				save_to_cache('product_'.$row["product_id"],serialize($products[$i]));
-				$i++;
+					save_to_cache('product_'.$row["product_id"],serialize($products[$i]));
+					$i++;
 			}
 			
 			// Save it to the session cache 

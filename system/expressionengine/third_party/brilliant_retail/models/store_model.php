@@ -44,18 +44,15 @@ class Store_model extends CI_Model {
 	
 	function build_url_types($type='',$site_id=0)
 	{
-	if ($type==''){
-	return;
-	}
+		if ($type==''){ return; }
 	
-	$this->db->select($type);
-	$this->db->from('br_store');
-	$this->db->where('site_id',$site_id);
+		$this->db->select($type);
+		$this->db->from('br_store');
+		$this->db->where('site_id',$site_id);
 	
-	$query = $this->db->get();
-	$row = $query->result_array();
-	return $row[0][$type];
-	
+		$query = $this->db->get();
+		$row = $query->result_array();
+		return $row[0][$type];
 	}
 	
 	function get_store_by_id($site_id){

@@ -105,70 +105,79 @@
         	<div id="details">
                     {price_html}
                     
-                    {!-- 
-                    	An on_sale flag is also available for if statements.
-                    	
-                    	Additional sale price/time tags are available. Sale/Price times 
-                    	accept the format parameter.
-						
-						Ex: 
-						{if on_sale}
-							{sale_start format="%d/%y"}
-						{/if}
-                    !--}
                     
-                    {!--
-                    	type_id 7 is a donation product. We are hiding it 
-                    	in the code below.
-                    !--}
-
-	                    {if {type_id} != 7}
-	                    	<label>Qty:</label>
-	                    	{quantity_select}
-						{if:else}
-							<input type="hidden" name="{product_id}_quantity" value="1" />
-						{/if}
-
-					<div class="clearboth"><!-- --></div>
-                    {!-- Insert Product Specific Selectors !--}
-                    	
-						{!-- Configurable Product Type !--}
-
-	                    	{configurable}
-	                    		
-	                    		<label>{configurable_label}</label>
-	                    		{configurable_select}<br />
-	                    		<div class="clearboth"><!-- --></div>		
-	                    	{/configurable}
+                    {if in_stock}
+                    
+		                    {!-- 
+		                    	An on_sale flag is also available for if statements.
+		                    	
+		                    	Additional sale price/time tags are available. Sale/Price times 
+		                    	accept the format parameter.
 								
-							{!-- Required to set configurable selectors!--}	
+								Ex: 
+								{if on_sale}
+									{sale_start format="%d/%y"}
+								{/if}
+		                    !--}
+		                    
+		                    {!--
+		                    	type_id 7 is a donation product. We are hiding it 
+		                    	in the code below.
+		                    !--}
+		
+			                    {if {type_id} != 7}
+			                    	<label>Qty:</label>
+			                    	{quantity_select}
+								{if:else}
+									<input type="hidden" name="{product_id}_quantity" value="1" />
+								{/if}
+		
+							<div class="clearboth"><!-- --></div>
+		                    {!-- Insert Product Specific Selectors !--}
+		                    	
+								{!-- Configurable Product Type !--}
+		
+			                    	{configurable}
+			                    		
+			                    		<label>{configurable_label}</label>
+			                    		{configurable_select}<br />
+			                    		<div class="clearboth"><!-- --></div>		
+			                    	{/configurable}
+										
+									{!-- Required to set configurable selectors!--}	
+		
+				                    	{configurable_js}
+		
+		                    	{!-- Donation Product Type !--}
+		                    	                    	
+			                    	{donation}
+		
+										{price_options}
+		
+			                    	{/donation}
+		                    	
+		                    	{!-- Optional Product Options !--}
+		
+			                    	{options}
+			                    		
+			                    		<h5>{option_label}</h5>
+			                    		{option_input}
+			                    		<div class="clearboth"><!-- --></div>
+		
+			                    	{/options}
+								
+		                    {!-- End Insert Product Specific Selectors !--}
+		                    
+		                    <div class="btn">
+		                    	<input class="inpbtn" name="" type="submit" value="Add to Cart" />
+		                    </div>
 
-		                    	{configurable_js}
-
-                    	{!-- Donation Product Type !--}
-                    	                    	
-	                    	{donation}
-
-								{price_options}
-
-	                    	{/donation}
-                    	
-                    	{!-- Optional Product Options !--}
-
-	                    	{options}
-	                    		
-	                    		<h5>{option_label}</h5>
-	                    		{option_input}
-	                    		<div class="clearboth"><!-- --></div>
-
-	                    	{/options}
-						
-                    {!-- End Insert Product Specific Selectors !--}
-                    
-                    <div class="btn">
-                    	<input class="inpbtn" name="" type="submit" value="Add to Cart" />
-                    </div>
-                    
+					{/if} {!-- end of in_stock statement !--}
+					
+					{if in_stock == FALSE}
+						<p>Out of Stock</p>
+					{/if}
+					                    
                     <div class="wishlist">
 		            	<a href="{exp:brilliant_retail:wishlist_add product_id="{product_id}" return="customer/wishlist"}">Add to Wishlist</a>
 		            </div>

@@ -598,6 +598,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 				}
 			
+			
 			// Get our category image
 				$img = (trim($category[0]['image']) != '') ? $this->_config["media_url"].'images/'.$category[0]['image'] : '';
 			
@@ -623,6 +624,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if(count($category[0]["products"]) != 0){
 					$vars = $this->_filter_results($vars,$key,true);
 				}
+
 			// If there are no product
 				if(count($category[0]["products"]) == 0 || !isset($vars[0]["results"])){
 					$no_result = '';
@@ -645,7 +647,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$results[] = $tmp[0];
 				}
 				$vars[0]['results'] = $results;
-
+				
 			// Add form_open / form_close tags
 				$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
 	
