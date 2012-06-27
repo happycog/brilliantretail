@@ -24,3 +24,4 @@
 * Added missing language defs for 'br_shipping_city' and 'br_shipping_country'
 * Updated to leave product SKU's case sensitive.
 * Updated the requirements for the State/Province to support international purchases.
+* Added the ability to suppress new order emails via br_suppress_new_order_email.

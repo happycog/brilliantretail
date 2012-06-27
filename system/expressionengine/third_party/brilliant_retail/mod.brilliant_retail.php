@@ -2173,8 +2173,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 												"has_subscription" 	=> $has_subscription,
 												"has_donation"		=> $has_donation
 											);
-		
+						if($this->EE->config->item('br_suppress_new_order_email') !== TRUE) {
 							$this->_send_email('customer-order-new', $vars);
+						}
 							
 						// Hook after we create the order before cleanup 
 							$data["order_id"] = $order_id;
