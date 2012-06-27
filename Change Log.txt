@@ -15,6 +15,7 @@
 * Updated new product to automatically set the 'cost' value to '0.00'
 * Updated image log message when returning a newly created cached image. 
 * Updated catalog index and product index templates in the demo theme with in_stock example code.
+* Updated the image method to better handle full media url paths and file sources that are not available. 
 
 # Isaac Horton
 

@@ -412,9 +412,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			// Get params 
 				$src = $this->EE->TMPL->fetch_param('src');
+			
+				// Did they pass the full path to the media url? 
+					if(strpos($src,$_SERVER["HTTP_HOST"]) !== -1){
+						$this->EE->TMPL->log_item('BrilliantRetail: Image is the full path.');
+						// lets make it relative to the media directory. 
+						$src = str_replace($this->_config["media_url"],"",$src);
+					}
+			
 				if(!file_exists($this->_config["media_dir"].$src) || $src == ''){
 					$this->EE->TMPL->log_item('BrilliantRetail: IMAGE FILE SOURCE DOES NOT EXIST!');
-					return;
+					// Give back the original source but log it in the output and debugging
+					return $src;
 				}else{
 					$this->EE->TMPL->log_item('BrilliantRetail: valid image source ('.$this->_config["media_dir"].$src.')');
 				} 
