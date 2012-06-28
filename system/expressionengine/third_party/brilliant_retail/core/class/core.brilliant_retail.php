@@ -2161,104 +2161,129 @@ class Brilliant_retail_core {
 	
 	function _build_config_opts($p)
 	{
-		$this->EE->load->model('product_model');
-		$first = array();
-		$row = '';
-		$js = '';
+		$row 	= '';
+		$opt 	= '';
+		$js 	= '';
+		$opt_count = 0; // track for the first iteration. 
+		
 		foreach($p["configurable"] as $c){
-			// Make sure that we have it
-			// in stock before building it as 
-			// an option
-				if($c["qty"] >= 1){
-					$tmp = unserialize($c["attributes"]);
-					$i = 0;
-					foreach($tmp as $key => $val){
-						$label[$i] = $key;
-						if($c["adjust"] != 0 && $i == (count($tmp) - 1)){
-							$attr[$i] = urldecode($val).' +'.$c["adjust"];
-						}else{
-							$attr[$i] = urldecode($val);
-						}
-						$i++;
+			$a = unserialize($c["attributes"]);
+			$row = array();
+				foreach($a as $key => $val)
+				{
+					if($opt_count == 0)
+					{
+						$a = $this->EE->product_model->get_attribute_by_id($key);
+						$config_label[] = $a["title"];
+					}				
+					if(count($row) == 0)
+					{
+						$first[$val] = $val;
 					}
-					
-					$js = '';
-					$cnt = 0;
-					if(count($attr) == 1){
-						// There is only one option
-						$first[$c["configurable_id"]] = urldecode($attr[0]);
-					}else{
-						// Multiple config array
-						$first[$attr[0]] = urldecode($attr[0]);
-						foreach($attr as $a){
-							if($cnt != 0){
-								$row .= "configOpts";
-								for($j=0;$j<$cnt;$j++){
-									// I'm sure this can be done better 
-									// but we need to make sure that a quote 
-									// doesn't break our javascript
-										if(strpos($attr[$j],"'") !== FALSE){
-											$row .= '.forValue("'.$attr[$j].'")';
-										}else{
-											$row .= ".forValue('".$attr[$j]."')";
-										}
-								}
-								if($cnt == (count($attr)-1)){
-									$val = $c["configurable_id"];
-								}else{
-									$val = $a;
-								}
-								// Same as above (quotes in javascript)
-									$row .= ".addOptionsTextValue(\"".$a."\",\"".$val."\");\n";
-								
-								$js .= $row;
-							}
-							$cnt++;
-						}
-					}
+					$row[] = $val;
 				}
+			
+			$opt[] = array(	
+								'id' 		=> $c["configurable_id"],
+								'qty'	 	=> $c["qty"],
+							    'adjust'	=> $c["adjust"],
+								'options' 	=> $row 
+							);
+			$opt_count++;
 		}
-		$i = 0;
-		$list = array();
-		$config = array();
-		if(isset($label)){
-			foreach($label as $l){
-				$a = $this->EE->product_model->get_attribute_by_id($l);
-				$labels[] = $a["title"];
-				
-				// if its the first one then put in the default values 
-					if($i ==0){
-						$opts = '<option value=""></option>';
-						foreach($first as $key => $val){
-							$opts .= '<option value="'.$key.'">'.$val.'</option>'; 
-						}
-						$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" class="required">'.$opts.'</select>';
-					}else{
-						$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" class="required"><option>-</option></select>';
-					}
-				$list[] = '"'.$p["product_id"].'_configurable_'.$i.'"';
-				$config[$i] = array(
-									'configurable_label' => $a['title'],
-									'configurable_select' => $select 
-									);
-				$i++;
+		$js = array(
+						'default_text'		=> lang('br_choose_an_option'),
+						'form_id' 			=> $p["product_id"],
+						'label' 			=> $config_label,
+						'rows'				=> $opt
+					);
+
+		$js_output = json_encode($js);
+		
+		for($i=0;$i<count($js["label"]);$i++)
+		{
+			if($i == 0){
+				$opts = '';
+				foreach($first as $f)
+				{
+					$opts .= '<option value="'.$f.'">'.$f.'</option>';
+				}
+				$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" id="'.$p["product_id"].'_configurable_'.$i.'" class="required"><option value="">'.lang('br_choose_an_option').'</option>'.$opts.'</select>';
+			}else{
+				$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" id="'.$p["product_id"].'_configurable_'.$i.'" class="required"><option value="">'.lang('br_choose_an_option').'</option></select>';
 			}
+			$config[$i] =  array(
+									'configurable_label' 	=> $js["label"][$i],
+									'configurable_select' 	=> $select 
+								);
 		}
-		// If we didn't build js then its possibly sold out
-		if($js == ''){
-			if(count($config) == 0){
-				$js = "$(function(){ $('.btn,.fancybox').hide(); });";
-			}
-		}else{
-			$js = '	$(function(){
-						var configOpts = new DynamicOptionList('.join(',',$list).');
-						'.$js.'
-						initDynamicOptionLists();
-					});';
-		}
+
+		$js_output = "	(function($){
+							$.fn.brConfig = function( opts ) {
+								
+								var opt_length 		= opts.label.length;
+								var row_length 		= opts.rows.length;
+								var default_text 	= opts.default_text;
+								 
+								return this.each(function(){
+									for(k=0;k<opt_length;k++)
+									{
+										$('#'+opts.form_id+'_configurable_'+k).bind('change',
+																					function(){
+																						var a = $(this);
+																						var b = a.attr('id').split('_');
+																						var c = parseInt(b[2]);
+																						var sel = a.val();
+																						var next = c + 1;
+																						var display = Array();
+																						
+																						if(next < (opt_length)){
+																							d = $('#'+opts.form_id+'_configurable_'+next);
+																							d.html('');
+																							options = '<option value=\"\">'+opts.default_text+'</option>';
+																							if(sel != ''){
+																								for(i=0;i<row_length;i++)
+																								{
+																									if(opts.rows[i].options[c] == sel)
+																									{
+																										if(!display[opts.rows[i].options[next]])
+																										{
+																											if(next == (opt_length - 1)){
+																												adj = '';
+																												if(opts.rows[i].adjust > 0)
+																												{
+																													adj = ' +'+opts.rows[i].adjust;
+																												}
+																												options += '<option value=\"'+opts.rows[i].id+'\">'+opts.rows[i].options[next]+adj+'</option>';
+																											}else{
+																												options += '<option value=\"'+opts.rows[i].options[next]+'\">'+opts.rows[i].options[next]+'</option>';
+																											}
+																										}
+																										display[opts.rows[i].options[next]] = opts.rows[i].options[next];
+																									}
+																								}
+																							}
+																							$(options).appendTo(d);
+																						}
+																						next++;
+																						for(i=next;i<=opt_length;i++)
+																						{
+																							var d = $('#'+opts.form_id+'_configurable_'+i);
+																							d.html('');
+																							$('<option value=\"\">'+opts.default_text+'</option>').appendTo(d);
+																						}
+																					});
+									}
+								});
+							};
+						})(jQuery);
+		
+		
+		$('#form_".$p["product_id"]."').brConfig(".$js_output.");";
+
 		$config_opts = array(	
-								'js' => $js,
-								'config' => $config
+								'js' 		=> $js_output,
+								'config' 	=> $config
 							);
 		return $config_opts;
 	}

@@ -609,7 +609,10 @@ $lang = array(
 		'br_ft_product_search' => 'Use the search box above to add products.',
 
 	// Front End 
-		
+				
+		// Product 
+			'br_choose_an_option'	=> '', 
+			
 		// Customer 
 			"br_customer_exists" => "Customer already exists. Please login below.",
 			"br_invalid_form_id" => "There was an error processing your registration. Please try again.", 

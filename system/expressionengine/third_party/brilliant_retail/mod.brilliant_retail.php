@@ -842,12 +842,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 						{
 							$tmp = ltrim(rtrim($v["options"],"<br />"),"<h4>");
 							$p = explode("<h4>",$tmp);
+							
 							foreach($p as $q)
 							{
 								$opt = explode("</h4>",$q);
 								$option[] = array(	
 													'label' => $opt[0],
-													'value' => $opt[1]
+													'value' => isset($opt[1]) ? $opt[1] : '' 
 												);
 							}	
 						}
