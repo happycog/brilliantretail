@@ -835,18 +835,34 @@ class Brilliant_retail extends Brilliant_retail_core{
 					// We want the entry_id for the product
 						$p = $this->_get_product($v["product_id"]);
 						$entry_id = $p[0]["entry_id"];
-
+					
+					// Lets split up the options
+						$option = array();
+						if($v["options"] != "")
+						{
+							$tmp = ltrim(rtrim($v["options"],"<br />"),"<h4>");
+							$p = explode("<h4>",$tmp);
+							foreach($p as $q)
+							{
+								$opt = explode("</h4>",$q);
+								$option[] = array(	
+													'label' => $opt[0],
+													'value' => $opt[1]
+												);
+							}	
+						}
 					// Build up the item array 
 						$hash = md5($key);
 						$items[$i] = $v;
+						$items[$i]['option'] 		= $option;
 						$items[$i]['hash'] 			= $hash;
 						$items[$i]['product_id'] 	= $v["product_id"];
 						$items[$i]['entry_id'] 		= $entry_id;
-						$items[$i]['remove_link'] = $remove.'&id='.$hash;
-						$items[$i]['base'] 		= $this->_format_money($v['base']);
-						$items[$i]['price']		= $this->_format_money($v['price']);
-						$items[$i]['subtotal']	= $this->_format_money($v['subtotal']);
-						$items[$i]['discount'] 	= $this->_format_money($v['discount']);
+						$items[$i]['remove_link'] 	= $remove.'&id='.$hash;
+						$items[$i]['base'] 			= $this->_format_money($v['base']);
+						$items[$i]['price']			= $this->_format_money($v['price']);
+						$items[$i]['subtotal']		= $this->_format_money($v['subtotal']);
+						$items[$i]['discount'] 		= $this->_format_money($v['discount']);
 						$i++;
 				}
 			}
