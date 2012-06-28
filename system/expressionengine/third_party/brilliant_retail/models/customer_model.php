@@ -134,13 +134,16 @@ class Customer_model extends CI_Model {
 	}
 	
 	function create_customer($data,$password='',$group_id=5){
+		// Load security helper for password hash
+		$this->load->helper('security');
+		
 		$member_id = '';
 		if($password == ''){
 			$password = strtolower(substr(md5(time()),0,8));
 		}
 		$new['group_id'] 		= $group_id;
 		$new['username']		= $data["email"];
-		$new['password']		= $this->functions->hash($password);
+		$new['password']		= do_hash($password);
 		$new['ip_address']  	= $this->input->ip_address();
 		$new['unique_id']		= $this->functions->random('encrypt');
 		$new['join_date']		= $this->localize->now;

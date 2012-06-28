@@ -2537,6 +2537,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 	// Register a customer		
 		function customer_register()
 		{
+			// Load security helper for password hash
+				$this->EE->load->helper('security');
+			
 			// Verify the security hash 
 			// We have to do it ourselves because of a bug in EE 2.2.2 
 				$xid = $this->EE->input->post('XID');
@@ -2616,7 +2619,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 				$new['group_id'] 		= $this->_config["store"][$this->site_id]["register_group"];
 				$new['username']		= $data['email'];
-				$new['password']		= $this->EE->functions->hash(stripslashes($data['password']));
+				$new['password']		= do_hash($data['password']);
 				$new['ip_address']  	= $this->EE->input->ip_address();
 				$new['unique_id']		= $this->EE->functions->random('encrypt');
 				$new['join_date']		= $this->EE->localize->now;
@@ -2700,6 +2703,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 	// Update customer password
 		function customer_pw_update()
 		{
+			// Load security helper for password hash
+				$this->EE->load->helper('security');
+
 			// Validate that we got everything
 				if(	(!isset($_POST["password"]) || trim($_POST["password"]) == '') ||
 					(!isset($_POST["new_password"]) || trim($_POST["new_password"]) == '') || 
@@ -2710,8 +2716,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 				if(version_compare(APP_VER, '2.2', '<')){
 					# Validate password pre EE v.2.2
-						$current_password = $this->EE->functions->hash(stripslashes($this->EE->input->post('password',TRUE)));
-						$data['password'] = $this->EE->functions->hash(stripslashes($this->EE->input->post('new_password',TRUE)));
+						$current_password = do_hash(stripslashes($this->EE->input->post('password',TRUE)));
+						$data['password'] = do_hash(stripslashes($this->EE->input->post('new_password',TRUE)));
 			
 						$sql = $this->EE->db->update_string('exp_members',$data,"member_id = '".$this->EE->session->userdata('member_id')."' and password = '".$current_password."'");
 						$this->EE->db->query($sql);
