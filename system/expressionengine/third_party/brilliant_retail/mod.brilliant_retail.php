@@ -2134,7 +2134,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 												// Insert into the db 
 												$dl["license"] = uuid();
 												
-												// Add a hook to modify the $dl array prior to creating the order download record
+												// Hook to modify the $dl array prior to creating the order download record
 												if($this->EE->extensions->active_hook('br_license_create_after') === TRUE){
 													$dl = $this->EE->extensions->call('br_license_create_after', $dl); 
 												}
@@ -2327,7 +2327,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$tax_rate		= ($tax > 0) ? $this->_currency_round($tax) : $this->_currency_round(0) ;
 			// Calculate Shipping 			
 				$hash 			= $this->EE->input->post("shipping",TRUE);
-				$rate 			= $_SESSION["shipping"][$hash]["rate"];
+				$rate 			= isset($_SESSION["shipping"][$hash]["rate"]) ? $_SESSION["shipping"][$hash]["rate"] : 0;
 				$shipping 		= ($rate > 0) ? $rate : 0;
 				$shipping_rate 	= $this->_currency_round($shipping);
 			// Calculate Total 

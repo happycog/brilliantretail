@@ -13,6 +13,7 @@
 		To display it you must prefix it {br:my_field}. If it is a tag pair be sure to 
 		namespace the closing as well. {br:my_field}{internal_tag}{/br:my_field}
 * Fixed an issue with category restricted promotions
+* Fixed an issue with the checkout_total method when there are no shipping methods required the rate is set to 0.
 * Updated Functions::hash() with preferred Security_helper::do_hash() method. 
 * Updated new product to automatically set the 'cost' value to '0.00'
 * Updated image log message when returning a newly created cached image. 
