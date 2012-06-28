@@ -2133,6 +2133,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 											for($j=0;$j<$f["quantity"];$j++){
 												// Insert into the db 
 												$dl["license"] = uuid();
+												
+												// Add a hook to modify the $dl array prior to creating the order download record
+												if($this->EE->extensions->active_hook('br_license_create_after') === TRUE){
+													$dl = $this->EE->extensions->call('br_license_create_after', $dl); 
+												}
+												
 												$this->EE->order_model->create_order_download($dl);
 												unset($dl);
 											}

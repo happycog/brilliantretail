@@ -6,6 +6,7 @@
 * Added in_stock variable (TRUE/FALSE) to catalog results pair and product tag. 
 * Added currency_marker variable to checkout_thank tag
 * Added a _format_money method to BrilliantRetail core to handle price output display formatting. 
+* Added br_license_create_after hook to modify the $dl array (contains license key) prior to creating the order download record
 * Fixed an issue with custom fields in the BrilliantRetail fieldtype [0000187]
 	- 	IMPORTANT: When using custom fields in the BR fieldtype you must namespace
 		them with a br: prefix. For example your custom fieldtype name maybe my_field. 
