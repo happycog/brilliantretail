@@ -285,8 +285,8 @@ class Gateway_authorize_arb extends Brilliant_retail_gateway {
 		        // Create the request and send it.
 		        	$request = new AuthorizeNetARB;
 		        	// do we need to process in sandbox mode
-		        	if(array_key_exists("x_test_request", $config) && $config["x_test_request"] == 'TRUE') {
-			        	$request->setSandbox(TRUE);
+		        	if(array_key_exists("x_test_request", $config) && $config["x_test_request"] == 'FALSE') {
+			        	$request->setSandbox(FALSE);
 		        	}
 		        	$request->setRefId($refId);
 		        	$response = $request->createSubscription($subscription);
