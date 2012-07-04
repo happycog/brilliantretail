@@ -1413,7 +1413,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$data["entry_id"] 	= $entry_id;
 					$data["channel_id"]	= $this->br_channel_id;
 					$data["entry_date"]	= time();
-	
+					$data["status"]		= ($data["enabled"] == 1) ? 'open' : 'closed';
 					foreach($id as $key => $val){
 						$this->EE->api_channel_fields->setup_handler($key);
 							if($this->EE->api_channel_fields->apply('validate', array($data["field_id_".$key]))){
