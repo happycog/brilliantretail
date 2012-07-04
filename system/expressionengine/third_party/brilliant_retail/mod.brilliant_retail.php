@@ -1124,6 +1124,55 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$this->promo_check_code($_SESSION["discount"]["code"]);
 				unset($_SESSION["br_message"]);
 			}
+			
+			// Lets do a cart check to see if we can actually combine any of these:
+			
+				$cart = $this->EE->product_model->cart_get();
+				$product_exists = array();
+				$combine_count 	= 0; 
+				foreach($cart["items"] as $key => $val)
+				{
+					if(isset($product_exists[$val['product_id']]))
+					{
+						$combine = TRUE;
+						if($val["configurable_id"] != $product_exists[$val['product_id']]["configurable_id"])
+						{
+							$combine = FALSE;
+						}
+						if($val["options"] != $product_exists[$val['product_id']]["options"])
+						{
+							$combine = FALSE;
+						}
+						if($combine === TRUE)
+						{
+							// Keep a tally of the number of products combine so we can do an inventory 
+							// check later on.
+								$combine_count++;
+							
+							// Set the new product quantity
+								$product_exists[$val['product_id']]['quantity'] += $val["quantity"];
+								$qty[md5($product_exists[$val['product_id']]['key'])] = $product_exists[$val['product_id']]['quantity'];
+								$this->cart_update($qty,FALSE);
+							// Unset the current row
+								$this->EE->product_model->cart_unset(md5($key));
+							// This product no longer exits so lets continue onto the next. 
+								continue; 
+						}
+					}
+					$product_exists[$val['product_id']] = array(
+																'key'				=> $key, 
+																'quantity' 			=> $val['quantity'],
+																'options' 			=> $val['options'],
+																'configurable_id' 	=> $val['configurable_id']  
+																);
+				}
+				// If there were any combined products then we better check inventory again! 
+					if($combine_count >= 1)
+					{
+						$cart = $this->EE->product_model->cart_get();
+						$this->_check_inventory($cart);
+					}
+					
 			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
 		}
 	
@@ -1133,27 +1182,34 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
 		}
 	
-		function cart_update()
+		/* Cart Update
+		 *
+		 * Update the quantity of products in the cart. 
+		 */
+		function cart_update($qty='',$continue=TRUE)
 		{
 			// New Quantity 
-				$quantity = $this->EE->input->post('qty',TRUE);
+				if($qty == '')
+				{
+					$qty = $this->EE->input->post('qty',TRUE);
+				}
 				$cart = $this->EE->product_model->cart_get();
 			
 			foreach($cart["items"] as $key => $val){
-				if(isset($quantity[md5($key)])){
-					if(!is_integer($quantity[md5($key)])){
-						$quantity[md5($key)] = round($quantity[md5($key)] * 1);
+				if(isset($qty[md5($key)])){
+					if(!is_integer($qty[md5($key)])){
+						$qty[md5($key)] = round($qty[md5($key)] * 1);
 					}
-					if($quantity[md5($key)] <= 0){
+					if($qty[md5($key)] <= 0){
 						$this->EE->product_model->cart_unset(md5($key));	
 					}else{
 						// We don't want more than 1 subscription
 							if($val["type_id"] == 6){
-								$quantity[md5($key)] = 1;
+								$qty[md5($key)] = 1;
 							}
 						// Update the cart 
-							$cart["items"][$key]["quantity"] = $quantity[md5($key)];	
-							$cart["items"][$key]["subtotal"] = $this->_currency_round(($cart["items"][$key]["price"] * $quantity[md5($key)])); 	
+							$cart["items"][$key]["quantity"] = $qty[md5($key)];	
+							$cart["items"][$key]["subtotal"] = $this->_currency_round(($cart["items"][$key]["price"] * $qty[md5($key)])); 	
 							$content = serialize($cart["items"][$key]);
 							$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
 											'session_id' => session_id(), 
@@ -1163,8 +1219,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 				}
 			}
-			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
-			exit();
+			if($continue == TRUE)
+			{
+				$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
+			}
 		}
 	
 		function cart_subtotal()

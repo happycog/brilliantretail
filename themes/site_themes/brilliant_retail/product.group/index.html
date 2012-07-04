@@ -105,7 +105,6 @@
         	<div id="details">
                     {price_html}
                     
-                    
                     {if in_stock}
                     
 		                    {!-- 
@@ -117,6 +116,9 @@
 								Ex: 
 								{if on_sale}
 									{sale_start format="%d/%y"}
+									
+									{base} <= original price
+									{price} <= adjusted sale price
 								{/if}
 		                    !--}
 		                    
@@ -131,7 +133,7 @@
 								{if:else}
 									<input type="hidden" name="{product_id}_quantity" value="1" />
 								{/if}
-		
+							
 							<div class="clearboth"><!-- --></div>
 		                    {!-- Insert Product Specific Selectors !--}
 		                    	

@@ -1421,8 +1421,18 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					
 				// Now we'll run the update entry
+				// We are going to assume that the user has access to the BrilliantRetail 
+				// Channel regardless of their actual settings. The channel is hidden and 
+				// we built it automatically so we should allow admins with access to the 
+				// BR module to access it directly. (This solves the disappearing product problem!)
+					
+					$orig_group_id = $this->EE->session->userdata["group_id"];
+					$this->EE->session->userdata["group_id"] = 1; // Temporarily open give SA access to channels
 					$this->EE->api_channel_entries->update_entry($entry_id, $data);
-								
+					
+					// Set back to original access
+						$this->EE->session->userdata["group_id"] = $orig_group_id;		
+			
 			// Feeds			
 				$prod_feed= array();
 				if (isset($data['feed_id'])){

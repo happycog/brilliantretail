@@ -2252,7 +2252,7 @@ class Brilliant_retail_core {
 																												adj = '';
 																												if(opts.rows[i].adjust > 0)
 																												{
-																													adj = ' +'+opts.rows[i].adjust;
+																													adj = ' (+".$this->_config["currency_marker"]."'+opts.rows[i].adjust+')';
 																												}
 																												options += '<option value=\"'+opts.rows[i].id+'\">'+opts.rows[i].options[next]+adj+'</option>';
 																											}else{
@@ -2277,7 +2277,6 @@ class Brilliant_retail_core {
 								});
 							};
 						})(jQuery);
-		
 		
 		$('#form_".$p["product_id"]."').brConfig(".$js_output.");";
 

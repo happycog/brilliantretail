@@ -12,14 +12,16 @@
 		them with a br: prefix. For example your custom fieldtype name maybe my_field. 
 		To display it you must prefix it {br:my_field}. If it is a tag pair be sure to 
 		namespace the closing as well. {br:my_field}{internal_tag}{/br:my_field}
+* Fixed an issue when saving products from a member group other than the Super Admin group.  
 * Fixed an issue with category restricted promotions
 * Fixed an issue with the checkout_total method when there are no shipping methods required the rate is set to 0.
+* Updated the cart_add method to combine products when they have the same product_id, configurable_id and options. 
 * Updated Functions::hash() with preferred Security_helper::do_hash() method. 
 * Updated new product to automatically set the 'cost' value to '0.00'
 * Updated image log message when returning a newly created cached image. 
 * Updated catalog index and product index templates in the demo theme with in_stock example code.
 * Updated the image method to better handle full media url paths and file sources that are not available. 
-* Updated configurable product select javascript with a custom jQuery extension. 
+* Updated configurable product select javascript with a custom jQuery extension.
 
 # Isaac Horton
 
@@ -29,4 +31,4 @@
 * Added missing language defs for 'br_shipping_city' and 'br_shipping_country'
 * Updated to leave product SKU's case sensitive.
 * Updated the requirements for the State/Province to support international purchases.
-* Added the ability to suppress new order emails via br_suppress_new_order_email.
+* Added the ability to suppress new order emails via br_suppress_new_order_email configuration variable.
