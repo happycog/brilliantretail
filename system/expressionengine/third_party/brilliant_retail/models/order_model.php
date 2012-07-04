@@ -459,29 +459,35 @@ class Order_model extends CI_Model {
 	function reduce_item_inventory($item){
 		// Reduce the Product Inventory 
 			// Get the current quantity 
-				$query = $this->db->select('quantity')->from('br_product')->where('product_id',$item["product_id"])->get();
+				$query = $this->db->select('quantity,type_id')->from('br_product')->where('product_id',$item["product_id"])->get();
 				$row = $query->result();
 				$quantity = $row[0]->quantity;
-	
-			// 	New Quantity 
-				$quantity =  $quantity - $item["quantity"];
-				$data = array('quantity' => $quantity);
-				$this->db->where('product_id',$item["product_id"]);
-				$this->db->update('br_product',$data);
+				$type_id =  $row[0]->type_id;
+				
+			// We only need to reduce the inventory on type_id <= 3 the others are virtual products. 	
+				if($type_id <= 3){
 
-		// Reduce the Configurable Product Inventory 
-			if($item["configurable_id"] != 0){
-				// Get the current quantity 
-				$query = $this->db->select('qty')->from('br_product_configurable')->where('configurable_id',$item["configurable_id"])->get();
-				$row = $query->result();
-				$quantity = $row[0]->qty;
-	
-				// 	New Quantity 
-				$quantity =  $quantity - $item["quantity"];
-				$data = array('qty' => $quantity);
-				$this->db->where('configurable_id',$item["configurable_id"]);
-				$this->db->update('br_product_configurable',$data);	
-			}
+					// 	New Quantity 
+							$quantity =  $quantity - $item["quantity"];
+							$data = array('quantity' => $quantity);
+							$this->db->where('product_id',$item["product_id"]);
+							$this->db->update('br_product',$data);
+			
+					// Reduce the Configurable Product Inventory 
+						if($item["configurable_id"] != 0){
+							// Get the current quantity 
+							$query = $this->db->select('qty')->from('br_product_configurable')->where('configurable_id',$item["configurable_id"])->get();
+							$row = $query->result();
+							$quantity = $row[0]->qty;
+				
+							// 	New Quantity 
+							$quantity =  $quantity - $item["quantity"];
+							$data = array('qty' => $quantity);
+							$this->db->where('configurable_id',$item["configurable_id"]);
+							$this->db->update('br_product_configurable',$data);	
+						}
+
+				}
 	}
 	
 	function create_order_note($arr){

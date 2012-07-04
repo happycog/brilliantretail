@@ -175,7 +175,7 @@ class Brilliant_retail_core {
 			if (empty($cart)){return;}
 			$reduce = 0;
 			foreach($cart["items"] as $key => $val){
-				if($val["type_id"] == 1 || $val["type_id"] == 3){
+				if($val["type_id"] <= 3){
 					$qty = $val["quantity"];
 					if($val["type_id"] == 1){
 						// Simple products quantity is 
@@ -401,9 +401,13 @@ class Brilliant_retail_core {
 				}			
 			}
 			
-			// Set an in_stock flag
-				$products[0]["in_stock"] = ($products[0]["quantity"] > 0) ? TRUE : FALSE;
-
+			// Set an in_stock flag 
+			// We don't manage stock for types greater than 4
+				$products[0]["in_stock"] = TRUE;
+				if($products[0]["type_id"] <= 3){
+					$products[0]["in_stock"] = ($products[0]["quantity"] > 0) ? TRUE : FALSE;
+				}
+				
 			// Set Category information for the breadcrumbs
 				$products[0]["category_title"] = "";
 				$products[0]["category_url"] = "";
@@ -1709,8 +1713,11 @@ class Brilliant_retail_core {
 			if($this->EE->config->item('br_display_out_of_stock') !== TRUE)
 			{
 				foreach($vars[0]["results"] as $key => $val){
-					if($val["quantity"] <= 0){
-						unset($vars[0]["results"][$key]);	
+					if($val["type_id"] <= 3)
+					{
+						if($val["quantity"] <= 0){
+							unset($vars[0]["results"][$key]);	
+						}
 					}
 				}
 			}
