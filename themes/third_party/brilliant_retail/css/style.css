@@ -2618,6 +2618,7 @@ table#relatedTable .tDnD_whileDrag td a{
 }
 
 #imageTable tbody td,
+#price_table tbody td,
 #sale_price_table tbody td {
 	vertical-align: top;
 	text-align: center;
