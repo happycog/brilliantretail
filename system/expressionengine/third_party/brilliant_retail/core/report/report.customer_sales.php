@@ -83,7 +83,6 @@ class Report_customer_sales extends Brilliant_retail_report {
 			foreach($orders["results"] as $row){
 				// only add orders if they are not canceled
 				if($row["status_id"] >= 1){
-					$row_total = ($row["total"] + $row["tax"] + $row["shipping"]);
 					$result[] = array(
 										$row['order_id'],
 										"<strong>".$row["customer"]."</strong>",
@@ -92,7 +91,7 @@ class Report_customer_sales extends Brilliant_retail_report {
 										$this->_currency_round($row["tax"]),
 										$this->_currency_round($row["shipping"]),
 										$this->_currency_round($row["discount"]),
-										$this->_currency_round($row_total-$row['discount'])
+										$this->_currency_round($row["total"])
 									);
 					
 					$orders = $this->EE->order_model->get_order($row["order_id"]);
@@ -114,7 +113,7 @@ class Report_customer_sales extends Brilliant_retail_report {
 					$base 	+= $row["base"];
 					$tax 	+= $row["tax"];
 					$shipping += $row["shipping"];
-					$total 	+= $row_total;
+					$total 	+= $row["total"];
 					$discount += $row["discount"];
 				}
 			}
@@ -126,8 +125,8 @@ class Report_customer_sales extends Brilliant_retail_report {
 							$this->_currency_round($base),
 							$this->_currency_round($tax),
 							$this->_currency_round($shipping),
-							$this->_currency_round($total),
-							$this->_currency_round($discount)
+							$this->_currency_round($discount),
+							$this->_currency_round($total) 
 						);
 						
 		$report = array(

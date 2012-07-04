@@ -16,7 +16,9 @@
 * Fixed an issue with category restricted promotions
 * Fixed an issue with the checkout_total method when there are no shipping methods required the rate is set to 0.
 * Fixed an issue where a PHP error might display if all products in a category were filtered out by inventory control. 
-* Updated the cart_add method to combine products when they have the same product_id, configurable_id and options. 
+* Fixed an issue with customer sales report [#0000192]
+* Fixed an issue with wildcard search terms containing a dash and less than 3 characters in the last segment. [#0000189]
+* Updated the cart_add method to combine products when they have the same product_id, configurable_id and options. [#0000154]
 * Updated Functions::hash() with preferred Security_helper::do_hash() method. 
 * Updated new product to automatically set the 'cost' value to '0.00'
 * Updated image log message when returning a newly created cached image. 
@@ -24,13 +26,15 @@
 * Updated the image method to better handle full media url paths and file sources that are not available. 
 * Updated configurable product select javascript with a custom jQuery extension.
 * Updated inventory controls so that service, downloadable and donation product types are not filtered by quantity available. 
-
+* Updated link to placeholder 0.gif image in promo.js file 
+* Updated default encoding to UTF-8 for Zend Lucene query analyzer and index search [#0000132]
+ 
 # Isaac Horton
 
+* Added the ability to suppress new order emails via br_suppress_new_order_email configuration variable.
 * Added the order_id to the Authorize.net process_subscription method.
-* Fixed language definitions in email views by prefixing them with br_
-* Changed the subscription start date to include a leading zero on the month per the xml spec. Added sandbox mode checking.
 * Added missing language defs for 'br_shipping_city' and 'br_shipping_country'
+* Fixed language definitions in email views by prefixing them with br_
+* Updated the subscription start date to include a leading zero on the month per the xml spec. Added sandbox mode checking.
 * Updated to leave product SKU's case sensitive.
 * Updated the requirements for the State/Province to support international purchases.
-* Added the ability to suppress new order emails via br_suppress_new_order_email configuration variable.

@@ -11,7 +11,7 @@ $(function(){
 		timer = setTimeout('showNext()',promoDelay);
 		$('.hp_slider:gt(0)').hide(); 
 		for(i=0;i<=promoLimit;i++){
-			$('<img id="btn_'+i+'" class="promo_button" src="{theme}/images/0.gif" alt="" />').appendTo($('#promo_control'));
+			$('<img id="btn_'+i+'" class="promo_button" src="/themes/site_themes/brilliant_retail/images/0.gif" alt="" />').appendTo($('#promo_control'));
 		}
 		$('#promo_control .promo_button:eq(0)').addClass('active');
 		$('#promo_control .promo_button').bind('click',setButton);

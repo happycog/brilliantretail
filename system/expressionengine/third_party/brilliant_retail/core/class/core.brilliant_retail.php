@@ -988,8 +988,11 @@ class Brilliant_retail_core {
 			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 			
-			Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive());
-			
+			Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+			Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+			    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
+			);
+
 			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.'search';
 			if(!file_exists($path)){
 				mkdir($path,DIR_WRITE_MODE,TRUE);
@@ -1038,8 +1041,11 @@ class Brilliant_retail_core {
 				ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 				include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 				
-				Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive());
-				
+				Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+				Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+				    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
+				);
+
 				$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.'search';
 				if(!file_exists($path)){
 					mkdir($path,DIR_WRITE_MODE,TRUE);
@@ -1120,16 +1126,24 @@ class Brilliant_retail_core {
 	}
 	
 	function _search_index($queryStr){
-		// Need at least 3 characters for wildcard searches 
+		// Need at least 3 characters in the last word for wildcard searches 
 		if(strlen($queryStr) >= 3){
 			// Dashes don't play nicely with our wildcard search
-			$queryStr = str_replace("-"," ",$queryStr).'*';
+			$queryStr = str_replace("-"," ",$queryStr);
+			$a = explode(" ",$queryStr);
+			if(strlen($a[count($a)-1] >= 3))
+			{
+				$queryStr += "*";
+			}
 		}
 		ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 		include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 		
-		Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive());
-		
+		Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+		Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+		    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
+		);
+
 		$path = APPPATH.'cache/brilliant_retail/search';
 		$index = Zend_Search_Lucene::open($path);
 		$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr, 'utf-8');
