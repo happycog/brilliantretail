@@ -22,6 +22,7 @@
 * Updated catalog index and product index templates in the demo theme with in_stock example code.
 * Updated the image method to better handle full media url paths and file sources that are not available. 
 * Updated configurable product select javascript with a custom jQuery extension.
+* Updated inventory controls so that service, downloadable and donation product types are not filtered by quantity available. 
 
 # Isaac Horton
 
