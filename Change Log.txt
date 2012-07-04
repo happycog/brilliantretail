@@ -7,14 +7,15 @@
 * Added currency_marker variable to checkout_thank tag
 * Added a _format_money method to BrilliantRetail core to handle price output display formatting. 
 * Added br_license_create_after hook to modify the $dl array (contains license key) prior to creating the order download record
+* Fixed an issue when saving products from a member group other than the Super Admin group.  
 * Fixed an issue with custom fields in the BrilliantRetail fieldtype [0000187]
 	- 	IMPORTANT: When using custom fields in the BR fieldtype you must namespace
 		them with a br: prefix. For example your custom fieldtype name maybe my_field. 
 		To display it you must prefix it {br:my_field}. If it is a tag pair be sure to 
 		namespace the closing as well. {br:my_field}{internal_tag}{/br:my_field}
-* Fixed an issue when saving products from a member group other than the Super Admin group.  
 * Fixed an issue with category restricted promotions
 * Fixed an issue with the checkout_total method when there are no shipping methods required the rate is set to 0.
+* Fixed an issue where a PHP error might display if all products in a category were filtered out by inventory control. 
 * Updated the cart_add method to combine products when they have the same product_id, configurable_id and options. 
 * Updated Functions::hash() with preferred Security_helper::do_hash() method. 
 * Updated new product to automatically set the 'cost' value to '0.00'

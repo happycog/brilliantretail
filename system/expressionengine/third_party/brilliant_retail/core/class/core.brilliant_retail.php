@@ -175,6 +175,7 @@ class Brilliant_retail_core {
 			if (empty($cart)){return;}
 			$reduce = 0;
 			foreach($cart["items"] as $key => $val){
+				// Only check Basic, Bundle and Configurable Products
 				if($val["type_id"] <= 3){
 					$qty = $val["quantity"];
 					if($val["type_id"] == 1){
@@ -1672,7 +1673,7 @@ class Brilliant_retail_core {
 						$vars[0]['link_sort_price'] = $this->_set_link($hash).'/sort/price/dir/'.$dir_link;
 				}
 			
-			// If sort by relevance 
+			// If sort by name 
 				if($vars[0]['sort_selected'] == 'name'){
 					foreach($vars[0]["results"] as $r){
 						$tmp[$r["title"]][$r["product_id"]] = $r;
@@ -1713,6 +1714,7 @@ class Brilliant_retail_core {
 			if($this->EE->config->item('br_display_out_of_stock') !== TRUE)
 			{
 				foreach($vars[0]["results"] as $key => $val){
+					// Only filter Basic, Bundle and Configurable
 					if($val["type_id"] <= 3)
 					{
 						if($val["quantity"] <= 0){

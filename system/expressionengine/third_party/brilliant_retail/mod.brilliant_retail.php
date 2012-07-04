@@ -635,7 +635,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 
 			// If there are no product
-				if(count($category[0]["products"]) == 0 || !isset($vars[0]["results"])){
+				if(count($vars[0]['results']) == 0 || !isset($vars[0]["results"])){
 					$no_result = '';
 					$key = 'no_results';
 					preg_match("^".LD.$key.RD."(.*?)".LD."/".$key.RD."^s",$this->EE->TMPL->tagdata, $matches);
@@ -651,6 +651,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 			
 			// Doubled up the array offset. Lets fix that 
+				$results = array();
 				foreach($vars[0]['results'] as $rst){
 					$tmp = $this->_get_product($rst["product_id"]);
 					$results[] = $tmp[0];
