@@ -294,12 +294,6 @@ class Brilliant_retail_ext {
 			$this->nav_menu["br_product"]		= $this->base_url.AMP.'method=product';
 		}
 		
-		if($this->_config["store"][$this->site_id]["subscription_enabled"] == 1){
-			if(isset($this->group_access["brilliant_retail"]["subscription"])){
-				$this->nav_menu["subscription"] = $this->base_url.AMP.'method=subscription';
-			}
-		}
-	
 		if(isset($this->group_access["brilliant_retail"]["promo"])){
 			$this->nav_menu["br_promo"]	= $this->base_url.AMP.'method=promo';
 		}

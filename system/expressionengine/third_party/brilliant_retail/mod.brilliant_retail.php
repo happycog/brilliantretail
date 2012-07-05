@@ -171,13 +171,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}			
 				
 				if($form == 'yes'){
-					$hidden = '<input type="hidden" name="'.$products[0]["product_id"].'_product_id" value="'.$products[0]["product_id"].'" />';
-					if($products[0]["type_id"] == 6){
-						$hidden .= '<input 	type="hidden" 
-											name="'.$products[0]["product_id"].'_subscription_id"
-											value="'.$products[0]["subscription"][0]["subscription_id"].'" />';
-					}
-					
+					$hidden = 	'<input type="hidden" name="'.$products[0]["product_id"].'_product_id" value="'.$products[0]["product_id"].'" />';
 					$output = 	'<form id="form_'.$products[0]["product_id"].'" action="'.$action.'" method="post">
 									'.$hidden.' 
 									'.$output.'
@@ -951,7 +945,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 				// Set some defaults
 					$configurable_id = '';
-					$subscription = array();
 					$options = '';
 					$sku = $product[0]["sku"];
 			
@@ -988,38 +981,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$options = $list.$adjust;
 					}
 		
-				// Subscriptions 
-					if($product[0]["type_id"] == 6){
-						// We only want to allow 1 per subscription
-							$data["quantity"] = 1;
-						$subscription = $product[0]["subscription"][0];
-						$periods = array(
-											1=>strtolower(lang('br_days')),
-											2=>strtolower(lang('br_months')) 
-										);
-						$options .= '<div class="subscription_options">';
-						
-						// format the renewal period
-							$length = rtrim($periods[$subscription["period"]],'s').'(s)';
-							
-						// Is there a trial period?
-							$subscription["price"] = $amt["price"];
-							$options .= '<label>'.lang('br_renews').':</label> 
-										'.lang('br_every').' '.$subscription["length"].' '.$length.'
-										<label>'.lang('br_price').':</label>
-										'.$this->_config["currency_marker"].$this->_currency_round($amt["price"]);
-							if($subscription["trial_occur"] >= 1){
-								$amt["base"]  = $subscription["trial_price"];
-								$amt["price"] = $subscription["trial_price"];
-								$amt["price_html"] = $subscription["trial_price"];
-								$options .= '<label>'.lang('br_trial_price').':</label> 
-											'.$this->_format_money($subscription["trial_price"]).'<br />
-											<label>'.lang('br_trial_length').':</label> 
-											'.$subscription["trial_occur"].' '.$length;
-							}
-						$options .= '</div>';
-					}
-	
 				// Donations 
 				if($product[0]["type_id"] == 7){
 	
@@ -1035,29 +996,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$amt["base"]  = $price;
 					$amt["price"] = $price;
 					$amt["price_html"] = '<p class="price">'.$this->_format_money($price).'</p>';
-	
-					// Are we going to setup a recurring profile?
-					if($product[0]["donation"][0]["allow_recurring"] == 1){
-						if(isset($data["recurring"])){
-							
-							$subscription["product_id"] 		= $product[0]["product_id"];
-							$subscription["length"] 			= 1;
-							$subscription["period"] 			= 2;
-							$subscription["group_id"] 			= 0;
-							$subscription["trial_price"] 		= '';
-							$subscription["trial_occur"] 		= '';
-							$subscription["cancel_group_id"] 	= 0;
-							$subscription["price"] 				= $price;
-	
-							$options .= '<div class="subscription_options">	
-											<label>'.lang('br_recurring_donation').':</label> 
-											'.lang('br_every_months').' 
-											<label>'.lang('br_price').':</label>
-											'.$this->_config["currency_marker"].$this->_currency_round($amt["price"]).
-										'</div>';
-						}				
-					}
-							
+
 				}
 	
 				// Add and adjust for options
@@ -1095,7 +1034,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 									'url_title' 		=> 	$product[0]["url"], 
 									'sku' 				=> 	$sku,
 									'configurable_id' 	=>  $configurable_id,
-									'subscription' 		=> 	$subscription, 
 									'quantity'  		=> 	$data["quantity"], 
 									'image_large' 		=> 	$product[0]["image_large"],
 									'image_thumb' 		=> 	$product[0]["image_thumb"],
@@ -1133,14 +1071,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$combine_count 	= 0; 
 				foreach($cart["items"] as $key => $val)
 				{
-					if(isset($product_exists[$val['product_id']]))
+					$config_id = ($val['configurable_id'] != "") ? $val['configurable_id'] : 0;
+					
+					if(isset($product_exists[$val['product_id']][$config_id]))
 					{
 						$combine = TRUE;
-						if($val["configurable_id"] != $product_exists[$val['product_id']]["configurable_id"])
+						if($val["configurable_id"] != $product_exists[$val['product_id']][$config_id]["configurable_id"])
 						{
 							$combine = FALSE;
 						}
-						if($val["options"] != $product_exists[$val['product_id']]["options"])
+						if($val["options"] != $product_exists[$val['product_id']][$config_id]["options"])
 						{
 							$combine = FALSE;
 						}
@@ -1151,8 +1091,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 								$combine_count++;
 							
 							// Set the new product quantity
-								$product_exists[$val['product_id']]['quantity'] += $val["quantity"];
-								$qty[md5($product_exists[$val['product_id']]['key'])] = $product_exists[$val['product_id']]['quantity'];
+								$product_exists[$val['product_id']][$config_id]['quantity'] += $val["quantity"];
+								$qty[md5($product_exists[$val['product_id']][$config_id]['key'])] = $product_exists[$val['product_id']][$config_id]['quantity'];
 								$this->cart_update($qty,FALSE);
 							// Unset the current row
 								$this->EE->product_model->cart_unset(md5($key));
@@ -1160,13 +1100,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 								continue; 
 						}
 					}
-					$product_exists[$val['product_id']] = array(
-																'key'				=> $key, 
-																'quantity' 			=> $val['quantity'],
-																'options' 			=> $val['options'],
-																'configurable_id' 	=> $val['configurable_id']  
-																);
+					$product_exists[$val['product_id']][$config_id] = array(
+																			'key'				=> $key, 
+																			'quantity' 			=> $val['quantity'],
+																			'options' 			=> $val['options'],
+																			'configurable_id' 	=> $val['configurable_id']  
+																			);
 				}
+				
 				// If there were any combined products then we better check inventory again! 
 					if($combine_count >= 1)
 					{
@@ -1204,10 +1145,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if($qty[md5($key)] <= 0){
 						$this->EE->product_model->cart_unset(md5($key));	
 					}else{
-						// We don't want more than 1 subscription
-							if($val["type_id"] == 6){
-								$qty[md5($key)] = 1;
-							}
 						// Update the cart 
 							$cart["items"][$key]["quantity"] = $qty[md5($key)];	
 							$cart["items"][$key]["subtotal"] = $this->_currency_round(($cart["items"][$key]["price"] * $qty[md5($key)])); 	
@@ -1742,7 +1679,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// For order email 
 				$has_donation 		= FALSE;
 				$has_item 			= FALSE;
-				$has_subscription 	= FALSE;
 				
 			// Some Defaults
 				$member_id = $this->EE->session->userdata["member_id"];
@@ -2011,11 +1947,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$this->EE->functions->redirect($this->_secure_url($this->_config["store"][$this->site_id]["checkout_url"]));
 				}
 				
-			// Do we need to create any subscription payments?
-			// If so we'll create them and then add the profile to the db after we 
-			// get the order id
-				$subs = $this->_process_subscription($data);
-				
 			// Create the order 
 				$order = array (
 					"site_id" 		=> $this->EE->session->userdata["site_id"], 
@@ -2047,41 +1978,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if (isset($_SESSION['br_form_post_data']))
 						unset($_SESSION['br_form_post_data']);
 
-			// If the order has subscriptions 
-				// load model 
-					$this->EE->load->model('subscription_model');
-					foreach($subs as $s){
-						$has_subscription = TRUE;
-						// Build the input array
-							$unit = ($s["period"] == 1) ? 'days' : 'months';
-							$startDate = date('Y-m-d g:i:s',strtotime("+".$s["length"]." ".$unit));
-							$status = ($s["subscription_id"] == 0) ? 2 : 1; 
-							$order_subscription = array(
-														"order_id" 			=> $order_id,
-														"subscription_id" 	=> $s["subscription_id"],
-														"code" 				=> $s["code"],
-														"status_id" 		=> $status,
-														"cc_last_four"		=> substr($s["cc_last_four"],-4,4), 
-														"cc_month"			=> $s["cc_month"],
-														"cc_year"			=> $s["cc_year"],
-														"product_id" 		=> $s["product_id"],
-														"group_id" 			=> $s["group_id"],
-														"cancel_group_id" 	=> $s["cancel_group_id"],
-														"length" 			=> $s["length"],
-														"period" 			=> $s["period"],
-														"start_dt" 			=> date('Y-m-d g:i:s'),
-														"trial_price" 		=> $s["trial_price"],
-														"trial_occur" 		=> $s["trial_occur"],
-														"renewal_price" 	=> $s["renewal_price"],
-														"next_renewal" 		=> $startDate,
-														"created" 			=> date('Y-m-d g:i:s') 
-													);
-
-						// Insert the records into the order_subscription table
-							$this->EE->subscription_model->create_subscription($order_subscription);
-
-					}
-								
 			// Now that the order has been created lets create a shipment if 
 			// a shipment is necessary	
 				
@@ -2133,11 +2029,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$i = 0;
 					foreach($data["cart"]["items"] as $items){
 						
-						if($items["type_id"] == 6)
-						{
-							$has_subscription = TRUE;
-						}
-						elseif($items["type_id"] == 7)
+						if($items["type_id"] == 7)
 						{
 							$has_donation = TRUE;
 						}
@@ -2272,7 +2164,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 												"shipping" 			=> $this->_currency_round($data["cart_shipping"]), 
 												"order_total" 		=> $this->_currency_round($data["order_total"]),
 												"has_item"			=> $has_item, 
-												"has_subscription" 	=> $has_subscription,
 												"has_donation"		=> $has_donation
 											);
 						if($this->EE->config->item('br_suppress_new_order_email') !== TRUE) {
@@ -3059,58 +2950,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}
 		}
 
-		function customer_subscriptions(){
-			
-			$this->EE->load->model('subscription_model');
-			$member_id = $this->EE->session->userdata["member_id"];
-			$subs = $this->EE->subscription_model->get_subscription_by_member($member_id);
-
-			$vars[0] = array('currency_marker'=>$this->_config["currency_marker"],'subscriptions' => $subs);
-			
-			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
-			return $output;
-		}
-		
-		function customer_subscriptions_history(){
-			$this->EE->load->model('subscription_model');
-			
-			$sub_id = ($this->EE->TMPL->fetch_param('subscription_order_id')) ? $this->EE->TMPL->fetch_param('subscription_order_id') : 0;
-			$member_id = $this->EE->session->userdata["member_id"];
-			// Get the match sub
-				$subs = $this->EE->subscription_model->get_subscription_by_member($member_id,$sub_id);
-				if(count($subs) != 1){
-					return '';
-				}
-			
-			// Now get all orders that match
-				$subscription_id = $subs[0]["subscription_id"];
-				
-			$vars[0] = array('currency_marker'=>$this->_config["currency_marker"],'subscriptions' => $subs);
-			
-			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
-			return $output;
-		}
-		
-		function customer_subscriptions_edit(){
-			$this->EE->load->model('subscription_model');
-			$sub_id = ($this->EE->TMPL->fetch_param('subscription_order_id')) ? $this->EE->TMPL->fetch_param('subscription_order_id') : 0;
-			$member_id = $this->EE->session->userdata["member_id"];
-			$subs = $this->EE->subscription_model->get_subscription_by_member($member_id,$sub_id);
-			
-			$vars[0] = $subs[0];
-			
-			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
-			return $output;
-		}
-		
-		function customer_subscription_update(){
-		
-		}
-		
-		function customer_subscription_cancel(){
-		
-		}
-		
 	/* END CUSTOMER */
 
 		function promo_check_code($inputCode='')

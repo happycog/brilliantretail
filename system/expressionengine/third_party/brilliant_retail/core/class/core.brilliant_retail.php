@@ -439,17 +439,6 @@ class Brilliant_retail_core {
 					$products[0]["configurable_js"] = '';
 				}
 			
-			// Subscriptions
-				if($products[0]["type_id"] == 6){
-					$periods = array(
-										1=>strtolower(lang('br_days')),
-										2=>strtolower(lang('br_months')) 
-									);
-					$products[0]["subscription"][0]["renewal"] = $periods[$products[0]["subscription"][0]["period"]];
-				}else{
-					$products[0]["subscription"][0] = array();				
-				}
-			
 			// Donation
 				if($products[0]["type_id"] == 7){
 					// Setup the radio buttons
@@ -1157,15 +1146,6 @@ class Brilliant_retail_core {
 		$output = '';
 		$this->EE->load->model('product_model'); 
 		$cart = $this->EE->product_model->cart_get();
-		// see if there are subscriptions in the cart
-			$subscriptions = 0;
-			if(isset($cart["items"])){
-				foreach($cart["items"] as $c){
-					if(count($c["subscription"]) > 0){
-						$subscriptions = 1;
-					}
-				}
-			}
 		$i = 0;
 
 		if(isset($this->_config["gateway"][$this->site_id])){ // Check if any gateways are enabled
@@ -1186,15 +1166,6 @@ class Brilliant_retail_core {
 					}
 					
 					if($proceed === TRUE){
-						// Check if the gateway supports 
-						// subscription checkouts 
-							$sub_available = 1;
-							if($subscriptions == 1){
-								if($tmp->subscription_enabled != 1){
-									$sub_available = 0;
-								}
-							}
-						
 						if($tmp->osc_enabled == $osc_enabled && $sub_available == 1){
 							
 							$form = $tmp->form();
@@ -1229,13 +1200,7 @@ class Brilliant_retail_core {
 		$this->EE->load->model('product_model'); 
 		$cart = $this->EE->product_model->cart_get();
 		if(!isset($cart["items"]) || count($cart["items"]) == 0) return $output;
-		
-		$subscriptions = 0;
-		foreach($cart["items"] as $c){
-			if($c["type_id"] == 6){
-				$subscriptions = 1;
-			}	
-		}
+
 		$i = 0;
 		
 		$total = $this->_get_cart_total();
@@ -1246,16 +1211,7 @@ class Brilliant_retail_core {
 				if($gateway["enabled"] == 1){
 					$str = 'Gateway_'.$gateway["code"];
 					$tmp = new $str($total);
-					// Check if the gateway supports 
-					// subscription checkouts 
-						
-						$sub_available = 1;
-						if($subscriptions == 1){
-							if($tmp->subscription_enabled != 1){
-								$sub_available = 0;
-							}
-						}
-					
+
 					if($tmp->cart_button == true && $sub_available == 1){
 						// Pass config data to the button
 							$config = array();
@@ -2515,40 +2471,6 @@ class Brilliant_retail_core {
 			// payment has been processed
 				if($this->EE->extensions->active_hook('br_process_payment_after') === TRUE){
 					$trans = $this->EE->extensions->call('br_process_payment_after', $trans); 
-				}
-
-			// Return Response
-				return $trans;
-		}
-
-	// Checkout Function to process subscriptions
-		function _process_subscription($data){
-			
-			$this->EE->load->model('order_model');
-			$this->EE->load->model('subscription_model');
-			
-			// Get the gateway code
-				$code = $this->EE->order_model->_get_gateway($data["gateway"]);
-			
-			// Config data for the given code
-				$config = array();
-				if(isset($this->_config["gateway"][$this->site_id][$code]["config_data"])){
-					$config_data = $this->_config["gateway"][$this->site_id][$code]["config_data"]; 
-					foreach($config_data as $c){
-						$config[$c["code"]] = $c["value"];
-					}
-				}
-								
-			// Process Gateway
-				$str = 'Gateway_'.$code;
-				$tmp = new $str();
-				$trans = array();
-				$i = 0;
-				foreach($data["cart"]["items"] as $item){
-					if(count($item["subscription"]) > 0){
-						$trans[$i] = $tmp->process_subscription($item,$data,$config);
-						$i++;
-					}
 				}
 
 			// Return Response
