@@ -64,8 +64,6 @@ $lang = array(
 	'nav_br_products' 			=> 'Products',
 	'nav_br_promotion' 			=> 'Promotions',
 	'nav_br_promo' 				=> 'Promotions',
-	'nav_br_subscription' 		=> 'Subscriptions',
-	'nav_br_subscription_cancel' => 'Subscriptions Cancel',
 	'nav_br_report' 			=> 'Reports', 
 	'nav_br_config' 			=> 'Settings',  
 	
@@ -260,43 +258,7 @@ $lang = array(
 			'br_add_config_products' => 'Add Configurable Options',
 			'br_configurable_create_error' => 'Please select at least one attribute to build your configurable products',
 			'br_configurable_product_required' => 'At least 1 configurable option',
-			
-		// Subscriptions 
-			'br_subscription' 			=> 'Subscription', 
-			'br_subscrition_id' 		=> 'ID',
-			'br_subscription_status' 	=> 'Status',
-			'br_subscrition_product' 	=> 'Product ID',
-			'br_subscrib_opt_title' 	=> 'Subscription Options',
-			'br_subscrib_disc_price' 	=> 'Subscription Pricing',
-			'br_subscrib_price_desc' 	=> 'The price for the subscription is set in the "Price" tab. In this section you can set volume pricing discounts.',
-			'br_move_to_group' 			=> 'Move To Group',
-			'br_no_change' 				=> 'No Change', 
-			'br_subscription_period' 	=> 'Subscription Period',
-			'br_next_renewal' 			=> 'Next Renewal', 
-			'br_renews' 				=> 'Renews', 
-			'br_every' 					=> 'Every', 
-			'br_days' 					=> 'Days',
-			'br_weeks' 					=> 'Weeks',
-			'br_months' 				=> 'Months',	
-			'br_daily' 					=> 'Daily',
-			'br_monthly' 				=> 'Monthly',
-			'br_trial_offer' 			=> 'Offer Trial',
-			'br_trial_price' 			=> 'Trial Price',
-			'br_trial_length' 			=> 'Trial Length',
-			'br_trial_occur' 			=> 'Trial Occurrences',
-			'br_length'					=> 'Length', 
-			'br_periods'				=> 'Periods', 
-			'br_percent_discount' 		=> 'Percentage Discount', 
-			'br_first_notice' 			=> 'First Email Notice',
-			'br_second_notice' 			=> 'Second Email Notice',
-			'br_third_notice' 			=> 'Third Email Notice',
-			'br_cancel_subscription' 	=> 'Cancel After',
-			'br_cancel_group' 			=> 'Cancel To Group',
-			'br_subscription_status_1'	=> 'Active',
-			'br_subscription_status_2'	=> 'Cancelled',
-			'br_subscription_status_3'	=> 'Cancelled by Admin',
-			'br_subscription_status_4'	=> 'Expired',
-		
+
 		// Donations 
 			'br_donation_opt_title' 		=> 'Donation Options',
 			'br_min_donation' 				=> 'Minimum Donation',
@@ -519,10 +481,6 @@ $lang = array(
 		'br_customer-password-update' 	=> 'Password Update',
 		'br_customer-password-reminder' => 'Password Reminder',
 		'br_customer-order-note'		=> 'Order Note Email',
-		'br_subscription-cancel'		=> 'Subscription Cancelled',
-		'br_subscription-cc-expiration' => 'Subscription Credit Card Expiring',
-		'br_subscription-cc-update'		=> 'Subscription Credit Card Updated',
-		'br_subscription-payment-failed' => 'Subscription Payment Failed',
 		'br_product-low-stock-notice' 	=> 'Product Low Stock Notice',
 		
 	// Gateway Methods
@@ -639,7 +597,6 @@ $lang = array(
 			'br_product_configuration_required' 	=> "Product requires configuration.",
 			'br_discount_removed' 					=> "The discount code has been removed.",
 			'br_discount_invalid' 					=> "The discount code you entered <b>\"%s\"</b> is invalid.",
-			'br_subscription_label'					=> "Subscription",
 			'br_stock_inventory_exceeded' 			=> "One or more of your items have exceeded the available quantity",
 		
 		// Checkout Messages

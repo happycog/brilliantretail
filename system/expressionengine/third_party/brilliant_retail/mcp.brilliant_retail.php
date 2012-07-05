@@ -65,7 +65,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											"config_category_edit","config_email_edit","config_gateway_install",
 											"config_gateway_edit","config_gateway_remove","config_permission_edit",
 											"config_shipping_install","config_shipping_edit","config_shipping_remove",
-											"config_tax_new","config_tax_edit","subscription_ajax","subscription_update","subscription_detail");
+											"config_tax_new","config_tax_edit");
 											
 			private $disallowed_fieldtypes = array('wygwam','Wyvern');								
 
@@ -972,9 +972,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						}
 					}
 				}
-			// Is there a gateway available to support subscriptions?
-				$this->vars["can_subscribe"] = $this->_can_subscribe();
-			
+
 				if($new_product == FALSE){
 					$this->vars['cp_page_title'] = lang('br_product_edit').' ['.$product_id.']';
 				}else{
@@ -1006,20 +1004,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 																	'allow_recurring' 		=> 0
 																);
 					}
-					if(!isset($products[0]["subscription"][0]))
-					{
-						// some defaults for subscriptions 
-							$products[0]["subscription"][0] = array(
-																		'length' 			=> 1,
-																		'period' 			=> 2,
-																		'trial_price' 		=> '',
-																		'trial_period' 		=> 1, 
-																		'trial_occur' 		=> 1,
-																		'group_id' 			=> 0,  
-																		'cancel_group_id' 	=> 0
-																	);
-					}				
-				
+
 				// We know the type
 					
 					
@@ -1177,7 +1162,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$options .= '</select>';
 							
 							$this->vars["type"] = $options;
-							// member groups for the price matrix / subscriptions
+							// member groups for the price matrix
 								$qry = $this->EE->member_model->get_member_groups();
 								$groups = array();
 								foreach($qry->result_array() as $row){
@@ -1194,16 +1179,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 																					'min_donation' 			=> 10,
 																					'allow_recurring' 		=> 0
 																				);
-							// some defaults for subscriptions 
-								$this->vars["products"][0]["subscription"][0] = array(
-																						'length' 			=> 1,
-																						'period' 			=> 2,
-																						'trial_price' 		=> '',
-																						'trial_period' 		=> 1, 
-																						'trial_occur' 		=> 1,
-																						'group_id' 			=> 0,  
-																						'cancel_group_id' 	=> 0
-																					);
 							// get the sub_type	
 								$this->vars["sub_type"] = $this->_get_sub_type();
 							
@@ -1539,91 +1514,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Reindex the search data
 			$this->_index_products();
 		}
-
-	/************************/
-	/* Subscriptions	 	*/
-	/************************/
-
-/*		
-	Not quite ready for prime time. 
-	
-			function subscription()
-			{ 
-				// Get the products 
-					$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-					$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-					$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-					$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=subscription_ajax';
-					return $this->_view('subscription/subscription', $this->vars);	
-			}
-
-			function subscription_ajax(){
-				$this->EE->load->model('subscription_model');
-				
-				$prefix = $this->EE->db->dbprefix;
-	
-				$subscriptions = $this->EE
-									->subscription_model
-									->get_subscription_collection(	
-																$_GET["sSearch"],
-																$_GET["iDisplayLength"],
-																$_GET["iDisplayStart"],
-																$_GET["iSortCol_0"],
-																$_GET["sSortDir_0"],
-																$prefix 
-															);
-				$arr = array();
-				$i = 0;
-				foreach($subscriptions["results"] as $row){
-					$units = ($row["period"] == 1) ? lang('br_days') : lang('br_months');
-					$sub_id = '<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=subscription_detail&order_subscription_id='.$row["order_subscription_id"].'">'.$row["order_subscription_id"].'</a>';
-					$sub_id = $row["order_subscription_id"];
-					$arr[] = array(	$sub_id, 
-									'<a href="'.BASE.'&C=myaccount&id='.$row["member_id"].'">'.$row["customer"].'</a>',
-									date('n/d/y',strtotime($row["created"])),
-									lang('br_every').' '.$row["length"].' '.$units, 
-									date('n/d/y',strtotime($row["next_renewal"])),
-									$this->_currency_round($row["renewal_price"]),
-									lang('br_subscription_status_'.$row["status_id"])
-								);
-				}
-				
-				$output = array(
-								"sEcho" => $_GET["sEcho"],
-								"iTotalRecords" => $subscriptions["total"],
-								"iTotalDisplayRecords" => $subscriptions["displayTotal"],
-								"aaData" => $arr 
-							);
-	
-				// Return the json data 
-					@header("HTTP/1.1 200 OK");
-					echo json_encode($output);
-					exit();
-	
-			}
-	
-			function subscription_detail(){ 
-				// Get the products 
-					$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-					$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-					$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-					
-				// Get the subscription
-					$subscription_id = $_GET["order_subscription_id"];
-					$this->EE->load->model('subscription_model');
-					$this->vars['subscriptions'] = $this->EE->subscription_model->get_subscription($subscription_id);
-					return $this->_view('subscription/detail', $this->vars);
-			}
-	
-			function subscription_update(){ 
-			
-			}
-	
-			function subscription_cancel(){ 
-			
-			}
-	
-*/
 
 	/************************/
 	/* Promotions Tab	 	*/
@@ -3140,7 +3030,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									2 => 'bundle',
 									3 => 'configurable',
 									4 => 'downloadable', 
-									6 => 'subscription', 
 									7 => 'donation'
 									);
 					$str = '';				
@@ -3165,9 +3054,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$a["bundle"] = $this->_view('product/sub_types/bundle',$this->vars);
 				$a["configurable"] = $this->_view('product/sub_types/configurable',$this->vars);
 				$a["downloadable"] = $this->_view('product/sub_types/downloadable',$this->vars);
-				$a["subscription"] = $this->_view('product/sub_types/subscription',$this->vars);
 				$a["donation"] = 	$this->_view('product/sub_types/donation',$this->vars);
-				$str = 	$a["bundle"].$a["configurable"].$a["downloadable"].$a["subscription"].$a["donation"];
+				$str = 	$a["bundle"].$a["configurable"].$a["downloadable"].$a["donation"];
 			}
 			
 			$str .= "	<script type=\"text/javascript\">
@@ -3185,7 +3073,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									});
 								})
 							</script>"; 
-			
 			return $str;
 		}
 		
@@ -3433,21 +3320,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$str .= '			</thead><tbody>'.$values.'</tbody></table>';
 			return $str;
 		}
-		
-		function _can_subscribe(){
-			$can_subscribe = FALSE;
-			foreach($this->_config["gateway"][$this->site_id] as $gateway){
-				if($gateway["enabled"] == 1){
-					$str = 'Gateway_'.$gateway["code"];
-					$tmp = new $str();
-					if($tmp->subscription_enabled == 1){
-						$can_subscribe = TRUE;
-					}
-				}
-			}
-			return $can_subscribe;
-		}
-	
+			
 		function _view($view,$vars){
 			if(file_exists(PATH_THIRD.'_local/brilliant_retail/views/'.trim($view).'.php')){
 				$this->EE->load->add_package_path(PATH_THIRD.'_local/brilliant_retail');

@@ -165,11 +165,6 @@ class Product_model extends CI_Model {
 						$products[$i]["download"] = $this->get_product_download($row["product_id"]);
 					}
 				
-				// Subscription Product Type
-					if($row["type_id"] == 6){
-						$products[$i]["subscription"] = $this->get_product_subscription($row["product_id"]);
-					}
-				
 				// Donation Product Type
 					if($row["type_id"] == 7){
 						$products[$i]["donation"] = $this->get_product_donation($row["product_id"]);
@@ -580,34 +575,6 @@ class Product_model extends CI_Model {
 				}
 				unset($data["require_download"]);
 				unset($data["asmSelect0"]);
-	
-		
-			// Subscription Products 
-				if($data["type_id"] == '6'){
-					
-					$trial_price = '';
-					$trial_occur = '';
-					if(isset($data["trial_offer"])){
-						$trial_price 	= $data["trial_price"];
-						$trial_occur 	= $data["trial_occur"];
-					}
-					
-					$subscription = array(
-											'length' => $data["length"],
-											'period' => $data["period"], 
-											'group_id' => $data["group_id"], 
-											'trial_price' => $trial_price,
-											'trial_occur' => $trial_occur,
-											'cancel_group_id' => $data["cancel_group_id"]
-										);
-				}
-				unset($data["length"]);
-				unset($data["period"]);
-				unset($data["group_id"]);
-				unset($data["trial_offer"]);
-				unset($data["trial_price"]);
-				unset($data["trial_occur"]);
-				unset($data["cancel_group_id"]);
 
 			// Donation Products 
 				if($data["type_id"] == '7'){
@@ -889,32 +856,7 @@ class Product_model extends CI_Model {
 				if(isset($download)){
 					$this->db->insert('br_product_download',$download);
 				}
-			
-			// If its a subscription
-				if(isset($subscription)){
-					$this->db->delete('br_product_subscription', array('product_id' => $product_id)); 
-					$subscription["product_id"] = $product_id; 
-					$this->db->insert('br_product_subscription',$subscription);
-					$subscription_id = $this->db->insert_id();
-					
-					// Do we have any discount pricing?
-						if(isset($sub_price)){
-							$i = 0;
-							foreach($sub_price["periods"] as $p){
-								$sPrice[] = array(
-													'subscription_id' => $subscription_id,
-													'periods' => $p,
-													'discount' => $sub_price["discount"][$i] 
-													);
-								$i++; 
-							}
-							$this->db->delete('br_product_subscription_price', array('subscription_id' => $subscription_id)); 
-							foreach($sPrice as $row){
-								$this->db->insert('br_product_subscription_price',$row);
-							}
-						}
-				}
-			
+						
 			// If its a donation
 				if(isset($donation)){
 					$this->db->delete('br_product_donation', array('product_id' => $product_id)); 
@@ -981,8 +923,7 @@ class Product_model extends CI_Model {
 		$this->db->delete('br_product_options', array('product_id' => $product_id)); 
 		$this->db->delete('br_product_price', array('product_id' => $product_id)); 
 		$this->db->delete('br_product_related', array('parent_id' => $product_id)); 
-		$this->db->delete('br_product_subscription', array('product_id' => $product_id)); 
-
+		
 		// Added 1.1 
 		// To remove the 
 			$this->db->delete('channel_titles', array('entry_id' => $entry_id)); 
@@ -1201,21 +1142,6 @@ class Product_model extends CI_Model {
 			$i++;
 		}
 		return $files;
-	}
-	
-	function get_product_subscription($product_id){
-		$this->db->select('*');
-		$this->db->where('product_id',$product_id);
-		$this->db->from('br_product_subscription');		
-		$this->db->limit(1);
-		$query = $this->db->get();
-		$arr = array();
-		$i = 0;
-		foreach ($query->result_array() as $row){
-			$arr[$i] = $row;
-			$i++;
-		}
-		return $arr;
 	}
 	
 	function get_product_donation($product_id){

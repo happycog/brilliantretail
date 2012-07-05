@@ -127,43 +127,6 @@
 				
 			$catalog = $this->table->generate();
 			$this->table->clear();
-		
-		// Subscription Tab
-			$this->table->set_template($cp_pad_table_template);
-      		
-  			$this->table->set_heading(array('data' => lang('br_subscription'), 
-											'colspan' => 2));
-
-		    $options = array(
-				0 => lang('br_no'),
-				1 => lang('br_yes')
-			);
-			
-      		$this->table->add_row(array(lang('br_enabled'),
-								form_dropdown(
-												'subscription_enabled', 
-												$options, 
-												$store["subscription_enabled"]))
-							);
-
-      		/*
-	      		$fields = array('first_notice','second_notice','third_notice','cancel_subscription');
-				foreach($fields as $f){
-					$this->table->add_row(array(lang($f),
-									form_input(
-												array(	'name' => $f, 
-														'id' => $f,
-														'value' => $store[$f],
-														'class' => '{required:true}',
-														'title' => lang($f))
-												)
-									)
-							);
-				}
-			*/
-				
-			$subscription = $this->table->generate();
-			$this->table->clear();
 			
 		// SEO TAB
 			$this->table->set_template($cp_pad_table_template);
@@ -210,15 +173,6 @@
 	<?=$catalog?>
 
 	<p>&nbsp;</p>
-
-<?php
-if($show_subs == TRUE){
-?>
-	<?=$subscription?>
-	<p>&nbsp;</p>
-<?php
-}
-?>
 
 	<?=$seo?>
 	

@@ -35,35 +35,9 @@ $donation = $products[0]["donation"][0];
 				<td class="indent_title">
 					<?=lang('br_min_donation')?></td>
 				<td>
+					<input type="hidden" name="allow_recurring" value="0" />
 					<input type="text" name="min_donation" value="<?=$donation["min_donation"]?>" style="width:50px;" /></td>
 			</tr>
-<?php
-	if($can_subscribe){	
-?>		
-			<tr>
-				<td>
-					<?=lang('br_allow_recurring')?></td>
-				<td>
-					<select name="allow_recurring">
-						<?php
-							$periods = array(
-												0=>lang('br_no'),
-												1=>lang('br_yes') 
-											);
-							foreach($periods as $key => $val){
-								$sel = ($donation["allow_recurring"] == $key) ? 'selected="selected"' : '' ;
-								echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';
-							}
-						?>
-					</select> <em><?=lang('br_donation_instructions')?></em></td>
-			</tr>
-<?php
-}else{
-?>
-	<input type="hidden" name="allow_recurring" value="0" />
-<?php
-}
-?>
 		</tbody>
 	</table>
 </div>

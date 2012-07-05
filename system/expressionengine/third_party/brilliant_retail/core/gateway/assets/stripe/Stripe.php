@@ -16,7 +16,7 @@ abstract class Stripe
   public static $apiKey;
   public static $apiBase = 'https://api.stripe.com/v1';
   public static $verifySslCerts = true;
-  const VERSION = '1.6.1';
+  const VERSION = '1.7.2';
 
   public static function getApiKey()
   {
@@ -64,3 +64,4 @@ require(dirname(__FILE__) . '/Stripe/Plan.php');
 require(dirname(__FILE__) . '/Stripe/Token.php');
 require(dirname(__FILE__) . '/Stripe/Coupon.php');
 require(dirname(__FILE__) . '/Stripe/Event.php');
+require(dirname(__FILE__) . '/Stripe/Transfer.php');
