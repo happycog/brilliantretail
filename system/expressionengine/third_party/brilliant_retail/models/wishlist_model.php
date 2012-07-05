@@ -35,12 +35,13 @@ class Wishlist_model extends CI_Model {
 		$query = $this->db->get();	
 		return $query->result_array();
 	}
-	public function wishlist_add($product_id,$member_id){
+	public function wishlist_add($product_id,$member_id,$is_public=0){
 		
 		$data = array(
-						'product_id' => $product_id,
-						'member_id' => $member_id 
-						);
+						'product_id' 	=> $product_id,
+						'member_id' 	=> $member_id, 
+						'is_public'		=> $is_public 
+					);
 		
 		$this->db->from('br_wishlist')
 					->where('product_id',$product_id)

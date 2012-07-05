@@ -2201,7 +2201,7 @@ class Brilliant_retail_core {
 					}				
 					if(count($row) == 0)
 					{
-						$first[$val] = $val;
+						$first[$val] = $c["configurable_id"];
 					}
 					$row[] = $val;
 				}
@@ -2227,9 +2227,10 @@ class Brilliant_retail_core {
 		{
 			if($i == 0){
 				$opts = '';
-				foreach($first as $f)
+				foreach($first as $key => $val)
 				{
-					$opts .= '<option value="'.$f.'">'.$f.'</option>';
+					$value = (count($js["label"]) == 1) ? $val : $key;
+					$opts .= '<option value="'.$value.'">'.$key.'</option>';
 				}
 				$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" id="'.$p["product_id"].'_configurable_'.$i.'" class="required"><option value="">'.lang('br_choose_an_option').'</option>'.$opts.'</select>';
 			}else{

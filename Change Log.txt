@@ -7,6 +7,7 @@
 * Added currency_marker variable to checkout_thank tag
 * Added a _format_money method to BrilliantRetail core to handle price output display formatting. 
 * Added br_license_create_after hook to modify the $dl array (contains license key) prior to creating the order download record
+* Added a status parameter to the wishlist_add method to allow for items to post directly to the public wishlist [#0000134]
 * Fixed an issue when saving products from a member group other than the Super Admin group.  
 * Fixed an issue with custom fields in the BrilliantRetail fieldtype [0000187]
 	- 	IMPORTANT: When using custom fields in the BR fieldtype you must namespace

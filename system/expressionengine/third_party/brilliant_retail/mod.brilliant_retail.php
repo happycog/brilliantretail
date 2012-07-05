@@ -1368,18 +1368,25 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			function wishlist_add(){
 				// What is the product id ?
-					$product_id = ($this->EE->TMPL->fetch_param('product_id')) ? ($this->EE->TMPL->fetch_param('product_id')) : "#product_id_reqired" ;
+					$product_id = ($this->EE->TMPL->fetch_param('product_id')) ? ($this->EE->TMPL->fetch_param('product_id')) : "#product_id_required" ;
 				
+				// Which list does it go on (public or private) 
+					$status = ($this->EE->TMPL->fetch_param('status')) ? strtolower($this->EE->TMPL->fetch_param('status')) : "private" ;
+					$statuses = array('public','private');
+					if(!in_array($status,$statuses)){
+						$status = 'private';		
+					}
+					
 				// Where we headed after the add?
 					$_SESSION["wishlist_add_return"] = ($this->EE->TMPL->fetch_param('return')) ? $this->EE->TMPL->fetch_param('return') : "" ;
 				
 					$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
-					$output = $action.AMP.'action=add'.AMP.'product_id='.$product_id;
+					$output = $action.AMP.'action=add'.AMP.'product_id='.$product_id.'&status='.$status;
 				return $output;
 			}
 			
 			function wishlist_remove(){
-				$product_id = ($this->EE->TMPL->fetch_param('product_id')) ? ($this->EE->TMPL->fetch_param('product_id')) : "#product_id_reqired" ;
+				$product_id = ($this->EE->TMPL->fetch_param('product_id')) ? ($this->EE->TMPL->fetch_param('product_id')) : "#product_id_required" ;
 				$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'wishlist_process'));
 				$output = $action.AMP.'action=remove'.AMP.'product_id='.$product_id;
 				return $output;
@@ -1393,6 +1400,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// What are we doing
 					$action = strtolower($this->EE->input->get('action',TRUE));
 					$product_id = strtolower($this->EE->input->get('product_id',TRUE));
+					$status =  strtolower($this->EE->input->get('status',TRUE));
 					
 				// Who are we?
 					$member_id = $this->EE->session->userdata["member_id"];
@@ -1403,8 +1411,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				$target = $_SERVER["HTTP_REFERER"];
 				if($action == 'add'){
+					
+					$is_public = ($status == 'public') ? 1 : 0;
+					
 					// Add it to the wishlist
-						if(!$this->EE->wishlist_model->wishlist_add($product_id,$member_id)){
+						if(!$this->EE->wishlist_model->wishlist_add($product_id,$member_id,$is_public)){
 							$_SESSION["br_alert"] = lang('br_wishlist_duplicate_error');
 						}else{
 							$_SESSION["br_message"] = lang('br_wishlist_add');
