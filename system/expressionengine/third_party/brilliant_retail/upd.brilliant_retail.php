@@ -79,8 +79,6 @@ class Brilliant_retail_upd {
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'process_ipn')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'pull_feed')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'retrieve_password')";
-			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'subscription_update')";
-			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'subscription_cancel')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'wishlist_process')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'customer_download_note')";
 			
@@ -552,37 +550,6 @@ class Brilliant_retail_upd {
 					PRIMARY KEY (order_ship_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
-
-## ----------------------------
-##  Table structure for exp_br_order_subscription
-## ----------------------------
-	$sql[] = "DROP TABLE IF EXISTS exp_br_order_subscription;";
-	$sql[] = "	CREATE TABLE exp_br_order_subscription (
-					order_subscription_id int(11) NOT NULL AUTO_INCREMENT,
-					order_id int(11) NOT NULL,
-					subscription_id int(11) NOT NULL,
-					code varchar(100) DEFAULT NULL,
-					cc_last_four varchar(50),
-					cc_month varchar(50),
-					cc_year varchar(50),
-					status_id int(11) NOT NULL DEFAULT '0',
-					product_id int(11) NOT NULL,
-					group_id int(11) NOT NULL,
-					cancel_group_id int(11) NOT NULL,
-					length int(11) NOT NULL DEFAULT '30',
-					period int(11) NOT NULL,
-					start_dt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-					end_dt timestamp NULL DEFAULT NULL,
-					trial_price decimal(10,2) NOT NULL DEFAULT '0.00',
-					trial_occur int(11) NOT NULL DEFAULT '0',
-					renewal_price decimal(10,2) NOT NULL,
-					next_renewal timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-					result varchar(255) DEFAULT NULL,
-					message varchar(255) DEFAULT NULL,
-					created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-				  PRIMARY KEY (order_subscription_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-
 ## ----------------------------
 ##  Table structure for exp_br_product
 ## ----------------------------
@@ -986,22 +953,6 @@ class Brilliant_retail_upd {
 				('190', '2520', '2522'), 
 				('296', '2536', '2509'), 
 				('295', '2536', '2508');";
-
-## ----------------------------
-##  Table structure for exp_br_product_subscription
-## ----------------------------
-	$sql[] = "DROP TABLE IF EXISTS exp_br_product_subscription;";
-	$sql[] = "CREATE TABLE exp_br_product_subscription (
-				  subscription_id int(11) NOT NULL AUTO_INCREMENT,
-				  product_id int(11) NOT NULL,
-				  length int(11) NOT NULL DEFAULT '30',
-				  period int(11) NOT NULL,
-				  group_id int(11) NOT NULL DEFAULT '0',
-				  trial_price decimal(10,2) DEFAULT NULL,
-				  trial_occur int(11) NOT NULL DEFAULT '1',
-				  cancel_group_id int(11) NOT NULL,
-				  PRIMARY KEY (subscription_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Table structure for exp_br_promo
@@ -4496,7 +4447,6 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_options;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_payment;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_ship;";
-			$sql[] = "DROP TABLE IF EXISTS exp_br_order_subscription;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_addon;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_attributes;";
@@ -4511,7 +4461,6 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_price;;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_options;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_related;";
-			$sql[] = "DROP TABLE IF EXISTS exp_br_product_subscription;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_promo;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_search;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_state;";

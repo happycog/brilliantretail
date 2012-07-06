@@ -1213,17 +1213,23 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$this->vars['feeds'] = $this->EE->feed_model->get_feeds();
 
-			$this->vars["tab_detail"] = $this->_view('product/tabs/detail', $this->vars);
-			$this->vars["tab_attributes"] = $this->_view('product/tabs/attributes', $this->vars);
-			$this->vars["tab_price"] = $this->_view('product/tabs/price', $this->vars);
-			$this->vars["tab_sale_price"] 	= $this->_view('product/tabs/sale_price', $this->vars);
-			$this->vars["tab_option"] = $this->_view('product/tabs/option', $this->vars);
-			$this->vars["tab_category"] = $this->_view('product/tabs/category', $this->vars);
-			$this->vars["tab_image"] = $this->_view('product/tabs/image', $this->vars);
-			$this->vars["tab_addon"] 	= $this->_view('product/tabs/addon', $this->vars);
-			$this->vars["tab_related"] 	= $this->_view('product/tabs/related', $this->vars);
-			$this->vars["tab_seo"] = $this->_view('product/tabs/seo', $this->vars);
-			$this->vars["tab_feed"] = $this->_view('product/tabs/feed', $this->vars);
+			$this->vars["tab"]["detail"] 		= $this->_view('product/tabs/detail', $this->vars);
+			$this->vars["tab"]["attributes"] 	= $this->_view('product/tabs/attributes', $this->vars);
+			$this->vars["tab"]["option"] 		= $this->_view('product/tabs/option', $this->vars);
+			$this->vars["tab"]["image"] 		= $this->_view('product/tabs/image', $this->vars);
+			$this->vars["tab"]["price"] 		= $this->_view('product/tabs/price', $this->vars);
+			$this->vars["tab"]["sale_price"] 	= $this->_view('product/tabs/sale_price', $this->vars);
+			$this->vars["tab"]["category"] 	= $this->_view('product/tabs/category', $this->vars);
+			#$this->vars["tab"]["addon"] 		= $this->_view('product/tabs/addon', $this->vars);
+			$this->vars["tab"]["related"] 		= $this->_view('product/tabs/related', $this->vars);
+			$this->vars["tab"]["seo"] 			= $this->_view('product/tabs/seo', $this->vars);
+			$this->vars["tab"]["feed"] 		= $this->_view('product/tabs/feed', $this->vars);
+	
+			// Want to do something to the edit form before we show it to the world? 
+			// Added 1.1.5.0 DPD
+			if($this->EE->extensions->active_hook('br_product_editform_before') === TRUE){
+				$this->vars = $this->EE->extensions->call('br_product_editform_before', $this->vars); 
+			}
 			
 			$this->EE->javascript->compile();
 			

@@ -126,16 +126,12 @@ class Brilliant_retail_core {
 														3 => lang('br_configurable'),
 														4 => lang('br_downloadable'),
 														5 => lang('br_virtual'), 
+														7 => lang('br_donation')
 													);
-
-			// Add some additional $this->_config["donation_enabled"]=>
-				if($this->_config["store"][$this->site_id]["subscription_enabled"] == 1){
-					$this->_config['product_type'][6] = lang('br_subscription');
-				}
-				if($this->_config["store"][$this->site_id]["donation_enabled"] == 1){
-					$this->_config['product_type'][7] = lang('br_donation');
-				}
-												
+			// Sort them alphabetically but maintain the key association (uasort not sort!)
+			// 
+			uasort($this->_config['product_type'],array($this,'_product_type_sort'));
+																			
 		// Check the license
 			$lic = $this->_config["store"][$this->site_id]["license"];
 			$this->_validate_license($lic);	
@@ -2581,4 +2577,11 @@ class Brilliant_retail_core {
 				return FALSE;
 			}
 		}
+
+	/** 
+	* Helper function to sort product types alphabetically.
+	*/	
+	private function _product_type_sort($a,$b){
+		return ($a > $b) ? +1 : -1;
+	}
 }

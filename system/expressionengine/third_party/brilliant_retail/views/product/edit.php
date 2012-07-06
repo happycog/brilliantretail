@@ -55,21 +55,8 @@
 								</p>
 							</div>
 					<?php
-						$tabs = array(
-										'details' 		=> $tab_detail,
-										'attributes' 	=> $tab_attributes,
-										'options' 		=> $tab_option, 
-										'images' 		=> $tab_image,
-										'pricing' 		=> $tab_price,
-										'sale_pricing' 	=> $tab_sale_price,
-										'categories' 	=> $tab_category,
-										#'addon' 		=> $tab_addon, // Not quite ready for prime time - dpd
-										'related' 		=> $tab_related,
-										'seo' 			=> $tab_seo,
-										'feed' 			=> $tab_feed
-										);
 						$i = 0;
-						foreach($tabs as $key=>$val){
+						foreach($tab as $val){
 							echo $val;
 							$i++;
 						}
