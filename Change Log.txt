@@ -3,5 +3,26 @@
 ## David Dexter 
 
 * Fixed an issue with merging products in cart when supplying variation of the same configurable product. 
+* Fixed an issue with Configurable product option display when there was only one option and with an adjustment. 
 * Added br_product_editform_before to manipulate product edit form prior to rendering. (NEEDS DOCUMENTATION)
 * Updated product types in new product form to sort alphabetically.
+
+
+
+
+
+
+### Random things
+
+Hooks Needed:
+
+- Add to Cart 
+- Get Payment Options
+- Get Product
+
+This to add:
+
+- Dunning Management
+- Email Management
+
+- Revisit Google Chart API! 

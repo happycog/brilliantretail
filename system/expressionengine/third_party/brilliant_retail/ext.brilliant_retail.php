@@ -287,20 +287,23 @@ class Brilliant_retail_ext {
 		if(isset($this->group_access["brilliant_retail"]["customer"])){
 			$this->nav_menu["br_customer"]		= $this->base_url.AMP.'method=customer';
 		}
+		
 		if(isset($this->group_access["brilliant_retail"]["order"])){
 			$this->nav_menu["br_order"] 		= $this->base_url.AMP.'method=order';
 		}
+		
 		if(isset($this->group_access["brilliant_retail"]["product"])){
 			$this->nav_menu["br_product"]		= $this->base_url.AMP.'method=product';
 		}
 		
 		if(isset($this->group_access["brilliant_retail"]["promo"])){
-			$this->nav_menu["br_promo"]	= $this->base_url.AMP.'method=promo';
+			$this->nav_menu["br_promo"]			= $this->base_url.AMP.'method=promo';
 		}
 
 		if(isset($this->group_access["brilliant_retail"]["report"])){
-			$this->nav_menu["br_report"]	= $this->base_url.AMP.'method=report';
+			$this->nav_menu["br_report"]		= $this->base_url.AMP.'method=report';
 		}
+		
 		if(isset($this->group_access["brilliant_retail"]["config"])){
 	
 			/* Create the submenu for configuration */

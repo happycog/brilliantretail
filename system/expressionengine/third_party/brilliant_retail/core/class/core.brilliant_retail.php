@@ -2153,7 +2153,10 @@ class Brilliant_retail_core {
 					}				
 					if(count($row) == 0)
 					{
-						$first[$val] = $c["configurable_id"];
+						$first[$val] = array(
+												"config_id" => $c["configurable_id"],
+												"adjust"	=> $c["adjust"]
+											);
 					}
 					$row[] = $val;
 				}
@@ -2181,8 +2184,12 @@ class Brilliant_retail_core {
 				$opts = '';
 				foreach($first as $key => $val)
 				{
-					$value = (count($js["label"]) == 1) ? $val : $key;
-					$opts .= '<option value="'.$value.'">'.$key.'</option>';
+					$value = (count($js["label"]) == 1) ? $val["config_id"] : $key;
+					$text = $key; 
+					if($val["adjust"] > 0){
+						$text .= " (+ ".$this->_format_money($val["adjust"]).")";
+					}
+					$opts .= '<option value="'.$value.'">'.$text.'</option>';
 				}
 				$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" id="'.$p["product_id"].'_configurable_'.$i.'" class="required"><option value="">'.lang('br_choose_an_option').'</option>'.$opts.'</select>';
 			}else{
@@ -2228,7 +2235,7 @@ class Brilliant_retail_core {
 																												adj = '';
 																												if(opts.rows[i].adjust > 0)
 																												{
-																													adj = ' (+".$this->_config["currency_marker"]."'+opts.rows[i].adjust+')';
+																													adj = ' (+ ".$this->_config["currency_marker"]."'+opts.rows[i].adjust+')';
 																												}
 																												options += '<option value=\"'+opts.rows[i].id+'\">'+opts.rows[i].options[next]+adj+'</option>';
 																											}else{

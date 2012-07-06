@@ -2634,9 +2634,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 
 				// Call the member_member_register hook 
-					$edata = $this->EE->extensions->call('member_member_register', $new, $member_id);
-					if ($this->EE->extensions->end_script === TRUE) return;
-
+					if($this->EE->extensions->active_hook('member_member_register') === TRUE){
+						$edata = $this->EE->extensions->call('member_member_register', $new, $member_id);
+						if ($this->EE->extensions->end_script === TRUE) return;
+					}
+					
 				// Send the email notification
 					$vars[0] = $data;
 					$this->_send_email('customer-account-new', $vars);
