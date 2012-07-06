@@ -54,13 +54,15 @@
 									<?=lang('br_form_error_message')?>
 								</p>
 							</div>
-					<?php
-						$i = 0;
-						foreach($tab as $val){
-							echo $val;
-							$i++;
-						}
-					?>
+
+							<?php
+								$i = 0;
+								foreach($tab as $val){
+									echo $val;
+									$i++;
+								}
+							?>
+
 							<ul id="publish_submit_buttons">
 								<li><?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?></li>
 								<li><?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?></li>
