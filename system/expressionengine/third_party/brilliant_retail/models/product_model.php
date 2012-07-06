@@ -1554,6 +1554,7 @@ class Product_model extends CI_Model {
 	{
 		$data["ip"] = $_SERVER["REMOTE_ADDR"];
 		$this->db->insert('br_cart',$data);
+		return $this->db->insert_id();
 	}
 	
 	function cart_update($data,$key)

@@ -160,8 +160,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}
 						$products[0]["configurable_js"] = '';
 				}
+				
+				// Adding br_product_parse_before manipulate $products array prior to 
+				// parsion. Useful for adding tags, etc. ADDED 1.1.5 by dpd
+					if($this->EE->extensions->active_hook('br_product_parse_before') === TRUE){
+						$products = $this->EE->extensions->call('br_product_parse_before', $products); 
+					}
 
-				$output = $this->EE->TMPL->parse_variables($tagdata, $products);
+					$output = $this->EE->TMPL->parse_variables($tagdata, $products);
+				
 				
 				// We should add a configuration variable to remove the 
 				// the blank default first option. 
@@ -182,6 +189,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			$this->switch_cnt = 0;
 			$output = preg_replace_callback('/'.LD.'image_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output);
+			
+			// Adding br_product_parse_after manipulate $output string
+			// ADDED 1.1.5 by dpd
+				if($this->EE->extensions->active_hook('br_product_parse_after') === TRUE){
+					$output = $this->EE->extensions->call('br_product_parse_after', $output); 
+				}
+
 			return $output;
 		}
 		
@@ -921,7 +935,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}
 					}
 				}
-				
+		
 		// Now add them
 			foreach($post as $data){
 			
@@ -1054,7 +1068,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 								'session_id' => session_id(), 
 								'content' => $content,
 								'updated' => date("Y-n-d G:i:s"));
-				$this->EE->product_model->cart_set($data);
+				
+				// br_product_cartadd_before manipulate $data array
+				// ADDED 1.1.5 by dpd
+					if($this->EE->extensions->active_hook('br_product_cartadd_before') === TRUE){
+						$data = $this->EE->extensions->call('br_product_cartadd_before', $data); 
+					}				
+
+					$data["cart_id"] = $this->EE->product_model->cart_set($data);
+
+				// br_product_cartadd_after
+				// ADDED 1.1.5 by dpd
+					if($this->EE->extensions->active_hook('br_product_cartadd_after') === TRUE){
+						$data = $this->EE->extensions->call('br_product_cartadd_after', $data); 
+					}
 
 			} // End Data Loop
 
