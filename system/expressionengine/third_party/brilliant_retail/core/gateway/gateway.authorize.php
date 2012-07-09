@@ -166,11 +166,11 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 		function form(){
 			$form =  ' 	<div class="general">
 		                    <label>Credit Card Number *</label>
-		                    <input class="txtinp required creditcard" name="autho_cc_num" type="text" />
+		                    <input class="autho_cc_num txtinp required creditcard" name="autho_cc_num" type="text" />
 		                </div>
 		                <div class="expdate_month">
 		                    <label>Expiration Date *</label>
-		                    <select name="autho_cc_month" class="required">
+		                    <select name="autho_cc_month" class="autho_cc_month required">
 		                      <option value="01">January</option>
 		                      <option value="02">February</option>
 		                      <option value="03">March</option>
@@ -187,17 +187,17 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 		                </div>
 		                <div class="expdate_year">
 		                    <label>&nbsp;</label>
-		                    <select name="autho_cc_year" class="required">';
+		                    <select name="autho_cc_year" class="autho_cc_year required">';
 			$year = date("Y");
 			for($i=$year;$i<=($year+10);$i++){
 				$form .= '			<option value="'.$i.'">'.$i.'</option>';
 			}
-			$form .=  '   	</select></label>
+			$form .=  '   	</select>
 		                </div>
 		                <div class="clearboth"><!-- --></div>
 		                <div class="card_code">
 		                    <label>Security Code *</label>
-		                    <input class="txtinp required" name="autho_cc_code" type="text" />
+		                    <input class="autho_cc_code txtinp required" name="autho_cc_code" type="text" />
 		                </div>
 		                <div class="clearboth"><!-- --></div>';
 			return $form;

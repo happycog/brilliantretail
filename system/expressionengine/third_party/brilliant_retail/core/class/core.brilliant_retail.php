@@ -1162,7 +1162,7 @@ class Brilliant_retail_core {
 					}
 					
 					if($proceed === TRUE){
-						if($tmp->osc_enabled == $osc_enabled && $sub_available == 1){
+						if($tmp->osc_enabled == $osc_enabled){
 							
 							$form = $tmp->form();
 							if($form !== false){

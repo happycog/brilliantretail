@@ -1577,9 +1577,9 @@ class Product_model extends CI_Model {
 	function cart_get($session_id = '')
 	{
 		$id = ($session_id == '') ? session_id() : $session_id;
-		if(isset($this->session->cache["cart_get"][$session_id])){
-			$cart = $this->session->cache["cart_get"][$session_id];
-		}else{
+		#if(isset($this->session->cache["cart_get"][$session_id])){
+		#	$cart = $this->session->cache["cart_get"][$session_id];
+		#}else{
 			$cart = array();
 			$this->db->cache_off();
 			$this->db->from('br_cart');
@@ -1593,7 +1593,7 @@ class Product_model extends CI_Model {
 				$cart["items"][$val["cart_id"]] = unserialize($val["content"]);
 			}
 			$this->session->cache["cart_get"][$session_id] = $cart;
-		}
+		#}
 		return $cart;
 	}
 

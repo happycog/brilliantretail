@@ -89,7 +89,7 @@ class Gateway_sagepay_direct extends Brilliant_retail_gateway {
 		$order["BillingAddress2"] = $data["br_billing_address2"];
 		$order["BillingCity"] = $data["br_billing_city"];
 		
-		if ($data["br_billing_state"] == "US")
+		if ($data["br_billing_country"] == "US")
 		{
 			$order["BillingState"] = $data["br_billing_state"];
 		}
@@ -103,7 +103,7 @@ class Gateway_sagepay_direct extends Brilliant_retail_gateway {
 		$order["DeliveryAddress2"] = $data["br_shipping_address2"];
 		$order["DeliveryCity"] = $data["br_shipping_city"];
 
-        if ($data["br_shipping_state"] == "US")
+        if ($data["br_shipping_country"] == "US")
 		{
 			$order["DeliveryState"] = $data["br_shipping_state"];
 		}

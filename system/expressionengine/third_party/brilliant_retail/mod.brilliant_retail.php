@@ -883,6 +883,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 			if(strtolower($show_form) == "yes"){ 
 				$output = form_open($update);
 			}
+			
+			// Manipulate the cart items array prior to processing
+			// Added 1.1.5 dpd 
+				if($this->EE->extensions->active_hook('br_product_cartprocess_before') === TRUE){
+					$vars = $this->EE->extensions->call('br_product_cartprocess_before', $vars); 
+				}
+			
 			$output .= $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
 			if(strtolower($show_form) == "yes"){ 
 				$output .= form_close();
@@ -1063,7 +1070,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 									'options' 			=> 	$options,
 									'subtotal' 			=> 	$this->_currency_round($amt["price"] * $data["quantity"]) 
 					          	);
-				$content = serialize($content);
 				$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
 								'session_id' => session_id(), 
 								'content' => $content,
@@ -1074,7 +1080,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if($this->EE->extensions->active_hook('br_product_cartadd_before') === TRUE){
 						$data = $this->EE->extensions->call('br_product_cartadd_before', $data); 
 					}				
-
+					
+					// Serialize the content to store it. 
+						$data["content"] = serialize($data["content"]);
+				
 					$data["cart_id"] = $this->EE->product_model->cart_set($data);
 
 				// br_product_cartadd_after

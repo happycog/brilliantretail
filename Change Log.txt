@@ -4,6 +4,9 @@
 
 * Fixed an issue with merging products in cart when supplying variation of the same configurable product. 
 * Fixed an issue with Configurable product option display when there was only one option and with an adjustment. 
+* Fixed the authorize.net payment gateway to remove extra closing label tag. 
+* Fixed an issue with SagePay direct when shipping to the United States
+* Fixed an issue with the query validate on the contact form in the blank demo theme.
 * Added br_product_editform_before to manipulate product edit form prior to rendering. (NEEDS DOCUMENTATION)
 * Added br_product_parse_before to manipulate the products array prior to parsing. (NEEDS DOCUMENTATION)
 * Added br_product_parse_after to manipulate the output string prior to returning. (NEEDS DOCUMENTATION)
@@ -11,7 +14,7 @@
 * Added br_product_cartadd_after
 
 * Updated product types in new product form to sort alphabetically.
-
+* Updated Authorize.net gateway to include input name in class definition for form elements.
 
 
 
