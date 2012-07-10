@@ -2306,7 +2306,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$this->EE->load->model('order_model');
 			$order[0] = $this->EE->order_model->get_order($_SESSION["order_id"]);
 			$order[0]["currency_marker"] = $this->_config["currency_marker"];
-
 			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $order); 
 			unset($_SESSION["order_id"]);
 			return $output;
