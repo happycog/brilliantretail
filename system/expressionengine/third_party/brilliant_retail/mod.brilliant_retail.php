@@ -2956,10 +2956,19 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$_SESSION["br_alert"] = lang('br_download_unavailable');
 					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 				}
+				
 				// Download the file
-					$data = array('cnt' => ($downloads[0]["cnt"] + 1 ));
+					$downloads[0]["cnt"]++;
+					$data = array('cnt' => $downloads[0]["cnt"]);
 					$this->EE->order_model->update_downloads_by_member($this->EE->session->userdata["member_id"],$downloads[0]["order_download_id"],$data);
 					
+				// Hook to modify the $downloads array prior to forcing the download	
+				// added 1.1.5 dpd 
+					if($this->EE->extensions->active_hook('br_customer_download_file_before') === TRUE){
+						$downloads = $this->EE->extensions->call('br_customer_download_file_before', $downloads); 
+					}
+				
+				// Load up the download helper and get the file
 					$this->EE->load->helper('my_download');
 					$path = $this->_config["media_dir"].'download/'.$downloads[0]["filenm"];
 					$name = $downloads[0]["filenm_orig"];

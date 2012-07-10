@@ -12,6 +12,7 @@
 * Added br_product_parse_after to manipulate the output string prior to returning. (NEEDS DOCUMENTATION)
 * Added br_product_cartadd_before to manipulate the cart post data before adding to the database. (NEEDS DOCUMENTATION)
 * Added br_product_cartadd_after (NEEDS DOCUMENTATION)
+* Added br_customer_download_file_before (NEEDS DOCUMENTATION)
 * Updated product types in new product form to sort alphabetically.
 * Updated Authorize.net gateway to include input name in class definition for form elements.
 
