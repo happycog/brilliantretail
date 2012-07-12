@@ -34,7 +34,14 @@
 			$stmt = "SELECT member_id FROM exp_br_order WHERE order_id = ".$rst["order_id"];
 			$query = $this->EE->db->query($stmt);
 			$row = $query->result_array();
-			$member_id = $row[0]["member_id"];
+			// Shouldn't be any rows in here without order_ids but lets 
+			// add this just so we dont crash and burn if there are. 
+				if(isset($row[0]))
+				{
+					$member_id = $row[0]["member_id"];
+				}else{
+					$member_id = 0;
+				}
 		}
 		// Build the update statement
 			$stmt = "UPDATE exp_br_order_download set member_id = ".$member_id." WHERE order_download_id = ".$rst["order_download_id"];
