@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.1.5.0';
+	public $version	= '1.1.5.2';
 	
 	function Brilliant_retail_upd()
 	{
@@ -449,6 +449,7 @@ class Brilliant_retail_upd {
 	$sql[] = "CREATE TABLE exp_br_order_download (
 					order_download_id int(11) NOT NULL AUTO_INCREMENT,
 					downloadable_id int(11) NOT NULL,
+					member_id int(11) NOT NULL DEFAULT '0',
 					product_id int(11) NOT NULL,
 					order_id int(11) NOT NULL,
 					cnt int(11) NOT NULL DEFAULT '0',

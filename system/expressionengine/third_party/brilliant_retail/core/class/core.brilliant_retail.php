@@ -27,12 +27,10 @@ session_start();
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-
 include_once(PATH_THIRD.'brilliant_retail/core/class/shipping.brilliant_retail.php');
 include_once(PATH_THIRD.'brilliant_retail/core/class/gateway.brilliant_retail.php');
 include_once(PATH_THIRD.'brilliant_retail/core/class/report.brilliant_retail.php');
 include_once(PATH_THIRD.'brilliant_retail/core/class/product.brilliant_retail.php');
-
 
 class Brilliant_retail_core {
 	
@@ -2153,10 +2151,13 @@ class Brilliant_retail_core {
 					}				
 					if(count($row) == 0)
 					{
-						$first[$val] = array(
-												"config_id" => $c["configurable_id"],
-												"adjust"	=> $c["adjust"]
-											);
+						if($c["qty"] > 0)
+						{
+							$first[$val] = array(
+													"config_id" => $c["configurable_id"],
+													"adjust"	=> $c["adjust"] 
+												);
+						}
 					}
 					$row[] = $val;
 				}
@@ -2219,7 +2220,6 @@ class Brilliant_retail_core {
 																						var sel = a.val();
 																						var next = c + 1;
 																						var display = Array();
-																						
 																						if(next < (opt_length)){
 																							d = $('#'+opts.form_id+'_configurable_'+next);
 																							d.html('');
@@ -2237,9 +2237,15 @@ class Brilliant_retail_core {
 																												{
 																													adj = ' (+ ".$this->_config["currency_marker"]."'+opts.rows[i].adjust+')';
 																												}
-																												options += '<option value=\"'+opts.rows[i].id+'\">'+opts.rows[i].options[next]+adj+'</option>';
+																												if(opts.rows[i].qty > 0)
+																												{
+																													options += '<option value=\"'+opts.rows[i].id+'\">'+opts.rows[i].options[next]+adj+'</option>';
+																												}
 																											}else{
-																												options += '<option value=\"'+opts.rows[i].options[next]+'\">'+opts.rows[i].options[next]+'</option>';
+																												if(opts.rows[i].qty > 0)
+																												{
+																													options += '<option value=\"'+opts.rows[i].options[next]+'\">'+opts.rows[i].options[next]+'</option>';
+																												}
 																											}
 																										}
 																										display[opts.rows[i].options[next]] = opts.rows[i].options[next];
@@ -2256,6 +2262,11 @@ class Brilliant_retail_core {
 																							$('<option value=\"\">'+opts.default_text+'</option>').appendTo(d);
 																						}
 																					});
+									}
+									var a = $('#'+opts.form_id+'_configurable_0');
+									if(a.val() != '')
+									{
+										a.trigger('change');
 									}
 								});
 							};

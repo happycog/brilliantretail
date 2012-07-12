@@ -2103,7 +2103,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 								// Create a file container 
 									$file = array();
 
-								// A download purchse is easy just go ahead and add it 
+								// A download purchase is easy just go ahead and add it 
 									if($items["type_id"] == 4){
 										$file[] = $item;
 									}else{
@@ -2131,7 +2131,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 											for($j=0;$j<$f["quantity"];$j++){
 												// Insert into the db 
 												$dl["license"] = uuid();
-												
+												$dl["member_id"] = $member_id;
 												// Hook to modify the $dl array prior to creating the order download record
 												if($this->EE->extensions->active_hook('br_license_create_after') === TRUE){
 													$dl = $this->EE->extensions->call('br_license_create_after', $dl); 
