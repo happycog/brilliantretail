@@ -8,6 +8,7 @@
 * Fixed the authorize.net payment gateway to remove extra closing label tag. 
 * Fixed an issue with SagePay direct when shipping to the United States
 * Fixed an issue with the query validate on the contact form in the blank demo theme.
+* Fixed an issue with Bundle products counting inventory on non-inventory items like download and service products 
 * Added br_product_editform_before to manipulate product edit form prior to rendering. (NEEDS DOCUMENTATION)
 * Added br_product_parse_before to manipulate the products array prior to parsing. (NEEDS DOCUMENTATION)
 * Added br_product_parse_after to manipulate the output string prior to returning. (NEEDS DOCUMENTATION)

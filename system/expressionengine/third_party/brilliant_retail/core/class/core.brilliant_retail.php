@@ -178,6 +178,23 @@ class Brilliant_retail_core {
 							$id = $val["product_id"];
 							$product = $this->EE->product_model->get_products($id);
 							$qty_available = $product[0]["quantity"];
+					}elseif($val["type_id"] == 2){
+						$id = $val["product_id"];
+						$items = 	$this->EE->product_model->get_product_bundle($id);
+						foreach($items as $row)
+						{
+							if($row["type_id"] == 1){
+								// check basic products
+								if($row["quantity"] == 0){
+									$qty_available = 0;
+									break;
+								}
+								$qty_available = $row["quantity"];
+							}else{
+								// We don't count inventory so make it big
+								$qty_available = 100000000;
+							}
+						}
 					}else{
 						// Config products quantity is 
 						// in the items
