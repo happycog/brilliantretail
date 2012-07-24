@@ -2200,14 +2200,16 @@ class Brilliant_retail_core {
 		{
 			if($i == 0){
 				$opts = '';
-				foreach($first as $key => $val)
-				{
-					$value = (count($js["label"]) == 1) ? $val["config_id"] : $key;
-					$text = $key; 
-					if($val["adjust"] > 0){
-						$text .= " (+ ".$this->_format_money($val["adjust"]).")";
+				if(isset($first)){
+					foreach($first as $key => $val)
+					{
+						$value = (count($js["label"]) == 1) ? $val["config_id"] : $key;
+						$text = $key; 
+						if($val["adjust"] > 0){
+							$text .= " (+ ".$this->_format_money($val["adjust"]).")";
+						}
+						$opts .= '<option value="'.$value.'">'.$text.'</option>';
 					}
-					$opts .= '<option value="'.$value.'">'.$text.'</option>';
 				}
 				$select = '<select name="'.$p["product_id"].'_configurable_'.$i.'" id="'.$p["product_id"].'_configurable_'.$i.'" class="required"><option value="">'.lang('br_choose_an_option').'</option>'.$opts.'</select>';
 			}else{

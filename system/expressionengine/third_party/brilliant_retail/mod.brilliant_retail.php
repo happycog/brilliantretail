@@ -886,8 +886,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			// Manipulate the cart items array prior to processing
 			// Added 1.1.5 dpd 
-				if($this->EE->extensions->active_hook('br_product_cartprocess_before') === TRUE){
-					$vars = $this->EE->extensions->call('br_product_cartprocess_before', $vars); 
+				if($this->EE->extensions->active_hook('br_cart_parse_before') === TRUE){
+					$vars = $this->EE->extensions->call('br_cart_parse_before', $vars); 
 				}
 			
 			$output .= $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
@@ -936,8 +936,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 								// If its a multiple post 
 								$a = explode('_',$key);
 								$b = ltrim($key,$a[0].'_');
-								$post[$a[0]]['product_id'] = $a[0];
-								$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
+								if(is_numeric($a[0])){
+									$post[$a[0]]['product_id'] = $a[0];
+									$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
+								}
 							} 
 						}
 					}
