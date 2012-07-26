@@ -238,23 +238,20 @@ class Brilliant_retail_core {
 		}
 			
 	function _get_meta_info(){
-		// Check for a cached meta file
-			if(!$arr = read_from_cache('meta_info')){
+			if(!$arr = read_from_cache('meta_details')){
 				$arr = array();
 				// Check Categories
-					$cats = $this->EE->product_model->get_categories();
-					foreach($cats as $cat){
-						foreach($cat as $c){
-							$arr[$c["url_title"]]  = array(
-															'type' => 'category',
-															'title' => $c["meta_title"],
-															'descr' => $c["meta_descr"],
-															'keywords' => $c["meta_keyword"]);
-						}
+					$cats = $this->EE->product_model->get_category_meta();
+					foreach($cats as $c){
+						$arr[$c["url_title"]]  = array(
+														'type' => 'category',
+														'title' => $c["meta_title"],
+														'descr' => $c["meta_descr"],
+														'keywords' => $c["meta_keyword"]);
 					}
 	
 				// Check Products 
-					$products = $this->EE->product_model->get_products();
+					$products = $this->EE->product_model->get_product_meta();
 					foreach($products as $p){
 						$arr[$p["url"]]  = array(
 												'type' => 'product',
@@ -264,8 +261,7 @@ class Brilliant_retail_core {
 					}
 	
 				// Check Channels
-				$arr = serialize($arr);
-				save_to_cache('meta_info',$arr);
+				save_to_cache('meta_details',serialize($arr));
 			}
 
 		$arr = unserialize($arr);

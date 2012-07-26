@@ -20,3 +20,4 @@
 * Added member_id to br_order_download table
 * Updated product types in new product form to sort alphabetically.
 * Updated Authorize.net gateway to include input name in class definition for form elements.
+* Updated meta method with optimized queries and caching to improve page loads on large data sets.

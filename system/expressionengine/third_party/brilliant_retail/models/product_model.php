@@ -339,6 +339,18 @@ class Product_model extends CI_Model {
 		return $products;
 	}
 	
+	function get_product_meta()
+	{
+		$products = array();
+		$this->db->select("product_id,url,meta_title,meta_descr,meta_keyword");
+		$this->db->from('br_product');
+		$query = $this->db->get();
+		foreach ($query->result_array() as $val){
+			$products[$val["product_id"]] = $val;
+		}
+		return $products;
+	}
+	
 	function get_product_entry($product_id){
 		// Not quite ready for prime time
 			if (isset($this->session->cache['get_product_entry'])){
@@ -1468,6 +1480,18 @@ class Product_model extends CI_Model {
 		$query = $this->db->get();
 		foreach ($query->result_array() as $val){
 			$cat[$val["category_id"]] = $val["category_id"];
+		}
+		return $cat;
+	}
+	
+	function get_category_meta()
+	{
+		$cat = array();
+		$this->db->select("category_id,url_title,meta_title,meta_descr,meta_keyword");
+		$this->db->from('br_category');
+		$query = $this->db->get();
+		foreach ($query->result_array() as $val){
+			$cat[$val["category_id"]] = $val;
 		}
 		return $cat;
 	}
