@@ -261,7 +261,8 @@ class Brilliant_retail_core {
 					}
 	
 				// Check Channels
-				save_to_cache('meta_details',serialize($arr));
+					$arr = serialize($arr);
+					save_to_cache('meta_details',$arr);
 			}
 
 		$arr = unserialize($arr);

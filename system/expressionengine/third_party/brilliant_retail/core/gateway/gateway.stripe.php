@@ -94,22 +94,22 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 	function form()
 	{
 		$form =  ' 	<div class="general">
-	                    <label>Credit Card Name *<br />
-	                    <input class="txtinp required" name="stripe_name" type="text" /></label>
+	                    <label>Credit Card Name *</label>
+	                    <input class="txtinp required" name="stripe_name" type="text" />
 	                </div>
 	                
 	                <div class="general">
-	                    <label>Credit Card Number *<br />
+	                    <label>Credit Card Number *</label>
 	                    <input class="txtinp required creditcard" name="stripe_num" type="text" /></label>
 	                </div>
 	                
 	                <div class="general">
-	                    <label>CV2 Number (if applicable)<br />
-	                    <input class="txtinp" name="stripe_cvc" type="text" /></label>
+	                    <label>CV2 Number (if applicable)</label>
+	                    <input class="txtinp" name="stripe_cvc" type="text" />
 	                </div>
 	                
 	                <div class="expdate_month">
-	                    <label>Expiration Date *<br />
+	                    <label>Expiration Date *</label>
 	                    <select name="stripe_month_exp" class="required">
 	                      <option value="01">January</option>
 	                      <option value="02">February</option>
@@ -123,17 +123,17 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 	                      <option value="10">October</option>
 	                      <option value="11">November</option>
 	                      <option value="12">December</option>
-	                    </select></label>
+	                    </select>
 	                </div>
 	                <div class="expdate_year">
-	                    <label>&nbsp;<br />
+	                    <label>&nbsp;</label>
 	                    <select name="stripe_year_exp" class="required">';
 		$year = date("Y");
 		for($i=$year;$i<=($year+10);$i++){
 			$i = str_pad($i, 2, 0, STR_PAD_LEFT);
 			$form .= '	<option value="'.$i.'">'.$i.'</option>';
 		}
-		$form .=  '   	</select></label>
+		$form .=  '   	</select>
 	                </div>
 	                <div class="clearboth"><!-- --></div>';
 		return $form;
