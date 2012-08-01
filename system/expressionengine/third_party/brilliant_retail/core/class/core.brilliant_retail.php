@@ -981,7 +981,7 @@ class Brilliant_retail_core {
 		}
 		
 		function _index_products($product_id=''){
-			$this->EE->load->model('product_model');
+			$this->EE->load->model('search_model');
 			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 			
@@ -1008,7 +1008,7 @@ class Brilliant_retail_core {
 			// Give the index writable permissions
 				Zend_Search_Lucene_Storage_Directory_Filesystem::setDefaultFilePermissions(0755);
 			
-				$products = $this->EE->product_model->get_products($product_id);
+				$products = $this->EE->search_model->get_search_products($product_id);
 				if(count($products) >= 1){
 					$hits = $index->find('product_id:' . $products[0]["product_id"]);
 					foreach ($hits as $hit) {

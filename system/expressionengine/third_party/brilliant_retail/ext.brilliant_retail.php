@@ -92,7 +92,8 @@ class Brilliant_retail_ext {
 			'hook'		=> 'template_post_parse',
 			'settings'	=> serialize($this->settings),
 			'version'	=> $this->version,
-			'enabled'	=> 'y'
+			'enabled'	=> 'y',
+			'priority'	=> 99 							// Set high so that its the last called. Other extensions might cause issues if they don't use the last_call feature.
 		);
 		
 		foreach($data as $d){

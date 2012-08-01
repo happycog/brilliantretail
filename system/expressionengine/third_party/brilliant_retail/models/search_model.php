@@ -69,5 +69,15 @@ class Search_model extends CI_Model {
 		
 		return $search;
 	}
-	
+	function get_search_products($product_id = '')
+	{
+		if($product_id != ''){
+			// Get the specific product id
+			$this->db->where('product_id',$product_id);
+		}
+		$this->db->where('enabled >',0);
+		$this->db->from('br_product p');
+		$products = $this->db->get();
+		return $products->result_array();
+	}
 }

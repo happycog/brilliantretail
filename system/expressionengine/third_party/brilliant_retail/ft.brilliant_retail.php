@@ -202,47 +202,56 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 		$this->EE->load->helper('form');
 		$output = '';
 		$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
-		$pid = explode(",",$data);
-		$prod = new Brilliant_retail();
-		$i=0;
-		$items = array();
-		if(isset($pid)){
-			foreach($pid as $p){
-				$products = $prod->_get_product($p);
-				if(isset($products[0]["product_id"])){
-					if(!isset($products[0]['attribute'][0])){
-						$products[0]['attribute'][0] = array();
-					}
-					if($products != false){
-						$items[$i] = $products[0];
-						$f_open = form_open($action,
-											array( "id" => "form_".$products[0]["product_id"]), 
-											array( $products[0]["product_id"]."_product_id" => $products[0]["product_id"])
-											);
-						$items[$i]['product_count'] = ($i+1);
-						$items[$i]['form_open']  = $f_open;
-						$items[$i]['form_close'] = '</form>';
-						$i++;
+		$items 			= array();
+		$total_count 	= 0;
+		if($data != '')
+		{
+			$pid = explode(",",$data);
+			$prod = new Brilliant_retail();
+			$i=0;
+			if(isset($pid)){
+				foreach($pid as $p){
+					$products = $prod->_get_product($p);
+					if(isset($products[0]["product_id"])){
+						if(!isset($products[0]['attribute'][0])){
+							$products[0]['attribute'][0] = array();
+						}
+						if($products != false){
+							$items[$i] = $products[0];
+							$f_open = form_open($action,
+												array( "id" => "form_".$products[0]["product_id"]), 
+												array( $products[0]["product_id"]."_product_id" => $products[0]["product_id"])
+												);
+							$items[$i]['product_count'] = ($i+1);
+							$items[$i]['form_open']  = $f_open;
+							$items[$i]['form_close'] = '</form>';
+							$i++;
+						}
 					}
 				}
 			}
+			// if random 
+				if(	isset($params["random"]) 
+					&& (strtoupper($params["random"]) == "TRUE" || strtoupper($params["random"]) == "YES")){
+					//shuffle randomly
+						shuffle($items);
+				}
+				
+			// if limit is set unset passed cap
+				if(isset($params["limit"])){
+					foreach($items as $key => $val){
+						if($key >= $params["limit"]){
+							unset($items[$key]);
+						}	
+					}
+				}
+				
+			// Get the total count
+			$total_count = count($pid);
 		}
-		// if random 
-			if(	isset($params["random"]) 
-				&& (strtoupper($params["random"]) == "TRUE" || strtoupper($params["random"]) == "YES")){
-				//shuffle randomly
-					shuffle($items);
-			}
-			
-		// if limit is set unset passed cap
-			if(isset($params["limit"])){
-				foreach($items as $key => $val){
-					if($key >= $params["limit"]){
-						unset($items[$key]);
-					}	
-				}
-			}
-		$vars[0] = array('items' => $items);
+
+		$vars[0] = array(	'total_count' => $total_count,
+							'items' => $items);
 		$output .= $this->EE->TMPL->parse_variables($tagdata, $vars);
 		
 		$this->switch_cnt = 0;

@@ -21,3 +21,5 @@
 * Updated product types in new product form to sort alphabetically.
 * Updated Authorize.net gateway to include input name in class definition for form elements.
 * Updated meta method with optimized queries and caching to improve page loads on large data sets.
+* Updated search indexer with optimized queries for improved index build times. 
+* Updated BrilliantRetail Product fieldtype with total_count variable
