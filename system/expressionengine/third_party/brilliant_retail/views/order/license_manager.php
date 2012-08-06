@@ -22,6 +22,8 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
+echo $br_header;
+
 $cp_pad_table_template["table_open"] = '<table id="order_tbl" cellpadding="0" cellspacing="0" class="mainTable" style="clear:both;">';
 	
 $this->table->set_template($cp_pad_table_template); 
@@ -54,85 +56,7 @@ $this->table->set_heading(
 			'width' => '5%')
 	*/
 );
-$content = $this->table->generate();
-$content = '';
-?>
-<div id="b2retail">
 
-	<?=$br_header?>
-   
-    <div id="b2r_content">
+echo $this->table->generate();
 
-    	<?=$br_menu?>
-        
-        <div id="b2r_main">
-        
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_settings">
-                
-						<div id="b2r_page" class="b2r_category">
-
-                        	<?=$content?>
-                        	
-                        	<div class="b2r_clearboth"><!-- --></div>
-        				
-                    </div> <!-- b2r_dashboard --> 
-                    
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-
-    	</div> <!-- b2r_main -->
-
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
-    
-</div> <!-- #b2retail -->
-<script type="text/javascript">
-	$(function(){
-		var oTable = $('#order_tbl').dataTable({
-													"iDisplayLength": 25, 
-													"aoColumns": [
-																		{ "asSorting": [ "desc", "asc" ] }, 
-																		null,
-																		null,
-																		null,
-																		null
-																	], 
-													"bProcessing": true,
-													"bServerSide": true,
-													"sAjaxSource": "<?=str_replace("&amp;","&",$ajax_url)?>", 
-													"fnDrawCallback": function() {
-														$('#toggle_check').click(function(){
-															if(this.checked){
-																$('input[type=checkbox]').attr('checked','checked');
-															}else{
-																$('input[type=checkbox]').each(function() {  
-																	this.checked = false;  
-																});  
-															}
-														});
-													}
-												});
-		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#order_tbl_filter input');
-		$('#clear').click(function(){
-										oTable.fnFilterClear();
-										return false
-									});
-		$('#toggle_check').click(function(){
-			if(this.checked){
-				$('input[type=checkbox]').attr('checked','checked');
-			}else{
-				$('input[type=checkbox]').attr('checked','');
-			}
-		});
-	});
-</script>
+echo $br_footer;

@@ -33,8 +33,8 @@
 						<th>
 							<?=lang('br_order_number')?>:</b> <?=$order["order_id"]?>
 						</th>
-						<th style="text-align:right">
-							<?=lang('br_order_date')?>: <?=date("F jS,y",$order["created"])?>
+						<th style="font-weight:normal;color:#888;text-align:right">
+							<em><?=date("F jS, Y",$order["created"])?></em>
 						</th>
 					</tr>
 					<tr>
@@ -320,9 +320,16 @@
 		</table>
 
 <?=$br_footer?>	
-
+<?php
+/*
+	Because the native buttons are built with an EE function 
+	we have to use some jquery to set the 'print' button to 
+	open in a new window. Use filter(:last) over selector:last 
+	for performance. -dpd
+*/
+?>
 <script type="text/javascript">
 	$(function(){
-		$('.rightNav a.submit:eq(1)').attr('target','_blank');
+		$('.rightNav a.submit').filter(":last").attr('target','_blank');
 	});
 </script>
