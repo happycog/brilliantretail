@@ -23,7 +23,7 @@
 /************************************************************/
 ?>
 <div id="sub_type_3" class="subtypes">
-	
+
 	<input type="hidden" name="require_configurable" title="<?=lang('br_details').' - '.lang('br_configurable_product_required').' '.lang('br_is_required')?>" id="sub_type_req_3"  value="1" class="{required:true} sub_type_req" />
 
 	<?php
@@ -110,7 +110,7 @@
 			}
 		});
 		
-		$('#configurableCreate').bind('click',function(){
+		$('#configurableCreate a').bind('click',function(){
 			var config_attr = $('#config_attr').val();
 			var config_sku = $('#config_sku').val();
 			var config_qty = $('#config_qty').val();
@@ -141,6 +141,9 @@
 			});
 			
 			$('#sub_type_req_3').val(1);
+			
+			return false;
+			
 		});
 	}
 </script>

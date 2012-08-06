@@ -22,12 +22,9 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-	$cp_pad_table_template["table_open"] = '<table cellspacing="0" id="site_edit" cellpadding="0" border="0" class="mainTable edit_form">';
-
 	$this->table->set_template($cp_pad_table_template);
 	
-	$this->table->set_heading(array('data' => lang('br_general_configuration'), 
-									'colspan' => 2));
+	$this->table->set_heading(lang('br_general_configuration'),'');
 	
 	$this->table->add_row(	
 							array(
@@ -108,9 +105,8 @@
 		// CATALOG TAB
 			$this->table->set_template($cp_pad_table_template);
 
-  			$this->table->set_heading(array('data' => lang('br_product_config'), 
-											'colspan' => 2));
-
+  			$this->table->set_heading(lang('br_product_config'),'');
+  			
       		$fields = array("low_stock","result_limit","result_per_page","result_paginate");
 			foreach($fields as $f){
 				$this->table->add_row(array(lang('br_'.$f),
@@ -131,9 +127,8 @@
 		// SEO TAB
 			$this->table->set_template($cp_pad_table_template);
 
-  			$this->table->set_heading(array('data' => lang('br_seo_config'), 
-								'colspan' => 2));
-
+  			$this->table->set_heading(lang('br_seo_config'),'');
+  			
 			$fields = array('meta_title','meta_keywords');
 		    foreach($fields as $f){
 				$this->table->add_row(array(lang('br_site_'.$f),
@@ -164,7 +159,7 @@
 
 		echo form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_site_update',array('method' => 'POST', 'id' => 'storeForm'),$hidden);
 ?>
-<div id="b2r_page" class="b2r_category">
+
 	
 	<?=$general?>
 
@@ -181,11 +176,12 @@
     	<div class="b2r_clearboth"><!-- --></div>
     </div>
 
-	<div class="b2r_clearboth"><!-- --></div>
-
-</div>
-
 </form>
+<style type="text/css">
+	.mainTable th:first-child {
+		width: 35%;
+	}
+</style>
 <script type="text/javascript">
 	$(function() {
 		$('#storeForm').validate();

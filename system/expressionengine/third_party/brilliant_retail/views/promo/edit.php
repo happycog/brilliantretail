@@ -21,32 +21,19 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+
+echo $br_header;
 ?>
-<div id="b2retail">
 
-	<?=$br_header?>
-   
-    <div id="b2r_content">
 
-    	<?=$br_menu?>
-        
-        <div id="b2r_main">
-        
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_settings">
+<?=form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update', array('method' => 'POST', 'id' => 'promoForm','encrypt' => 'multipart/form-data'),$hidden)?>
 
-					<?=form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update', array('method' => 'POST', 'id' => 'promoForm','encrypt' => 'multipart/form-data'),$hidden)?>
 					<div id="b2r_page" class="b2r_category">
 <?php
 	$start = ($promo[0]["start_dt"] > 0) ? date("n/d/y",strtotime($promo[0]["start_dt"])) : '';
 	$end = ($promo[0]["end_dt"] > 0) ? date("n/d/y",strtotime($promo[0]["end_dt"])) : '';
 ?>
-	<table id="promoTableEdit" cellspacing="0" cellpadding="0" border="0" class="mainTable edit_form">
+	<table id="promoTableEdit" cellspacing="0" cellpadding="0" border="0" class="product_edit" width="100%">
 		<tr>
 			<th colspan="2"><?=lang('br_details')?></td>
 		</tr>
@@ -224,18 +211,23 @@
 						<?=$checked?>/>&nbsp;<?=lang('br_all_products')?>
 						<br />
 						<div id="product_opts" style="border:1px #ccc solid;background:#fff;padding: 15px;margin-top:10px;<?=$showProd?>">
-							<div class="search">
-								<?=lang('search')?>
+							<div class="br_product_search">
 								<input type="text" id="product_search">
 							</div>
 							<h4><?=lang('br_add_products')?></h4>
 							<div id="product_result" class="result_div">
-								<table id="product_results" width="100%" cellpadding="0" cellspacing="0">
+								<table id="product_results" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th colspan="2">
+												<?=lang('br_title')?></th>
+										</tr>
+									</thead>
 									<tr><td colspan="4" style="background-color:#fff"><?=lang('br_promo_product_search')?></td></tr>
 								</table>
 							</div>
 							<p>&nbsp;</p>
-							<table id="product_selected" width="100%" cellpadding="0" cellspacing="0">
+							<table id="product_selected" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 								<tr>
 									<th><?=lang('br_promo_products')?></th>
 									<th>&nbsp;</th>
@@ -273,46 +265,25 @@
 		*/
 		?>
 	</table>
-									<div class="b2r_clearboth"><!-- --></div>
-					    			<div id="header_buttons">
-									    <?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
-										<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
-										<?php 
-											if($promo[0]["promo_id"] != 0){
-										?>
-												<?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?>
-												<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
-										<?php
-											}
-										?>
-										<div class="b2r_clearboth"><!-- --></div>
-								    </div>
 
-								
-							<div class="b2r_clearboth"><!-- --></div>
+	<div class="b2r_clearboth"><!-- --></div>
+	<div id="bottom_buttons">
+	    <?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
+		<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
+		<?php 
+			if($promo[0]["promo_id"] != 0){
+		?>
+				<?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?>
+				<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
+		<?php
+			}
+		?>
+		<div class="b2r_clearboth"><!-- --></div>
+    </div>
 
-
-
-                    </div> <!-- b2r_dashboard --> 
-	
-	
-	
-	</form>
-
-                    
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-
-    	</div> <!-- b2r_main -->
-
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
+</form>
     
-</div> <!-- #b2retail -->
-
+    <?=$br_footer?>
 
 <script type="text/javascript">
 	$(function() {

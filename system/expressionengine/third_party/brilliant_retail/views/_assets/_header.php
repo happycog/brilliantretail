@@ -24,3 +24,18 @@
 ?>
 
 <?=$system_message?>
+
+<?php
+if($message != ''){
+?>
+<div id="status_message">
+	<?=$message?>
+</div>
+<script type="text/javascript">
+$(function(){
+	setTimeout("$('#status_message').slideUp();",3000);
+});
+</script>
+<?php
+}
+?>

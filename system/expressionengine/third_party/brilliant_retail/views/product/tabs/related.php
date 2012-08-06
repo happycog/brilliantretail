@@ -34,30 +34,24 @@
 		
 		<fieldset class="holder">
 
-			<div class="product_edit">
-				
-				<div class="related_search">
+				<div class="br_product_search">
 					<input id="related_search" autocomplete="off" type="text" />
 				</div>
-				
-				<div class="result_div product_edit">
-					
-					<table id="related_results" width="100%" cellpadding="0" cellspacing="0">
-						<thead>
-							<tr>
-								<th><?=lang('nav_br_product')?></th>
-								<th><?=lang('br_type')?></th>
-								<th>&nbsp;</th>
-							</tr>
-						</thead>
-						<tfoot>
-							<tr><td colspan="3" style="border-width:0"><?=lang('br_ft_product_search')?></td></tr>
-						</tfoot>
-						<tbody></tbody>
-					</table>
-				
-				</div>
-				<table id="related_selected" width="100%" cellpadding="0" cellspacing="0">
+				<table id="related_results" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<th><?=lang('nav_br_product')?></th>
+							<th><?=lang('br_type')?></th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr><td colspan="3" style="border-width:0"><?=lang('br_ft_product_search')?></td></tr>
+					</tfoot>
+					<tbody></tbody>
+				</table>
+
+				<table id="related_selected" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 					<thead>
 						<tr>
 							<th width="40%"><?=lang('br_title')?></th>
@@ -86,7 +80,6 @@
 					?>
 					</tbody>
 				</table>
-			</div>
 
 		</fieldset>
 	</div> <!-- /sub_hold_field -->

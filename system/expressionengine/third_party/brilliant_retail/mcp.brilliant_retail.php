@@ -58,7 +58,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											'config_email_update','config_gateway_update','config_permission_update',
 											'config_shipping_update','config_site_update','config_tax_update',
 											"order_ajax","customer_ajax","product_ajax","index_products","order_detail",
-											"order_detail_add_payment","order_detail_add_payment_process","order_entry","order_batch","order_license_manager", 
+											"order_detail_add_payment","order_detail_add_payment_process",
+											"order_entry",
+											"order_batch","order_license_manager", 
 											"customer_orders","product_edit", "product_new","promo_new","promo_edit",
 											"report_detail","config_feeds_edit","config_attribute_create","config_attribute_edit",
 											"config_attributeset_create","config_attributeset_edit","config_attributeset_delete",
@@ -240,8 +242,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Add the create product button
 				
 				$this->EE->cp->set_right_nav(array(
-					#'nav_br_order_new_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_entry',
-					#'nav_br_order_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
+					'nav_br_order_new_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_entry',
+					'nav_br_order_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
 				));
 			
 				$this->vars['action']	= $this->base_url.'&method=order_batch';
@@ -297,9 +299,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function order_detail()
 		{
+		
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
 				$print = $this->EE->input->get("print",TRUE);
+				
+			// Order Information
+				$this->vars["status"] = $this->_config["status"];			
+				$this->vars['order'] = $this->EE->order_model->get_order($order_id,TRUE);
 				
 			// Page title
 				$this->vars['cp_page_title'] = lang('nav_br_order_detail');
@@ -308,9 +315,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order', 'BrilliantRetail '.lang('nav_br_order'));
 
-			// Order Information
-				$this->vars["status"] = $this->_config["status"];			
-				$this->vars['order'] = $this->EE->order_model->get_order($order_id,TRUE);
 				// Do we have a user photo?
 					if($this->vars['order']['member']['photo_filename'] != ''){
 						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['member']['photo_filename'].'" />';
@@ -333,6 +337,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
 				$this->vars['order']['order_total_due']		= $this->_currency_round($total-$payment);
 			
+			// Now that we have an order lets build some buttons
+				$right[lang('print')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true';
+				
+				if($this->vars['order']["order_total_due"] > 0){
+					$right[lang('br_add_payment')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment&order_id='.$this->vars['order']["order_id"];
+				}
+		
+				$this->EE->cp->set_right_nav($right);
+			
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
 				if($print == TRUE){
@@ -348,8 +361,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 		}
 		function order_detail_add_payment(){
-			
-
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
 
@@ -447,14 +458,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.'&method=order_detail&order_id='.$order_id);
 		}		
 
-		function order_entry(){
-			$this->vars['cp_page_title'] = lang('nav_br_new_order');
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-			
-			return $this->_view('order/order_entry', $this->vars);	
-		}
 		function order_batch(){
 			
 			$data = array();
@@ -620,6 +623,18 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				return $this->_view('order/license_manager', $this->vars);	
 		}
 		
+		
+		function order_entry(){
+			return $this->_view('order/entry/index', $this->vars);	
+		}
+		
+		function order_entry_items(){
+			return $this->_view('order/admin_items', $this->vars);	
+		}
+		function order_entry_checkout()
+		{
+			return $this->_view('order/admin_checkout', $this->vars);	
+		}
 		
 	/************************/
 	/* Customer Tab		 	*/
@@ -1763,7 +1778,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 
 			// Set the header/breadcrumb 
-				$this->vars['cp_page_title'] = lang('nav_br_report');
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
 				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
@@ -1782,14 +1796,25 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$str = 'Report_'.$inc["code"];	
 					}
 				}
-			
+
 			// Initiate the selected report class
 				$report = new $str();
+				
 				$this->vars["parent"] 	= $report->category;
 				$this->vars["title"] 	= $report->title;
 				$this->vars["detail"] 	= $report->get_report();
 				$this->vars["input"] 	= '';
 				
+				// Set the title
+					$this->vars['cp_page_title'] = $report->title;
+					
+				// Do we need to add the range to the title?
+					if($this->vars["detail"]["range"] != "")
+					{
+						$this->vars['cp_page_title'] .= " - (".date("F j, Y",strtotime($this->vars["detail"]["range"]["start"]))." - ".
+														date("F j, Y",strtotime($this->vars["detail"]["range"]["end"])).")";
+					}
+					
 				foreach($this->vars["detail"]["input"] as $in){
 					$this->vars["input"] .= $this->_build_report_input($in);
 				}
@@ -3294,13 +3319,16 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$str = '<input id="config_attr" name="config_attr" type="hidden" value="'.join($fields,',').'" />
 					<h4 style="margin-bottom:5px">'.lang('br_create_config_options').'</h4>
-					<table id="configurable_form" class="subTable" cellpadding="0" cellpacing="0">
-						<tr>
-							<th>
-								'.lang('br_title').'</th>
-							<th>
-								'.lang('br_create_config_options').'</th>
-						</tr>';
+					<table id="configurable_form" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th>
+									'.lang('br_title').'</th>
+								<th>
+									'.lang('br_create_config_options').'</th>
+							</tr>
+						</thead>';
+						
 			$headings = '';
 			foreach($fields as $f){
 				$attr = $this->EE->product_model->get_attribute_by_id($f);
@@ -3312,11 +3340,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$str .=	'	<tr>
 							<td>&nbsp;</td>
 							<td>
-								<div id="configurableCreate">'.lang('create').'</div></td>
+								<div id="configurableCreate" class="button"><a class="submit" href="#">'.lang('create').'</a></div></td>
 						</tr>
 						</table>
 								<h4 style="margin-bottom:5px">'.lang('br_products').'</h4>
-								<table id="config_selected" class="subTable" width="100%" cellpadding="0" cellspacing="0"><thead>'
+								<table id="config_selected" class="product_edit" width="100%" cellpadding="0" cellspacing="0"><thead>'
 						.$headings.
 						'	<th>'.lang('br_sku').'</th>
 							<th>'.lang('br_quantity').'</th>

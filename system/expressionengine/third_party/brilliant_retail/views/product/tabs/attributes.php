@@ -56,14 +56,16 @@
 					// the custom attributes
 											
 					$attrOptions = '<div id="attributeContainer">
+										<label>
+											'.lang('br_select_attribute_set').': 	
+										</label>
 											<select id="attributeOptions">';
 					foreach($attribute_sets	as $set){
 						$attrOptions .= '<option value="'.$set["attribute_set_id"].'">'.$set["title"].'</option>';
 					}	
 					$attrOptions .= '	</select>
-										<div class="b2r_clearboth"><!-- --></div>
-										<div id="optionSelect">'.lang('br_select_attribute_set').'</div>
-										<div id="optionCancel">'.lang('br_cancel').'</div>
+										<div id="optionSelect" class="button"><a class="submit">'.lang('br_select_attribute_set').'</a></div>
+										<div id="optionCancel" class="button"><a class="submit">'.lang('br_cancel').'</a></div>
 									</div>';
 				?>
 					<tr class="<?=$show_attr_add?>">
@@ -130,7 +132,7 @@
 			$(this).hide();
 		});
  
-		$('#optionSelect').bind('click',function(){
+		$('#optionSelect a').bind('click',function(){
 			$.post('<?=$add_attributes?>',{
 											set_id:$('#attributeOptions').val(), 
 											product_id:<?=$hidden["product_id"]?>
@@ -142,8 +144,15 @@
 				$('#product_attributes_tbl tfoot').hide();
 				$('#removeCustom').show();
 			});
+			return false;
 		});
 		
+		$('#optionCancel a').bind('click',function(){
+			$('#addCustomAttribute').show();
+			$('#attributeContainer').hide();
+			return false;
+		});
+	
 		$('#removeCustom .submit').bind('click',function(){
 			$('#removeCustom').hide();
 			$('#addCustomAttribute').show();
@@ -154,9 +163,5 @@
 			return false;
 		});
 		
-		$('#optionCancel').bind('click',function(){
-			$('#addCustomAttribute').show();
-			$('#attributeContainer').hide();
-		});
 	});
 </script>

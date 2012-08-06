@@ -23,7 +23,7 @@
 /************************************************************/
 ?>
 <div id="sub_type_4" class="subtypes">
-	<table id="download_selected" class="subTable" width="100%" cellpadding="0" cellspacing="0">
+	<table id="download_selected" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 		<thead>
 			<tr>
 				<td colspan="5" id="download_buttons">

@@ -22,6 +22,8 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 	
+	echo $br_header;
+	
 	$cp_pad_table_template["table_open"] = '<table id="reportTable" class="mainTable" cellpadding="0" cellspacing="0">';
 	
 	$this->table->set_template($cp_pad_table_template);
@@ -49,53 +51,20 @@
 								$r["version"]
 							);
 	}
-	$content = $this->table->generate();
+	
+	// Generate the table
+		echo  $this->table->generate();
 
+	// Put in our footer
+		echo $br_footer;
 ?>
-
-<div id="b2retail">
-
-	<?=$br_header?>
-   
-    <div id="b2r_content">
-
-    	<?=$br_menu?>
-        
-        <div id="b2r_main">
-        
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_settings">
-                
-						<div id="b2r_page" class="b2r_category">
-                			
-                			<?=$content?>
-	            	
-					</div> <!-- b2r_dashboard --> 
-                    
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-
-    	</div> <!-- b2r_main -->
-
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
-    
-</div> <!-- #b2retail -->
 <script type="text/javascript">
 	$(function(){
-		var oTable = $('#reportTable').dataTable({
+		var oTable = $('.mainTable').dataTable({
 													"bStateSave": true
 												});
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#reportTable_filter input');
-		$('<div style="clear:both"></div>').insertAfter('#reportTable_filter');
+		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('.mainTable_filter input');
+		$('<div style="clear:both"></div>').insertAfter('.mainTable_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

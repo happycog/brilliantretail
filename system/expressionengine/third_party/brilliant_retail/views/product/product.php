@@ -52,66 +52,35 @@
 						   );
 	$content = $this->table->generate();
 ?>
-<div id="b2retail">
+<div id="b2r_page" class="b2r_category">
+    <?=form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_batch',array('method' => 'POST', 'id' => 'productForm'))?>
+        <div id="filterMenu"> 
+			<fieldset>
+				<legend>Search Products</legend> 
+            	<select id="filter" style="margin-top:5px;margin-left:10px;">
+            		<option value=""><?=lang('br_filter_by_category')?></option>
+            		<? foreach($categories as $c) { ?>
+            		<option value="<?= $c['category_id'];?>" <? if ($c['category_id']==$catid){echo('selected="selected"');}?>><?= $c['title'];?></option>
+            		<? } ?>
+            	</select>
+			</fieldset> 
+		</div>								
+    	<div class="b2r_clearboth"><!-- --></div>
+        <?=$content?>
+		<div id="bottom_buttons">
+    		<select id="action" name="action">
+        		<option value="">------------</option> 
+        		<option value="0"><?=lang('br_delete_selected_products')?></option>
+        		<option value="1"><?=lang('br_enable_selected_products')?></option>
+        		<option value="2"><?=lang('br_disable_selected_products')?></option>
+        	</select>
+        	<?=form_submit(array('name' => 'submit', 'value' => lang('submit'), 'class'=>'submit', 'id' => 'batch_submit'))?>
+    	</div>
+	</form>
+</div> <!-- b2r_dashboard --> 
 
-	<?=$br_header?>
-   
-    <div id="b2r_content">
-
-    	<?=$br_menu?>
-        
-        <div id="b2r_main">
-
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_settings">
-                
-						<div id="b2r_page" class="b2r_category">
-                            <?=form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_batch',array('method' => 'POST', 'id' => 'productForm'))?>
-                            <div id="filterMenu"> 
-								<fieldset>
-									<legend>Search Products</legend> 
-	                            	<select id="filter" style="margin-top:5px;margin-left:10px;">
-	                            		<option value=""><?=lang('br_filter_by_category')?></option>
-	                            		<? foreach($categories as $c) { ?>
-	                            		<option value="<?= $c['category_id'];?>" <? if ($c['category_id']==$catid){echo('selected="selected"');}?>><?= $c['title'];?></option>
-	                            		<? } ?>
-	                            	</select>
-								</fieldset> 
-							</div>								
-                            	<div class="b2r_clearboth"><!-- --></div>
-	                            <?=$content?>
-                        		<div id="header_buttons">
-	                        		<select id="action" name="action">
-	                            		<option value="">------------</option> 
-	                            		<option value="0"><?=lang('br_delete_selected_products')?></option>
-	                            		<option value="1"><?=lang('br_enable_selected_products')?></option>
-	                            		<option value="2"><?=lang('br_disable_selected_products')?></option>
-	                            	</select>
-	                            	<?=form_submit(array('name' => 'submit', 'value' => lang('submit'), 'class'=>'submit', 'id' => 'batch_submit'))?>
-	                        	</div>
-							</form>
-                        	<div class="b2r_clearboth"><!-- --></div>
-                        
-                    </div> <!-- b2r_dashboard --> 
-
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-
-    	</div> <!-- b2r_main -->
-
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
-    
-</div> <!-- #b2retail -->
-
+<?=$br_footer?>
+  
 <script type="text/javascript">
 	$(function(){
 		var oTable = $('#productTable').dataTable({

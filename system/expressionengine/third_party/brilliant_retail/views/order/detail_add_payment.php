@@ -25,138 +25,108 @@
 // Make address a little more usable;
 	$address = $order["address"][0];
 ?>
-	<div id="b2retail">
-	
-		<?=$br_header?>
-	   
-	    <div id="b2r_content">
-	
-	    	<?=$br_menu?>
-	        
-	        <div id="b2r_main">
-	        
-	            <?=$br_logo?>
-	            
-	            <div id="b2r_panel">
-	                
-	                <div id="b2r_panel_int">
-	                
-	                	<div id="b2r_settings">
-	
-		                    <div id="b2r_page" class="b2r_category">
-						
-							<?php
-								
-								echo form_open_multipart(	'&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment_process',
-															array(	'method' 	=> 'POST', 
-																	'id' 		=> 'paymentForm'),
-															$hidden);
-							
-							?>
-								<table cellspacing="0" id="add_payment_table" cellpadding="0" border="0" class="mainTable edit_form">
-									<thead>
-										<tr>
-											<th colspan="2"><?=lang('br_add_payment_form')?></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><?=lang('br_order_id')?></td>
-											<td><?=$hidden["order_id"]?></td>
-										</tr>
-										<tr>
-											<td><?=lang('br_total')?></td>
-											<td><?=$currency_marker?><?=$order["order_total"]?></td>
-										</tr>
-										<tr>
-											<td><?=lang('br_total_paid')?></td>
-											<td><?=$currency_marker?><?=$order["order_total_paid"]?></td>
-										</tr>
-										<tr>
-											<td><?=lang('br_total_due')?></td>
-											<td><b><?=$currency_marker?><?=$order["order_total_due"]?></b></td>
-										</tr>
-										<tr>
-											<td style="vertical-align:top">
-												<?=lang('br_billing_address1')?></td>
-											<td>
-												<label>First Name *</label>
-												<input 	class="txtinp required" name="br_billing_fname" value="<?=$address["billing_fname"]?>" type="text" />
-												<label>Last Name *</label>
-												<input 	class="txtinp required" name="br_billing_lname" value="<?=$address["billing_lname"]?>" type="text" />
-												<label>Company</label>
-												<input 	class="txtinp" name="br_billing_company" value="<?=$address["billing_company"]?>" type="text" />
-												<label>Telephone *</label>
-												<input 	class="txtinp required" name="br_billing_phone" value="<?=$address["billing_phone"]?>" type="text" />
-												<label>Address 1*</label>
-												<input 	class="txtinp required" name="br_billing_address1" value="<?=$address["billing_address1"]?>" type="text" />
-												<label>Address 2</label>
-												<input 	class="txtinp" name="br_billing_address2" value="<?=$address["billing_address2"]?>" type="text" />
-												<label>Country *</label>
-												<select name="br_billing_country" id="br_billing_country" class="required">
-													<?php
-														foreach($countries as $key => $val){
-															$sel = ($key == $address["billing_country"]) ? 'selected="selected"' : '' ;
-															echo '<option value="'.$key.'" class="{zone_id:'.$val["zone_id"].'}" '.$sel.'>'.$val["title"].'</option>';
-														}
-													?>
-												</select>
-												<label>City *</label>
-												<input class="txtinp required" name="br_billing_city" value="<?=$address["billing_city"]?>" type="text" />
-												<label>State *</label> 
-												<select name="br_billing_state" id="br_billing_state" class="required" data-br_selected="<?=$address["billing_state"]?>" data-br_country="br_billing_country"></select>
-												<label>Zip Code *</label>
-												<input class="txtinp required" name="br_billing_zip" id="br_billing_zip" value="<?=$address["billing_address2"]?>" type="text" /></td>
-										</tr>
-										<tr>
-											<td><?=lang('br_order_amount')?></td>
-											<td>
-												<input type="hidden" name="order_total_due" value="<?=$order["order_total_due"]?>" />
-												<?=$currency_marker?><input type="text" name="order_amount" style="width: 100px" value="<?=$order["order_total_due"]?>" />
-												<em><?=lang('br_add_payment_instructions')?></em></td>
-										</tr>
-										<tr id="checkout">
-											<td style="vertical-align:top">
-												<?=lang('br_add_payment_form')?></td>
-											<td class="col2">
-												<?=$order["payment_options"]?></td>
-										</tr>	
-										<?php 
-											/*
-												<tr>
-													<td style="vertical-align:top">
-														<?=lang('br_add_payment_form')?></td>
-													<td class="col2">
-														notes form</td>
-												</tr>							
-											*/
-										?>
-									</tbody>
-								</table>
-							
-								<ul id="publish_submit_buttons">
-									<li><input type="submit" class="submit" name="submit" id="submit_button" value="<?=lang('submit')?>" /></li>
-								</ul>
 
-								</form>
+<?=$br_header?>
 
-								<div class="b2r_clearboth"><!-- --></div>
-							
-							</div>
+<?php
 	
-	                    </div> <!-- b2r_settings --> 
-	                    
-	                </div> <!-- b2r_panel_int -->
-	            </div> <!-- b2r_panel -->
-	            
-	    	</div> <!-- b2r_main -->
-	        <div class="b2r_clearboth"><!-- --></div>
-	        
-	        <?=$br_footer?>
-	        
-	    </div> <!-- b2r_content -->
-	    
-	</div> <!-- #b2retail -->
+	echo form_open_multipart(	'&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment_process',
+								array(	'method' 	=> 'POST', 
+										'id' 		=> 'paymentForm'),
+								$hidden);
+
+?>
+	<table cellspacing="0" id="add_payment_table" cellpadding="0" border="0" class="mainTable">
+		<thead>
+			<tr>
+				<th width="30%"><?=lang('br_add_payment_form')?></th>
+				<th>&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><?=lang('br_order_id')?></td>
+				<td><?=$hidden["order_id"]?></td>
+			</tr>
+			<tr>
+				<td><?=lang('br_total')?></td>
+				<td><?=$currency_marker?><?=$order["order_total"]?></td>
+			</tr>
+			<tr>
+				<td><?=lang('br_total_paid')?></td>
+				<td><?=$currency_marker?><?=$order["order_total_paid"]?></td>
+			</tr>
+			<tr>
+				<td><?=lang('br_total_due')?></td>
+				<td><b><?=$currency_marker?><?=$order["order_total_due"]?></b></td>
+			</tr>
+			<tr>
+				<td style="vertical-align:top">
+					<?=lang('br_billing_address1')?></td>
+				<td>
+					<label>First Name *</label>
+					<input 	class="txtinp required" name="br_billing_fname" value="<?=$address["billing_fname"]?>" type="text" />
+					<label>Last Name *</label>
+					<input 	class="txtinp required" name="br_billing_lname" value="<?=$address["billing_lname"]?>" type="text" />
+					<label>Company</label>
+					<input 	class="txtinp" name="br_billing_company" value="<?=$address["billing_company"]?>" type="text" />
+					<label>Telephone *</label>
+					<input 	class="txtinp required" name="br_billing_phone" value="<?=$address["billing_phone"]?>" type="text" />
+					<label>Address 1*</label>
+					<input 	class="txtinp required" name="br_billing_address1" value="<?=$address["billing_address1"]?>" type="text" />
+					<label>Address 2</label>
+					<input 	class="txtinp" name="br_billing_address2" value="<?=$address["billing_address2"]?>" type="text" />
+					<label>Country *</label>
+					<select name="br_billing_country" id="br_billing_country" class="required">
+						<?php
+							foreach($countries as $key => $val){
+								$sel = ($key == $address["billing_country"]) ? 'selected="selected"' : '' ;
+								echo '<option value="'.$key.'" class="{zone_id:'.$val["zone_id"].'}" '.$sel.'>'.$val["title"].'</option>';
+							}
+						?>
+					</select>
+					<div class="clearboth"></div>
+					<label>City *</label>
+					<input class="txtinp required" name="br_billing_city" value="<?=$address["billing_city"]?>" type="text" />
+					<label>State *</label> 
+					<select name="br_billing_state" id="br_billing_state" class="required" data-br_selected="<?=$address["billing_state"]?>" data-br_country="br_billing_country"></select>
+					<div class="clearboth"></div>
+					<label>Zip Code *</label>
+					<input class="txtinp required" name="br_billing_zip" id="br_billing_zip" value="<?=$address["billing_address2"]?>" type="text" /></td>
+			</tr>
+			<tr>
+				<td><?=lang('br_order_amount')?></td>
+				<td>
+					<input type="hidden" name="order_total_due" value="<?=$order["order_total_due"]?>" />
+					<?=$currency_marker?><input type="text" name="order_amount" style="width: 100px" value="<?=$order["order_total_due"]?>" />
+					<em><?=lang('br_add_payment_instructions')?></em></td>
+			</tr>
+			<tr id="checkout">
+				<td style="vertical-align:top">
+					<?=lang('br_add_payment_form')?></td>
+				<td class="col2">
+					<?=$order["payment_options"]?></td>
+			</tr>	
+			<?php 
+				/*
+					<tr>
+						<td style="vertical-align:top">
+							<?=lang('br_add_payment_form')?></td>
+						<td class="col2">
+							notes form</td>
+					</tr>							
+				*/
+			?>
+		</tbody>
+	</table>
+
+	<ul id="publish_submit_buttons">
+		<li><input type="submit" class="submit" name="submit" id="submit_button" value="<?=lang('submit')?>" /></li>
+	</ul>
+
+</form>
+
+<?=$br_footer?>
 
 <style type="text/css">
 	.gateways { margin-bottom: 10px;}
@@ -164,9 +134,9 @@
 	.clearboth { clear: both; }
 
 #checkout label {
-margin: 0 0 0 2px;
-font-size: 14px;
-color: #505757;
+	margin: 0 0 0 2px;
+	font-size: 14px;
+	color: #505757;
 }
 #checkout .col2 .general {
 	padding: 5px 0 0 5px;
@@ -216,7 +186,6 @@ color: #505757;
 	$(function(){
 		// stripe things 
 			$('#paymentForm').validate();
-			$('#add_payment_table tbody tr:odd').addClass('odd');
 		
 		// bind the payment options
 			_bind_payment_options();

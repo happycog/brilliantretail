@@ -21,108 +21,85 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+
+echo $br_header;
 ?>
-<div id="b2retail">
+<div id="b2r_dboard">
+	<div id="b2r_graph">
+        <?php
+        	$i = 0;
+			foreach($reports as $rep){
+				$class = ($i != 0) ? 'nodisplay' : '';
+				echo '	<div id="db_graph_'.$i.'" class="db_graph '.$class.'">
+							<div>';
+					
+				if($rep["graph"] == '')
+				{
+					echo '<div class="no_graph"><p>'.lang('br_no_graph_availble').'</p></div>';
+				}else{
+					echo '<img src="'.$rep["graph"].'" width="100%" alt="'.$rep["title"].'" title="'.$rep["title"].'" />';
+				}
+		        
+		        echo '		</div>
+		                	<h1>	
+		                		'.$currency_marker.$rep["total"].'</h1>
+			                <h2><a href="'.$rep["link"].'">'.$rep["title"].'</a></h2>
+			           	</div>';
+				$i++;
+			}
+		?>
+    </div> <!-- graph -->
+	            <div id="b2r_orders">
+	            	<h3>Orders</h3>
+	                <ul>
+	                <?php
+	                	foreach($order_collection as $order){
+	                		echo '	<li>
+				                    	<p class="b2r_acct">
+				                    		<a href="'.$base_url.'&method=order_detail&order_id='.$order["order_id"].'">'.$order["order_id"].'</a>
+				                    	</p>
+				                        <p class="b2r_name">
+				                        	'.$order["customer"].'
+				                        </p>
+				                        <p class="b2r_amt">
+				                        	'.$currency_marker.$order["total"].'
+				                        </p>
+				                        <div class="b2r_clearboth"><!-- --></div>
+				                    </li>';
+	                	}
+	                ?>
+	                	<li>
+	                		<p class="b2r_all"><a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order"><?=lang('br_all_orders')?> &raquo;</a></p>
+	                        <div class="b2r_clearboth"><!-- --></div>
+						</li>
+	                </ul>
+	            </div> <!-- orders -->
+	            
+	            
+	            <div id="b2r_sales">
+	            	<ul id="db_graph_links">
+	            		<?php
+							$i=0;
+	            			foreach($reports as $rep){
+	            				$class = ($i == 0) ? 'b2r_active' : '';
+      							echo '	<li class="'.$class.' db_graph_link" data-gid="'.$i.'" >
+					                    	<h1>'.$currency_marker.$rep["total"].'</h1>
+					                        <h2>'.$rep["title"].'</h2>
+					                    </li>';
+								$i++;
+							}
+						?>
+	                </ul>
+	                <div class="b2r_clearboth"><!-- --></div>
+	            </div> <!-- b2r_sales -->
+			</div>
+		 	<div class="b2r_clearboth"><!-- --></div>
 
-	<?=$br_header?>
-   
-    <div id="b2r_content">
+			<?=$br_footer?>
 
-    	<?=$br_menu?>
-        
-        <div id="b2r_main">
-        
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_page" class="br_contain">
-                    	
-                    	<div id="b2r_dboard">
-	                    	<div id="b2r_graph">
-				                <?php
-				                	$i = 0;
-			            			foreach($reports as $rep){
-			            				$class = ($i != 0) ? 'nodisplay' : '';
-			      						echo '	<div id="db_graph_'.$i.'" class="db_graph '.$class.'">
-				      								<div>';
-				      					
-				      					if($rep["graph"] == ''){
-								                 echo '<div class="no_graph"><p>'.lang('br_no_graph_availble').'</p></div>';
-								        }else{
-								        	echo '<img src="'.$rep["graph"].'" width="100%" alt="'.$rep["title"].'" title="'.$rep["title"].'" />';
-								        }
-								        echo '</div>
-								                	<h1>	
-								                		'.$currency_marker.$rep["total"].'</h1>
-									                <h2><a href="'.$rep["link"].'">'.$rep["title"].'</a></h2>
-									           	</div>';
-										$i++;
-									}
-								?>
-				            </div> <!-- graph -->
-				            
-				            <div id="b2r_orders">
-				            	<h3>Orders</h3>
-				                <ul>
-				                <?php
-				                	foreach($order_collection as $order){
-				                		echo '	<li>
-							                    	<p class="b2r_acct">
-							                    		<a href="'.$base_url.'&method=order_detail&order_id='.$order["order_id"].'">'.$order["order_id"].'</a>
-							                    	</p>
-							                        <p class="b2r_name">
-							                        	'.$order["customer"].'
-							                        </p>
-							                        <p class="b2r_amt">
-							                        	'.$currency_marker.$order["total"].'
-							                        </p>
-							                        <div class="b2r_clearboth"><!-- --></div>
-							                    </li>';
-				                	}
-				                ?>
-				                </ul>
-				                <p class="b2r_all"><a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order"><?=lang('br_all_orders')?> &raquo;</a></p>
-				            </div> <!-- orders -->
-				            
-				            
-				            <div id="b2r_sales">
-				            	<ul id="db_graph_links">
-				            		<?php
-										$i=0;
-				            			foreach($reports as $rep){
-				            				$class = ($i == 0) ? 'b2r_active' : '';
-			      							echo '	<li class="'.$class.' db_graph_link" data-gid="'.$i.'" >
-								                    	<h1>'.$currency_marker.$rep["total"].'</h1>
-								                        <h2>'.$rep["title"].'</h2>
-								                    </li>';
-											$i++;
-										}
-									?>
-				                </ul>
-				                <div class="b2r_clearboth"><!-- --></div>
-				            </div> <!-- b2r_sales -->
-						</div>
-					 	<div class="b2r_clearboth"><!-- --></div>
+        </div> <!-- b2r_dashboard --> 
 
-                    </div> <!-- b2r_dashboard --> 
 
-					<div class="b2r_clearboth"><!-- --></div>
-
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-
-    	</div> <!-- b2r_main -->
-
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
-    
-</div> <!-- #b2retail -->
 <script type="text/javascript">
 	$(function(){
 		$('#db_graph_links .db_graph_link').bind('click',function(){

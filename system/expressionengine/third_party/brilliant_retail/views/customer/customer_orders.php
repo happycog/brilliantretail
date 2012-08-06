@@ -22,95 +22,49 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-$content = '<table id="order_tbl" cellpadding="0" cellspacing="0" class="mainTable">
-			<thead>
-				<tr>
-					<th style="width:40px">'.lang('br_order_id').'</th>
-					<th style="width:60px">'.lang('br_order_date').'</th>
-					<th>'.lang('br_line_items').'</th>
-					<th>'.lang('br_order_amount').'</th>
-					<th>'.lang('br_order_status').'</th>
-				</tr>
-			<thead>';
 
-$total_value = 0;
+// Header
+	echo $br_header;
+	
+// Create the table
+	$this->table->set_template($cp_table_template);
+   	$this->table->set_heading(
+			   					lang('br_order_id'),
+			   					lang('br_order_date'),
+			   					lang('br_line_items'),
+			   					lang('br_order_amount'),
+			   					lang('br_order_status')
+			   				);
+	
+	$total_value = 0;
 
-foreach($order_collection as $order){
-	$row[] = array(
-						'<a href="'.$base_url.'&method=order_detail&order_id='.$order["order_id"].'">'.$order["order_id"].'</a>', 
-						date('n/d/y',$order["created"]),
-						$order['line_items'],
-						$order["total"],
-						$order["status"]
-					);
-	$total_value += $order["total"];
-}
-$content .= '<tfoot>
-			 	<tr>
-			 		<td colspan="3" style="text-align:right;font-weight:bold;">'.lang('br_total').'</td>
-			 		<td>
-			 			<strong>'.$currency_marker.number_format($total_value,2).'</strong></td>
-			 		<td>
-			 			&nbsp;</td>
-			 	</tr>
-			 </tfoot>
-			 <tbody>';
-			 
-if(isset($row)){
-	foreach($row as $r){
-	$content .= '	<tr>
-						<td>'.$r[0].'</td>
-						<td>'.$r[1].'</td>
-						<td>'.$r[2].'</td>
-						<td>'.$r[3].'</td>
-						<td>'.$r[4].'</td>
-					</tr>';
+	foreach($order_collection as $order){
+		$this->table->add_row(
+								'<a href="'.$base_url.'&method=order_detail&order_id='.$order["order_id"].'">'.$order["order_id"].'</a>', 
+								date('n/d/y',$order["created"]),
+								$order['line_items'],
+								$order["total"],
+								$order["status"]
+							);
+		$total_value += $order["total"];
 	}
-}
-$content .= '		</tbody>
-				</table>';
+	echo $this->table->generate();
+
+// Footer
+	echo $br_footer;
 ?>
-<div id="b2retail">
-
-	<?=$br_header?>
-   
-    <div id="b2r_content">
-
-    	<?=$br_menu?>
-        
-        <div id="b2r_main">
-        
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_settings">
-                
-						<div id="b2r_page" class="b2r_category">
-
-                        	<?=$content?>
-                        	
-                        	<div class="b2r_clearboth"><!-- --></div>
-        				
-                    </div> <!-- b2r_dashboard --> 
-                    
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-
-    	</div> <!-- b2r_main -->
-
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
-    
-</div> <!-- #b2retail -->
 <script type="text/javascript">
 	$(function(){
-		var oTable = $('#order_tbl').dataTable({
+		
+		/*
+			Need to inject the footer with JS cause CI Table doesn't have a footer method 
+		*/
+			$('.mainTable').append('<tfoot><tr><td></td><td></td><td style="text-align:right;font-weight:bold"><strong><?=lang('br_total')?></strong></td><td><?=$currency_marker.number_format($total_value,2)?></td><td></td></tr></tfoot>');
+						
+		/*
+			Build the dynamic table
+		*/
+		var oTable = $('.mainTable').dataTable({
 										"bStateSave": true,
 										"aoColumns": [
 														null, 
@@ -121,8 +75,8 @@ $content .= '		</tbody>
 													]
 									});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#order_tbl_filter input');
-		$('<div style="clear:both"></div>').insertAfter('#order_tbl_filter');
+		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('.mainTable_filter input');
+		$('<div style="clear:both"></div>').insertAfter('.mainTable_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

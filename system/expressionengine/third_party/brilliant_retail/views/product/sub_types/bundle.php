@@ -22,13 +22,13 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
-<div id="sub_type_2" class="subtypes product_edit">
-	<div class="search">
+<div id="sub_type_2" class="subtypes">
+	<div class="br_product_search">
 		<input type="text" id="bundle_search" autocomplete="off" />
 	</div>
-	<div class="result_div product_edit">
+	<div class="result_div">
 		
-		<table id="bundle_result" width="100%" cellpadding="0" cellspacing="0">
+		<table id="bundle_result" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
 					<th><?=lang('nav_br_product')?></th>
@@ -43,7 +43,7 @@
 		</table>
 	
 	</div>
-	<table id="bundle_selected" width="100%" cellpadding="0" cellspacing="0">
+	<table id="bundle_selected" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 		<thead>
 			<tr>
 				<th><?=lang('nav_br_product')?></th>

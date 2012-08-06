@@ -21,37 +21,12 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-?>
-<div id="b2retail">
 
-	<?=$br_header?>
-   
-    <div id="b2r_content">
+// Insert the global header
+	echo $br_header;
 
-    	<?=$br_menu?>
-        
-        <div id="b2r_main">
-        
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_settings">
-
-						<?=$content?>
-                    
-                    </div> <!-- b2r_settings --> 
-                    
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-            
-    	</div> <!-- b2r_main -->
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
-    
-</div> <!-- #b2retail -->
+// Section Content
+	echo $content;
+	
+// Global Footer
+	echo $br_footer;

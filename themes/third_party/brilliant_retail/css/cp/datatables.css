@@ -1,0 +1,136 @@
+/* Datatables */
+.dataTables_length {
+	float: left;
+	width: 150px;
+	margin: 10px 0 3px;
+}
+.dataTables_processing {
+	position:absolute;
+	margin-top: 12px;
+	margin-left: 170px;
+}
+
+.dataTables_info {
+	position: absolute;
+	color:#6B7F86;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:12px;
+	margin: 13px 0 0 60px; 
+	padding:0 8px;
+	text-align:left;
+	vertical-align:middle;
+}
+.dataTables_filter {
+	width: 250px;
+	float: right;
+	text-align:right;
+	margin: 7px 0 3px;
+}
+.dataTables_filter input{
+	width: 50%;
+}
+
+.paging_two_button {
+	margin: 10px 0;
+}
+.paginate_enabled_previous {
+	float: left;
+	display: inline;
+	margin: 0;
+	padding: 0;
+	width: 30px;
+	height: 21px;
+	background: url(../../images/map_products01.gif) -10px -80px no-repeat;
+	border: none; }
+
+.paginate_disabled_previous {
+	float: left;
+	display: inline;
+	margin: 0;
+	padding: 0;
+	width: 30px;
+	height: 21px;
+	background: url(../../images/map_products01.gif) -70px -80px no-repeat;
+	border: none; }
+
+
+.paginate_enabled_next {
+	float: left;
+	display: inline;
+	margin: 0;
+	padding: 0;
+	width: 29px;
+	height: 21px;
+	background: url(../../images/map_products01.gif) -40px -80px no-repeat;
+	border: none; }
+	 
+.paginate_disabled_next {
+	float: left;
+	display: inline;
+	margin: 0;
+	padding: 0;
+	width: 29px;
+	height: 21px;
+	background: url(../../images/map_products01.gif) -100px -80px no-repeat;
+	border: none; }
+
+#b2r_page .b2r_search {
+	float: left;
+	display: inline;
+	margin: 8px 0 0;
+	padding: 5px 5px 0;
+	width: 369px;
+	height: 25px;
+	overflow: hidden;
+	background: url(../../images/map_products01.gif) 0 -112px repeat-x; }
+
+#b2r_page .b2r_search input {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	color: #aaa9a9;
+	border: none;
+	background: #fff; 
+	padding: 0;
+}
+
+#b2r_page .b2r_search_right {
+	float: left;
+	display: inline;
+	margin: 8px 0 0;
+	padding: 0;
+	width: 3px;
+	height: 30px;
+	background: url(../../images/map_products01.gif) -5px -80px no-repeat; }
+
+
+#b2r_page p.b2r_search_btn {
+	float:right;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:14px;
+	margin:1px 5px 0;
+	padding:0;
+}
+
+#b2r_page p.b2r_search_btn a {
+	float: left;
+	display: inline-block;
+	margin: 0;
+	padding: 0 0 0 10px;
+	height: 21px;
+	color: #607982;
+	text-decoration: none;
+	line-height: 21px;
+	background: url(../../images/map_products01.gif) 0 -34px no-repeat; }
+
+#b2r_page p.b2r_search_btn a b {
+	display: inline-block;
+	cursor: pointer;
+	margin: 0;
+	padding: 0 10px 0 0;
+	height: 21px;
+	font-weight: normal;
+	line-height: 21px;
+	background: url(../../images/map_products01.gif) 100% -57px no-repeat; }
+
+
+/* End Datatables */

@@ -22,8 +22,6 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-$cp_pad_table_template["table_open"] = '<table id="order_tbl" cellpadding="0" cellspacing="0" class="mainTable" style="clear:both;">';
-	
 $this->table->set_template($cp_pad_table_template); 
 
 $this->table->set_heading(
@@ -54,68 +52,35 @@ $this->table->set_heading(
 );
 $content = $this->table->generate();
 ?>
-<div id="b2retail">
 
-	<?=$br_header?>
-   
-    <div id="b2r_content">
+<?=$br_header?>
+<?=form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_batch',array('method' => 'POST', 'id' => 'order_form'))?>
 
-    	<?=$br_menu?>
+	<?=$content?>
+
+	<div id="order_status_id">
+		<select name="status_id" id="status_id">
+		<?php 
+			ksort($status);
+			foreach($status as $key => $val){
+				$sel = ($key == $order["status_id"]) ? 'selected="selected"' : '';
+				echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
+			}
+		?>
+		</select>&nbsp;<input type="submit" class="submit" value="<?=lang('update')?>" />
+		<br />
+		<div style="margin:5px 0">
+			<input type="checkbox" name="notify" style="float:left;" />&nbsp;<?=lang('br_status_notify')?>
+		</div>
+	</div>
+	<div class="b2r_clearboth"><!-- --></div>
+</form>
         
-        <div id="b2r_main">
-        
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_settings">
-                
-                		<?=form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_batch',array('method' => 'POST', 'id' => 'order_form'))?>
-                        	
-						<div id="b2r_page" class="b2r_category">
+<?=$br_footer?>
 
-                        	<?=$content?>
-
-							<div id="order_status_id">
-								<select name="status_id" id="status_id">
-								<?php 
-									ksort($status);
-									foreach($status as $key => $val){
-										$sel = ($key == $order["status_id"]) ? 'selected="selected"' : '';
-										echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
-									}
-								?>
-								</select><input type="submit" class="update" value="<?=lang('update')?>" />
-								<br />
-								<div style="margin:5px 0">
-									<input type="checkbox" name="notify" style="float:left;" />&nbsp;<?=lang('br_status_notify')?>
-								</div>
-							</div>
-                			<div class="b2r_clearboth"><!-- --></div>
-        				
-        				</div>
-        				
-        				</form>
-        				
-                    </div> <!-- b2r_dashboard --> 
-                    
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-
-    	</div> <!-- b2r_main -->
-
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
-    
-</div> <!-- #b2retail -->
 <script type="text/javascript">
 	$(function(){
-		var oTable = $('#order_tbl').dataTable({
+		var oTable = $('.mainTable').dataTable({
 													"iDisplayLength": 25, 
 													"aoColumns": [
 																		{ "asSorting": [ "desc", "asc" ] }, 
@@ -141,7 +106,7 @@ $content = $this->table->generate();
 													}
 												});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#order_tbl_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('.mainTable_filter input');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

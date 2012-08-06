@@ -1,0 +1,72 @@
+/* Overview Batch Update */
+
+	#order_status_id {
+		float:right;
+		margin:10px 0;
+	}
+
+/* Order Status Colors */
+	
+	span.order_status_0 { color: #990000; }
+	span.order_status_1 { color: #009900; }
+	span.order_status_2 { color: #9933CC; }
+	span.order_status_3 { color: #CD6E00; }
+	span.order_status_4 { color: #0099FF; }
+	span.order_status_5 { color: #000; }
+
+/* Smaller Contnet Boxes */
+	.small_content_box
+	{
+		height: 100px;
+	}
+ 
+/* Notes */
+	
+	#order_notes,
+	#order_notes_form
+	{
+		border: 1px #DDD solid;
+	}
+	
+	#order_notes table.order_notes {
+		border: none;
+		margin: 0;
+	}
+	
+	#order_notes table.order_notes tr th,
+	#order_notes_form tr th {
+		background:		url(../../images/bg_fieldtype.jpg) repeat-x #F4F6F6;
+		border-bottom: 	1px #CCC solid;
+		color:			#666;
+		padding: 		8px 10px 6px;
+		text-align: 	left;
+	}
+	
+	#order_notes table.order_notes td,
+	#order_notes_form td {
+		vertical-align: top;
+		text-align: left;
+		padding: 8px 10px;
+		border-top: none;
+		border-left: none;
+		border-bottom: 1px #E7E7E7 solid;
+		border-right: 1px #E7E7E7 solid;
+		background: #FFF;
+	}
+	
+	#order_notes table.order_notes td:last-child
+	{
+		border-right:none;
+	}
+
+	#order_notes table.order_notes tr.private_note td {
+		background-image: url(../../images/bg_private.jpg);
+	}
+	
+	#order_notes table.order_notes tr.system_note td {
+		background-image: url(../../images/bg_system.jpg);
+	}	
+
+	#order_notes table.order_notes tr.order_note td {
+		background: 	#FFF;
+	}

@@ -22,36 +22,29 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
-<div id="b2retail">
 
-	<?=$br_header?>
-   
-    <div id="b2r_content">
-
-    	<?=$br_menu?>
-        
-        <div id="b2r_main">
-        
-            <?=$br_logo?>
-            
-            <div id="b2r_panel">
-                
-                <div id="b2r_panel_int">
-                
-                	<div id="b2r_products" class="br_contain">
-							
-							<div id="order_member">
-                            <?php
-                            	echo 	$member_photo. 
-                            			'<h5>'.$order["member"]["br_fname"].' '.$order["member"]["br_lname"].'
-                            			<br />
-										<span><a href="mailto:'.$order["member"]["email"].'">'.$order["member"]["email"].'</a></span></h5>';
+<?=$br_header?>
+			
+	<table id="order_table" width="100%" cellpadding="3" cellspacing="0">
+		<tr>
+			<td colspan="2">
+				<table width="100%" cellpadding="0" cellspacing="0" class="product_edit">
+					<tr>
+						<th>
+							<?=lang('br_order_number')?>:</b> <?=$order["order_id"]?>
+						</th>
+						<th style="text-align:right">
+							<?=lang('br_order_date')?>: <?=date("F jS,y",$order["created"])?>
+						</th>
+					</tr>
+					<tr>
+						<td colspan="2">
+						    <?php
+								echo form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_update_status&order_id='.$hidden["order_id"],array('method' => 'POST', 'id' => 'statusForm'),$hidden);
 							?>
-                            </div>
-                        	<div id="order_status_id">
-							    <?php
-									echo form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_update_status&order_id='.$hidden["order_id"],array('method' => 'POST', 'id' => 'statusForm'),$hidden);
-								?>
+								<b>
+									<?=lang('br_order_status')?>: 
+								</b>
 								<select name="status_id" id="status_id">
 								<?php 
 									ksort($status);
@@ -60,309 +53,276 @@
 										echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
 									}
 								?>
-								</select><input type="submit" class="update" value="<?=lang('update')?>" />
-								<br />
-								<div style="margin:5px 0">
-									<input type="checkbox" name="notify" style="float:left;" />&nbsp;<?=lang('br_status_notify')?>
-								</div>
-								</form>
-							</div>
-                        	
-                        	<div class="b2r_clearleft"><!-- --></div>
+								</select>
+								<input type="checkbox" name="notify" />&nbsp;<?=lang('br_status_notify')?>
+								<input type="submit" class="submit" value="<?=lang('update')?>" />
+							</form>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td width="50%">
+				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
+					<tr>
+						<th>
+							<?=lang('br_ship_to')?></th>
+					</tr>
+					<tr>
+						<td>
+							<p>
+								<b><?=$order["address"][0]["shipping_fname"]?> <?=$order["address"][0]["shipping_lname"]?></b><br />
+								<?=$order["address"][0]["shipping_company"]?><br />
+								<?=$order["address"][0]["shipping_address1"]?><br />
+								<?php 
+									if(trim($order["address"][0]["shipping_address2"]) != '')
+									{
+										echo $order["address"][0]["shipping_address2"].'<br />';
+									}
+								?>
+								<?=$order["address"][0]["shipping_city"]?>, <?=$order["address"][0]["shipping_state"]?> <?=$order["address"][0]["shipping_zip"]?><br />
+								<?=$order["address"][0]["shipping_country"]?><br />
+								<?=$order["address"][0]["shipping_phone"]?>
+							</p></td>
+					</tr>
+				</table></td>
+			<td width="50%">
+				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
+					<tr>
+						<th>
+							<?=lang('br_bill_to')?></th>
+					</tr>
+					<tr>
+						<td>
+							<p>
+								<b><?=$order["address"][0]["billing_fname"]?> <?=$order["address"][0]["billing_lname"]?></b><br />
+								<?=$order["address"][0]["billing_company"]?><br />
+								<?=$order["address"][0]["billing_address1"]?><br />
+								<?php 
+									if(trim($order["address"][0]["billing_address2"]) != '')
+									{
+										echo $order["address"][0]["billing_address2"].'<br />';
+									}
+								?>
+								<?=$order["address"][0]["billing_city"]?>, <?=$order["address"][0]["billing_state"]?> <?=$order["address"][0]["billing_zip"]?><br />
+								<?=$order["address"][0]["billing_country"]?><br />
+								<?=$order["address"][0]["billing_phone"]?>
+						</p></td>
+					</tr>
+				</table></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
+					<tr>
+            			<th>
+            				<?=lang('br_item')?></th>
+            			<th>
+            				<?=lang('br_sku')?></th>
+            			<th>
+            				<?=lang('br_qty')?></th>
+            			<th>
+            				<?=lang('br_price')?></th>
+            		</tr>
+					<?php
+            			$i = 1;
+            			if(isset($order["items"])){
+                			foreach($order["items"] as $item){
+                				$class = ($i % 2 != 0) ? 'odd' : 'even';
+                				echo '	<tr class="'.$class.'">
+                							<td>
+                								<strong>'.$item["title"].'</strong>';
+                				echo '<br />'.$item["options"];
+            					if(trim($item["opts"]) != ''){
+            						echo $item["opts"].'<br />';
+            					}			
+                				echo 			'</td>
+                							<td>
+                								'.$item["sku"].'</td>
+                							<td>
+                								'.$item["quantity"].'</td>
+                							<td>
+                								'.$currency_marker.$item["price"].'</td>
+                						</tr>';
+                				$i++;
+                			}
+						}
+					?>
 
-							<h4 id="status_text">
-                            	<?=lang('br_order_date')?> : <?=date("n/d/y",$order["created"])?><br />
-                            	<?=lang('br_order_number')?> : <?=$order["order_id"]?><br />
-                            </h4>
-                            <div class="b2r_clearboth"><!-- --></div>
-                            
-                            <div class="b2r_line"><!-- --></div>
-													
-                            	<table id="order_table" width="100%" cellpadding="0" cellspacing="0">
-                            		<tr>
-                            			<td colspan="2">
-			                            	<div style="text-align:right;">
-												<?php
-													if($order["order_total_due"] > 0){
-														echo '<a href="'.$base_url.'&method=order_detail_add_payment&order_id='.$order["order_id"].'" class="button submit">'.lang('br_add_payment').'</a>';					
-													}
-												?>
-												<a href="<?=BASE?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id=<?=$order["order_id"]?>&print=true" class="button submit" target="_blank"><?=lang('print')?></a>
-											</div>
-                            			</td>
-                            		</tr>
-                            		<tr>
-                            			<td width="50%">
-                            				<table width="100%" class="subOrder" cellpadding="0" cellspacing="0">
-                            					<tr>
-                            						<th>
-                            							<?=lang('br_ship_to')?></th>
-                            					</tr>
-                            					<tr>
-                            						<td>
-														<p>
-															<b><?=$order["address"][0]["shipping_fname"]?> <?=$order["address"][0]["shipping_lname"]?></b><br />
-															<?=$order["address"][0]["shipping_company"]?><br />
-															<?=$order["address"][0]["shipping_address1"]?><br />
-															<?php 
-																if(trim($order["address"][0]["shipping_address2"]) != '')
-																{
-																	echo $order["address"][0]["shipping_address2"].'<br />';
-																}
-															?>
-															<?=$order["address"][0]["shipping_city"]?>, <?=$order["address"][0]["shipping_state"]?> <?=$order["address"][0]["shipping_zip"]?><br />
-															<?=$order["address"][0]["shipping_country"]?><br />
-															<?=$order["address"][0]["shipping_phone"]?>
-														</p></td>
-                            					</tr>
-                            				</table></td>
-                            			<td width="50%">
-                            				<table width="100%" class="subOrder" cellpadding="0" cellspacing="0">
-                            					<tr>
-                            						<th>
-                            							<?=lang('br_bill_to')?></th>
-                            					</tr>
-                            					<tr>
-                            						<td>
-														<p>
-															<b><?=$order["address"][0]["billing_fname"]?> <?=$order["address"][0]["billing_lname"]?></b><br />
-															<?=$order["address"][0]["billing_company"]?><br />
-															<?=$order["address"][0]["billing_address1"]?><br />
-															<?php 
-																if(trim($order["address"][0]["billing_address2"]) != '')
-																{
-																	echo $order["address"][0]["billing_address2"].'<br />';
-																}
-															?>
-															<?=$order["address"][0]["billing_city"]?>, <?=$order["address"][0]["billing_state"]?> <?=$order["address"][0]["billing_zip"]?><br />
-															<?=$order["address"][0]["billing_country"]?><br />
-															<?=$order["address"][0]["billing_phone"]?>
-													</p></td>
-                            					</tr>
-                            				</table></td>
-                            		</tr>
-                            		<tr>
-                            			<td colspan="2"  style="border-bottom-width:0">
-                            				<table width="100%" cellpadding="0" cellspacing="0">
-                            					<tr>
-			                            			<th>
-			                            				<?=lang('br_item')?></th>
-			                            			<th>
-			                            				<?=lang('br_sku')?></th>
-			                            			<th>
-			                            				<?=lang('br_qty')?></th>
-			                            			<th>
-			                            				<?=lang('br_price')?></th>
-			                            		</tr>
-                            					<?php
-			                            			$i = 1;
-			                            			if(isset($order["items"])){
-				                            			foreach($order["items"] as $item){
-				                            				$class = ($i % 2 != 0) ? 'odd' : 'even';
-				                            				echo '	<tr class="'.$class.'">
-				                            							<td>
-				                            								<strong>'.$item["title"].'</strong><br />
-				                            								'.$item["options"];
-				                            					if(trim($item["opts"]) != ''){
-				                            						echo $item["opts"].'<br />';
-				                            					}			
-				                            				echo 			'</td>
-				                            							<td>
-				                            								'.$item["sku"].'</td>
-				                            							<td>
-				                            								'.$item["quantity"].'</td>
-				                            							<td>
-				                            								'.$currency_marker.$item["price"].'</td>
-				                            						</tr>';
-				                            				$i++;
-				                            			}
-													}
-												?>
+					<tr>
+						<td colspan="3" class="totals" style="text-align:right">
+							<p><?=lang('br_subtotal')?> :</p>
+							<p><?=lang('br_discount')?> :</p>
+							<p><?=lang('br_shipping')?> :</p>
+							<p><?=lang('br_tax')?> :</p>
+							<p><b><?=lang('br_total')?> :</b></p>
+							<p><b><?=lang('br_total_paid')?> :</b></p>
+							<p><b><?=lang('br_total_due')?> :</b></p>
+						</td>
+						<td class="totals">
+							<p><?=$currency_marker?><?=$order["base"]?></p>
+							<p><?=$currency_marker?><?=$order["discount"]?></p>
+							<p><?=$currency_marker?><?=$order["shipping"]?></p>
+            				<p><?=$currency_marker?><?=$order["tax"]?></p>
+            				<p><b><?=$currency_marker?><?=$order["order_total"]?></b></p>
+            				<p><b><?=$currency_marker?><?=$order["order_total_paid"]?></b></p>
+            				<p><b><?=$currency_marker?><?=$order["order_total_due"]?></b></p>
+            			</td>
+					</tr>
+				</table></td>
+		</tr>
+		<tr>
+			<td width="50%" valign="top">
+				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
+					<tr>
+						<th>
+							<?=lang('br_payment_info')?></th>
+					</tr>
+					<tr>
+						<td class="small_content_box">
+							<?php
+								$d = unserialize($order["payment"][0]["details"]);
+								foreach($d as $key => $val){
+									echo '<b>'.lang(strtolower(str_replace(" ","_",trim($key)))).'</b> : '.$val.'<br />';
+								}
+							?></td>
+					</tr>
+				</table></td>
+			<td width="50%" valign="top">
+				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0"> 
+					<tr>
+						<th>
+							<?=lang('br_shipping')?></th>
+					</tr>
+					<tr>
+						<td class="small_content_box"> 
+							<?php 
+								$list = array(
+												'Method' 	=> strtoupper($order["shipment"][0]["method"]),
+												'label' 	=> $order["shipment"][0]["label"] 
+											);
 
-												<tr>
-													<td colspan="3" class="totals" style="text-align:right">
-														<p><?=lang('br_subtotal')?> :</p>
-														<p><?=lang('br_discount')?> :</p>
-														<p><?=lang('br_shipping')?> :</p>
-														<p><?=lang('br_tax')?> :</p>
-														<p><b><?=lang('br_total')?> :</b></p>
-														<p><b><?=lang('br_total_paid')?> :</b></p>
-														<p><b><?=lang('br_total_due')?> :</b></p>
-													</td>
-													<td class="totals">
-														<p><?=$currency_marker?><?=$order["base"]?></p>
-														<p><?=$currency_marker?><?=$order["discount"]?></p>
-														<p><?=$currency_marker?><?=$order["shipping"]?></p>
-			                            				<p><?=$currency_marker?><?=$order["tax"]?></p>
-			                            				<p><b><?=$currency_marker?><?=$order["order_total"]?></b></p>
-			                            				<p><b><?=$currency_marker?><?=$order["order_total_paid"]?></b></p>
-			                            				<p><b><?=$currency_marker?><?=$order["order_total_due"]?></b></p>
-			                            			</td>
-												</tr>
-                            				</table></td>
-                            		</tr>
-                            		<tr>
-                            			<td width="50%">
-                            				<table width="100%" cellpadding="0" cellspacing="0">
-                            					<tr>
-                            						<th>
-                            							<?=lang('br_payment_info')?></th>
-                            					</tr>
-                            					<tr>
-                            						<td>
-                            							<?php
-                            								$d = unserialize($order["payment"][0]["details"]);
-                            								foreach($d as $key => $val){
-                            									echo '<b>'.lang(strtolower(str_replace(" ","_",trim($key)))).'</b> : '.$val.'<br />';
-                            								}
-                            							?></td>
-                            					</tr>
-                            				</table></td>
-                            			<td width="50%">
-                            				<table width="100%" id="order_totals" cellpadding="0" cellspacing="0"> 
-                            					<tr>
-                            						<th>
-                            							<?=lang('br_shipping')?></th>
-                            					</tr>
-                            					<tr>
-                            						<td>
-                            							<?php 
-                            								$list = array(
-                            												'Method' 	=> strtoupper($order["shipment"][0]["method"]),
-                            												'label' 	=> $order["shipment"][0]["label"] 
-                            											);
+								foreach($list as $key => $val){
+									echo '<b>'.lang($key).'</b> : '.$val.'<br />';
+								}
+							?></td>
+					</tr>
+				</table></td>
+		</tr>  
+  		<tr>
+			<td colspan="2">
+					<?php
+						echo form_open_multipart('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_add_note',array('method' => 'POST', 'id' => 'noteForm'),$hidden);
+					?>
+							<table id="order_notes_form" width="100%" class="order_notes" cellpadding="0" cellspacing="0"> 
+								<tr>
+									<th colspan="2">
+										<?=lang('br_order_notes')?></th>
+								</tr>
+								<tr>
+									<td>
+										<b><?=lang('br_order_note')?></b></td>
+									<td>
+											<textarea name="order_note"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<b><?=lang('br_note_private')?></b></td>
+									<td>
+										<input type="checkbox" value="1" name="isprivate" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<b><?=lang('br_order_note_file')?></b></td>
+									<td>
+											<input type="file" name="order_note_file" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<b><?=lang('br_note_notify')?></b></td>
+									<td>
+										<input type="checkbox" name="order_note_notify" />
+									</td>
+								</tr>
 
-                            								foreach($list as $key => $val){
-                            									echo '<b>'.lang($key).'</b> : '.$val.'<br />';
-                            								}
-                            							?></td>
-                            					</tr>
-                            				</table></td>
-                            		</tr>  
-                              		<tr>
-                            			<td colspan="2">
-                            				<table width="100%" cellpadding="0" cellspacing="0">
-                            					<tr>
-                            						<th>
-                            							<?=lang('br_order_notes')?></th>
-                            					</tr>
-                            					<tr>
-                            						<td>
-                            							<div id="order_note_form">
-                            							<?php
-                            								echo form_open_multipart('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_add_note',array('method' => 'POST', 'id' => 'noteForm'),$hidden);
-														?>
-                            							<table width="100%" cellpadding="0" cellspacing="0"> 
-                            								<tr>
-                            									<td>
-                            										<b><?=lang('br_order_note')?></b></td>
-                            									<td>
-																		<textarea name="order_note"></textarea>
-                            									</td>
-                            								</tr>
-                            								<tr>
-                            									<td>
-                            										<b><?=lang('br_note_private')?></b></td>
-                            									<td>
-																	<input type="checkbox" value="1" name="isprivate" />
-																</td>
-                            								</tr>
-                            								<tr>
-                            									<td>
-                            										<b><?=lang('br_order_note_file')?></b></td>
-                            									<td>
-																		<input type="file" name="order_note_file" />
-                            									</td>
-                            								</tr>
-                            								<tr>
-                            									<td>
-                            										<b><?=lang('br_note_notify')?></b></td>
-                            									<td>
-																	<input type="checkbox" name="order_note_notify" />
-																</td>
-                            								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td>
+										<input type="submit" value="<?=lang('br_add_note')?>" />
+									</td>
+								</tr>
+							</table>
+							<?php
+								form_close();
+							?></td>
+					</tr>
+					<?php
+						if(count($order["notes"]) > 0){
+							echo '	<tr>
+										<td colspan="2">
+											<div id="order_notes">';
+						}
+						
+						$i = 0;
+						foreach($order["notes"] as $n){ 
+							if(isset($n["order_note"])){
+    							if($n["isprivate"] == 1){
+    								$class = 'private_note';
+    							}elseif($n["isprivate"] == 2){
+    								$class = 'system_note';
+    							}else{
+    								$class = 'order_note';
+    							}
+    							
+    							$note = $n["order_note"];
+    							if($n["filenm"] != ''){
+    								$note .= '<br /><a href="/media/attachments/'.$n["filenm"].'" target="_blank">'.lang('br_attachment').'</a>';
+    							}
+    							
+    							if($n["member_id"] == ''){
+    								$by 	= date('n/d/y g:i:s a',$n["created"]);
+    								$remove = '';
+    							}else{
+    								$by 	= lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.date('n/d/y g:i:s a',$n["created"]);
+    								$remove = '<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'">'.lang('remove').'</a>';
+    							}
+    							
+    							echo '	<table width="100%" class="order_notes" cellpadding="0" cellspacing="0">
+        									<thead>
+        										<tr>
+        											<th>
+        												'.$by.'</th>
+        											<th width="10%" style="text-align:right">
+        												'.$remove.'</th>
+        										</tr>
+        									</thead>
+        									<tbody>
+            									<tr class="'.$class.'">
+            										<td colspan="2">
+            											'.nl2br($note).'</td>
+            									</tr>
+        									</tbody>
+        								</table>';
+    							$i++;
+							}
+						}
 
-                            								<tr>
-                            									<td>&nbsp;</td>
-                            									<td>
-																	<input type="submit" value="<?=lang('br_add_note')?>" />
-                            									</td>
-                            								</tr>
-                            							</table>
-                            							<?php
-                            								form_close();
-                            							?>
-                            							</div></td>
-                            					</tr>
-                            					<tr>
-                            						<td id="order_notes">
-                            					<?php
-                            						$i = 0;
-                            						foreach($order["notes"] as $n){ 
-                            							if(isset($n["order_note"])){
-	                            							if($n["isprivate"] == 1){
-	                            								$class = 'private_note';
-	                            							}elseif($n["isprivate"] == 2){
-	                            								$class = 'system_note';
-	                            							}else{
-	                            								$class = 'order_note';
-	                            							}
-	                            							
-	                            							$note = $n["order_note"];
-	                            							if($n["filenm"] != ''){
-	                            								$note .= '<br /><a href="/media/attachments/'.$n["filenm"].'" target="_blank">'.lang('br_attachment').'</a>';
-	                            							}
-	                            							
-	                            							if($n["member_id"] == ''){
-	                            								$by 	= date('n/d/y g:i:s a',$n["created"]);
-	                            								$remove = '';
-	                            							}else{
-	                            								$by 	= lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.date('n/d/y g:i:s a',$n["created"]);
-	                            								$remove = '<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'">'.lang('remove').'</a>';
-	                            							}
-	                            							
-	                            							echo '	<table width="100%" cellspacing="0">
-		                            									<thead>
-		                            										<tr>
-		                            											<th>
-		                            												'.$by.'</th>
-		                            											<th width="10%" style="text-align:right">
-		                            												'.$remove.'</th>
-		                            										</tr>
-		                            									</thead>
-		                            									<tbody>
-			                            									<tr class="'.$class.'">
-			                            										<td colspan="2">
-			                            											'.nl2br($note).'</td>
-			                            									</tr>
-		                            									</tbody>
-		                            								</table>';
-	                            							$i++;
-														}
-                            						}
-                            					?>
-                            							</table>
+						if(count($order["notes"]) > 0){
+							echo '	</div>
+											</td>
+									</tr>';
+						}
+					?>
+		</table>
 
-                            						</td>
-                            					</tr>
-                            				</table></td> 
-                            		</tr>                          		
-                            		
-                            	</table>
+<?=$br_footer?>	
 
-                        	<div class="b2r_clearboth"><!-- --></div>
-
-                    </div> <!-- b2r_dashboard --> 
-                    
-                </div> <!-- b2r_panel_int -->
-            </div> <!-- b2r_panel -->
-
-    	</div> <!-- b2r_main -->
-
-        <div class="b2r_clearboth"><!-- --></div>
-        
-        <?=$br_footer?>
-        
-    </div> <!-- b2r_content -->
-    
-</div> <!-- #b2retail -->
+<script type="text/javascript">
+	$(function(){
+		$('.rightNav a.submit:eq(1)').attr('target','_blank');
+	});
+</script>

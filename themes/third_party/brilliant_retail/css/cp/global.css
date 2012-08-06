@@ -1,0 +1,63 @@
+/* Global Content */
+
+	.nodisplay {
+		display:none;
+	}
+
+	#mainContent table.mainTable {
+		clear:both;
+	}
+
+	.b2r_clearboth {
+		clear: both;
+		height: 1%; }
+	
+	.b2r_clearleft {
+		clear: left;
+		height: 1%; }
+	
+	.b2r_clearright {
+		clear: right;
+		height: 1%; }
+
+	#bottom_buttons {
+		padding:o;
+		text-align: right;
+	}	
+
+/* End Global Content */
+
+/* Buy Message */
+	#mainContent .pageContents p#b2r_buy 
+	{
+		background-image: url(../../images/bg_private.jpg);
+		margin:	0 0 7px;
+		padding: 7px;
+		border: #E7E7E7 solid;
+		border-width: 1px;
+	}
+
+
+	#status_message {
+		font-weight: bold;
+		background-image: url(../../images/bg_system.jpg);
+		margin:	0 0 7px;
+		padding: 7px;
+		border: 1px #99cc99 solid;
+		color: #006600;
+	}
+	
+	#mainContent .pageContents p#b2r_status_alert {
+		float: left;
+		margin: 0;
+		padding: 0 15px 0 0;
+		min-width: 200px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 15px;
+		color: #FF0000;
+		line-height: 31px;
+		background-color: #2A3940;
+	}
+
+
+/* End Buy Message */

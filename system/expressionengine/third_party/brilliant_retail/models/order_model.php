@@ -117,7 +117,7 @@ class Order_model extends CI_Model {
 			
 			$query = $this->db->get();
 			$i = 0;
-			$order["notes"][0] = array();
+			$order["notes"] = array();
 			foreach($query->result_array() as $val){
 				$order["notes"][$i] = $val; 
 				$order["notes"][$i]["order_created"] = $val["created"]; 

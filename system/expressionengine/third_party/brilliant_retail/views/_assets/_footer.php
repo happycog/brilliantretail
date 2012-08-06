@@ -22,10 +22,8 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
+<div class="b2r_clearboth"><!-- clear footer !--></div>
 <div id="b2r_botleft">
-	<a href="http://www.brilliantretail.com/" target="_blank"><img id="b2r_botleft_logo" src="<?=$theme?>images/0.gif" alt="Brilliant Retail" /></a>
-    <p id="b2r_botleft_version"><?=$version?></p>
-    <a href="http://support.brilliantretail.com" target="_blank"><img id="b2r_botleft_con" src="<?=$theme?>images/0.gif" alt="Brilliant Retail" /></a>
-    <div class="b2r_clearboth"><!-- --></div>
+	<a href="http://www.brilliantretail.com/" target="_blank"><?=$version?></a>
 </div>
 <!-- b2r_botleft -->

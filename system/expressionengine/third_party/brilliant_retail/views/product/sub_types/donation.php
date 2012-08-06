@@ -26,7 +26,7 @@ $donation = $products[0]["donation"][0];
 
 <div id="sub_type_7" class="subtypes">
 
-	<table width="100%" class="subTable" cellspacing="0" cellpadding="0" id="donation_selected">
+	<table width="100%" class="product_edit" cellspacing="0" cellpadding="0" id="donation_selected">
 		<tbody>
 			<tr>
 				<th colspan="2"><?=lang('br_donation_opt_title')?></th>

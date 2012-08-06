@@ -1,0 +1,223 @@
+/* Dashboard */
+
+#b2r_dboard {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	overflow: hidden;
+}
+	
+#b2r_dboard #b2r_main {
+	margin: 0 0 4px 203px;
+	padding: 4px;
+	zoom: 1;
+	border: 1px solid #0f5571; }
+
+#b2r_dboard #b2r_graph div div {
+    border-width:0;
+    padding: 0;
+}
+
+#b2r_dboard #b2r_graph div div.no_graph {
+	text-align: center;
+	padding: 150px 0 5px;
+	color: #999;
+	border: 0px;
+	background: url(../../images/graphdefault.png) repeat-x bottom left transparent;
+}
+#b2r_dboard #b2r_graph div div.no_graph p {
+	background: url(../../images/graphdefaultalert.png) repeat-x bottom left transparent;
+	width: 218px;
+	padding: 28px 0;
+	margin: 0 auto;
+	color: #CCC;
+}
+
+#b2r_dboard #b2r_graph {
+	margin: 0;
+	padding: 3px;
+	background: #e0e4e5; }
+
+#b2r_dboard #b2r_graph div {
+	padding:5px;
+	background:#fff;
+	border:1px #bfbfbf solid;
+}
+
+#b2r_dboard #b2r_graph p.b2r_hide {
+	margin: 0;
+	padding: 0;
+	font-size: 10px;
+	color: #1f2b33;
+	text-align: right; }
+	
+#b2r_dboard #b2r_graph h1 {
+	margin: 15px 0 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	color: #1f2b33;
+	font-weight: bold;
+	text-align: center; }
+
+#b2r_dboard #b2r_graph h2 {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	color: #1f2b33;
+	font-weight: normal;
+	text-align: center; }
+
+#b2r_dboard #b2r_graph h5 {
+	margin: 5px 0 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #1f2b33;
+	font-weight: normal;
+	text-align: center; }
+
+#b2r_dboard #b2r_graph a {
+	color: #1f2b33;
+	text-decoration: none; }
+
+
+#b2r_dboard #b2r_orders {
+	position: relative;
+	float: right;
+	display: inline;
+	margin: 2px;
+	padding: 8px 0 10px 8px;
+	width: 237px;
+	overflow: hidden;
+	background: #E2E8EB;
+	min-height: 185px; }
+
+#b2r_dboard #b2r_orders h3 {
+	color:#1f2b33;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:14px;
+	font-weight:bold;
+	margin:0;
+	padding:5px 8px;
+}
+
+#b2r_dboard #b2r_orders p.b2r_hide {
+	position: absolute;
+	top: 10px;
+	right: 8px;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #1f2b33;
+	text-align: right; }
+
+#b2r_dboard #b2r_orders p.b2r_hide a {
+	color: #1f2b33;
+	text-decoration: none; }
+
+#b2r_dboard #b2r_orders ul {
+	margin: 0;
+	padding: 3px 0 0;
+	list-style: none; }
+
+#b2r_dboard #b2r_orders ul li {
+	margin: 0;
+	padding: 5px 0 0;
+	line-height: 1.25em; }
+
+#b2r_dboard #b2r_orders ul li p {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #1f2b33; }
+
+#b2r_dboard #b2r_orders ul li p.b2r_acct {
+	margin: 0 0 0 8px;
+	float: left;
+	width: 37px; }
+
+#b2r_dboard #b2r_orders ul li p.b2r_name {
+	float: left;
+	width: 97px; }
+
+#b2r_dboard #b2r_orders ul li p.b2r_amt {
+	float: left;
+	width: 51px; }
+
+#b2r_dboard #b2r_orders p.b2r_all {
+	margin: 10px 0 0 8px;
+	float: left;
+}
+
+#b2r_dboard #b2r_orders ul li p a {
+	color: #1f2b33;
+	text-decoration: underline; }
+
+#b2r_dboard #b2r_sales {
+	margin: 0 250px 0 0;
+	padding: 0; }
+
+#b2r_dboard #b2r_sales ul {
+	margin: 0;
+	padding: 0;
+	list-style: none; }
+
+#b2r_dboard #b2r_sales ul li {
+	margin: 1px 0 0;
+	padding: 7px 15px 7px 10px;
+	background: #F4F6F6;
+	border: 1px solid #F4F6F6; 
+	cursor: pointer;	
+}
+
+#b2r_dboard #b2r_sales ul li:hover, 
+#b2r_dboard #b2r_sales ul li.b2r_active {
+	background: #E2E8EB;
+}
+
+#b2r_dboard #b2r_sales ul li h1 {
+	float: left;
+	margin: 0;
+	padding: 0;
+	width: 80px;
+	overflow: hidden;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #1f2b33;
+	font-weight: bold;
+	line-height: 24px;
+	text-align: left; }
+
+#b2r_dboard #b2r_sales ul li h2 {
+	margin: 0 0 0 90px;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #1F2B33;
+	font-weight: normal;
+	text-align: left;
+	line-height: 24px;
+}
+
+#b2r_dboard #b2r_sales ul li h5 {
+	float: right;
+	margin: 0;
+	padding: 0;
+	width: 40px;
+	overflow: hidden;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #1f2b33;
+	font-weight: normal;
+	text-align: right;
+	line-height: 24px; }
+
+#b2r_dboard #b2r_sales ul li a {
+	color: #1f2b33;
+	text-decoration: none; }
+
+/* end of Dashboard */

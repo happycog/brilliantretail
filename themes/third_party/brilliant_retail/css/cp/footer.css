@@ -1,0 +1,13 @@
+/* Footer */
+	#b2r_botleft {
+		background: url(../../images/bg_b2r_botleft.png) 0 0 no-repeat; 
+		margin-top: 25px;
+		width: 200px;
+	}
+	#mainContent .pageContents #b2r_botleft a {
+		display: block;
+		padding: 17px 0 5px 142px;
+		font-size: 10px;
+		color: #FFF;
+	}
+/* End Footer */
