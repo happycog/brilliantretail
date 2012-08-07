@@ -24,7 +24,9 @@
 
 // Header
 	echo $br_header;
-	
+
+	$cp_table_template["table_open"] = '<table id="customerTable" cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
+
 // Create the table
 	$this->table->set_template($cp_table_template);
    	$this->table->set_heading(
@@ -43,7 +45,7 @@
 ?>
 <script type="text/javascript">
 	$(function(){
-		var oTable = $('.mainTable').dataTable({
+		var oTable = $('#customerTable').dataTable({
 													"iDisplayLength": 25, 
 													"aoColumns": [
 																		null,
@@ -70,7 +72,7 @@
 													
 													});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('.mainTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#customerTable_filter input');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

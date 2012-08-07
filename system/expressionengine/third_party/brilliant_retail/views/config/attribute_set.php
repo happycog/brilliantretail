@@ -22,35 +22,32 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
-<div id="b2r_page" class="b2r_category">
-    <table id="attributeSetTable" class="mainTable" cellpadding="0" cellspacing="0">
-    	<thead>
-	    	<tr>
-	    		<th style="width:30px;">
-	    			<?=lang('id')?></th>
-	    		<th>
-	    			<?=lang('br_title')?></th>
-	    	</tr>
-		</thead>
-    	<tbody>
-	    	<?php
-		    	foreach($attributes as $a){
-					$title 	= '<a href="'.$base_url.AMP.'method=config_attributeset_edit&attribute_set_id='.$a["attribute_set_id"].'">'.$a["title"].'</a>';	
-					echo '	<tr>
-					        	<td>
-					        		'.$a["attribute_set_id"].'</td>
-					        	<td>'.$title.'</td>
-					        </tr>';
-				}
-	    	?>
-		</tbody>
-    </table>
-</form>                     
+<table id="attributeSetTable" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
+	<thead>
+    	<tr>
+    		<th style="width:30px;">
+    			<?=lang('id')?></th>
+    		<th>
+    			<?=lang('br_title')?></th>
+    	</tr>
+	</thead>
+	<tbody>
+    	<?php
+	    	foreach($attributes as $a){
+				$title 	= '<a href="'.$base_url.AMP.'method=config_attributeset_edit&attribute_set_id='.$a["attribute_set_id"].'">'.$a["title"].'</a>';	
+				echo '	<tr>
+				        	<td>
+				        		'.$a["attribute_set_id"].'</td>
+				        	<td>'.$title.'</td>
+				        </tr>';
+			}
+    	?>
+	</tbody>
+</table>
 <script type="text/javascript">
 	$(function(){
 		$('#attributeSetTable').tablesorter({
-			textExtraction: "complex",			
-			widgets: ["zebra"]
+			textExtraction: "complex" 			
 		});
 	});
 </script>

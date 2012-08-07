@@ -30,8 +30,8 @@
 					array(	'config_id' => $config_id));
 ?>
 <div id="b2r_page" class="b2r_category">
-	<table id="gateway_tbl" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
-    	<thead>
+	<table id="gateway_tbl" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
+		<thead>
     		<tr>
     			<th colspan="2">
     				<?=$title?></th>
@@ -97,7 +97,7 @@
 	    	?>
 		</tbody>
     </table>
-	<div id="header_buttons">
+	<div id="bottom_buttons">
 	    <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
 		<div class="b2r_clearboth"><!-- --></div>
     </div>

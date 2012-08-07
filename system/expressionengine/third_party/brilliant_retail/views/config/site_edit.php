@@ -22,6 +22,8 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
+	$cp_pad_table_template["table_open"] = '<table cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
+	
 	$this->table->set_template($cp_pad_table_template);
 	
 	$this->table->set_heading(lang('br_general_configuration'),'');
@@ -162,16 +164,12 @@
 
 	
 	<?=$general?>
-
-	<p>&nbsp;</p>
 	
 	<?=$catalog?>
 
-	<p>&nbsp;</p>
-
 	<?=$seo?>
 	
-	<div id="header_buttons">
+	<div id="bottom_buttons">
 	    <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
     	<div class="b2r_clearboth"><!-- --></div>
     </div>

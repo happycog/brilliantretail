@@ -59,8 +59,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											'config_shipping_update','config_site_update','config_tax_update',
 											"order_ajax","customer_ajax","product_ajax","index_products","order_detail",
 											"order_detail_add_payment","order_detail_add_payment_process",
-											"order_entry",
-											"order_batch","order_license_manager", 
+											"order_batch", 
 											"customer_orders","product_edit", "product_new","promo_new","promo_edit",
 											"report_detail","config_feeds_edit","config_attribute_create","config_attribute_edit",
 											"config_attributeset_create","config_attributeset_edit","config_attributeset_delete",
@@ -239,14 +238,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 			$this->EE->cp->set_breadcrumb($this->base_url.'&method=orders', 'BrilliantRetail '.lang('nav_br_order'));
 		
-			// Add the create product button
-				
-				$this->EE->cp->set_right_nav(array(
-					'nav_br_order_new_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_entry',
-					'nav_br_order_license_manager' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_license_manager'
-				));
-			
-				$this->vars['action']	= $this->base_url.'&method=order_batch';
+			$this->vars['action']	= $this->base_url.'&method=order_batch';
 
 			// ajax url to get order_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
@@ -607,33 +599,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$_SESSION["message"] = lang('br_order_remove_note_success');
 				header('location: '.$this->base_url.'&method=order_detail&order_id='.$order_id);
 				exit();
-		}
-		
-		public function order_license_manager(){
-			// Page title
-				$this->vars['cp_page_title'] = lang('nav_br_order_license_manager');
-				
-			// Add the create product button
-				$this->EE->cp->set_right_nav(array(
-					'nav_br_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order'
-				));
-				
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-				return $this->_view('order/license_manager', $this->vars);	
-		}
-		
-		
-		function order_entry(){
-			return $this->_view('order/entry/index', $this->vars);	
-		}
-		
-		function order_entry_items(){
-			return $this->_view('order/admin_items', $this->vars);	
-		}
-		function order_entry_checkout()
-		{
-			return $this->_view('order/admin_checkout', $this->vars);	
 		}
 		
 	/************************/

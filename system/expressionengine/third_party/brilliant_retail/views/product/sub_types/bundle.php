@@ -62,7 +62,7 @@
 									'.$b["title"].'</td>
 								<td>
 									'.$product_type[$b["type_id"]].'</td>
-								<td width="10%" class="move_related_row" style="text-align:center"><img src="'.$theme.'images/icon_move.png" /></td>
+								<td width="10%" class="move_related_row" style="text-align:center"><img src="'.$theme.'images/move.png" /></td>
 								<td width="10%">
 									<a class="remove_bundle" href="#">'.lang('delete').'</a><input type="hidden" value="'.$b["product_id"].'" name="bundle[]">
 								</td>
@@ -127,7 +127,7 @@
 		new_row.addClass('odd');
 		new_row.find('td:eq(2)').remove();
 		new_row.find('td:eq(0)').attr({'style':'width:auto','width':'60%'});
-		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/icon_move.png" /><input type="hidden" name="bundle[]" value="'+product_id+'"></td><td width="10%"><a href="#" class="remove_bundle"><?=lang('delete')?></a></td>').appendTo(new_row);
+		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/move.png" /><input type="hidden" name="bundle[]" value="'+product_id+'"></td><td width="10%"><a href="#" class="remove_bundle"><?=lang('delete')?></a></td>').appendTo(new_row);
 		$(new_row).appendTo(bundleSelected);
 		row.remove();
 		_remove_bundle();

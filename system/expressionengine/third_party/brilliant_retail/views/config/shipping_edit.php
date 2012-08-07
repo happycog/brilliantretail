@@ -29,11 +29,12 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
 				array(	'config_id' => $config_id));
 ?>
 <div id="b2r_page" class="b2r_category">
-	<table id="shipping_tbl" class="mainTable" cellspacing="0" cellpadding="0" style="clear:both">
-    	<thead>
+	<table id="shipping_tbl" class="product_edit" width="100%" cellspacing="0" cellpadding="0">
+		<thead>
     		<tr>
-    			<th colspan="2">
+    			<th width="35%">
     				<?=$title?></th>
+    			<th>&nbsp;</th>
     		</tr>
     	</thead>
     	<tbody>
@@ -87,7 +88,7 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
 	    	?>
 		</tbody>
     </table>
-	<div id="header_buttons">
+	<div id="bottom_buttons">
 		<?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
     	<div class="b2r_clearboth"><!-- --></div>
     </div>

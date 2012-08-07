@@ -53,6 +53,7 @@ $lang = array(
 	'br_show' 	=> 'Show', 
 	'br_cancel' => 'Cancel',
 	'br_invalid_expired_license' => 'invalid license',
+	'br_actions'	=> 'Actions',
 	
 // Main Menu Buttons
 	'nav_br_store' 				=> 'Store',
@@ -60,6 +61,7 @@ $lang = array(
 	'nav_br_order' 				=> 'Orders', 
 	'nav_br_customer' 			=> 'Customers', 
 	'nav_br_customer_customer' 	=> 'Customers',
+	'nav_br_customer_orders'	=> 'Customer Orders', 
 	'nav_br_product' 			=> 'Products',
 	'nav_br_products' 			=> 'Products',
 	'nav_br_promotion' 			=> 'Promotions',
@@ -428,6 +430,7 @@ $lang = array(
 		'br_level_2' => 'Level 2',
 		'br_level_3' => 'Level 3',
 		'br_level_4' => 'Level 4',
+		'br_category_products' => 'Category Products', 
 		'br_template_path' => 'Template&nbsp;Path',
 		'br_add_category' => 'New Category',
 		'br_delete_category' => 'Delete Category',

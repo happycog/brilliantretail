@@ -30,11 +30,13 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
                 array(  'email_id' => $email["email_id"]));
 ?>
 <div id="b2r_page" class="b2r_category">
-    <table id="attribute_tbl" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
+    <table id="attribute_tbl" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                <th colspan="2">
+                <th width="35%">
                     <?=lang("br_".$email["title"])?></th>
+				<th>
+					&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -78,11 +80,11 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
                         ?>
                         </ul>
                     </div>
-                    <textarea id="content" name="content" class="{required:true}" style="height: 450px"><?=$email["content"]?></textarea></td>
+                    <textarea id="content" name="content" class="ckeditor" style="height: 450px"><?=$email["content"]?></textarea></td>
             </tr>
         </tbody>
     </table>
-    <div id="header_buttons">
+    <div id="bottom_buttons">
         <?=form_submit(array('name' => 'submit', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
         <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
         <div class="b2r_clearboth"><!-- --></div>

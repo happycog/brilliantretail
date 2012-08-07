@@ -61,8 +61,7 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 						<th width="15%"><?=lang('br_large')?></th>
 						<th width="15%"><?=lang('br_thumbnail')?></th>
 						<th width="10%"><?=lang('br_exclude')?></th>
-						<th width="5%"><?=lang('br_sort')?></th>
-						<th width="10%"><?=lang('delete')?></th>
+						<th width="5%" colspan="2"><?=lang('br_actions')?></th>
 					</tr>
 				</thead>
 				<?php
@@ -98,8 +97,8 @@ $hide_header = (count($images) == 0) ? 'style="display:none"' : '';
 								<td><input type="radio" name="cImg_large" value="'.$base.'" '.$large.' /></td>
 								<td><input type="radio" name="cImg_thumb" value="'.$base.'" '.$thumb.' /></td>
 								<td><input type="checkbox" name="cImg_exclude['.$base.']"  value="'.$img["filenm"].'" '.$exclude.' /></td>
-								<td class="move_image_row"><img src="'.$theme.'images/icon_move.png" /></td>
-								<td><a href="#" class="remove_img">'.lang('delete').'</a></td>
+								<td class="move_image_row"><img src="'.$theme.'images/move.png" /></td>
+								<td><a href="#" class="remove_img"><img src="'.$theme.'images/delete.png" /></a></td>
 							</tr>';
 					$cnt++;
 				}
@@ -233,8 +232,8 @@ function _add_image_row(serverData){
 		'	<td><input type="radio" name="cImg_large" value="'+img[0]+'" /></td>'+
 		'	<td><input type="radio" name="cImg_thumb" value="'+img[0]+'" /></td>'+
 		'	<td><input type="checkbox" name="cImg_exclude['+img[0]+']"  value="'+img[1]+'" /></td>'+
-		'	<td class="move_image_row"><img src="<?=$theme?>images/icon_move.png" /></td>'+
-		'	<td><a href="#" class="remove_img"><?=lang('delete')?></a></td>'+
+		'	<td class="move_image_row"><img src="<?=$theme?>images/move.png" /></td>'+
+		'	<td><a href="#" class="remove_img"><img src="<?=$theme?>images/delete.png" /></a></td>'+
 		'</tr>').appendTo($('#imageTable tbody'));
 		
 		// Make sure the header is showing

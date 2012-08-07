@@ -10,6 +10,7 @@
 * Fixed an issue with the query validate on the contact form in the blank demo theme.
 * Fixed an issue with Bundle products counting inventory on non-inventory items like download and service products. 
 * Fixed an issue with cart_add feature when using an image to post to cart with a custom name on the image input. 
+* Fixed a number of minor language key settings. 
 * Added br_product_editform_before to manipulate product edit form prior to rendering. (NEEDS DOCUMENTATION)
 * Added br_product_parse_before to manipulate the products array prior to parsing. (NEEDS DOCUMENTATION)
 * Added br_product_parse_after to manipulate the output string prior to returning. (NEEDS DOCUMENTATION)

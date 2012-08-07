@@ -22,7 +22,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 	
-	$cp_pad_table_template["table_open"] = '<table id="productTable" cellpadding="0" cellspacing="0" class="mainTable" style="clear:both;">';
+	$cp_pad_table_template["table_open"] = '<table id="productTable" cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
 	
 	$this->table->set_template($cp_pad_table_template);
 

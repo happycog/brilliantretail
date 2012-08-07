@@ -22,37 +22,22 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
-<div id="b2r_page" class="b2r_category">
-	<table id="siteTable" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
-    	<thead>
-	    	<tr>
-	    		<th>
-	    			<?=lang('br_title')?></th>
-	    	</tr>
-		</thead>
-    	<tbody>
-	    	<?php
-				foreach($groups as $key => $val){
-					$link = ($key == 1) ? '<b>'.$val.'</b>' : '<a href="'.$base_url.AMP.'method=config_permission_edit&group_id='.$key.'">'.$val.'</a>';
-					echo '	<tr>
-					        	<td>
-					        		'.$link.'</td>
-					        </tr>';
-				}
-	    	?>
-		</tbody>
-    </table>
-</div> 
-<script type="text/javascript">
-	$(function(){
-		var oTable = $('#siteTable').dataTable({
-													"bStateSave": true
-												});
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#siteTable_filter input');
-		$('<div style="clear:both"></div>').insertAfter('#siteTable_filter');
-		$('#clear').click(function(){
-										oTable.fnFilterClear();
-										return false
-									});
-	});
-</script>
+<table id="siteTable" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
+	<thead>
+    	<tr>
+    		<th>
+    			<?=lang('br_title')?></th>
+    	</tr>
+	</thead>
+	<tbody>
+    	<?php
+			foreach($groups as $key => $val){
+				$link = ($key == 1) ? '<b>'.$val.'</b>' : '<a href="'.$base_url.AMP.'method=config_permission_edit&group_id='.$key.'">'.$val.'</a>';
+				echo '	<tr>
+				        	<td>
+				        		'.$link.'</td>
+				        </tr>';
+			}
+    	?>
+	</tbody>
+</table>

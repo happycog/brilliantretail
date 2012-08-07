@@ -55,7 +55,7 @@
 			}
 		?>
 		
-		<table width="100%" class="mainTable" cellpadding="0" cellspacing="0">
+		<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
 					<?php

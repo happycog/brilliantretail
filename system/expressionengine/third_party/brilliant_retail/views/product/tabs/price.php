@@ -48,8 +48,7 @@
 			<th width="20%"><b><?=lang('br_price')?></b></th>
 			<th width="20%"><b><?=lang('br_start_dt')?></b></th>
 			<th width="20%"><b><?=lang('br_end_dt')?></b></th>
-			<th width="5%"><b><?=lang('br_sort')?></b></th>
-			<th width="10%"><b><?=lang('delete')?></b></th>
+			<th width="5%" colspan="2"><b><?=lang('br_actions')?></b></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -92,8 +91,8 @@
 												'value' => $end, 
 												'class' => 'datepicker')
 										);
-				$move 	= '<img src="'.$theme.'images/icon_move.png" />';
-				$remove = '<a href="#delete" class="remove_price_row">'.lang('delete').'</a>';
+				$move 	= '<img src="'.$theme.'images/move.png" />';
+				$remove = '<a href="#delete" class="remove_price_row"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a>';
 				$class="";
 			}
 			
@@ -189,9 +188,9 @@
 													'class' => 'datepicker')
 											).'</td>
 							<td class="move_price_row">
-								<img src="'.$theme.'images/icon_move.png" /></td>
+								<img src="'.$theme.'images/move.png" /></td>
 							<td style=\"text-align:center;\">
-								<a href="#delete" class="remove_price_row">'.lang('delete').'</a></td>
+								<a href="#delete" class="remove_price_row"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a></td>
 						</tr>			
 					</table>
 			</div>';

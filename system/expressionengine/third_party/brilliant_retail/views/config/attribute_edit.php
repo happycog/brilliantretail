@@ -21,8 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-?>
-<?php
+
 	echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attribute_update',
 					array(	'method' 	=> 'POST', 
 							'id' 		=> 'attribute_edit',
@@ -30,11 +29,13 @@
 					array(	'attribute_id' => $attributes["attribute_id"]));
 ?>
 <div id="b2r_page" class="b2r_category">
-	<table id="attribute_tbl" class="mainTable" cellpadding="0" cellspacing="0">
+	<table id="attribute_tbl" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 		<thead>
 			<tr class="odd">
-				<th colspan="2">
+				<th width="35%">
 					<?=lang('br_attribute_settings')?></th>
+				<th>
+					&nbsp;</th>
 			</tr>
 		</thead>
     	<tbody>
@@ -67,7 +68,7 @@
 	        	<td>
 	        		<?=lang('br_field_type')?></td>
 	        	<td>
-	        		<select id="fieldtype" name="fieldtype">
+	        		<select id="fieldtype" id="fl_type" name="fieldtype">
 	        			<?php 
 	        				$opts = array('text','textarea','dropdown','multiselect','file');
 	        			
@@ -108,7 +109,7 @@
 	        </tr>
 		</tbody>
     </table>
-		<div id="header_buttons">
+		<div id="bottom_buttons">
 		    <?=form_submit(array('name' => 'submit', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
 			<?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
 			<?php 
@@ -125,7 +126,7 @@
 <script type="text/javascript">
 	$(function(){
 		
-		$('.mainTable tr:odd').addClass('odd');
+		$('.product_edit tbody tr:even').addClass('even');
 		
 		$('#delete_button').bind('click',function(){
 			if(confirm('<?=lang('br_confirm_delete_attribute')?>')){
@@ -133,8 +134,6 @@
 			}
 			return false;
 		});
-		
-		$('#attribute_tbl tr:even').addClass('b2r_status');
 		$('#title').bind('click',function(){
 			var a = $(this);
 			if(a.val() == '<?=lang('br_new_attribute')?>'){

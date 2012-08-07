@@ -74,7 +74,7 @@
 	background: url(../../images/map_products01.gif) -100px -80px no-repeat;
 	border: none; }
 
-#b2r_page .b2r_search {
+.b2r_search {
 	float: left;
 	display: inline;
 	margin: 8px 0 0;
@@ -84,7 +84,7 @@
 	overflow: hidden;
 	background: url(../../images/map_products01.gif) 0 -112px repeat-x; }
 
-#b2r_page .b2r_search input {
+.b2r_search input {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 15px;
 	color: #aaa9a9;
@@ -93,7 +93,7 @@
 	padding: 0;
 }
 
-#b2r_page .b2r_search_right {
+.b2r_search_right {
 	float: left;
 	display: inline;
 	margin: 8px 0 0;
@@ -103,7 +103,7 @@
 	background: url(../../images/map_products01.gif) -5px -80px no-repeat; }
 
 
-#b2r_page p.b2r_search_btn {
+p.b2r_search_btn {
 	float:right;
 	font-family:Arial,Helvetica,sans-serif;
 	font-size:14px;
@@ -111,7 +111,7 @@
 	padding:0;
 }
 
-#b2r_page p.b2r_search_btn a {
+p.b2r_search_btn a {
 	float: left;
 	display: inline-block;
 	margin: 0;
@@ -122,7 +122,7 @@
 	line-height: 21px;
 	background: url(../../images/map_products01.gif) 0 -34px no-repeat; }
 
-#b2r_page p.b2r_search_btn a b {
+p.b2r_search_btn a b {
 	display: inline-block;
 	cursor: pointer;
 	margin: 0;

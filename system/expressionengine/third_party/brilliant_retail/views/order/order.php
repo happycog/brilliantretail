@@ -22,6 +22,8 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
+$cp_pad_table_template["table_open"] = '<table id="orderTable" cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
+
 $this->table->set_template($cp_pad_table_template); 
 
 $this->table->set_heading(
@@ -80,7 +82,7 @@ $content = $this->table->generate();
 
 <script type="text/javascript">
 	$(function(){
-		var oTable = $('.mainTable').dataTable({
+		var oTable = $('#orderTable').dataTable({
 													"iDisplayLength": 25, 
 													"aoColumns": [
 																		{ "asSorting": [ "desc", "asc" ] }, 
@@ -106,7 +108,7 @@ $content = $this->table->generate();
 													}
 												});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('.mainTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#orderTable_filter input');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

@@ -22,12 +22,11 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
-<div id="b2r_page" class="b2r_category">
-	<table id="feeds_tbl" class="mainTable" cellspacing="0" cellpadding="0">
+	<table id="feeds_tbl" class="product_edit" width="100%" cellspacing="0" cellpadding="0">
 		<tr>
-			<th style="width:160px"><?=lang('br_feed_title')?></th>
-			<th><?=lang('br_feed_code')?></th>
-			<th style="width:60px"><?=lang('br_products')?></th>
+			<th width="35%"><?=lang('br_feed_title')?></th>
+			<th width="55%"><?=lang('br_feed_code')?></th>
+			<th width="10%"><?=lang('br_products')?></th>
 		</tr>
 	<?php
 	if( count($feeds) > 0 ){
@@ -46,7 +45,6 @@
 	}
 	?>
 	</table>
-</div>
 <script type="text/javascript">
 $(function(){
 	$('#feeds_tbl').tablesorter();

@@ -22,6 +22,8 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
+	$cp_pad_table_template["table_open"] = '<table id="shippingTable" cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
+	
 	$this->table->set_template($cp_pad_table_template); 
 	
 	$this->table->set_heading(
@@ -63,7 +65,7 @@
 ?>
 <script type="text/javascript">
 	$(function(){
-		$('.mainTable').tablesorter({
+		$('#shippingTable').tablesorter({
 			headers: {},
         	textExtraction: "complex",			
 			widgets: ["zebra"]

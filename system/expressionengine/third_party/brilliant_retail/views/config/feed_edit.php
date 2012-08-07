@@ -23,7 +23,7 @@
 /************************************************************/
 	if( isset($products) && count($products) > 0)
 	{	
-  	$cp_pad_table_template["table_open"] = '<table id="productTable" class="mainTable" cellspacing="0" cellpadding="0">';
+  	$cp_pad_table_template["table_open"] = '<table id="productTable" class="product_edit" width="100%" cellspacing="0" cellpadding="0">';
 	
   	$this->table->set_template($cp_pad_table_template);
 
@@ -82,7 +82,7 @@
                     );
                     ?>
         						<div id="b2r_page" class="b2r_category">
-    		<table id="feed_tbl" class="mainTable" cellspacing="0" cellspacing="0" style="clear:both">
+    		<table id="feed_tbl" class="product_edit" width="100%" cellspacing="0" cellspacing="0">
             	<thead>
 					<tr class="odd">
 						<th colspan="2"><?=lang('br_feed_settings')?></th>
@@ -105,7 +105,7 @@
 					</tr>
 				</tbody>
 				</table>
-				<div id="header_buttons">
+				<div id="bottom_buttons">
 					<?=form_submit(array('name' => 'submit', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
 					<?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
 					<?php 
@@ -121,7 +121,7 @@
                           <br />
                           <br />
         						    
-          					<table class="mainTable" style="clear:both">
+          					<table class="product_edit" width="100%" cellpadding="0" cellspacing="0">
                         		<thead>
                         			<tr class="odd">
                         				<th colspan="2"><?=lang('br_products')?></th>

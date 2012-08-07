@@ -21,32 +21,34 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-	
-	$cp_pad_table_template["table_open"] = '<table cellspacing="0" id="site_edit" cellpadding="0" border="0" class="mainTable edit_form" style="clear:both">';
 
-	$this->table->set_template($cp_pad_table_template);
-	
-	$this->table->set_heading(array('data' => $group,"colspan" => 2));
-
-	$cell_1 = 	lang('br_permission');
-	$permissions = '<a href="#" id="permission_select_all">'.lang('select_all').'</a> | <a href="#" id="permission_clear_all">'.lang('br_clear_all').'</a>
-					<hr />
-					'.$permissions;
-					
-    $this->table->add_row(array($cell_1,$permissions));
-    
-	$content = $this->table->generate();
-	$this->table->clear();
-	
 	echo form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_permission_update',array('method' => 'POST', 'id' => 'storeForm'),$hidden);
 ?>
-<div id="b2r_page" class="b2r_category">
-	<?=$content?>
-	<div id="header_buttons">
+	<table cellspacing="0" id="site_edit" cellpadding="0" border="0" class="product_edit" width="100%">
+		<thead>
+			<tr>
+				<th width="35%">
+					<?=$group?></th>
+				<th>
+					&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<?=lang('br_permission')?></td>
+				<td>
+					<a href="#" id="permission_select_all"><?=lang('select_all')?></a> | <a href="#" id="permission_clear_all"><?=lang('br_clear_all')?></a>
+					<hr />
+					<?=$permissions?></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div id="bottom_buttons">
 	    <?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
     	<div class="b2r_clearboth"><!-- --></div>
     </div>
-</div>
 </form>
 <script type="text/javascript">
 	$(function(){

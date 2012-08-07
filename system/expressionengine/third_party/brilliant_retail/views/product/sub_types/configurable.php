@@ -125,7 +125,7 @@
 					'<td><input type="text" name="config_qty[]" value="0" /></td><td>'+
 					'<select style="display:none" name="config_adjust_type[]"><option>fixed</option><option>percent</option></select>'+
 					'<input type="text" name="config_adjust[]" value="0.00" /></td>'+
-					'<td class="move_config_row"><img src="<?=$theme?>images/icon_move.png" /></td>'+
+					'<td class="move_config_row"><img src="<?=$theme?>images/move.png" /></td>'+
 					'<td><a href="#" class="config_item_remove"><?=lang('delete')?></a></td></tr>';
 			$(tmp).prependTo($('#config_selected tbody'));
 

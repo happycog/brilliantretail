@@ -24,8 +24,8 @@
 	
 	echo $br_header;
 	
-	$cp_pad_table_template["table_open"] = '<table id="reportTable" class="mainTable" cellpadding="0" cellspacing="0">';
-	
+	$cp_pad_table_template["table_open"] = '<table id="reportTable" cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
+
 	$this->table->set_template($cp_pad_table_template);
 
 	$this->table->set_heading(
@@ -60,11 +60,11 @@
 ?>
 <script type="text/javascript">
 	$(function(){
-		var oTable = $('.mainTable').dataTable({
+		var oTable = $('#reportTable').dataTable({
 													"bStateSave": true
 												});
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('.mainTable_filter input');
-		$('<div style="clear:both"></div>').insertAfter('.mainTable_filter');
+		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#reportTable_filter input');
+		$('<div style="clear:both"></div>').insertAfter('#reportTable_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

@@ -23,11 +23,11 @@
 /************************************************************/
 ?>
 <div id="b2r_page" class="b2r_category">
-    <table id="emailTable" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
+    <table id="emailTable" class="product_edit" width="100%" cellpadding="0" cellspacing="0" style="clear:both">
         <thead>
             <tr>
                 <th>
-                    <?=lang("br_".'br_title')?></th>
+                    <?=lang("br_title")?></th>
                 <th style="width:100px">
                     <?=lang('version')?></th>
             </tr>

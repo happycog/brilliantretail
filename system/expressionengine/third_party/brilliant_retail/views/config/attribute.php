@@ -24,7 +24,7 @@
 ?>
 <div id="b2r_page" class="b2r_category">
 
-	<table id="attributeTable" class="mainTable" cellpadding="0" cellspacing="0">
+	<table id="attributeTable" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
     	<thead>
 	    	<tr>
 	    		<th>

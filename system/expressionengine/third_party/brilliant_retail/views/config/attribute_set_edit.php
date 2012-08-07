@@ -21,64 +21,63 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-?>
-<?php
-	echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attributeset_update',
-					array(	'method' 	=> 'POST', 
-							'id' 		=> 'attribute_set_edit',
-							'class' 	=> 'b2r_category', 
-							'encrypt' 	=> 'multipart/form-data'),
-					array(	'attribute_set_id' => $attribute_set_id));
+
+echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attributeset_update',
+				array(	'method' 	=> 'POST', 
+						'id' 		=> 'attribute_set_edit',
+						'class' 	=> 'b2r_category', 
+						'encrypt' 	=> 'multipart/form-data'),
+				array(	'attribute_set_id' => $attribute_set_id));
 ?>
 
-<div id="b2r_page" class="b2r_category">
-	<table id="attribute_tbl" class="mainTable" cellpadding="0" cellspacing="0">
-    	<thead>
-	    	<tr>
-	    		<th colspan="2">
-	    			<?=lang('br_attribute_set_settings')?></th>
-	    	</tr>
-		</thead>
-    	<tbody>
-	        <tr class="odd">
-	        	<td class="cell_1">
-	        		<?=lang('br_title')?> *</td>
-	        	<td class="cell_2">
-	        		<input type="text" name="title" id="title" class="{required:true}" value="<?=$title?>" /></td>
-	        </tr>
-	        <tr class="even">
-	        	<td>
-	        		<?=lang('br_attributes')?></td>
-	        	<td>
-			    	<p><?=lang('br_attribute_set_instruction')?></p>
-			    	<br />
-			    	<table id="sel_attribute" class="product_edit" cellpadding="0" cellspacing="0" width="100%">
-			    		<thead>
-			    			<tr>
-			    				<th width="90%">
-			    					<?=lang('br_attributes')?></th>
-			    				<th width="10%">
-			    					<?=lang('br_sort')?></th>
-			    			</tr>
-			    		</thead>
-						<tbody>
-					    	<?php
-						    	foreach($attributes as $a){
-									$sel = ($a["selected"] == 1) ? 'checked' : '' ;
-									echo '	<tr>
-												<td>
-													<input type="checkbox" name="attr[]" value="'.$a["attribute_id"].'" '.$sel.' />&nbsp;'.$a["title"].'</td>
-												<td class="move_attr_row">
-													<img src="'.$theme.'images/icon_move.png" /></td>
-											</tr>';
-								}
-					    	?>
-						</tbody>
-			    	</table></td>
-	        </tr>
-		</tbody>
-    </table>
-	<div id="header_buttons">
+<table id="attribute_tbl" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
+	<thead>
+    	<tr>
+    		<th width="35%">
+    			<?=lang('br_attribute_set_settings')?></th>
+    		<th>
+    			&nbsp;</th>
+    	</tr>
+	</thead>
+	<tbody>
+        <tr class="odd">
+        	<td class="cell_1">
+        		<?=lang('br_title')?> *</td>
+        	<td class="cell_2">
+        		<input type="text" name="title" id="title" class="{required:true}" value="<?=$title?>" /></td>
+        </tr>
+        <tr class="even">
+        	<td>
+        		<?=lang('br_attributes')?></td>
+        	<td>
+		    	<p><?=lang('br_attribute_set_instruction')?></p>
+		    	<table id="sel_attribute" class="product_edit" cellpadding="0" cellspacing="0" width="100%">
+		    		<thead>
+		    			<tr>
+		    				<th width="90%">
+		    					<?=lang('br_attributes')?></th>
+		    				<th width="10%">
+		    					<?=lang('br_sort')?></th>
+		    			</tr>
+		    		</thead>
+					<tbody>
+				    	<?php
+					    	foreach($attributes as $a){
+								$sel = ($a["selected"] == 1) ? 'checked' : '' ;
+								echo '	<tr>
+											<td>
+												<input type="checkbox" name="attr[]" value="'.$a["attribute_id"].'" '.$sel.' />&nbsp;'.$a["title"].'</td>
+											<td class="move_attr_row">
+												<img src="'.$theme.'images/move.png" /></td>
+										</tr>';
+							}
+				    	?>
+					</tbody>
+		    	</table></td>
+        </tr>
+	</tbody>
+</table>
+	<div id="bottom_buttons">
 	    <?=form_submit(array('name' => 'submit', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
 		<?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
 		<?php 

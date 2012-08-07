@@ -39,8 +39,9 @@
 <table id="category_update_tbl" cellpadding="0" cellspacing="0" class="mainTable" style="margin-top:0;">
 	<thead>
 		<tr class="odd">
-			<th colspan="2">
+			<th width="30%">
 				<?=lang('br_category_settings')?></th>
+			<th>&nbsp;</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -88,10 +89,14 @@
         	<td>
             	<input name="template_path" id="template_path" value="<?=$category["template_path"]?>" type="text" /></td>
     	</tr>	
-		<tr class="odd">
-			<th colspan="2">
-				<?=lang('br_meta_data')?></th>
-		</tr>
+    </table>
+    <table cellpadding="0" cellspacing="0" class="mainTable">
+		<thead>
+			<tr class="odd">
+				<th colspan="2">
+					<?=lang('br_meta_data')?></th>
+			</tr>
+		</thead>
 		<tr class="odd">
         	<td>
         		<?=lang('br_meta_title')?></td>
@@ -113,14 +118,21 @@
 	</tbody>
 </table>
 
-<div class="b2r_clearboth"><!-- --></div>
-
-<table id="product_sort_tbl" class="mainTable" cellpadding="0" cellspacing="0" style="margin-top:25px;">
+<table id="product_sort_tbl" class="mainTable" cellpadding="0" cellspacing="0">
 	<thead>
 		<tr class="odd">
-			<th colspan="2">
-				<?=lang('br_product_sort')?></th>
-		</tr>
+			<th>
+				<?=lang('br_category_products')?></th>
+			<th width="5%"> 
+				<?=lang('br_actions')?></th>
+		<?php
+			/*
+				</tr>
+					<td colspan="2" style="background-color: #FFF">
+						Product Lookup Field Goes Here</td>
+				</tr>
+			*/
+		?>
 	</thead>
 	<tbody>
 	<?php foreach($products as $items) { ?>
@@ -129,13 +141,13 @@
         		<?= $items['title'] ?>
         	</td>
         	<td class="move_image_row">
-	        	<img src="<?=$theme?>images/icon_move.png">
+	        	<img src="<?=$theme?>images/move.png">
 	        	<input name="items[<?= $items['id']?>]" value="<?= $items['sort_order'] ?>" type="hidden" /></td>
 	    </tr>
 	<?php } ?>
 	</tbody>
 </table>
-<div id="header_buttons">
+<div id="bottom_buttons">
 	<input type="submit" class="submit" value="<?=lang('save_changes')?>" />
 	<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
 </div>

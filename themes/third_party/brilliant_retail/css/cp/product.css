@@ -22,6 +22,7 @@
 	border: 	#CCC solid;
 	border-width: 1px;
 	background:	#F4F6F6;
+	clear: both;
 }
 
 .product_edit tr th {
@@ -42,9 +43,14 @@
 	border-right: 1px #E7E7E7 solid;
 	background: #FFF;
 }
+
 .product_edit td:last-child
 {
 	border-right:none;
+}
+
+.product_edit td textarea {
+	height: 150px;
 }
 
 /* Move Row Handles */
@@ -53,12 +59,14 @@
 #price_table td.move_price_row,
 #sale_price_table td.move_sale_price_row,
 #optionTable td.move_option_row,
-.move_image_row, 
-.move_related_row,
+.product_edit td.move_image_row, 
+.product_edit .move_related_row,
 #config_selected td.move_config_row,
 #optionTable table.product_edit td.move_drop_option_row {
+	border-right: none;
 	text-align: center;
 	cursor: move;
+	padding-right: 0;
 }
 
 /* Custom Attributes */

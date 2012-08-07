@@ -44,3 +44,6 @@
 /* Order Overview / Detail */
 @import url('cp/order.css');
 
+/* Settings */
+@import url('cp/config_categories.css');
+

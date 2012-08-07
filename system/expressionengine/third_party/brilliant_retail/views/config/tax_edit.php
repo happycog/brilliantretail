@@ -23,12 +23,13 @@
 /************************************************************/
 ?>
 <?=form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_update', array('method' => 'POST', 'id' => 'promoForm','encrypt' => 'multipart/form-data'),$hidden)?>
-<div id="b2r_page" class="b2r_category">
-	<table id="taxTable" class="mainTable" cellpadding="0" cellspacing="0" style="clear:both">
+	<table id="taxTable" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
     	<thead>
     		<tr>
-    			<th colspan="2">
+    			<th width="35%">
     				<?=lang('br_tax_settings')?></th>
+    			<th>
+    				&nbsp;</th>
     		</tr>
     	</thead>
     	<tbody>
@@ -93,7 +94,7 @@
 			</tr>
 		</tbody>
     </table>
-	<div id="header_buttons">
+	<div id="bottom_buttons">
 	    <?=form_submit(array('name' => 'save_continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
 		<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
 		<?php 
@@ -106,8 +107,6 @@
 		?>
     	<div class="b2r_clearboth"><!-- --></div>
     </div>
-	<div class="b2r_clearboth"><!-- --></div>
-</div>
 </form>                     
 
 <script type="text/javascript">

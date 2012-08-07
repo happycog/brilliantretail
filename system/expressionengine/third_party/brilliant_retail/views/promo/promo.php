@@ -23,7 +23,9 @@
 /************************************************************/
 
 //Get the cart promo data
-
+	
+	$cp_pad_table_template["table_open"] = '<table id="promoTable" cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
+	
 	$this->table->set_template($cp_pad_table_template);
 	
 	$this->table->set_heading(	
@@ -38,7 +40,7 @@
 	foreach($promo as $c){
 		$start		= ($c["start_dt"] > 0) 	? 	date("n/d/y",strtotime($c["start_dt"])) : '-';
 		$end 		= ($c["end_dt"] > 0) 	? 	date("n/d/y",strtotime($c["end_dt"])) : '-';
-		$enabled 	= ($c["enabled"] == 1) 	? 	'status_on' : 'status_off' ;
+		$enabled 	= ($c["enabled"] == 1) 	? 	lang('br_enabled') : lang('br_disabled') ;
 
 		$this->table->add_row(
 								$c['promo_id'],
@@ -46,7 +48,7 @@
 								$c["code"],
 								$start,
 								$end, 
-								'<img src="'.$theme.'images/icon_'.$enabled.'.png" />'
+								$enabled
 							);	
 	}
 	
@@ -57,12 +59,12 @@
 
 <script type="text/javascript">
 	$(function(){
-		var oTable = $('.mainTable').dataTable({
+		var oTable = $('#promoTable').dataTable({
 										"bStateSave": true
 									});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('.mainTable_filter input');
-		$('<div style="clear:both"></div>').insertAfter('.mainTable_filter');
+		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#promoTable_filter input');
+		$('<div style="clear:both"></div>').insertAfter('#promoTable_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

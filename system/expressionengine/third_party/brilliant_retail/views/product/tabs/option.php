@@ -52,8 +52,7 @@ $option = 10000;
 				<tr>
 					<th width="20%"><b><?=lang('br_title')?></b></th>
 					<th width="65%"><b><?=lang('br_type')?></b></th>
-					<th width="5%"><b><?=lang('br_sort')?></b></th>
-					<th width="10%"><b><?=lang('delete')?></b></th>
+					<th width="5%" colspan="2"><b><?=lang('br_actions')?></b></th>
 				</tr>	
 			</thead>
 <?php
@@ -108,10 +107,8 @@ if(isset($options) && count($options) > 0){
 												'.lang('br_title').'</th>
 											<th width="20%">
 												'.lang('br_price_adjust').'</th>
-											<th width="5%">
-												'.lang('br_sort').'</th>
-											<th width="10%">	
-												'.lang('delete').'</th>
+											<th width="5%" colspan="2">
+												'.lang('actions').'</th>
 										</tr>
 									</thead>
 									<tbody>';
@@ -127,9 +124,9 @@ if(isset($options) && count($options) > 0){
 										<input type="hidden" name="cOptions_opt_type['.$i.']['.$option.']" title="type" value="fixed" /></td>
 									<td class="move_drop_option_row">
 										<input type="hidden" name="cOptions_opt_sort['.$i.']['.$option.']" title="sort" value="'.$d["sort"].'" />
-										<img src="'.$theme.'images/icon_move.png" /></td> 
+										<img src="'.$theme.'images/move.png" /></td> 
 									<td>
-										<a href="#" class="removeDropOpt">'.lang('delete').'</a></td>
+										<a href="#" class="removeDropOpt"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a></td>
 								</tr>';				
 						$option++;
 					}
@@ -140,9 +137,9 @@ if(isset($options) && count($options) > 0){
 								</table></td>
 							</div>
 						<td class="move_option_row">
-							<img src="'.$theme.'images/icon_move.png" /></td>
+							<img src="'.$theme.'images/move.png" /></td>
 						<td>
-							<a href="#" class="remove">'.lang('delete').'</a></td>
+							<a href="#" class="remove"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a></td>
 					</tr>';
 			$i++;
 		}
@@ -196,10 +193,8 @@ if(isset($options) && count($options) > 0){
 													'.lang('br_title').'</th>
 												<th width="20%">
 													'.lang('br_price_adjust').'</th>
-												<th width="5%">	
-													'.lang('br_sort').'</th>
-												<th width="10%">	
-													'.lang('delete').'</th>
+												<th width="5%" colspan="2">	
+													'.lang('actions').'</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -207,9 +202,9 @@ if(isset($options) && count($options) > 0){
 									</table></td>
 								</div>
 							<td class="move_option_row">
-								<img src="'.$theme.'images/icon_move.png" /></td>
+								<img src="'.$theme.'images/move.png" /></td>
 							<td>
-								<a href="#" class="remove">'.lang('delete').'</a></td>
+								<a href="#" class="remove"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a></td>
 						</tr>
 				</table>
 				<div id="dropOptions">
@@ -222,9 +217,9 @@ if(isset($options) && count($options) > 0){
 								<input type="hidden" name="cOptions_opt_dropType" title="type" value="fixed" /></td>
 							<td class="move_drop_option_row">
 								<input type="hidden" name="cOptions_opt_dropSort" title="sort" value="0" />
-								<img src="'.$theme.'images/icon_move.png" /></td> 
+								<img src="'.$theme.'images/move.png" /></td> 
 							<td>
-								<a href="#" class="removeDropOpt">'.lang('delete').'</a></td>
+								<a href="#" class="removeDropOpt"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a></td>
 						</tr>
 					</table>
 				</div>

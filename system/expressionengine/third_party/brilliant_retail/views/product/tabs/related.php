@@ -54,10 +54,9 @@
 				<table id="related_selected" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 					<thead>
 						<tr>
-							<th width="40%"><?=lang('br_title')?></th>
-							<th width="20%"><?=lang('br_type')?></th>
-							<th width="5%"><?=lang('br_sort')?></th>
-							<th width="10%"><?=lang('delete')?></th>
+							<th width="70%"><?=lang('br_title')?></th>
+							<th width="25%"><?=lang('br_type')?></th>
+							<th width="5%" colspan="2"><?=lang('br_actions')?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -70,9 +69,9 @@
 										<td width="20%">
 											'.$product_type[$rel["type_id"]].'</td>
 										<td width="10%" class="move_related_row" style="text-align:center">
-											<img src="'.$theme.'images/icon_move.png" /></td>
+											<img src="'.$theme.'images/move.png" /></td>
 										<td width="10%">
-											<a class="remove_related" href="#">'.lang('delete').'</a><input type="hidden" value="'.$rel["product_id"].'" name="related['.$rel["product_id"].']">
+											<a class="remove_related" href="#"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a><input type="hidden" value="'.$rel["product_id"].'" name="related['.$rel["product_id"].']">
 										</td>
 									</tr>';
 							$i++;
@@ -148,7 +147,7 @@
 		new_row.attr({'id':''}).find('td:eq(3)').remove();
 		new_row.find('td:eq(2)').remove();
 		new_row.find('td:eq(0)').attr({'style':'width:auto','width':'60%'});
-		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/icon_move.png" /></td><td width="10%"><a href="#" class="remove_related"><?=lang('delete')?></a><input type="hidden" name="related[]" value="'+product_id+'"></td>').appendTo(new_row);
+		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/move.png" /></td><td width="10%"><a href="#" class="remove_related"><?=lang('delete')?></a><input type="hidden" name="related[]" value="'+product_id+'"></td>').appendTo(new_row);
 		$(new_row).appendTo(relatedSelected);
 		row.remove();
 		relatedSelected.find('tr').removeClass('even').removeClass('odd');
