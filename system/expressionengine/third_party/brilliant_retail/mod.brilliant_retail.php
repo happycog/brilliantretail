@@ -1773,7 +1773,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 							'br_shipping_lname'    => lang('br_shipping_lname'),
 							'br_shipping_address1' => lang('br_shipping_address1'),
 							'br_shipping_city'     => lang('br_shipping_city'),
-							'br_shipping_state'    => lang('br_shipping_state'),
+							#'br_shipping_state'    => lang('br_shipping_state'),
 							'br_shipping_zip'      => lang('br_shipping_zip'),
 							'br_shipping_country'  => lang('br_shipping_country'),
 							'br_shipping_phone'    => lang('br_shipping_phone')

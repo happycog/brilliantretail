@@ -59,9 +59,13 @@
 				<legend>Search Products</legend> 
             	<select id="filter" style="margin-top:5px;margin-left:10px;">
             		<option value=""><?=lang('br_filter_by_category')?></option>
-            		<? foreach($categories as $c) { ?>
-            		<option value="<?= $c['category_id'];?>" <? if ($c['category_id']==$catid){echo('selected="selected"');}?>><?= $c['title'];?></option>
-            		<? } ?>
+            		<?php
+            		 	foreach($categories as $c) 
+            		 	{ 
+            		 		$selected = ($c['category_id']==$catid) ?  'selected="selected"' : '';
+            		 		echo '<option value="'.$c['category_id'].'" '.$selected.' >'.$c['title'].'</option>';
+            		 	} 
+            		 ?>
             	</select>
 			</fieldset> 
 		</div>								

@@ -1,0 +1,81 @@
+/* Categories */
+	#b2r_settings .b2r_category table#category_tbl td {
+		padding: 0;
+	}
+	.tree_container{
+		border: #E9E9E9 solid;
+		border-width: 1px 1px 0 0;
+		padding: 4px;
+		height: 450px;
+		overflow: auto;
+	}
+	
+	#category_tbl {
+		border-top: 1px solid #D0D7DF !important;
+	}
+	
+	#category_tbl .odd {
+		background: #F7F7F7;
+	}
+	
+	.b2r_category .edit{
+		text-transform: lowercase;
+		font-size:12px;	
+	}
+	
+	.tree_container li {
+		color:#1f2b33;
+		background-color: #fff;
+		border: 1px #e7e7e7 solid;
+		margin: 3px 0;
+		padding: 5px;
+		cursor: pointer;
+		min-height: 15px;
+	}
+	
+	.tree_container li.disabled {
+		color: #999;
+	}
+		
+	li.tree_selected {
+		background-color:#8FA2AD;
+		color: #1F2B33;
+		font-weight: bold;
+	}
+	
+	.tree_container li .cat_list {
+		min-height: 100px;
+	}	
+	
+	.tree_container li .cat_action {
+		float: right;
+	}
+	
+	.tree_container li .cat_handle {
+		margin-right: 5px;
+		float: right;
+		cursor: move; 
+	}
+	.tree_container li.add_item span{
+		font-weight: bold;
+		color: #0581A7;
+	}
+
+/* Attribute Edit */
+	.type_opts {
+		display: none;
+	}
+
+/* Permission */
+	#permmision_tree li {
+		padding-bottom: 8px;
+	}
+	.permission_parent {
+		font-weight:bold;
+	}
+	.permission_child {
+		padding-left: 30px;
+	}
+	.permission_child-child {
+		padding-left: 60px;
+	}

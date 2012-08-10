@@ -182,6 +182,10 @@ class Customer_model extends CI_Model {
 	
 	function get_customer_data($member_id){
 		$member = $this->member_model->get_member_data($member_id);
+		if($member->num_rows() == 0){
+			return FALSE;
+		}
+
 		foreach((array)$member->row() as $key => $val){
 			$customer[$key] = $val;
 		}

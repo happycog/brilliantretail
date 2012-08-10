@@ -175,7 +175,12 @@
 	cursor: 	pointer;
 }
 
-/* Configuralbe Subtype */
+/* Subtypes */
+
+#sub_hold_br_type .subtypes {
+	display: none;
+	margin-top: 15px;
+}
 
 #configurableCreate a {
 	color: #FFF;

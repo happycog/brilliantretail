@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.1.5.4';
+		public $version			= '1.1.5.5';
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -1329,10 +1329,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						// We'll create the new channel entry 
 						$entry = array(
 						        		'title'         => $data["title"],
+						       			'url_title' 	=> $data["url"],
 						       			'entry_date'    => time(),
 						       			'channel_id' 	=> $this->br_channel_id 
 										);
-						
+
+						$entry["status"]		= ($data["enabled"] == 1) ? 'open' : 'closed';
+
 						// Default the fields
 							foreach($fields as $f){
 								if(isset($f["field_name"])){
@@ -1371,6 +1374,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 
 				// Check for custom fields
+					$data["title"]		= $data["title"];
 					$data["url_title"]	= $data["url"];
 					$data["entry_id"] 	= $entry_id;
 					$data["channel_id"]	= $this->br_channel_id;

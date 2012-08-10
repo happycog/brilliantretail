@@ -98,7 +98,7 @@
 					</tr>
 				</tfoot>
 		<tbody>
-<?
+<?php 
 		if($products[0]["attribute_set_id"] != 0){
 			$i = 0;
 			foreach($attrs as $a){

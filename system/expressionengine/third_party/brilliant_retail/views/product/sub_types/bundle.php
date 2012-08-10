@@ -31,9 +31,9 @@
 		<table id="bundle_result" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
-					<th><?=lang('nav_br_product')?></th>
-					<th><?=lang('br_type')?></th>
-					<th>&nbsp;</th>
+					<th width="70%"><?=lang('nav_br_product')?></th>
+					<th width="20%"><?=lang('br_type')?></th>
+					<th width="10%">&nbsp;</th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -46,10 +46,9 @@
 	<table id="bundle_selected" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 		<thead>
 			<tr>
-				<th><?=lang('nav_br_product')?></th>
-				<th><?=lang('br_type')?></th>
-				<th>&nbsp;</th>
-				<th>&nbsp;</th>
+				<th width="75%"><?=lang('nav_br_product')?></th>
+				<th width="20%"><?=lang('br_type')?></th>
+				<th width="5%" colspan="2"><?=lang('br_actions')?></th>
 			</tr>
 		</thead>
 		<?php
@@ -96,7 +95,7 @@
 	            	$('#bundle_result tfoot').hide();
 	            	
 	            	$.each(data, function(i,item){
-	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><?=lang('br_add')?></a></td></tr>').appendTo($('#bundle_result tbody'));
+	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><img src="<?=$theme?>images/add.png" /></a></td></tr>').appendTo($('#bundle_result tbody'));
 	            	});
 
 	            	$('.add_bundle').unbind('click').bind('click',function(){
@@ -127,7 +126,7 @@
 		new_row.addClass('odd');
 		new_row.find('td:eq(2)').remove();
 		new_row.find('td:eq(0)').attr({'style':'width:auto','width':'60%'});
-		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/move.png" /><input type="hidden" name="bundle[]" value="'+product_id+'"></td><td width="10%"><a href="#" class="remove_bundle"><?=lang('delete')?></a></td>').appendTo(new_row);
+		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/move.png" /><input type="hidden" name="bundle[]" value="'+product_id+'"></td><td width="10%"><a href="#" class="remove_bundle"><img src="<?=$theme?>images/delete.png" alt="<?=lang('delete')?>" title="<?=lang('delete')?>" /></a></td>').appendTo(new_row);
 		$(new_row).appendTo(bundleSelected);
 		row.remove();
 		_remove_bundle();

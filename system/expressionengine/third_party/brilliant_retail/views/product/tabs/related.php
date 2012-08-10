@@ -111,7 +111,7 @@
 					$('#related_results tfoot').hide();
 					
 					$.each(data, function(i,item){
-	            		$('<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td width="10%"><a href="#" class="add_related {product_id:'+item.product_id+'}" ><?=lang('br_add')?></a></td></tr>').appendTo($('#related_results tbody'));
+	            		$('<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td width="10%"><a href="#" class="add_related {product_id:'+item.product_id+'}" ><img src="<?=$theme?>images/add.png" /></a></td></tr>').appendTo($('#related_results tbody'));
 	            	});
 	            	$('.add_related').unbind('click').bind('click',function(){
 						_add_related($(this).metadata().product_id);
@@ -147,7 +147,7 @@
 		new_row.attr({'id':''}).find('td:eq(3)').remove();
 		new_row.find('td:eq(2)').remove();
 		new_row.find('td:eq(0)').attr({'style':'width:auto','width':'60%'});
-		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/move.png" /></td><td width="10%"><a href="#" class="remove_related"><?=lang('delete')?></a><input type="hidden" name="related[]" value="'+product_id+'"></td>').appendTo(new_row);
+		$('<td width="10%" class="move_related_row" style="text-align:center"><img src="<?=$theme?>images/move.png" /></td><td width="10%"><a href="#" class="remove_related"><img src="<?=$theme?>images/delete.png" alt="<?=lang('delete')?>" title="<?=lang('delete')?>" /></a><input type="hidden" name="related[]" value="'+product_id+'"></td>').appendTo(new_row);
 		$(new_row).appendTo(relatedSelected);
 		row.remove();
 		relatedSelected.find('tr').removeClass('even').removeClass('odd');
