@@ -60,12 +60,54 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 	// Start IPN handoff to Google Checkout for payment
 		public function start_ipn($data,$config)
 		{
+		require_once('assets/google-checkout/library/googlecart.php');
+		require_once('assets/google-checkout/library/googleitem.php');
+		require_once('assets/google-checkout/library/googleshipping.php');
+		require_once('assets/google-checkout/library/googletax.php');
 		
+		$merchant_id = $config['merchant_id'];  // Your Merchant ID
+		$merchant_key = $config['merchant_key'];  // Your Merchant Key
+		$server_type = $config['sandbox'];
+		$currency = "USD";
+		
+		$cart = new GoogleCart($merchant_id, $merchant_key, $server_type, $currency);
+		
+		$i = 1;
+		foreach($data["cart"]["items"] as $items){
+			
+			
+			${'item_'.$i} = new GoogleItem($items['title'],
+									"",
+									$items['quantity'],
+									$this->_currency_round($items["price"])
+									);
+			${'item_'.$i}->SetMerchantItemId($items["product_id"]);
+			
+			$cart->AddItem(${'item_'.$i});
+			
+			$i++;
+		}
+		
+		$ship_1 = new GoogleFlatRateShipping("Shipping", $data['cart_shipping']);
+		$cart->AddShipping($ship_1);
+		
+		// Specify <edit-cart-url>
+		$cart->SetEditCartUrl($data['cancel_return']);
+
+	    // Specify "Return to xyz" link
+	    $cart->SetContinueShoppingUrl($data['return']);
+	
+	    // Define rounding policy
+	    $cart->AddRoundingPolicy("CEILING", "TOTAL");
+    
+		// =debug
+		echo $cart->CheckoutButtonCode("SMALL");
 		}
 	
 	// Process IPN Calls which come back from Google 
 		public function gateway_ipn($config)
 		{
+		
 		}
 	
 	// Create a inputs for the checkout form
@@ -90,9 +132,23 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 							'label'	 	=> 'Sandbox Mode', 
 							'code' 		=> 'sandbox',
 							'type' 		=> 'dropdown', 
-							'options' 	=> 'TRUE:True|FALSE:False (Transactions are Live)',
+							'options' 	=> 'sandbox:True|production:False (Transactions are Live)',
 							'value' 	=> 'TRUE',
 							'sort' 		=> 2
+							);	
+			$data[] = array(
+							'config_id' => $config_id, 
+							'label'	 	=> 'Merchant ID', 
+							'code' 		=> 'merchant_id',
+							'type' 		=> 'text',
+							'sort' 		=> 3
+							);
+			$data[] = array(
+							'config_id' => $config_id, 
+							'label'	 	=> 'Merchant Key', 
+							'code' 		=> 'merchant_key',
+							'type' 		=> 'text',
+							'sort' 		=> 4
 							);	
 			foreach($data as $d){
 				$this->EE->db->insert('br_config_data',$d);
