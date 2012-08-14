@@ -38,7 +38,7 @@
 			if(isset($m["config_id"])){
 				$enabled = ($m["enabled"] == 1)? lang('br_enabled') : '<span style="color:red">'.lang('br_disabled')."</span>";
 				$class = 'installed';
-				$link 	= '<a href="'.$base_url.AMP.'method=config_shipping_remove&config_id='.$m["config_id"].'&code='.$m["code"].'" class="remove">'.lang('delete').'</a>';
+				$link 	= '<a href="'.$base_url.AMP.'method=config_shipping_remove&config_id='.$m["config_id"].'&code='.$m["code"].'" class="remove"><img src="'.$theme.'images/delete.png" /></a>';
 				if($m['has_options'] == 0){
 					$title 	= '<b>'.$m["title"].'</b>';	
 				}else{
@@ -47,7 +47,7 @@
 			}else{
 				$enabled = ' - ';
 				$class 	= 'not_installed';
-				$link 	= '<a href="'.$base_url.AMP.'method=config_shipping_install&type='.$m["type"].'&code='.$m["code"].'" class="install">'.lang('install').'</a>';
+				$link 	= '<a href="'.$base_url.AMP.'method=config_shipping_install&type='.$m["type"].'&code='.$m["code"].'" class="install"><img src="'.$theme.'images/add.png" /></a>';
 				$title 	= $m["title"];	
 			}
 			

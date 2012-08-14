@@ -38,12 +38,12 @@
 		if($m["installed"] == 1){
 			$enabled = ($m["enabled"] == 1)? lang('br_enabled') : '<span style="color:red">'.lang('br_disabled')."</span>";
 			$class 	= '';
-			$link 	= '<a href="'.$base_url.AMP.'method=config_gateway_remove&config_id='.$m["config_id"].'&code='.$m["code"].'&type='.$m["type"].'" class="remove">'.lang('delete').'</a>';
+			$link 	= '<a href="'.$base_url.AMP.'method=config_gateway_remove&config_id='.$m["config_id"].'&code='.$m["code"].'&type='.$m["type"].'" class="remove"><img src="'.$theme.'images/delete.png" /></a>';
 			$title 	= '<a href="'.$base_url.AMP.'method=config_gateway_edit&config_id='.$m["config_id"].'&code='.$m["code"].'">'.$m["title"].'</a>';	
 		}else{
 			$enabled = ' - ';
 			$class 	= 'not_installed';
-			$link 	= '<a href="'.$base_url.AMP.'method=config_gateway_install&type='.$m["type"].'&code='.$m["code"].'" class="install">'.lang('install').'</a>';
+			$link 	= '<a href="'.$base_url.AMP.'method=config_gateway_install&type='.$m["type"].'&code='.$m["code"].'" class="install"><img src="'.$theme.'images/add.png" /></a>';
 			$title 	= $m["title"];	
 		}
 		
