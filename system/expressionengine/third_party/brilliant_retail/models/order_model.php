@@ -50,6 +50,12 @@ class Order_model extends CI_Model {
 		$this->db->from('br_order o');
 		$this->db->where('o.order_id = '.$order_id);
 		$query = $this->db->get();
+		
+		// No order
+			if($query->num_rows() == 0){
+				return FALSE;
+			}
+		
 		foreach($query->result_array() as $val){
 			$member = $this->customer_model->get_customer_profile($val["member_id"]);
 			$order = array_merge($order,$val);
@@ -105,7 +111,10 @@ class Order_model extends CI_Model {
 			}	
 			
 		// Order Notes 
-			$this->db->select('*') 
+			$this->db->select('	br_order_note.*,
+								members.group_id,
+								members.username,
+								members.screen_name') 
 					->from('br_order_note') 
 					->where('br_order_note.order_id',$order_id);
 					

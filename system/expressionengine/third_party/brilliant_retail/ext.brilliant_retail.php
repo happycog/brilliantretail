@@ -286,15 +286,17 @@ class Brilliant_retail_ext {
 		}
 					
 		if(isset($this->group_access["brilliant_retail"]["customer"])){
-			$this->nav_menu["br_customer"]		= $this->base_url.AMP.'method=customer';
+			$this->nav_menu["br_customer"]['br_all_customer'] = $this->base_url.AMP.'method=customer';
 		}
 		
 		if(isset($this->group_access["brilliant_retail"]["order"])){
-			$this->nav_menu["br_order"] 		= $this->base_url.AMP.'method=order';
+			$this->nav_menu["br_order"]['br_all_order']			= $this->base_url.AMP.'method=order';
 		}
 		
 		if(isset($this->group_access["brilliant_retail"]["product"])){
-			$this->nav_menu["br_product"]		= $this->base_url.AMP.'method=product';
+			$this->nav_menu["br_product"]['br_all_product']		= $this->base_url.AMP.'method=product';
+			$this->nav_menu["br_product"][]						= "----";
+			$this->nav_menu["br_product"]['br_new_product']		= $this->base_url.AMP.'method=product_new';
 		}
 		
 		if(isset($this->group_access["brilliant_retail"]["promo"])){
