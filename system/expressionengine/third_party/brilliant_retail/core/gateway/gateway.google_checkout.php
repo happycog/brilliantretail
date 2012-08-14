@@ -60,6 +60,8 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 	// Start IPN handoff to Google Checkout for payment
 		public function start_ipn($data,$config)
 		{
+		
+		
 		require_once('assets/google-checkout/library/googlecart.php');
 		require_once('assets/google-checkout/library/googleitem.php');
 		require_once('assets/google-checkout/library/googleshipping.php');
@@ -71,6 +73,9 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		$currency = "USD";
 		
 		$cart = new GoogleCart($merchant_id, $merchant_key, $server_type, $currency);
+		
+		$cart->SetMerchantPrivateData(new MerchantPrivateData(array("transaction_id" =>$data['transaction_id'])));
+		
 		
 		$i = 1;
 		foreach($data["cart"]["items"] as $items){
@@ -88,6 +93,8 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 			$i++;
 		}
 		
+			
+		
 		$ship_1 = new GoogleFlatRateShipping("Shipping", $data['cart_shipping']);
 		$cart->AddShipping($ship_1);
 		
@@ -95,7 +102,7 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		$cart->SetEditCartUrl($data['cancel_return']);
 
 	    // Specify "Return to xyz" link
-	    $cart->SetContinueShoppingUrl($data['return']);
+	    $cart->SetContinueShoppingUrl("http://br.hippoclients.com/store/");
 	
 	    // Define rounding policy
 	    $cart->AddRoundingPolicy("CEILING", "TOTAL");
@@ -107,6 +114,115 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 	// Process IPN Calls which come back from Google 
 		public function gateway_ipn($config)
 		{
+		
+		$cancel = $this->EE->input->get('cancel',TRUE);
+		if($cancel != ''){
+			$this->EE->product_model->cart_update_status(session_id(),0);
+			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
+			exit();
+		}
+		
+		$this->EE->load->library('logger');
+		
+		$this->EE->logger->developer('IPN Started');
+				
+		  require_once('assets/google-checkout/library/googleresponse.php');
+		  require_once('assets/google-checkout/library/googlemerchantcalculations.php');
+		  require_once('assets/google-checkout/library/googlerequest.php');
+		  require_once('assets/google-checkout/library/googlenotificationhistory.php');
+		
+		 
+		  //Definitions
+		  $merchant_id = $config['merchant_id'];  // Your Merchant ID
+		  $merchant_key = $config['merchant_key'];  // Your Merchant Key
+		  $server_type = $config['sandbox'];
+		  $currency = "USD";
+		  $certificate_path = ""; // set your SSL CA cert path
+		  
+		  
+		  //Create the response object
+		  $Gresponse = new GoogleResponse($merchant_id, $merchant_key);
+		  
+		 
+		  //Retrieve the XML sent in the HTTP POST request to the ResponseHandler
+		  $xml_response = isset($HTTP_RAW_POST_DATA)?
+		                    $HTTP_RAW_POST_DATA:file_get_contents("php://input");
+		  
+		  
+		  $this->EE->logger->developer($xml_response);
+		  		  
+		  //If serial-number-notification pull serial number and request xml
+		  if(strpos($xml_response, "xml") == FALSE){
+		   
+		   $this->EE->logger->developer('If Clause Executed');
+		   
+		    //Find serial-number ack notification
+		    $serial_array = array();
+		    parse_str($xml_response, $serial_array);
+		    $serial_number = $serial_array["serial-number"];
+		    
+		    $this->EE->logger->developer("SN Array Logic: " . $serial_number);
+		    
+		    //Request XML notification
+		    $Grequest = new GoogleNotificationHistoryRequest($merchant_id, $merchant_key, $server_type);
+		    
+		    $this->EE->logger->developer('GRequest Instantiated');
+		    
+		    $raw_xml_array = $Grequest->SendNotificationHistoryRequest($serial_number);
+		    
+		    if ($raw_xml_array[0] != 200){
+		      //Add code here to retry with exponential backoff
+		    } else {
+		      $raw_xml = $raw_xml_array[1];
+		    }
+		    $Gresponse->SendAck($serial_number, false);
+		  }
+		  else{
+		    
+		    $this->EE->logger->developer('else Clause Executed');
+		    
+		    //Else assume pre 2.5 XML notification
+		    //Check Basic Authentication
+		    $Gresponse->SetMerchantAuthentication($merchant_id, $merchant_key);
+		    $status = $Gresponse->HttpAuthentication();
+		    if(! $status) {
+		      die('authentication failed');
+		    }
+		    $raw_xml = $xml_response;
+		    $Gresponse->SendAck(null, false);
+		  }
+		  
+		  if (get_magic_quotes_gpc()) {
+		    $raw_xml = stripslashes($raw_xml);
+		  }
+		  
+		  list($root, $data) = $Gresponse->GetParsedXML($raw_xml);
+		  
+		  switch($root){
+		    case "new-order-notification": {
+		      
+		      $this->EE->logger->developer('NEW ORDER');
+		      
+		      $transaction_id = $data[$root]['shopping-cart']['merchant-private-data']['transaction_id']['VALUE'];
+		      $google_order_number = $data[$root]['google-order-number']['VALUE'];
+		      
+		      $this->ipn_create_order($transaction_id,2);
+		      
+		      break;
+		    }
+		    case "authorization-amount-notification": {
+		     
+		     	$this->EE->logger->developer('UPDATE ORDER');
+		     
+		      $transaction_id = $data[$root]['shopping-cart']['merchant-private-data']['transaction_id']['VALUE'];
+		      $google_order_number = $data[$root]['google-order-number']['VALUE'];
+		      
+		      $this->ipn_create_order($transaction_id,3);
+		      
+		      break;
+		    }
+		  }
+		  
 		
 		}
 	
