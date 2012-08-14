@@ -90,7 +90,7 @@
      $postargs .= "</notification-history-request>";
 
      $Grequest = new GoogleRequest($this->merchant_id, $this->merchant_key, $this->server_type);
-     $GRequest->SetCertificatePath($cp);
+     $Grequest->SetCertificatePath($cp);
      return $Grequest->SendReq($Grequest->GetReportUrl(), $Grequest->GetAuthenticationHeaders(), $postargs);
     }
   }
