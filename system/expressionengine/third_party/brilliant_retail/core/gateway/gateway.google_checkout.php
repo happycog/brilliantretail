@@ -198,6 +198,9 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		  
 		  list($root, $data) = $Gresponse->GetParsedXML($raw_xml);
 		  
+		  
+		  $this->EE->logger->developer('We are running a : ' . $root);
+		  
 		  switch($root){
 		    case "new-order-notification": {
 		      
@@ -211,8 +214,18 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		      break;
 		    }
 		    case "authorization-amount-notification": {
+		     $google_order_number = $data[$root]['google-order-number']['VALUE'];
+      $tracking_data = array("Z12345" => "UPS", "Y12345" => "Fedex");
+      $GChargeRequest = new GoogleRequest($merchant_id, $merchant_key, $server_type);
+      $GRequest->SetCertificatePath($certificate_path);
+      $GChargeRequest->SendChargeAndShipOrder($google_order_number, $tracking_data);
+      			break;
+      		}
+      		case "order-state-change-notification": {
+		     	
+		     $this->EE->logger->developer('UPDATE ORDER');
 		     
-		     	$this->EE->logger->developer('UPDATE ORDER');
+		     $this->EE->logger->developer( serialize($data) );
 		     
 		      $transaction_id = $data[$root]['shopping-cart']['merchant-private-data']['transaction_id']['VALUE'];
 		      $google_order_number = $data[$root]['google-order-number']['VALUE'];
