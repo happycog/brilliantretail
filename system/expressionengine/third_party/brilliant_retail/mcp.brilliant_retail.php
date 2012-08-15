@@ -1271,7 +1271,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					
 					// Reindex the products
-					$this->_index_products();
+					$this->_index_delete_product($data["product_id"]);
+					remove_from_cache('product_'.$data["product_id"]);
+					
 					$_SESSION["message"] = lang('br_product_delete_success');
 					header('location: '.$this->base_url.'&method=product');
 					exit();
