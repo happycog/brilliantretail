@@ -1151,7 +1151,9 @@ class Brilliant_retail_core {
 	
 	function _payment_options($osc_enabled=TRUE,$tax=0,$shipping=0,$admin_order=FALSE){
 		
-		$output = '';
+		$output 	= '';
+		$gateways 	= array();
+		
 		$this->EE->load->model('product_model'); 
 		$cart = $this->EE->product_model->cart_get();
 		$i = 0;
@@ -1179,12 +1181,12 @@ class Brilliant_retail_core {
 							$form = $tmp->form();
 							if($form !== false){
 								$sel = ($i == 0) ? 'checked="checked"' : '';
-								$output .= ' <div id="gateway_'.$gateway["code"].'" class="gateways">
-												<label>
-							                    <input type="radio" name="gateway" value="'.md5($gateway["config_id"]).'" class="gateway required" id="gateway_'.$i.'" '.$sel.' />
-							                    '.$gateway["label"].'</label>
-							                    <div class="payment_form">'.trim($form).'</div>
-							               	</div>';
+								$gateways[$gateway["code"]] = ' <div id="gateway_'.$gateway["code"].'" class="gateways">
+																	<label>
+												                    <input type="radio" name="gateway" value="'.md5($gateway["config_id"]).'" class="gateway required" id="gateway_'.$i.'" '.$sel.' />
+												                    '.$gateway["label"].'</label>
+												                    <div class="payment_form">'.trim($form).'</div>
+												               	</div>';
 								$i++;
 							}
 						}
@@ -1193,7 +1195,16 @@ class Brilliant_retail_core {
 			}
 		
 		}
-
+		// Adding another hook that lets you manipulate the actual array of gateways first
+		// Added 1.0.5.5 - dpd
+			if($this->EE->extensions->active_hook('br_payment_options_before') === TRUE){
+				$gateways = $this->EE->extensions->call('br_payment_options_before',$gateways); 
+			}
+			
+			foreach($gateways as $g){
+				$output .= $g;
+			}
+		
 		// This will allow us to add stuff directly into the payment option response form
 		// Added 1.0.5.1 - dpd
 			if($this->EE->extensions->active_hook('br_payment_options_after') === TRUE){

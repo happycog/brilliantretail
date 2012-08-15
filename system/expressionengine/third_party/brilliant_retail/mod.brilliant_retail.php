@@ -826,7 +826,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		public function cart()
 		{
 			$cart = $this->EE->product_model->cart_get();
-			
+
 			//We're going to check the inventory and if stock isn't correct - redirect the user
 				$this->_check_inventory($cart);
 			
