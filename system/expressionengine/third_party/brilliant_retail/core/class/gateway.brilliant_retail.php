@@ -257,6 +257,40 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 					}
 				}
 				$this->_send_email('customer-order-status', $eml);
+			} elseif($order["status_id"] == 3){
+				// This is an order moving from processing to 
+				// something else
+
+					$data = array(
+									"order_id" 	=> $order["order_id"],
+									"status_id" => $status
+								); 
+
+				// Hook before we update the order
+					if($this->EE->extensions->active_hook('br_order_update_before') === TRUE){
+						$data = $this->EE->extensions->call('br_order_update_before', $data); 
+					}
+
+					$this->EE->order_model->update_order_status($data);
+									
+				// Hook after we update the order
+					if($this->EE->extensions->active_hook('br_order_update_after') === TRUE){
+						$data = $this->EE->extensions->call('br_order_update_after', $data); 
+					}
+			
+				$tmp = $this->EE->order_model->get_order($order["order_id"]);
+				
+				$eml[0]["email"] = $tmp["member"]["email"];
+				$eml[0]["order_id"] = $order["order_id"];
+				$eml[0]["order_num"] = $order["order_num"];
+				$eml[0]["order_status"] = $this->_config["status"][$status_id];
+				
+				foreach($tmp["member"] as $key => $val){
+					if(substr($key,0,3) == 'br_'){
+						$eml[0][str_replace("br_","",$key)] = $val;
+					}
+				}
+				$this->_send_email('customer-order-status', $eml);
 			}
 			$_SESSION["order_id"] = $order["order_id"];
 			return;
