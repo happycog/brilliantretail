@@ -148,25 +148,16 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		  $xml_response = isset($HTTP_RAW_POST_DATA)?
 		                    $HTTP_RAW_POST_DATA:file_get_contents("php://input");
 		  
-		  
-		  $this->EE->logger->developer($xml_response);
-		  		  
 		  //If serial-number-notification pull serial number and request xml
 		  if(strpos($xml_response, "xml") == FALSE){
-		   
-		   $this->EE->logger->developer('If Clause Executed');
 		   
 		    //Find serial-number ack notification
 		    $serial_array = array();
 		    parse_str($xml_response, $serial_array);
 		    $serial_number = $serial_array["serial-number"];
 		    
-		    $this->EE->logger->developer("SN Array Logic: " . $serial_number);
-		    
 		    //Request XML notification
 		    $Grequest = new GoogleNotificationHistoryRequest($merchant_id, $merchant_key, $server_type);
-		    
-		    $this->EE->logger->developer('GRequest Instantiated');
 		    
 		    $raw_xml_array = $Grequest->SendNotificationHistoryRequest($serial_number);
 		    
@@ -178,8 +169,6 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		    $Gresponse->SendAck($serial_number, false);
 		  }
 		  else{
-		    
-		    $this->EE->logger->developer('else Clause Executed');
 		    
 		    //Else assume pre 2.5 XML notification
 		    //Check Basic Authentication
@@ -199,38 +188,43 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		  list($root, $data) = $Gresponse->GetParsedXML($raw_xml);
 		  
 		  
-		  $this->EE->logger->developer('We are running a : ' . $root);
-		  
 		  switch($root){
 		    case "new-order-notification": {
 		      
-		      $this->EE->logger->developer('NEW ORDER');
+		      $this->EE->logger->developer('Google New Order Notification');
 		      
 		      $transaction_id = $data[$root]['shopping-cart']['merchant-private-data']['transaction_id']['VALUE'];
 		      $google_order_number = $data[$root]['google-order-number']['VALUE'];
 		      
 		      $this->ipn_create_order($transaction_id,2);
 		      
+		      $this->add_gc_entry($transaction_id,$google_order_number);
+		      
 		      break;
 		    }
 		    case "authorization-amount-notification": {
-		     $google_order_number = $data[$root]['google-order-number']['VALUE'];
-      $tracking_data = array("Z12345" => "UPS", "Y12345" => "Fedex");
-      $GChargeRequest = new GoogleRequest($merchant_id, $merchant_key, $server_type);
-      $GRequest->SetCertificatePath($certificate_path);
-      $GChargeRequest->SendChargeAndShipOrder($google_order_number, $tracking_data);
-      			break;
+		     	break;
       		}
       		case "order-state-change-notification": {
-		     	
-		     $this->EE->logger->developer('UPDATE ORDER');
 		     
-		     $this->EE->logger->developer( serialize($data) );
-		     
-		      $transaction_id = $data[$root]['shopping-cart']['merchant-private-data']['transaction_id']['VALUE'];
+		      $this->EE->logger->developer('Order State Change Triggered');
+		      
+		      $orderstate = $data[$root]['new-fulfillment-order-state']['VALUE'];
+		      
 		      $google_order_number = $data[$root]['google-order-number']['VALUE'];
 		      
-		      $this->ipn_create_order($transaction_id,3);
+		      $br_merchant_id = $this->get_gc_entry($google_order_number);
+		      
+		      $status['NEW'] = 2;
+		      $status['PROCESSING'] = 3;
+		      $status['DELIVERED'] = 4;
+			
+			  if(isset($status[$orderstate]))
+			  {
+			  	$this->ipn_create_order($br_merchant_id,$status[$orderstate]);	
+			  	
+			  	$this->EE->logger->developer("Updating order with status ID: ". $status[$orderstate]);
+			  }		  
 		      
 		      break;
 		    }
@@ -247,15 +241,21 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 	
 	// Install the gateway
 		public function install($config_id){
+			$sql[] = "DROP TABLE IF EXISTS exp_br_google_checkout;";
+			$sql[] = "CREATE TABLE exp_br_google_checkout (
+						  google_checkout_id int(11) NOT NULL AUTO_INCREMENT,
+						  google_order_id varchar(128) NOT NULL DEFAULT '',
+						  br_merchant_id varchar(128) NOT NULL DEFAULT '',
+						  PRIMARY KEY (google_checkout_id)
+						) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+			
+			foreach($sql as $line)
+			{
+				$this->EE->db->query($line);
+			}
+			
+			
 			$data = array();
-			$data[] = array(
-							'config_id' => $config_id, 
-							'label'	 	=> 'Business E-mail', 
-							'code'		=> 'email', 
-							'type' 		=> 'text',
-							'required' 	=> true,
-							'sort' 		=> 1
-							);
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Sandbox Mode', 
@@ -263,21 +263,21 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 							'type' 		=> 'dropdown', 
 							'options' 	=> 'sandbox:True|production:False (Transactions are Live)',
 							'value' 	=> 'TRUE',
-							'sort' 		=> 2
+							'sort' 		=> 1
 							);	
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Merchant ID', 
 							'code' 		=> 'merchant_id',
 							'type' 		=> 'text',
-							'sort' 		=> 3
+							'sort' 		=> 2
 							);
 			$data[] = array(
 							'config_id' => $config_id, 
 							'label'	 	=> 'Merchant Key', 
 							'code' 		=> 'merchant_key',
 							'type' 		=> 'text',
-							'sort' 		=> 4
+							'sort' 		=> 3
 							);	
 			foreach($data as $d){
 				$this->EE->db->insert('br_config_data',$d);
@@ -287,6 +287,24 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 
 	// Remove the gateway
 		public function remove($config_id){
+			
+			$this->EE->db->query("DROP TABLE IF EXISTS exp_br_google_checkout;");
+			
 			return true;		
+		}
+		
+		function add_gc_entry($transid,$googleid)
+		{
+			$data = array(
+				'google_order_id' => $googleid,
+				'br_merchant_id' => $transid
+			);
+			
+			$this->EE->db->insert('br_google_checkout',$data);
+		}
+		
+		function get_gc_entry($googleid)
+		{
+			return $this->EE->db->select('br_merchant_id')->from('br_google_checkout')->where('google_order_id',$googleid)->get()->row()->br_merchant_id;
 		}
 }
