@@ -1156,8 +1156,7 @@ class Brilliant_retail_core {
 		
 		$this->EE->load->model('product_model'); 
 		$cart = $this->EE->product_model->cart_get();
-		$i = 0;
-
+		
 		if(isset($this->_config["gateway"][$this->site_id])){ // Check if any gateways are enabled
 			
 			foreach($this->_config["gateway"][$this->site_id] as $gateway){
@@ -1177,17 +1176,10 @@ class Brilliant_retail_core {
 					
 					if($proceed === TRUE){
 						if($tmp->osc_enabled == $osc_enabled){
-							
 							$form = $tmp->form();
 							if($form !== false){
-								$sel = ($i == 0) ? 'checked="checked"' : '';
-								$gateways[$gateway["code"]] = ' <div id="gateway_'.$gateway["code"].'" class="gateways">
-																	<label>
-												                    <input type="radio" name="gateway" value="'.md5($gateway["config_id"]).'" class="gateway required" id="gateway_'.$i.'" '.$sel.' />
-												                    '.$gateway["label"].'</label>
-												                    <div class="payment_form">'.trim($form).'</div>
-												               	</div>';
-								$i++;
+								$gateways[$gateway["code"]] = $gateway;
+								$gateways[$gateway["code"]]["form"] = trim($form);
 							}
 						}
 					}
@@ -1201,8 +1193,17 @@ class Brilliant_retail_core {
 				$gateways = $this->EE->extensions->call('br_payment_options_before',$gateways); 
 			}
 			
+			$i = 0;
 			foreach($gateways as $g){
-				$output .= $g;
+				$sel = ($i == 0) ? 'checked="checked"' : '';
+				$display = ($i == 0) ? ' style="display:block"' : '';
+				$output .= ' <div id="gateway_'.$g["code"].'" class="gateways">
+								<label>
+			                    <input type="radio" name="gateway" value="'.md5($g["config_id"]).'" class="gateway required" id="gateway_'.$i.'" '.$sel.' />
+			                    '.$g["label"].'</label>
+			                    <div class="payment_form" '.$display.'>'.trim($g["form"]).'</div>
+			               	</div>';
+				$i++;
 			}
 		
 		// This will allow us to add stuff directly into the payment option response form
