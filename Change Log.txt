@@ -26,3 +26,8 @@
 * Updated search indexer with optimized queries for improved index build times. 
 * Updated BrilliantRetail Product fieldtype with total_count variable
 * Updated admin view templates with additional changes to match EE default code styling.
+
+
+## Isaac Horton
+
+* Added optional State validation for US/CA purchases.
