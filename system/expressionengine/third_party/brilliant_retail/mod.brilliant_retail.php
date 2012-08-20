@@ -1737,6 +1737,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// If we don't have br_fname/lname then try to set them on the billing fname/lname 
 					if($data["br_fname"] == ''){ $data["br_fname"] = $data["br_billing_fname"]; }
 					if($data["br_lname"] == ''){ $data["br_lname"] = $data["br_billing_lname"]; }
+
 				
 				// Minimum required fields
 					$required_fields = array(
@@ -1748,7 +1749,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 												'br_billing_phone'    	=> lang('br_billing_phone'),
 												'br_billing_address1' 	=> lang('br_billing_address1'),
 												'br_billing_city'     	=> lang('br_billing_city'),
-												//'br_billing_state'    	=> lang('br_billing_state'),
 												'br_billing_zip'      	=> lang('br_billing_zip'),
 												'br_billing_country'  	=> lang('br_billing_country')
 											);
@@ -1773,12 +1773,29 @@ class Brilliant_retail extends Brilliant_retail_core{
 							'br_shipping_lname'    => lang('br_shipping_lname'),
 							'br_shipping_address1' => lang('br_shipping_address1'),
 							'br_shipping_city'     => lang('br_shipping_city'),
-							'br_shipping_state'    => lang('br_shipping_state'),
 							'br_shipping_zip'      => lang('br_shipping_zip'),
 							'br_shipping_country'  => lang('br_shipping_country'),
 							'br_shipping_phone'    => lang('br_shipping_phone')
 						) );
 				}
+
+				// Should we validate the State
+					$country = (isset($data['br_billing_country'])) ? $data['br_billing_country'] : '';
+					$validate_state = (strcasecmp($country, "US") == 0 || strcasecmp($country, "United States") == 0 || strcasecmp($country, "CA") == 0 || strcasecmp($country, "Canada") == 0);
+					if($validate_state) 
+					{
+						array_merge( $required_fields, 
+							array('br_billing_state' => lang('br_billing_state'))
+						);
+
+						if (!$ship_same_address)
+						{
+							array_merge( $required_fields, 
+								array('br_shipping_state' => lang('br_shipping_state'))
+							);
+						}
+					}
+
 
 				// Let's do some validation...
 				try {
