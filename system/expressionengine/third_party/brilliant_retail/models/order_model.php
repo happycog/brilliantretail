@@ -401,7 +401,7 @@ class Order_model extends CI_Model {
 				->join('br_order_download d','o.order_id = d.order_id')
 				->join('br_order_item i','i.order_id = d.order_id')
 				->where('o.site_id =',$this->config->item('site_id'))
-				->where('o.member_id',$member_id)
+				->where('d.member_id',$member_id)
 				->where('o.status_id >=',1); // Canceled = 0 so don't show it. 
 		if($hash != ''){
 			$this->db->where("md5(d.order_download_id)",$hash);
