@@ -224,7 +224,7 @@
 									<td>
 										<b><?=lang('br_order_note')?></b></td>
 									<td>
-											<textarea name="order_note"></textarea>
+											<textarea name="order_note" id="order_note"></textarea>
 									</td>
 								</tr>
 								<tr>
@@ -288,7 +288,7 @@
     								$remove = '';
     							}else{
     								$by 	= lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.date('n/d/y g:i:s a',$n["created"]);
-    								$remove = '<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'">'.lang('remove').'</a>';
+    								$remove = '<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'"><img src="'.$theme.'images/delete-grey.png" /></a>';
     							}
     							
     							echo '	<table width="100%" class="order_notes" cellpadding="0" cellspacing="0">
@@ -296,7 +296,7 @@
         										<tr>
         											<th>
         												'.$by.'</th>
-        											<th width="10%" style="text-align:right">
+        											<th width="10%" style="text-align:right;padding:5px 5px 0">
         												'.$remove.'</th>
         										</tr>
         									</thead>
@@ -331,5 +331,17 @@
 <script type="text/javascript">
 	$(function(){
 		$('.rightNav a.submit').filter(":last").attr('target','_blank');
+		
+		/*
+		$('#order_note').redactor({
+		['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|',
+'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
+'image', 'video', 'file', 'table', 'link', '|',
+'fontcolor', 'backcolor', '|', 
+'alignleft', 'aligncenter', 'alignright', 'justify', '|',
+'horizontalrule']
+		
+		});
+		*/
 	});
 </script>
