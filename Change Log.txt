@@ -21,6 +21,8 @@
 * Added br_customer_download_file_before (NEEDS DOCUMENTATION)
 * Added member_id to br_order_download table
 * Added endabled/disabled message to gateway overview page
+* Added subtotal variable to items in checkout_thankyou tag. (NEEDS DOCUMENTATION)
+* Added order_id parameter to customer_downloads template tag.
 * Updated product types in new product form to sort alphabetically.
 * Updated Authorize.net gateway to include input name in class definition for form elements.
 * Updated meta method with optimized queries and caching to improve page loads on large data sets.

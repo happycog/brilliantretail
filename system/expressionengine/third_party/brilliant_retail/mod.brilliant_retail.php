@@ -2887,7 +2887,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function customer_downloads()
 		{
 			$this->EE->load->model('order_model');
-			$downloads = $this->EE->order_model->get_downloads_by_member($this->EE->session->userdata["member_id"]);
+			$downloads = $this->EE->order_model->get_downloads_by_member(
+				$this->EE->session->userdata["member_id"],
+				'',
+				$this->EE->TMPL->fetch_param('order_id')
+			);
+
 			$limit = 1 * ($this->EE->TMPL->fetch_param('limit'));
 			if($limit > 0){
 				$cap = count($downloads);

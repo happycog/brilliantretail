@@ -83,6 +83,7 @@ class Order_model extends CI_Model {
 		$query = $this->db->get();
 		$i = 0;
 		foreach($query->result_array() as $val){
+			$val['subtotal'] = number_format($val['quantity'] * $val['price'],2,'.','');
 			$order['items'][$i] = $val;	
 			$i++;
 		}
@@ -392,7 +393,7 @@ class Order_model extends CI_Model {
 		return $orders;
 	}
 	
-	function get_downloads_by_member($member_id,$hash=''){
+	function get_downloads_by_member($member_id,$hash='',$order_id=''){
 		$downloads = array();
 		$this->db->select('	o.*,
 							d.*, 
@@ -405,6 +406,9 @@ class Order_model extends CI_Model {
 				->where('o.status_id >=',1); // Canceled = 0 so don't show it. 
 		if($hash != ''){
 			$this->db->where("md5(d.order_download_id)",$hash);
+		}
+		if($order_id != ''){
+			$this->db->where("o.order_id",$order_id);
 		}
 		$this->db->group_by("d.order_download_id");
 		
