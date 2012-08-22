@@ -182,9 +182,12 @@
 					<tr>
 						<td class="small_content_box">
 							<?php
-								$d = unserialize($order["payment"][0]["details"]);
-								foreach($d as $key => $val){
-									echo '<b>'.lang(strtolower(str_replace(" ","_",trim($key)))).'</b> : '.$val.'<br />';
+								if(isset($order["payment"][0]))
+								{
+									$d = unserialize($order["payment"][0]["details"]);
+									foreach($d as $key => $val){
+										echo '<b>'.lang(strtolower(str_replace(" ","_",trim($key)))).'</b> : '.$val.'<br />';
+									}								
 								}
 							?></td>
 					</tr>
@@ -198,13 +201,16 @@
 					<tr>
 						<td class="small_content_box"> 
 							<?php 
-								$list = array(
+								if(isset($order["shipment"][0]))
+								{
+									$list = array(
 												'Method' 	=> strtoupper($order["shipment"][0]["method"]),
 												'label' 	=> $order["shipment"][0]["label"] 
 											);
-
-								foreach($list as $key => $val){
-									echo '<b>'.lang($key).'</b> : '.$val.'<br />';
+	
+									foreach($list as $key => $val){
+										echo '<b>'.lang($key).'</b> : '.$val.'<br />';
+									}								
 								}
 							?></td>
 					</tr>
@@ -252,7 +258,7 @@
 								<tr>
 									<td>&nbsp;</td>
 									<td>
-										<input type="submit" value="<?=lang('br_add_note')?>" />
+										<input type="submit" class="submit" value="<?=lang('br_add_note')?>" />
 									</td>
 								</tr>
 							</table>

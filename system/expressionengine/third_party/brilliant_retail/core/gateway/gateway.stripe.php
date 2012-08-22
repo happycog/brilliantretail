@@ -473,7 +473,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 			Stripe::setApiKey($key);
 			
 			$c = Stripe_Customer::retrieve($customer_id);
-			$response = $c->updateSubscription(array("plan" => $data["br_subscribe"]["id"]));
+			$response = $c->updateSubscription(array("trial_end" => (gmdate("U")+60),"plan" => $data["br_subscribe"]["id"]));
 			
 			// The extension create_subsciption method expects
 			// a subscription_id
@@ -581,7 +581,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 		);
 		$data[] = array(
 			'config_id' => $config_id, 
-			'label'	 	=> 'Public API Key', 
+			'label'	 	=> 'Live Publishable Key', 
 			'code'		=> 'public_key', 
 			'type' 		=> 'text',
 			'value'		=> '',
@@ -599,7 +599,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 		);
 		$data[] = array(
 			'config_id' => $config_id, 
-			'label'	 	=> 'Test Public API Key', 
+			'label'	 	=> 'Test Publishable Key', 
 			'code'		=> 'test_public_key', 
 			'type' 		=> 'text',
 			'value'		=> '',
