@@ -18,10 +18,13 @@
 			"types": ["module","fieldtype","extension"],
 			"paths": {
 				"system": [
-					"system/expressionengine/third_party//brilliant_retail"
+					"system/expressionengine/third_party/brilliant_retail"
 				],
 				"themes": [
 					"themes/third_party/brilliant_retail"
+				],
+				"root": [
+					"media"
 				]
 			}
 		},{
@@ -62,9 +65,6 @@
 			"paths": {
 				"system": [
 					"system/expressionengine/third_party/snippet"
-				],
-				"themes": [
-					"themes/third_party/snippet"
 				]
 			}
 		},{
