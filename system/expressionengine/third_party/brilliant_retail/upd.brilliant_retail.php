@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.1.5.5';
+	public $version	= '1.1.6.0';
 	
 	function Brilliant_retail_upd()
 	{
