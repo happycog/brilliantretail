@@ -35,7 +35,9 @@ echo $br_header;
 ?>
 	<table id="promoTableEdit" cellspacing="0" cellpadding="0" border="0" class="product_edit" width="100%">
 		<tr>
-			<th colspan="2"><?=lang('br_details')?></td>
+			<th width="35%"><?=lang('br_details')?></td>
+			<th>
+				&nbsp;</th>
 		</tr>
 		<tr>
 			<td>
@@ -327,7 +329,7 @@ echo $br_header;
 	        	function(data){
 	            	brResult.find('tr').remove();
 					$.each(data, function(i,item){
-	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td width="10%"><a href="#" class="add_product {product_id:'+item.product_id+'}" ><?=lang('br_add')?></a></td></tr>').appendTo(brResult);
+	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td width="10%"><a href="#" class="add_product {product_id:'+item.product_id+'}" ><img src="<?=$theme?>images/add.png" /></a></td></tr>').appendTo(brResult);
 	            	});
 	            	$('.add_product').unbind('click').bind('click',function(){
 						_add_product($(this).metadata().product_id);
@@ -363,7 +365,7 @@ echo $br_header;
 		new_row.attr({'id':''}).find('td:eq(3)').remove();
 		new_row.find('td:eq(1)').remove();
 		new_row.find('td:eq(0)').attr({'style':'width:auto','width':'60%'});
-		$('<td width="10%"><a href="#" class="remove_product">remove</a><input type="hidden" name="product[]" value="'+product_id+'"></td>').appendTo(new_row);
+		$('<td width="10%"><a href="#" class="remove_product"><img src="<?=$theme?>images/delete.png" /></a><input type="hidden" name="product[]" value="'+product_id+'"></td>').appendTo(new_row);
 		$(new_row).appendTo(productSelected);
 		row.remove();
 		productSelected.find('tr:even').addClass('even');

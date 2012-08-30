@@ -47,12 +47,14 @@
 			$title 	= $m["title"];	
 		}
 		
+		$last = array('data' => $link, 'style' => 'text-align:center');
+		
 		$this->table->add_row(
 				        		'<span style="display:none">'.$m["title"].'</span>'.$title,
 			        			$m["descr"],
 			        			$m["version"],
 			        			$enabled,
-			        			$link
+			        			$last
 		        			);
 	}
 	echo $this->table->generate();
