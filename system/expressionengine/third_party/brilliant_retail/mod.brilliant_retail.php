@@ -756,26 +756,26 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			// Parameters
 				// ID for the UL tag		
-					$id = ($this->EE->TMPL->fetch_param('id') == '') ? 'nav' : $this->EE->TMPL->fetch_param('id');
-
+					$id = $this->EE->TMPL->fetch_param('id','nav');
+					
 				// Class for the UL tag		
-					$class = ($this->EE->TMPL->fetch_param('class') == '') ? '' : $this->EE->TMPL->fetch_param('class');
-
+					$class = $this->EE->TMPL->fetch_param('class','');
+					
 				// Style allows for linear or nested
-					$style = ($this->EE->TMPL->fetch_param('style')) ? strtolower($this->EE->TMPL->fetch_param('style')) : 'nested' ;
-				
+					$style = $this->EE->TMPL->fetch_param('style','nested');
+					
 				// exclude categories by url_title
 					$exclude = $this->EE->TMPL->fetch_param("exclude");
 				
 				// Sort method (options: 'sort','title')
-					$sort =  ($this->EE->TMPL->fetch_param('sort') == '') ? 'sort' : $this->EE->TMPL->fetch_param('sort');
+					$sort =  $this->EE->TMPL->fetch_param('sort','sort');
 				
 				// Show only the parent category
 					$parent_only = $this->EE->TMPL->fetch_param('parent_only');
 				
 				// Base path
-					$path = ($this->EE->TMPL->fetch_param('path') == '') ? 'catalog' : $this->EE->TMPL->fetch_param('path') ;
-				
+					$path = $this->EE->TMPL->fetch_param('path','catalog');
+					
 				// Active Category
 					$product_selected = $this->EE->TMPL->fetch_param('active_cat');
 

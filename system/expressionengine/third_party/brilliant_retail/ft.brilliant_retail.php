@@ -116,7 +116,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 								brClear.show();
 								brClear.bind(\'click\',_cleat_search_'.$this->field_name.');
 
-								if(term.length <= 3){
+								if(term.length <= 2){
 									brResult.find(\'tr\').remove();
 									return;
 								}

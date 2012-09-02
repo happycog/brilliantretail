@@ -111,26 +111,11 @@ p.b2r_search_btn {
 	padding:0;
 }
 
-p.b2r_search_btn a {
-	float: left;
-	display: inline-block;
-	margin: 0;
-	padding: 0 0 0 10px;
-	height: 21px;
-	color: #607982;
-	text-decoration: none;
-	line-height: 21px;
-	background: url(../../images/map_products01.gif) 0 -34px no-repeat; }
-
-p.b2r_search_btn a b {
-	display: inline-block;
-	cursor: pointer;
-	margin: 0;
-	padding: 0 10px 0 0;
-	height: 21px;
-	font-weight: normal;
-	line-height: 21px;
-	background: url(../../images/map_products01.gif) 100% -57px no-repeat; }
+div.dataTables_filter input 
+{
+	margin: 1px 0 0;
+	padding: 5px;
+}
 
 
 /* End Datatables */

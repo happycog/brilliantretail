@@ -100,8 +100,8 @@
 		?>
 		brSearch.keyup(function(e){
 			var term = $(this).val();
-			if(term.length < 3){
-				return;
+			if(term.length < 2){
+				//return;
 			}
 			brClear.show();
 			brClear.bind('click',_clear_search);

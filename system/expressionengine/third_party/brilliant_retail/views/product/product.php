@@ -114,7 +114,7 @@
 													}
 													
 													});
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#productTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear" class="submit"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#productTable_filter input');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false
