@@ -52,9 +52,9 @@
 							?>
 							
 						</select>
-						<p>
-							<div id="create_config" class="add_btn"><?=lang('create')?></div>
-						</p></td>
+						<span class="button">
+							<a id="create_config" class="submit"><?=lang('create')?></a>
+						</span></td>
 				</tr>
 			</table>
 		</div>
@@ -63,7 +63,8 @@
 				$(function() {
 					$("#config_opts").asmSelect({
 						addItemTarget: 'bottom',
-						sortable: true
+						sortable: true,
+						removeLabel: '<img src="<?=$theme?>images/delete.png" />'
 					});
 					$('#create_config').bind('click',function(){
 						if($('#config_opts').val() != null){
@@ -126,7 +127,7 @@
 					'<select style="display:none" name="config_adjust_type[]"><option>fixed</option><option>percent</option></select>'+
 					'<input type="text" name="config_adjust[]" value="0.00" /></td>'+
 					'<td class="move_config_row"><img src="<?=$theme?>images/move.png" /></td>'+
-					'<td><a href="#" class="config_item_remove"><?=lang('delete')?></a></td></tr>';
+					'<td><a href="#" class="config_item_remove"><img src="<?=$theme?>images/delete.png" /></a></td></tr>';
 			$(tmp).prependTo($('#config_selected tbody'));
 
 			// reset the dnd for the rows

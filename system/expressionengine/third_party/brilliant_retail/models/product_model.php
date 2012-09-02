@@ -182,10 +182,11 @@ class Product_model extends CI_Model {
 			return $products;
 		}
 	
-	function get_product_collection($search,$limit=0,$offset=0,$sort,$dir,$cat,$prefix='exp_'){
+	function get_product_collection($search,$limit=0,$offset=0,$sort,$dir,$cat_id='',$type_id=''){
 		
-		$site_id = $this->config->item('site_id');
-			
+		$site_id 	= $this->config->item('site_id');
+		$prefix 	= $this->db->dbprefix;
+		 
 		// Get a simple count of all products
 			$sql = "SELECT 
 						count(product_id) as cnt 
@@ -206,15 +207,21 @@ class Product_model extends CI_Model {
 						p.enabled  
 					FROM 
 						".$prefix."br_product p "; 
-			if($cat != ''){
+			if($cat_id != ''){
 				$sql .= ", 	".$prefix."br_product_category c 
 							WHERE 
 								p.product_id = c.product_id 
 							AND
-								c.category_id = ".$cat." ";
+								c.category_id = ".$cat_id." ";
 			}else{
 				$sql .= "WHERE 1 = 1 ";
 			}
+			
+			// Are we filtering by type?
+				if($type_id != '')
+				{
+					$sql .= ' AND p.type_id = '.$type_id;
+				}
 			
 			$sql .= " AND p.site_id = ".$site_id;
 			

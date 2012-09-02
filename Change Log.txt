@@ -1,7 +1,5 @@
 # Version 1.2
 
-## David Dexter 
-
 * Added br_payment_options_before to manipulate payment gateway form array prior to output. (NEEDS DOCUMENTATION) 
 * Added br_product_editform_before to manipulate product edit form prior to rendering. (NEEDS DOCUMENTATION)
 * Added br_product_parse_before to manipulate the products array prior to parsing. (NEEDS DOCUMENTATION)
@@ -14,6 +12,9 @@
 * Added endabled/disabled message to gateway overview page
 * Added subtotal variable to items in checkout_thankyou tag. (NEEDS DOCUMENTATION)
 * Added order_id parameter to customer_downloads template tag.
+* Added type filter to product overview page. 
+* Added optional State validation for US/CA purchases.
+* Added a 'new product' link to the store > products navigation. 
 * Fixed an issue with merging products in cart when supplying variation of the same configurable product. 
 * Fixed an issue with Configurable product option display when there was only one option and with an adjustment. 
 * Fixed an issue with Configurable product option display when individual options are out of stock. 
@@ -23,6 +24,7 @@
 * Fixed an issue with cart_add feature when using an image to post to cart with a custom name on the image input. 
 * Fixed the authorize.net payment gateway to remove extra closing label tag. 
 * Fixed a number of minor language key settings. 
+* Fixed a number of minor html errors in the demo blank theme.
 * Updated product types in new product form to sort alphabetically.
 * Updated Authorize.net gateway to include input name in class definition for form elements.
 * Updated meta method with optimized queries and caching to improve page loads on large data sets.
@@ -31,7 +33,5 @@
 * Updated admin view templates with additional changes to match EE default code styling.
 * Updated product fieldtype and related product search to fire after second character. [#0000072]
 * Updated dataTables plugin to version 1.9.3.
+* Removed $prefix parameter from product_model method get_product_collection in favor of the $this->db->prefix variable
 
-## Isaac Horton
-
-* Added optional State validation for US/CA purchases.

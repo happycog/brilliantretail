@@ -56,14 +56,32 @@
     <?=form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_batch',array('method' => 'POST', 'id' => 'productForm'))?>
         <div id="filterMenu"> 
 			<fieldset>
-				<legend>Search Products</legend> 
-            	<select id="filter" style="margin-top:5px;margin-left:10px;">
-            		<option value=""><?=lang('br_filter_by_category')?></option>
+				<legend><?=lang('br_filter_products')?></legend> 
+            	<label>
+            		<?=lang('br_category')?>:
+            	</label>
+            	<select class="filter" id="category" style="margin-top:5px;margin-left:10px;">
+            		<option value=""><?=lang('br_all_categories')?></option>
             		<?php
             		 	foreach($categories as $c) 
             		 	{ 
             		 		$selected = ($c['category_id']==$catid) ?  'selected="selected"' : '';
             		 		echo '<option value="'.$c['category_id'].'" '.$selected.' >'.$c['title'].'</option>';
+            		 	} 
+            		 ?>
+            	</select>
+            	&nbsp;
+            	&nbsp;
+            	<label>
+            		<?=lang('br_type')?>: 
+            	</label>
+            	<select class="filter" id="type" style="margin-top:5px;margin-left:10px;">
+            		<option value=""><?=lang('br_all_types')?></option>
+            		<?php
+            			foreach($product_type as $key => $val) 
+            		 	{ 
+            		 		$selected = ($key==$typeid) ?  'selected="selected"' : '';
+            		 		echo '<option value="'.$key.'" '.$selected.' >'.$val.'</option>';
             		 	} 
             		 ?>
             	</select>
@@ -88,7 +106,9 @@
 <script type="text/javascript">
 	$(function(){
 		var oTable = $('#productTable').dataTable({
+													"sDom": "lfrt<'dataTables_footer'ip<'clear'>>",
 													"iDisplayLength": 25, 
+													"sPaginationType": "full_numbers", 
 													"aoColumns"	: [
 																		{ "asSorting": [ "desc", "asc" ] }, 
 																		null,
@@ -114,14 +134,16 @@
 													}
 													
 													});
-		$('<p class="b2r_search_btn"><a href="#" id="clear" class="submit"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#productTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear" class="submit"><?=lang('br_clear')?></a></p>').insertBefore('#productTable_filter input');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false
 									});
 		
-		$('#filter').change(function(){
-			location.href="<?=$base_url;?>&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product&cat_id="+$("#filter").val();
+		$('.filter').change(function(){
+			var cat_id = $("#category").val();
+			var type_id = $("#type").val();
+			location.href="<?=$base_url;?>&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product&cat_id="+cat_id+"&type_id="+type_id;
 		})
 		
 		$('#batch_submit').bind('click',function(){

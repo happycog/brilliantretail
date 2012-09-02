@@ -695,18 +695,20 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function product()
 		{
 			// Set the parameters 
-				$_SESSION["catid"] = (isset($_GET["cat_id"])) ? $_GET["cat_id"] : "";
-
-			$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
-			
-			// Get the categories 
-				$this->vars['categories'] = $this->EE->product_model->get_all_categories();
-				$this->vars['catid'] = $_SESSION["catid"];
-			
+				$_SESSION["catid"] 	= $this->EE->input->get("cat_id");
+				$_SESSION["typeid"] = $this->EE->input->get("type_id");
+				
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
 				$this->vars['cp_page_title'] = lang('view').' '.lang('nav_br_products');
 				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
 				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
+
+			// Get the categories & product types for filtering
+				$this->vars['categories'] 	= $this->EE->product_model->get_all_categories();
+				$this->vars['product_type'] = $this->_config['product_type'];	
+				
+				$this->vars['catid'] 		= $_SESSION["catid"];
+				$this->vars['typeid'] 		= $_SESSION["typeid"];
 
 			// Add the create product button
 				$this->EE->cp->set_right_nav(array(
@@ -726,7 +728,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$prefix = $this->EE->db->dbprefix;
 			
 			// Get product collection 
-				$products = $this->EE->product_model->get_product_collection($_GET["sSearch"],$_GET["iDisplayLength"],$_GET["iDisplayStart"],$_GET["iSortCol_0"],$_GET["sSortDir_0"],$_SESSION["catid"],$prefix);
+				$products = $this->EE->product_model->get_product_collection($_GET["sSearch"],$_GET["iDisplayLength"],$_GET["iDisplayStart"],$_GET["iSortCol_0"],$_GET["sSortDir_0"],$_SESSION["catid"],$_SESSION["typeid"]);
 				
 			// setup the return array 
 				$row = array();
@@ -1018,9 +1020,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$values .= '		</select>
 												<input type="text" name="config_adjust[]" value="'.$c["adjust"].'" /></td>
 											<td class="move_config_row">
-												<img src="'.$this->_theme('images/icon_move.png').'" /></td>
+												<img src="'.$this->_theme('images/move.png').'" /></td>
 											<td>
-												<a href="#" class="config_item_remove">'.lang('delete').'</a></td>
+												<a href="#" class="config_item_remove"><img src="'.$this->_theme('images/delete.png').'" alt="'.lang('br_delete').'" /></a></td>
 										</tr>';
 						}
 					}	
@@ -3320,8 +3322,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						'	<th>'.lang('br_sku').'</th>
 							<th>'.lang('br_quantity').'</th>
 							<th>'.lang('br_price_adjust').'</th>
-							<th>'.lang('br_sort').'</th>
-							<th>'.lang('delete').'</th>';
+							<th colspan="2">'.lang('br_actions').'</th>';
 												
 			$str .= '			</thead><tbody>'.$values.'</tbody></table>';
 			return $str;

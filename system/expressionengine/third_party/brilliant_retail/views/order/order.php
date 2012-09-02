@@ -83,6 +83,8 @@ $content = $this->table->generate();
 <script type="text/javascript">
 	$(function(){
 		var oTable = $('#orderTable').dataTable({
+													"sDom": "lfrt<'dataTables_footer'ip<'clear'>>",
+													"sPaginationType": "full_numbers", 
 													"iDisplayLength": 25, 
 													"aoColumns": [
 																		{ "asSorting": [ "desc", "asc" ] }, 

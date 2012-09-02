@@ -169,7 +169,8 @@ $lang = array(
 				
 // Products 
 	'br_product_id' 				=> 'ID',
-	'br_filter_by_category' 		=> 'Filter by Category',
+	'br_filter_products' 			=> 'Filter Products',
+	'br_all_types'					=> 'All Product Types',
 	'br_batch_action_required' 		=> 'Opps...Please Select a Batch Action.',
 	'br_delete_selected_products' 	=> 'Delete Selected',
 	'br_enable_selected_products' 	=> 'Enable Selected',
