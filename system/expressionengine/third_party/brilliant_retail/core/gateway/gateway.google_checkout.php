@@ -97,10 +97,28 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 			$i++;
 		}
 		
-		// Set default tax options
-		//$tax_rule = new GoogleDefaultTaxRule(0.15);
-		//$tax_rule->SetWorldArea(true);
-		//$cart->AddDefaultTaxRules($tax_rule);
+		
+		// Applying a discount
+		if ($data['cart_discount']!="")
+		{
+			${'item_'.$i} = new GoogleItem("Discount Applied",
+									"",
+									1,
+									"-".$this->_currency_round($data['cart_discount'])
+									);
+												
+			$cart->AddItem(${'item_'.$i});
+			
+		}
+		
+		// Calculating the Tax by taking the subtotal, subtracting the discount and 
+		// dividing by the pre-calculated rate.
+		// -- Then formatting the number by 2 decimal places
+		$taxrate = number_format(($data['cart_subtotal']-$data['cart_discount']/$data['cart_tax']),2);
+		
+		$tax_rule = new GoogleDefaultTaxRule($taxrate);
+		$tax_rule->SetWorldArea(true);
+		$cart->AddDefaultTaxRules($tax_rule);
 			
 		
 		$ship_1 = new GoogleFlatRateShipping("Shipping", $data['cart_shipping']);
