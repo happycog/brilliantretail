@@ -61,9 +61,12 @@
 <script type="text/javascript">
 	$(function(){
 		var oTable = $('#reportTable').dataTable({
-													"bStateSave": true
+													"sDom": "lfrt<'dataTables_footer'ip<'clear'>>",
+													"iDisplayLength": 10, 
+													"sPaginationType": "full_numbers", 
+													"bStateSave": true 
 												});
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#reportTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear" class="submit"><?=lang('br_clear')?></a></p>').insertBefore('#reportTable_filter input');
 		$('<div style="clear:both"></div>').insertAfter('#reportTable_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();

@@ -110,7 +110,7 @@ $content = $this->table->generate();
 													}
 												});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#orderTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear" class="submit">Clear</a></p>').insertBefore('#orderTable_filter input');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

@@ -46,6 +46,8 @@
 <script type="text/javascript">
 	$(function(){
 		var oTable = $('#customerTable').dataTable({
+													"sDom": "lfrt<'dataTables_footer'ip<'clear'>>",
+													"sPaginationType": "full_numbers", 
 													"iDisplayLength": 25, 
 													"aoColumns": [
 																		null,
@@ -72,7 +74,7 @@
 													
 													});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#customerTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear" class="submit">Clear</a></p>').insertBefore('#customerTable_filter input');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();
 										return false

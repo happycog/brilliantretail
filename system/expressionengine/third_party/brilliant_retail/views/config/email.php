@@ -49,13 +49,10 @@
 
 <script type="text/javascript">
     $(function(){
-        var oTable = $('#emailTable').dataTable({
-                                                    "bStateSave": true
-                                                });
-        $('<p class="b2r_search_btn"><a href="#" id="clear"><b><?=lang('br_clear')?></b></a></p>').insertBefore('#emailTable_filter input');
-        $('#clear').click(function(){
-                                        oTable.fnFilterClear();
-                                        return false
-                                    });
-    });
+        var oTable = $('#emailTable').tablesorter({
+			headers: {},
+        	textExtraction: "complex",			
+			widgets: ["zebra"]
+		});
+	});
 </script>

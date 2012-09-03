@@ -113,6 +113,7 @@
 	$(function(){
 		$('#taxTable tr:even').addClass('even');
 		$('#taxTable tr:odd').addClass('odd');
+		$('#taxTable').validate();
 		$('#delete').bind('click',function(){
 			if(confirm('<?=lang('br_confirm_delete_tax')?>')){
 				return true;

@@ -109,6 +109,7 @@
 													"sDom": "lfrt<'dataTables_footer'ip<'clear'>>",
 													"iDisplayLength": 25, 
 													"sPaginationType": "full_numbers", 
+													"bStateSave": true,
 													"aoColumns"	: [
 																		{ "asSorting": [ "desc", "asc" ] }, 
 																		null,
