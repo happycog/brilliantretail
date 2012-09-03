@@ -61,6 +61,10 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		public function start_ipn($data,$config)
 		{
 		
+		// =debug
+		header('Content-Type: text/plain; charset=iso-8859-1');
+		print_r($data);
+		exit;
 		
 		require_once('assets/google-checkout/library/googlecart.php');
 		require_once('assets/google-checkout/library/googleitem.php');
@@ -93,16 +97,20 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 			$i++;
 		}
 		
+		// Set default tax options
+		//$tax_rule = new GoogleDefaultTaxRule(0.15);
+		//$tax_rule->SetWorldArea(true);
+		//$cart->AddDefaultTaxRules($tax_rule);
 			
 		
 		$ship_1 = new GoogleFlatRateShipping("Shipping", $data['cart_shipping']);
 		$cart->AddShipping($ship_1);
 		
 		// Specify <edit-cart-url>
-		$cart->SetEditCartUrl($data['cancel_return']);
+		$cart->SetEditCartUrl($data['return']);
 
 	    // Specify "Return to xyz" link
-	    $cart->SetContinueShoppingUrl("http://br.hippoclients.com/store/");
+	    $cart->SetContinueShoppingUrl($data['cancel_return']);
 	
 	    // Define rounding policy
 	    $cart->AddRoundingPolicy("CEILING", "TOTAL");
