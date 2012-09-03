@@ -1,9 +1,6 @@
 /* Datatables */
 
-#mainContent .pageContents table#productTable,
-#mainContent .pageContents table#orderTable,
-#mainContent .pageContents table#customerTable,
-#mainContent .pageContents table#reportTable {
+#mainContent .pageContents table.dataTable {
 	margin-bottom: 0;
 	border-bottom: 0;
 }

@@ -15,6 +15,7 @@
 * Added type filter to product overview page. 
 * Added optional State validation for US/CA purchases.
 * Added a 'new product' link to the store > products navigation. 
+* Fixed an issue with download remaining count on limited download products.  
 * Fixed an issue with merging products in cart when supplying variation of the same configurable product. 
 * Fixed an issue with Configurable product option display when there was only one option and with an adjustment. 
 * Fixed an issue with Configurable product option display when individual options are out of stock. 

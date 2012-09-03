@@ -2929,7 +2929,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($downloads[$i]["download_limit"] == 0){
 					$downloads[$i]["download_remaining"] = lang('br_download_unlimited');
 				}else{
-					$downloads[$i]["download_remaining"] = $downloads[$i]["download_remaining"] - $downloads[$i]["cnt"];
+					$downloads[$i]["download_remaining"] = $downloads[$i]["download_limit"] - $downloads[$i]["cnt"];
 				}
 				
 				$downloads[$i]["order_status"] = $this->_config["status"][$downloads[$i]["status_id"]];
