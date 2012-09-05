@@ -2157,8 +2157,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 												}
 												
 												$this->EE->order_model->create_order_download($dl);
-												unset($dl);
 											}
+											unset($dl);
 									}
 							}
 						
