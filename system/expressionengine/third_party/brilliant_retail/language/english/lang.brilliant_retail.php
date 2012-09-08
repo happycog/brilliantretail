@@ -274,7 +274,7 @@ $lang = array(
 			
 		// Download 
 			'br_download_file_required' => 'A downloadable file',
-	
+			
 	'br_add_options' => 'Add Options',
 	'br_add_custom_attributes' => 'Add custom attributes',
 	'br_select_attribute_set' => 'Select',
@@ -578,6 +578,8 @@ $lang = array(
 				
 		// Product 
 			'br_choose_an_option'	=> '', 
+			'br_filter_category' 	=> 'Category',
+			'br_filter_price'		=> 'Price',
 			
 		// Customer 
 			"br_customer_exists" => "Customer already exists. Please login below.",
@@ -597,6 +599,8 @@ $lang = array(
 				'br_download_length' 		=> "Length", 	
 				'br_download_version' 		=> "Version",
 				'br_download_note_updated'	=> 'Your order note has been updated.',
+				'br_download_unavailable' 	=> 'The requested download is no longer available.',
+				'br_download_complete'		=> 'Download Complete', 
 				
 		// Cart Messages 
 			'br_checkout_shipping_error' 			=> "An error has occurred with the shipping method you selected. Please try again.", 

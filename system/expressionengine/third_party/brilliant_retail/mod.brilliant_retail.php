@@ -2930,20 +2930,32 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$downloads[$i]["download_remaining"] = lang('br_download_unlimited');
 				}else{
 					$downloads[$i]["download_remaining"] = $downloads[$i]["download_limit"] - $downloads[$i]["cnt"];
+					// If we reached the limit then lets go ahead and make things as complete. 
+						if($downloads[$i]["download_remaining"] < 1)
+						{
+							$downloads[$i]["download_status_id"] 	= 0;
+							$downloads[$i]["download_link"] 		= lang('br_download_link_unavailable');
+							$downloads[$i]["download_status"] 		= lang('br_download_complete');
+						}
 				}
-				
-				$downloads[$i]["order_status"] = $this->_config["status"][$downloads[$i]["status_id"]];
-				if($downloads[$i]["status_id"] <= 2){
-					$downloads[$i]["download_status_id"] = 0;
-					$downloads[$i]["download_link"] = lang('br_download_link_unavailable');
-					$downloads[$i]["download_status"] = lang('br_download_pending');
-				}else{
-					$downloads[$i]["download_status_id"] = 1;
-					$action_id = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_download_file');
-					$link = $action_id.'&id='.md5($downloads[$i]["order_download_id"]);
-					$downloads[$i]["download_link"] = $link;
-					$downloads[$i]["download_status"] = lang('br_download_available');
-				}
+
+				// If we didn't set the download_status in the 'limit' section 
+				// lets go ahead and take a look at it now. 
+					if(!isset($downloads[$i]["download_status"]))
+					{
+						$downloads[$i]["order_status"] = $this->_config["status"][$downloads[$i]["status_id"]];
+						if($downloads[$i]["status_id"] <= 2){
+							$downloads[$i]["download_status_id"] 	= 0;
+							$downloads[$i]["download_link"] 		= lang('br_download_link_unavailable');
+							$downloads[$i]["download_status"] 		= lang('br_download_pending');
+						}else{
+							$downloads[$i]["download_status_id"] = 1;
+							$action_id = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_download_file');
+							$link = $action_id.'&id='.md5($downloads[$i]["order_download_id"]);
+							$downloads[$i]["download_link"] = $link;
+							$downloads[$i]["download_status"] = lang('br_download_available');
+						}
+					}
 			}
 			$vars[0] = array('downloads'=>$downloads);
 			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
@@ -2971,7 +2983,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				// Is the status not right?
 					if($downloads[0]["download_limit"] >= 1){
-						if(($downloads[$i]["download_remaining"] - $downloads[$i]["cnt"]) <= 0){
+						if(($downloads[0]["download_limit"] - $downloads[0]["cnt"]) <= 0){
 							$_SESSION["br_alert"] = lang('br_download_unavailable');
 							$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 						}

@@ -41,6 +41,7 @@
 		 */
 		 
 		public function __construct(){
+			@ini_set('memory_limit','128M');
 		}
 		
 		public function create($path_to_image)

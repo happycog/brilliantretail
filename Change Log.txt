@@ -27,6 +27,7 @@
 * Fixed a number of minor language key settings. 
 * Fixed a number of minor html errors in the demo blank theme.
 * Fixed an issue with ordering multiple downloadable products. [#0000198]
+* Updated price and category in catalog_layered tag to use new br_filter_category and br_filter_price language keys. 
 * Updated product types in new product form to sort alphabetically.
 * Updated Authorize.net gateway to include input name in class definition for form elements.
 * Updated meta method with optimized queries and caching to improve page loads on large data sets.

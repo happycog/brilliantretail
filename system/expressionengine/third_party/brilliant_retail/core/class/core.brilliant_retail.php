@@ -1419,8 +1419,8 @@ class Brilliant_retail_core {
 								$i++;
 							}
 							$layered[] = array(
-												'result_layered_label' => 'Category',
-												"result_layered_item" => $items
+												'result_layered_label' 	=> lang('br_filter_category'),
+												"result_layered_item" 	=> $items
 											);	
 						}
 					}
@@ -1453,8 +1453,8 @@ class Brilliant_retail_core {
 								}
 					
 								$layered[] = array(
-													'result_layered_label' => 'Price',
-													"result_layered_item" => $items
+													'result_layered_label' 	=> lang('br_filter_price'),
+													"result_layered_item" 	=> $items
 												);	
 							#}
 						}
