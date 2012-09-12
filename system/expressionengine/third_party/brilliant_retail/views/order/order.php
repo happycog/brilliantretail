@@ -40,7 +40,15 @@ $this->table->set_heading(
 			'style' => ''
 		),
 	array(
-			'data' => lang('br_order_amount'),
+			'data' => lang('br_order_total'),
+			'style' => 'width:60px'
+		),
+	array(
+			'data' => lang('br_order_payment'),
+			'style' => 'width:60px'
+		),
+	array(
+			'data' => lang('br_order_balance'),
 			'style' => 'width:60px'
 		),
 	array(
@@ -88,6 +96,8 @@ $content = $this->table->generate();
 													"iDisplayLength": 25, 
 													"aoColumns": [
 																		{ "asSorting": [ "desc", "asc" ] }, 
+																		null,
+																		null,
 																		null,
 																		null,
 																		null,

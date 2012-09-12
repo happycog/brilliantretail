@@ -2087,7 +2087,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 											'details' => $data["payment"]["details"],
 											'amount' => $this->_currency_round($data["payment"]["amount"]),
 											'approval' => $data["payment"]["approval"],
-											'created' => date("Y-n-d H:i:s")
+											'created' => $this->EE->localize->now
 										);
 					$this->EE->order_model->create_order_payment($payment[0]);
 				

@@ -122,8 +122,10 @@
             				<?=lang('br_sku')?></th>
             			<th>
             				<?=lang('br_qty')?></th>
-            			<th>
+            			<th style="width:75px">
             				<?=lang('br_price')?></th>
+            			<th style="width:75px">
+            				&nbsp;</th>
             		</tr>
 					<?php
             			$i = 1;
@@ -142,7 +144,7 @@
                 								'.$item["sku"].'</td>
                 							<td>
                 								'.$item["quantity"].'</td>
-                							<td>
+                							<td colspan="2">
                 								'.$currency_marker.$item["price"].'</td>
                 						</tr>';
                 				$i++;
@@ -151,24 +153,69 @@
 					?>
 
 					<tr>
-						<td colspan="3" class="totals" style="text-align:right">
-							<p><?=lang('br_subtotal')?> :</p>
-							<p><?=lang('br_discount')?> :</p>
-							<p><?=lang('br_shipping')?> :</p>
-							<p><?=lang('br_tax')?> :</p>
-							<p><b><?=lang('br_total')?> :</b></p>
-							<p><b><?=lang('br_total_paid')?> :</b></p>
-							<p><b><?=lang('br_total_due')?> :</b></p>
-						</td>
+						<td colspan="3" class="totals">
+							<?=lang('br_subtotal')?> :</td>
+						<td colspan="2">
+							<?=$currency_marker.$order["base"]?></td>
+					</tr>		
+					<tr>
+						<td colspan="3" class="totals">
+							<?=lang('br_discount')?> :</td>
+						<td colspan="2">
+							<?=$currency_marker.$order["discount"]?></td>
+					</tr>
+					<tr>
+						<td colspan="3" class="totals">
+							<?=lang('br_shipping')?> :</td>
+						<td colspan="2">
+							<?=$currency_marker.$order["shipping"]?></td>
+					</tr>
+					<tr>
+						<td colspan="3" class="totals">
+							<?=lang('br_tax')?> :</td>
+						<td colspan="2">
+							<?=$currency_marker.$order["tax"]?></td>
+					</tr>
+					<tr>
+						<td colspan="3" class="totals">
+							<?=lang('br_total')?> :</td>
+						<td>
+							&nbsp;</td>
 						<td class="totals">
-							<p><?=$currency_marker?><?=$order["base"]?></p>
-							<p><?=$currency_marker?><?=$order["discount"]?></p>
-							<p><?=$currency_marker?><?=$order["shipping"]?></p>
-            				<p><?=$currency_marker?><?=$order["tax"]?></p>
-            				<p><b><?=$currency_marker?><?=$order["order_total"]?></b></p>
-            				<p><b><?=$currency_marker?><?=$order["order_total_paid"]?></b></p>
-            				<p><b><?=$currency_marker?><?=$order["order_total_due"]?></b></p>
-            			</td>
+							<?=$currency_marker.$order["order_total"]?></td>
+					</tr>
+					
+			<?php
+				foreach($order["payment"] as $p)
+				{
+					$date = (date("n/d/Y",$p["created"]) != '12/31/1969') ? ' ('.date("n/d/Y",$p["created"]).')' : '';
+			?>
+					<tr>
+						<td class="payment" colspan="3">
+							<strong>Payment: <?=$p["payment_type"]?></strong> <em><?=$date?></em></td>
+						<td class="payment" colspan="2">
+							(<?=$currency_marker.$p["amount"]?>)</td>
+					</tr>
+			<?php
+				}
+			?>		
+					
+					
+					<tr>
+						<td colspan="3" class="totals">
+							<?=lang('br_total_paid')?> :</td>
+						<td>
+							&nbsp;</td>
+						<td class="totals">
+							<?=$currency_marker.$order["order_total_paid"]?></td>
+					</tr>
+					<tr>
+						<td colspan="3" class="totals">
+							<?=lang('br_order_balance')?> :</td>
+						<td>
+							&nbsp;</td>
+						<td class="totals">
+							<?=$currency_marker.$order["order_total_due"]?></td>
 					</tr>
 				</table></td>
 		</tr>
@@ -289,7 +336,7 @@
     								$note .= '<br /><a href="/media/attachments/'.$n["filenm"].'" target="_blank">'.lang('br_attachment').'</a>';
     							}
     							
-    							if($n["member_id"] == ''){
+    							if($n["member_id"] == 0){
     								$by 	= date('n/d/y g:i:s a',$n["created"]);
     								$remove = '';
     							}else{

@@ -15,6 +15,8 @@
 * Added type filter to product overview page. 
 * Added optional State validation for US/CA purchases.
 * Added a 'new product' link to the store > products navigation. 
+* Added 'Payments' and 'Balance' headings to the control panel order overview page.
+* Added line item payments to order detail in the control panel.  
 * Fixed an issue with download remaining count on limited download products.  
 * Fixed an issue with merging products in cart when supplying variation of the same configurable product. 
 * Fixed an issue with Configurable product option display when there was only one option and with an adjustment. 
@@ -27,6 +29,7 @@
 * Fixed a number of minor language key settings. 
 * Fixed a number of minor html errors in the demo blank theme.
 * Fixed an issue with ordering multiple downloadable products. [#0000198]
+* Fixed an issue with creating paired entries for existing products. Entry status set to open or closed based on product enabled value. 
 * Updated control panel look and feel for better integration. 
 * Updated price and category in catalog_layered tag to use new br_filter_category and br_filter_price language keys. [#0000202]
 * Updated product types in new product form to sort alphabetically.

@@ -22,12 +22,13 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
+echo $br_header;
 
-// Header
-	echo $br_header;
-	
 // Create the table
-	$this->table->set_template($cp_table_template);
+
+	$cp_pad_table_template["table_open"] = '<table id="customerDetailTable" cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
+
+	$this->table->set_template($cp_pad_table_template);
    	$this->table->set_heading(
 			   					lang('br_order_id'),
 			   					lang('br_order_date'),
@@ -64,7 +65,10 @@
 		/*
 			Build the dynamic table
 		*/
-		var oTable = $('.mainTable').dataTable({
+		var oTable = $('#customerDetailTable').dataTable({
+										"sDom": "lfrt<'dataTables_footer'ip<'clear'>>",
+										"sPaginationType": "full_numbers", 
+										"iDisplayLength": 25, 
 										"bStateSave": true,
 										"aoColumns": [
 														null, 
@@ -75,7 +79,7 @@
 													]
 									});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('.mainTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear" class="submit">Clear</a></p>').insertBefore('#customerDetailTable_filter input');
 		$('<div style="clear:both"></div>').insertAfter('.mainTable_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();

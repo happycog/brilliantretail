@@ -191,6 +191,8 @@ class Order_model extends CI_Model {
 						o.created, 
 						CONCAT(d.".$fl_fname.", ' ', d.".$fl_lname.") as customer,  
 						(o.base + o.shipping + o.tax - o.discount) as total,
+						SUM(p.amount) as payment, 
+						((o.base + o.shipping + o.tax - o.discount) - SUM(p.amount)) as balance,
 						o.status_id,
 						CONCAT(a.billing_fname, ' ', a.billing_lname) as billing_customer, 
 						o.base,
@@ -201,6 +203,10 @@ class Order_model extends CI_Model {
 					FROM 
 						".$prefix."br_order_address a,  
 						".$prefix."br_order o  
+					INNER JOIN 
+						exp_br_order_payment p 
+							ON 
+						o.order_id = p.order_id 
 					LEFT JOIN
 						".$prefix."members m  
 							ON 
@@ -238,13 +244,18 @@ class Order_model extends CI_Model {
 									|| 
 								a.billing_lname  LIKE '%".$search."%' )";	
 			}
+
+			// Set the group by so we get the correct SUM on balance
+				$sql .= " GROUP BY o.order_id ";
 			
-			$sql .= " ORDER BY ".($sort+1)." ".$dir;
+			// Set the order by clause 		
+				$sql .= " ORDER BY ".($sort+1)." ".$dir;
 
-			if($limit != 0){
-				$sql .= " LIMIT ".$offset.",".$limit;
-			}
-
+			// Know your limits. 
+				if($limit != 0){
+					$sql .= " LIMIT ".$offset.",".$limit;
+				}
+			
 		// Run the sql
 			$query = $this->db->query($sql);
 			$rst = $query->result_array();

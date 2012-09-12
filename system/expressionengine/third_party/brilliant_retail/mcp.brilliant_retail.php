@@ -270,6 +270,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											date('n/d/y',$row["created"]),
 											$customer, 
 											$row["total"],
+											$row["payment"],
+											$row["balance"],
 											'<span class="order_status_'.$row["status_id"].'">'.$status.'</span>',
 											'<input type="checkbox" name="batch['.$row["order_id"].']" />'
 									);
@@ -436,7 +438,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 										'details' => $data["payment"]["details"],
 										'amount' => $this->_currency_round($data["payment"]["amount"]),
 										'approval' => $data["payment"]["approval"],
-										'created' => date("Y-n-d H:i:s")
+										'created' => $this->EE->localize->now 
 									);
 			
 				// Setup some email variables
@@ -445,7 +447,19 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 				$this->_send_email('admin-order-payment', $vars);
 
-			$this->EE->order_model->create_order_payment($payment[0]);
+				$this->EE->order_model->create_order_payment($payment[0]);
+			
+				// Add a system note
+					$message = str_replace('%x',$this->vars["currency_marker"].$this->_currency_round($data["payment"]["amount"]),str_replace('%y',$this->EE->session->userdata["username"],lang('br_order_payment_note_message')));
+					$note = array(
+								'order_note' 	=> $message,
+								'created'		=> $this->EE->localize->now,
+								'member_id'		=> 0,
+								'order_id' 		=> $order_id, 
+								'isprivate'		=> 2
+							);
+					$this->EE->order_model->create_order_note($note);
+			
 			$_SESSION["message"] = lang('br_order_payment_added');
 			$this->EE->functions->redirect($this->base_url.'&method=order_detail&order_id='.$order_id);
 		}		
@@ -3422,6 +3436,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					foreach($qry->result_array() as $rst){
 						$data = array(
 						        'title'         => $rst["title"],
+						        'status'		=> ($rst["enabled"] == 1) ? 'open' : 'closed', 
 						        'entry_date'    => time() 
 						);
 						$this->EE->api_channel_entries->submit_new_entry($channel_id,$data);	
