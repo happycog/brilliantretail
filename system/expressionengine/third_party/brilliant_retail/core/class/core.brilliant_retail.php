@@ -2482,7 +2482,7 @@ class Brilliant_retail_core {
 		}
 	
 	// Checkout Function to process payment
-		function _process_payment($data){
+		function _process_payment($data,$admin=FALSE){
 			
 			$this->EE->load->model('order_model');
 			
@@ -2507,6 +2507,7 @@ class Brilliant_retail_core {
 				// Process Gateway
 					$str = 'Gateway_'.$code;
 					$tmp = new $str();
+					$tmp->admin_order = $admin;
 					$trans = $tmp->process($data,$config);
 			
 			// Hook option to modify the $trans array after the 

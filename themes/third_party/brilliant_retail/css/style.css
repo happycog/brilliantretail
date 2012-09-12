@@ -44,6 +44,9 @@
 /* Order Overview / Detail */
 @import url('cp/order.css');
 
+/* Report Detail */
+@import url('cp/report.css');
+
 /* Settings */
 @import url('cp/config_categories.css');
 

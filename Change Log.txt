@@ -1,13 +1,13 @@
 # Version 1.2
 
-* Added br_payment_options_before to manipulate payment gateway form array prior to output. (NEEDS DOCUMENTATION) 
-* Added br_product_editform_before to manipulate product edit form prior to rendering. (NEEDS DOCUMENTATION)
-* Added br_product_parse_before to manipulate the products array prior to parsing. (NEEDS DOCUMENTATION)
-* Added br_product_parse_after to manipulate the output string prior to returning. (NEEDS DOCUMENTATION)
-* Added br_product_cartadd_before to manipulate the cart post data before adding to the database. (NEEDS DOCUMENTATION)
-* Added br_product_cartadd_after (NEEDS DOCUMENTATION)
-* Added br_cart_parse_before (NEEDS DOCUMENTATION)
-* Added br_customer_download_file_before (NEEDS DOCUMENTATION)
+* Added Hook: br_payment_options_before to manipulate payment gateway form array prior to output. (NEEDS DOCUMENTATION) 
+* Added Hook: br_product_editform_before to manipulate product edit form prior to rendering. (NEEDS DOCUMENTATION)
+* Added Hook: br_product_parse_before to manipulate the products array prior to parsing. (NEEDS DOCUMENTATION)
+* Added Hook: br_product_parse_after to manipulate the output string prior to returning. (NEEDS DOCUMENTATION)
+* Added Hook: br_product_cartadd_before to manipulate the cart post data before adding to the database. (NEEDS DOCUMENTATION)
+* Added Hook: br_product_cartadd_after (NEEDS DOCUMENTATION)
+* Added Hook: br_cart_parse_before (NEEDS DOCUMENTATION)
+* Added Hook: br_customer_download_file_before (NEEDS DOCUMENTATION)
 * Added member_id to br_order_download table
 * Added endabled/disabled message to gateway overview page
 * Added subtotal variable to items in checkout_thankyou tag. (NEEDS DOCUMENTATION)
@@ -27,7 +27,8 @@
 * Fixed a number of minor language key settings. 
 * Fixed a number of minor html errors in the demo blank theme.
 * Fixed an issue with ordering multiple downloadable products. [#0000198]
-* Updated price and category in catalog_layered tag to use new br_filter_category and br_filter_price language keys. 
+* Updated control panel look and feel for better integration. 
+* Updated price and category in catalog_layered tag to use new br_filter_category and br_filter_price language keys. [#0000202]
 * Updated product types in new product form to sort alphabetically.
 * Updated Authorize.net gateway to include input name in class definition for form elements.
 * Updated meta method with optimized queries and caching to improve page loads on large data sets.

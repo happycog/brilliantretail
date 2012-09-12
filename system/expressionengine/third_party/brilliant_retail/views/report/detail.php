@@ -37,7 +37,8 @@
             		<?php if($input!="") {?>
             		<div id="report_edit"><a class="submit" href="<?=$base_url?>&method=report"><b><?=lang('edit')?></b></a></div>
             		<?php } ?>
-					<div id="report_export"><a href="<?=$_SERVER["REQUEST_URI"]?>&export=csv" target="_blank"><b><?=lang('br_export_csv')?></b></a></div>
+					<div id="report_export">
+						<a href="<?=$_SERVER["REQUEST_URI"]?>&export=csv" class="submit" target="_blank"><b><?=lang('br_export_csv')?></b></a></div>
 					<div class="b2r_clearboth"><!-- --></div>
         			<div id="report_inputs">
 						<?=$input?>

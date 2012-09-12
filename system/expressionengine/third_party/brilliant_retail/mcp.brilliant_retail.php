@@ -420,15 +420,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$data['br_'.$key] = $val; #namespaced forms with br_ prefix
 						}
 					}
-				
 				// Process the payment
-					$data["payment"] = $this->_process_payment($data);
+					$data["payment"] = $this->_process_payment($data,TRUE);
 				
 				// Lets deal with an error message from the gateway
 					if(isset($data["payment"]["error"])){
 						$_SESSION["alert"]= lang('br_order_payment_errror').': '.$data["payment"]["error"];
 						$this->EE->functions->redirect($this->base_url.'&method=order_detail_add_payment&order_id='.$order_id);
 					}
+
 				$payment[0] = array(
 										'order_id' => $order_id, 
 										'transaction_id' => $data["payment"]["transaction_id"],

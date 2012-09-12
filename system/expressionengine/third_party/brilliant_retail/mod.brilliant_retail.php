@@ -36,6 +36,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 		}
 	}
 
+	/** 
+	* Autoloading for integration methods. 
+	* 
+	* @author   David Dexter 
+	* @access   public
+	*/  
+	    function __call($name,$args){
+	        $this->EE->load->library('integrate');
+	        return $this->EE->integrate->$name(); 
+	    }
+    
 	/**
 	* Show system messages and alerts
 	* 

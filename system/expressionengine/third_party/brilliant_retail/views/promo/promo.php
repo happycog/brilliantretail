@@ -25,7 +25,7 @@
 //Get the cart promo data
 	
 	$cp_pad_table_template["table_open"] = '<table id="promoTable" cellpadding="0" cellspacing="0" class="product_edit" width="100%">';
-	
+		
 	$this->table->set_template($cp_pad_table_template);
 	
 	$this->table->set_heading(	
@@ -60,10 +60,13 @@
 <script type="text/javascript">
 	$(function(){
 		var oTable = $('#promoTable').dataTable({
-										"bStateSave": true
+										"sDom": "lfrt<'dataTables_footer'ip<'clear'>>",
+													"iDisplayLength": 25, 
+													"sPaginationType": "full_numbers", 
+													"bStateSave": true
 									});
 		
-		$('<p class="b2r_search_btn"><a href="#" id="clear"><b>Clear</b></a></p>').insertBefore('#promoTable_filter input');
+		$('<p class="b2r_search_btn"><a href="#" id="clear" class="submit"><?=lang('br_clear')?></a></p>').insertBefore('#promoTable_filter input');
 		$('<div style="clear:both"></div>').insertAfter('#promoTable_filter');
 		$('#clear').click(function(){
 										oTable.fnFilterClear();

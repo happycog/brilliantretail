@@ -155,6 +155,7 @@ $lang = array(
 	'br_order_status_success' 		=> 'Order status successfully updated',  
 	'br_order_status_updated_to' 	=> 'Order status updated to', 
 	'br_order_remove_note_success' 	=> 'Order note successfully removed', 
+	'br_order_payment_added' => 'Payment Added', 
 	"method" 					=> "Method",
 	"card_type" 				=> "Card Type",
 	"exp_year"					=> "Expires",

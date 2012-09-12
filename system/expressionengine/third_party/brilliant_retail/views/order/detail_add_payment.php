@@ -92,7 +92,7 @@
 					<select name="br_billing_state" id="br_billing_state" class="required" data-br_selected="<?=$address["billing_state"]?>" data-br_country="br_billing_country"></select>
 					<div class="clearboth"></div>
 					<label>Zip Code *</label>
-					<input class="txtinp required" name="br_billing_zip" id="br_billing_zip" value="<?=$address["billing_address2"]?>" type="text" /></td>
+					<input class="txtinp required" name="br_billing_zip" id="br_billing_zip" value="<?=$address["billing_zip"]?>" type="text" /></td>
 			</tr>
 			<tr>
 				<td><?=lang('br_order_amount')?></td>
@@ -130,7 +130,6 @@
 
 <style type="text/css">
 	.gateways { margin-bottom: 10px;}
-	.payment_form { width: 250px; display: none; margin: 0 15px; border: 1px #CCC solid; padding: 15px; background-color: #FFF; }
 	.clearboth { clear: both; }
 
 #checkout label {

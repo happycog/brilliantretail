@@ -43,12 +43,12 @@ class Gateway_mailin extends Brilliant_retail_gateway {
 		if($this->admin_order === FALSE){
 			$amount = 0;
 		}else{
-			$amount = $data["amount"];
+			$amount = $data["order_total"];
 		}
 									
 		$trans = array(
 							'status' => 2, 
-							'amount' => 0,
+							'amount' => $amount,
 							'transaction_id' =>$id, 
 							'payment_card' => 'Mail In', 
 							'payment_type' => 'Mail In', 
