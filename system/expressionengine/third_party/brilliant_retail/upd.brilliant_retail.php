@@ -25,7 +25,7 @@
 
 class Brilliant_retail_upd {
 
-	public $version	= '1.1.7.0';
+	public $version	= '1.1.7.1';
 	
 	function Brilliant_retail_upd()
 	{
@@ -327,7 +327,7 @@ class Brilliant_retail_upd {
 				('5', '1', 'Complete', '', '', '5', null, null, '0', '0'), 
 				('6', '2', 'Enabled', 'enabled', 'dropdown', '1', '1:Yes|0:No', null, '0', '0'), 
 				('7', '2', 'Label', 'label', 'text', 'Free Shipping', null, null, '0', '0'), 
-				('8', '2', 'Countries', 'country', 'multiselect', 'a:1:{i:0;s:2:\"US\";}', 'AF:Afghanistan|AX:Aland Islands|AL:Albania|DZ:Algeria|AS:American Samoa|AD:Andorra|AO:Angola|AI:Anguilla|AQ:Antarctica|AG:Antigua and Barbuda|AR:Argentina|AM:Armenia|AW:Aruba|AU:Australia|AT:Austria|AZ:Azerbaijan|BS:Bahamas|BH:Bahrain|BD:Bangladesh|BB:Barbados|BY:Belarus|BE:Belgium|BZ:Belize|BJ:Benin|BM:Bermuda|BT:Bhutan|BO:Bolivia|BA:Bosnia and Herzegovina|BW:Botswana|BV:Bouvet Island|BR:Brazil|IO:British Indian Ocean Territory|VG:British Virgin Islands|BN:Brunei|BG:Bulgaria|BF:Burkina Faso|BI:Burundi|KH:Cambodia|CM:Cameroon|CA:Canada|CV:Cape Verde|KY:Cayman Islands|CF:Central African Republic|TD:Chad|CL:Chile|CN:China|CX:Christmas Island|CC:Cocos [Keeling] Islands|CO:Colombia|KM:Comoros|CG:Congo - Brazzaville|CD:Congo - Kinshasa|CK:Cook Islands|CR:Costa Rica|CI:Cote d|HR:Croatia|CU:Cuba|CY:Cyprus|CZ:Czech Republic|DK:Denmark|DJ:Djibouti|DM:Dominica|DO:Dominican Republic|EC:Ecuador|EG:Egypt|SV:El Salvador|GQ:Equatorial Guinea|ER:Eritrea|EE:Estonia|ET:Ethiopia|FK:Falkland Islands|FO:Faroe Islands|FJ:Fiji|FI:Finland|FR:France|GF:French Guiana|PF:French Polynesia|TF:French Southern Territories|GA:Gabon|GM:Gambia|GE:Georgia|DE:Germany|GH:Ghana|GI:Gibraltar|GR:Greece|GL:Greenland|GD:Grenada|GP:Guadeloupe|GU:Guam|GT:Guatemala|GN:Guinea|GW:Guinea-Bissau|GY:Guyana|HT:Haiti|HM:Heard Island and McDonald Islands|HN:Honduras|HK:Hong Kong SAR China|HU:Hungary|IS:Iceland|IN:India|ID:Indonesia|IR:Iran|IQ:Iraq|IE:Ireland|IM:Isle of Man|IL:Israel|IT:Italy|JM:Jamaica|JP:Japan|JO:Jordan|KZ:Kazakhstan|KE:Kenya|KI:Kiribati|KW:Kuwait|KG:Kyrgyzstan|LA:Laos|LV:Latvia|LB:Lebanon|LS:Lesotho|LR:Liberia|LY:Libya|LI:Liechtenstein|LT:Lithuania|LU:Luxembourg|MO:Macau SAR China|MK:Macedonia|MG:Madagascar|MW:Malawi|MY:Malaysia|MV:Maldives|ML:Mali|MT:Malta|MH:Marshall Islands|MQ:Martinique|MR:Mauritania|MU:Mauritius|YT:Mayotte|MX:Mexico|FM:Micronesia|MD:Moldova|MC:Monaco|MN:Mongolia|MS:Montserrat|MA:Morocco|MZ:Mozambique|MM:Myanmar [Burma]|NA:Namibia|NR:Nauru|NP:Nepal|NL:Netherlands|AN:Netherlands Antilles|NC:New Caledonia|NZ:New Zealand|NI:Nicaragua|NE:Niger|NG:Nigeria|NU:Niue|NF:Norfolk Island|KP:North Korea|MP:Northern Mariana Islands|NO:Norway|OM:Oman|PK:Pakistan|PW:Palau|PS:Palestinian Territories|PA:Panama|PG:Papua New Guinea|PY:Paraguay|PE:Peru|PH:Philippines|PN:Pitcairn Islands|PL:Poland|PT:Portugal|PR:Puerto Rico|QA:Qatar|RE:Reunion|RO:Romania|RU:Russia|RW:Rwanda|SH:Saint Helena|KN:Saint Kitts and Nevis|LC:Saint Lucia|PM:Saint Pierre and Miquelon|VC:Saint Vincent and the Grenadines|WS:Samoa|SM:San Marino|ST:Sao Tome and Principe|SA:Saudi Arabia|SN:Senegal|SC:Seychelles|SL:Sierra Leone|SG:Singapore|SK:Slovakia|SI:Slovenia|SB:Solomon Islands|SO:Somalia|ZA:South Africa|GS:South Georgia and the South Sandwich Islands|KR:South Korea|ES:Spain|LK:Sri Lanka|SD:Sudan|SR:Suriname|SJ:Svalbard and Jan Mayen|SZ:Swaziland|SE:Sweden|CH:Switzerland|SY:Syria|TW:Taiwan|TJ:Tajikistan|TZ:Tanzania|TH:Thailand|TL:Timor-Leste|TG:Togo|TK:Tokelau|TO:Tonga|TT:Trinidad and Tobago|TN:Tunisia|TR:Turkey|TM:Turkmenistan|TC:Turks and Caicos Islands|TV:Tuvalu|UM:U.S. Minor Outlying Islands|VI:U.S. Virgin Islands|UG:Uganda|UA:Ukraine|AE:United Arab Emirates|GB:United Kingdom|US:United States|UY:Uruguay|UZ:Uzbekistan|VU:Vanuatu|VA:Vatican City|VE:Venezuela|VN:Vietnam|WF:Wallis and Futuna|EH:Western Sahara|YE:Yemen|ZM:Zambia|ZW:Zimbabwe', 'Select countries where free shipping is available. Control + click to add multiple countries', '0', '1'), 
+				('8', '2', 'Countries', 'country', 'multiselect', 'a:1:{i:0;s:2:\"US\";}', 'AF:Afghanistan|AX:Aland Islands|AL:Albania|DZ:Algeria|AD:Andorra|AO:Angola|AI:Anguilla|AQ:Antarctica|AG:Antigua and Barbuda|AR:Argentina|AM:Armenia|AW:Aruba|AU:Australia|AT:Austria|AZ:Azerbaijan|BS:Bahamas|BH:Bahrain|BD:Bangladesh|BB:Barbados|BY:Belarus|BE:Belgium|BZ:Belize|BJ:Benin|BM:Bermuda|BT:Bhutan|BO:Bolivia|BA:Bosnia and Herzegovina|BW:Botswana|BV:Bouvet Island|BR:Brazil|IO:British Indian Ocean Territory|VG:British Virgin Islands|BN:Brunei|BG:Bulgaria|BF:Burkina Faso|BI:Burundi|KH:Cambodia|CM:Cameroon|CA:Canada|CV:Cape Verde|KY:Cayman Islands|CF:Central African Republic|TD:Chad|CL:Chile|CN:China|CX:Christmas Island|CC:Cocos [Keeling] Islands|CO:Colombia|KM:Comoros|CG:Congo - Brazzaville|CD:Congo - Kinshasa|CK:Cook Islands|CR:Costa Rica|CI:Cote d|HR:Croatia|CU:Cuba|CY:Cyprus|CZ:Czech Republic|DK:Denmark|DJ:Djibouti|DM:Dominica|DO:Dominican Republic|EC:Ecuador|EG:Egypt|SV:El Salvador|GQ:Equatorial Guinea|ER:Eritrea|EE:Estonia|ET:Ethiopia|FK:Falkland Islands|FO:Faroe Islands|FJ:Fiji|FI:Finland|FR:France|GF:French Guiana|PF:French Polynesia|TF:French Southern Territories|GA:Gabon|GM:Gambia|GE:Georgia|DE:Germany|GH:Ghana|GI:Gibraltar|GR:Greece|GL:Greenland|GD:Grenada|GP:Guadeloupe|GT:Guatemala|GN:Guinea|GW:Guinea-Bissau|GY:Guyana|HT:Haiti|HM:Heard Island and McDonald Islands|HN:Honduras|HK:Hong Kong SAR China|HU:Hungary|IS:Iceland|IN:India|ID:Indonesia|IR:Iran|IQ:Iraq|IE:Ireland|IM:Isle of Man|IL:Israel|IT:Italy|JM:Jamaica|JP:Japan|JO:Jordan|KZ:Kazakhstan|KE:Kenya|KI:Kiribati|KW:Kuwait|KG:Kyrgyzstan|LA:Laos|LV:Latvia|LB:Lebanon|LS:Lesotho|LR:Liberia|LY:Libya|LI:Liechtenstein|LT:Lithuania|LU:Luxembourg|MO:Macau SAR China|MK:Macedonia|MG:Madagascar|MW:Malawi|MY:Malaysia|MV:Maldives|ML:Mali|MT:Malta|MQ:Martinique|MR:Mauritania|MU:Mauritius|YT:Mayotte|MX:Mexico|FM:Micronesia|MD:Moldova|MC:Monaco|MN:Mongolia|MS:Montserrat|MA:Morocco|MZ:Mozambique|MM:Myanmar [Burma]|NA:Namibia|NR:Nauru|NP:Nepal|NL:Netherlands|AN:Netherlands Antilles|NC:New Caledonia|NZ:New Zealand|NI:Nicaragua|NE:Niger|NG:Nigeria|NU:Niue|NF:Norfolk Island|KP:North Korea|MP:Northern Mariana Islands|NO:Norway|OM:Oman|PK:Pakistan|PS:Palestinian Territories|PA:Panama|PG:Papua New Guinea|PY:Paraguay|PE:Peru|PH:Philippines|PN:Pitcairn Islands|PL:Poland|PT:Portugal|QA:Qatar|RE:Reunion|RO:Romania|RU:Russia|RW:Rwanda|SH:Saint Helena|KN:Saint Kitts and Nevis|LC:Saint Lucia|PM:Saint Pierre and Miquelon|VC:Saint Vincent and the Grenadines|WS:Samoa|SM:San Marino|ST:Sao Tome and Principe|SA:Saudi Arabia|SN:Senegal|SC:Seychelles|SL:Sierra Leone|SG:Singapore|SK:Slovakia|SI:Slovenia|SB:Solomon Islands|SO:Somalia|ZA:South Africa|GS:South Georgia and the South Sandwich Islands|KR:South Korea|ES:Spain|LK:Sri Lanka|SD:Sudan|SR:Suriname|SJ:Svalbard and Jan Mayen|SZ:Swaziland|SE:Sweden|CH:Switzerland|SY:Syria|TW:Taiwan|TJ:Tajikistan|TZ:Tanzania|TH:Thailand|TL:Timor-Leste|TG:Togo|TK:Tokelau|TO:Tonga|TT:Trinidad and Tobago|TN:Tunisia|TR:Turkey|TM:Turkmenistan|TC:Turks and Caicos Islands|TV:Tuvalu|UM:U.S. Minor Outlying Islands|UG:Uganda|UA:Ukraine|AE:United Arab Emirates|GB:United Kingdom|US:United States|UY:Uruguay|UZ:Uzbekistan|VU:Vanuatu|VA:Vatican City|VE:Venezuela|VN:Vietnam|WF:Wallis and Futuna|EH:Western Sahara|YE:Yemen|ZM:Zambia|ZW:Zimbabwe', 'Select countries where free shipping is available. Control + click to add multiple countries', '0', '1'), 
 				('9', '2', 'Amount', 'amount', 'text', '0', null, 'Minimum amount for free shipping', '0', '2'), 
 				('10', '1', 'Canceled', '', '', '0', null, null, '0', '0')";
 
@@ -1007,7 +1007,7 @@ class Brilliant_retail_upd {
 ##  Table structure for exp_br_state
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_state;";
-	$sql[] = "CREATE TABLE exp_br_state (
+	$sql[] = "CREATE TABLE `exp_br_state` (
 				  state_id int(11) NOT NULL AUTO_INCREMENT,
 				  zone_id int(11) NOT NULL,
 				  title varchar(100) NOT NULL,
@@ -3986,6 +3986,13 @@ class Brilliant_retail_upd {
 		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'Hong Kong','HK')";
 		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'Kowloon','KLN')";
 		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'New Territories','NT')";
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'FM','Federated States of Micronesia');"; 
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'GU','Guam');"; 
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'PR','Puerto Rico');"; 
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'PW','Republic of Palau');"; 
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'MH','Republic of the Marshall Islands');"; 
+		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'VI','U.S. Virgin Islands');"; 
+
 		
 ## ----------------------------
 ##  Table structure for exp_br_store
@@ -4081,7 +4088,6 @@ class Brilliant_retail_upd {
 				('2', 'Afghanistan', 'AF',0), 
 				('3', 'Albania', 'AL',0), 
 				('4', 'Algeria', 'DZ',0), 
-				('5', 'American Samoa', 'AS',0), 
 				('6', 'Andorra', 'AD',0), 
 				('7', 'Angola', 'AO',0), 
 				('8', 'Anguilla', 'AI',0), 
@@ -4165,7 +4171,6 @@ class Brilliant_retail_upd {
 				('86', 'Greenland', 'GL',0), 
 				('87', 'Grenada', 'GD',0), 
 				('88', 'Guadeloupe', 'GP',0), 
-				('89', 'Guam', 'GU',0), 
 				('90', 'Guatemala', 'GT',0), 
 				('92', 'Guinea', 'GN',0), 
 				('93', 'Guinea-Bissau', 'GW',0), 
@@ -4209,7 +4214,6 @@ class Brilliant_retail_upd {
 				('132', 'Maldives', 'MV',0), 
 				('133', 'Mali', 'ML',0), 
 				('134', 'Malta', 'MT',0), 
-				('135', 'Marshall Islands', 'MH',0), 
 				('136', 'Martinique', 'MQ',0), 
 				('137', 'Mauritania', 'MR',0), 
 				('138', 'Mauritius', 'MU',0), 
@@ -4240,7 +4244,6 @@ class Brilliant_retail_upd {
 				('164', 'Norway', 'NO',0), 
 				('165', 'Oman', 'OM',0), 
 				('166', 'Pakistan', 'PK',0), 
-				('167', 'Palau', 'PW',0), 
 				('168', 'Palestinian Territories', 'PS',0), 
 				('169', 'Panama', 'PA',0), 
 				('170', 'Papua New Guinea', 'PG',0), 
@@ -4250,7 +4253,6 @@ class Brilliant_retail_upd {
 				('174', 'Pitcairn Islands', 'PN',0), 
 				('175', 'Poland', 'PL',0), 
 				('176', 'Portugal', 'PT',0), 
-				('177', 'Puerto Rico', 'PR',0), 
 				('178', 'Qatar', 'QA',0), 
 				('179', 'Romania', 'RO',0), 
 				('180', 'Russia', 'RU',0), 
@@ -4299,8 +4301,6 @@ class Brilliant_retail_upd {
 				('226', 'Turkmenistan', 'TM',0), 
 				('227', 'Turks and Caicos Islands', 'TC',0), 
 				('228', 'Tuvalu', 'TV',0), 
-				('229', 'U.S. Minor Outlying Islands', 'UM',0), 
-				('230', 'U.S. Virgin Islands', 'VI',0), 
 				('231', 'Uganda', 'UG',0), 
 				('232', 'Ukraine', 'UA',0), 
 				('233', 'United Arab Emirates', 'AE',0), 

@@ -18,6 +18,7 @@
 * Added 'Payments' and 'Balance' headings to the control panel order overview page.
 * Added line item payments to order detail in the control panel.  
 * Added CDN links for jquery resources to demo blank theme footer template.
+* Added all US Territories as state options when United States is selected [#0000199]
 * Fixed an issue with download remaining count on limited download products.  
 * Fixed an issue with merging products in cart when supplying variation of the same configurable product. 
 * Fixed an issue with Configurable product option display when there was only one option and with an adjustment. 
@@ -46,4 +47,5 @@
 * Updated jQuery in demo blank theme to version 1.8.1.
 * Updated jQuery in demo blank theme to version 1.8.23.
 * Updated jQuery dataTables plugin to version 1.9.3.
+* Removed US Territories as country (zone) options in country / state selector
 * Removed $prefix parameter from product_model method get_product_collection in favor of the $this->db->prefix variable
