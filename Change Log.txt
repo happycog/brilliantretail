@@ -5,9 +5,9 @@
 * Added Hook: br_product_parse_before to manipulate the products array prior to parsing. 
 * Added Hook: br_product_parse_after to manipulate the output string prior to returning. 
 * Added Hook: br_product_cartadd_before to manipulate the cart post data before adding to the database. 
-* Added Hook: br_product_cartadd_after 
-* Added Hook: br_cart_parse_before 
-* Added Hook: br_customer_download_file_before 
+* Added Hook: br_product_cartadd_after receives the $data array after the item is added to the cart. 
+* Added Hook: br_cart_parse_before to manipulate the cart items array prior to processing
+* Added Hook: br_customer_download_file_before to modify the $downloads array prior to forcing the download
 * Added member_id to br_order_download table
 * Added endabled/disabled message to gateway overview page
 * Added subtotal variable to items in checkout_thankyou tag. 
