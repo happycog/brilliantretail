@@ -1,28 +1,29 @@
 # Version 1.2
 
-* Added Hook: br_payment_options_before to manipulate payment gateway form array prior to output. (NEEDS DOCUMENTATION) 
-* Added Hook: br_product_editform_before to manipulate product edit form prior to rendering. (NEEDS DOCUMENTATION)
-* Added Hook: br_product_parse_before to manipulate the products array prior to parsing. (NEEDS DOCUMENTATION)
-* Added Hook: br_product_parse_after to manipulate the output string prior to returning. (NEEDS DOCUMENTATION)
-* Added Hook: br_product_cartadd_before to manipulate the cart post data before adding to the database. (NEEDS DOCUMENTATION)
-* Added Hook: br_product_cartadd_after (NEEDS DOCUMENTATION)
-* Added Hook: br_cart_parse_before (NEEDS DOCUMENTATION)
-* Added Hook: br_customer_download_file_before (NEEDS DOCUMENTATION)
+* Added Hook: br_payment_options_before to manipulate payment gateway form array prior to output.  
+* Added Hook: br_product_editform_before to manipulate product edit form prior to rendering. 
+* Added Hook: br_product_parse_before to manipulate the products array prior to parsing. 
+* Added Hook: br_product_parse_after to manipulate the output string prior to returning. 
+* Added Hook: br_product_cartadd_before to manipulate the cart post data before adding to the database. 
+* Added Hook: br_product_cartadd_after 
+* Added Hook: br_cart_parse_before 
+* Added Hook: br_customer_download_file_before 
 * Added member_id to br_order_download table
 * Added endabled/disabled message to gateway overview page
-* Added subtotal variable to items in checkout_thankyou tag. (NEEDS DOCUMENTATION)
+* Added subtotal variable to items in checkout_thankyou tag. 
 * Added order_id parameter to customer_downloads template tag.
 * Added type filter to product overview page. 
 * Added optional State validation for US/CA purchases.
 * Added a 'new product' link to the store > products navigation. 
 * Added 'Payments' and 'Balance' headings to the control panel order overview page.
 * Added line item payments to order detail in the control panel.  
+* Added CDN links for jquery resources to demo blank theme footer template.
 * Fixed an issue with download remaining count on limited download products.  
 * Fixed an issue with merging products in cart when supplying variation of the same configurable product. 
 * Fixed an issue with Configurable product option display when there was only one option and with an adjustment. 
 * Fixed an issue with Configurable product option display when individual options are out of stock. 
 * Fixed an issue with SagePay direct when shipping to the United States
-* Fixed an issue with the query validate on the contact form in the blank demo theme.
+* Fixed an issue with the query validate on the contact form in the demo blank theme.
 * Fixed an issue with Bundle products counting inventory on non-inventory items like download and service products. 
 * Fixed an issue with cart_add feature when using an image to post to cart with a custom name on the image input. 
 * Fixed the authorize.net payment gateway to remove extra closing label tag. 
@@ -30,6 +31,9 @@
 * Fixed a number of minor html errors in the demo blank theme.
 * Fixed an issue with ordering multiple downloadable products. [#0000198]
 * Fixed an issue with creating paired entries for existing products. Entry status set to open or closed based on product enabled value. 
+* Fixed an issue with rebuilding product cache after creating paired entries on installation. 
+* Updated validation class calls to use simply required instead of {required:true}. 
+* Updated demo blank theme to remove metadata style validation rules. jquery.metadata.js is no longer a validation requirement on new installs. 
 * Updated control panel look and feel for better integration. 
 * Updated price and category in catalog_layered tag to use new br_filter_category and br_filter_price language keys. [#0000202]
 * Updated product types in new product form to sort alphabetically.
@@ -39,6 +43,7 @@
 * Updated BrilliantRetail Product fieldtype with total_count variable
 * Updated admin view templates with additional changes to match EE default code styling.
 * Updated product fieldtype and related product search to fire after second character. [#0000072]
-* Updated dataTables plugin to version 1.9.3.
+* Updated jQuery in demo blank theme to version 1.8.1.
+* Updated jQuery in demo blank theme to version 1.8.23.
+* Updated jQuery dataTables plugin to version 1.9.3.
 * Removed $prefix parameter from product_model method get_product_collection in favor of the $this->db->prefix variable
-

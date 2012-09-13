@@ -88,20 +88,20 @@
 			
 				{if logged_out}
 					<label>Name</label>
-					<input type="text" name="name" value="{name}" size="50" class="inptxt {required:true}" />
+					<input type="text" name="name" value="{name}" size="50" class="inptxt required" />
 					
 					<label>Email</label>
-					<input type="text" name="email" value="{email}" size="50" class="inptxt {required:true,email:true}" />
+					<input type="text" name="email" value="{email}" size="50" class="inptxt required email" />
 					
 					<label>Location</label>
 					<input type="text" name="location" value="{location}" size="50" class="inptxt" />
 					
 					<label>Url</label>
-					<input type="text" name="url" value="{url}" size="50" class="inptxt {url:true}" />
+					<input type="text" name="url" value="{url}" size="50" class="inptxt url" />
 				{/if}
 				
 				<label>Add Comment</label>
-				<textarea name="comment" class="inparea {required:true}">{comment}</textarea>
+				<textarea name="comment" class="inparea required">{comment}</textarea>
 				
 				<p><input type="checkbox" name="save_info" value="yes" class="inpchk" {save_info} /> Remember my personal information</p>
 				

@@ -723,20 +723,20 @@ class Brilliant_retail_core {
 	// Product Type Attribute Fields
 	
 		function _producttype_text($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
-			$class = ($required == 1) ? '{required:true}' : '' ;
+			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			return '<input name="'.$product_id.'_cAttribute_'.$attribute_id.'" value="'.$val.'" title="'.$input_title.'" type="text" class="'.$class.'" />';
 		}
 		
 		function _producttype_password($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
-			$class = ($required == 1) ? '{required:true}' : '' ;
+			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			$val = ($val != '') ? '************************' : '' ;
 			return '<input name="'.$product_id.'_cAttributePW_'.$attribute_id.'" value="'.$val.'" title="'.$input_title.'" type="password" class="'.$class.' cleartext" />';
 		}
 		
 		function _producttype_file($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
-			$class = ($required == 1) ? '{required:true}' : '' ;
+			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
 			// Values  
@@ -767,13 +767,13 @@ class Brilliant_retail_core {
 		}
 		
 		function _producttype_textarea($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
-			$class = ($required == 1) ? '{required:true}' : '' ;
+			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			return '<textarea name="'.$product_id.'_cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'.$val.'</textarea>';
 		}
 		
 		function _producttype_dropdown($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
-			$class = ($required == 1) ? '{required:true}' : '' ;
+			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
 			$options = '<option value=""></option>';
@@ -888,7 +888,7 @@ class Brilliant_retail_core {
 		}
 		
 		function _producttype_multiselect($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
-			$class = ($required == 1) ? '{required:true}' : '' ;
+			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
 			$options = '';
@@ -943,7 +943,7 @@ class Brilliant_retail_core {
 	// End Product Type Fields 
 	
 		function _configurable_dropdown($attribute_id,$title,$label,$required,$val,$opts = ''){
-			$class = ($required == 1) ? '{required:true}' : '' ;
+			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
 			$options = '';

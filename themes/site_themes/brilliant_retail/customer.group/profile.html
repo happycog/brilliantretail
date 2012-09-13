@@ -73,8 +73,8 @@
 	                       	<img src="{theme}/images/profile-pic.jpg" alt="" /></td>
 	     				<td valign="top">
 	                 		<strong>General Info</strong><br />
-	                 		<label>First Name*<br /><input class="txtinp {required:true}" name="br_fname" value="{br_fname}" type="text" /></label>
-				            <label>Last Name*<br /><input class="txtinp {required:true}" name="br_lname" value="{br_lname}" type="text" /></label>
+	                 		<label>First Name*<br /><input class="txtinp required" name="br_fname" value="{br_fname}" type="text" /></label>
+				            <label>Last Name*<br /><input class="txtinp required" name="br_lname" value="{br_lname}" type="text" /></label>
 				        </td>
 				        <td valign="top">
 				        	<strong>&nbsp;</strong><br />
@@ -89,32 +89,32 @@
 					    <td valign="top">
 								<p>&nbsp;</p>
 								<strong>Billing Address</strong><br />
-	                            <label>First Name*<br /><input class="txtinp {required:true}" name="br_billing_fname" value="{br_billing_fname}" type="text" /></label>
-					            <label>Last Name*<br /><input class="txtinp {required:true}" name="br_billing_lname" value="{br_billing_lname}" type="text" /></label>
+	                            <label>First Name*<br /><input class="txtinp required" name="br_billing_fname" value="{br_billing_fname}" type="text" /></label>
+					            <label>Last Name*<br /><input class="txtinp required" name="br_billing_lname" value="{br_billing_lname}" type="text" /></label>
 					            <label>Company<br /><input class="txtinp" name="br_billing_company" value="{br_billing_company}" type="text" /></label>
 					            <label>Country<br />
-					            	{exp:brilliant_retail:countries name="br_billing_country" id="br_billing_country" class="listinp {required:true}" value="{br_billing_country}"}
+					            	{exp:brilliant_retail:countries name="br_billing_country" id="br_billing_country" class="listinp required" value="{br_billing_country}"}
 					            </label>
 					            <label>Address<br /><input class="txtinp txtinp_nospace" name="br_billing_address1" value="{br_billing_address1}" type="text" /></label><input class="txtinp" name="br_billing_address2" value="{br_billing_address2}" type="text" />
 					            <label>City<br /><input class="txtinp" name="br_billing_city" value="{br_billing_city}" type="text" /></label>
 					            <label>State<br />
-					            	{exp:brilliant_retail:states name="br_billing_state" id="br_billing_state" class="listinp {required:true}" value="{br_billing_state}" country_select="br_billing_country"}
+					            	{exp:brilliant_retail:states name="br_billing_state" id="br_billing_state" class="listinp required" value="{br_billing_state}" country_select="br_billing_country"}
 					            </label>
 					            <label>Zip/Postal Code<br /><input class="txtinp" name="br_billing_zip" value="{br_billing_zip}" type="text" /></label>
 						</td>
 					    <td valign="top">
 					            <p>&nbsp;</p>
 								<strong>Shipping Address</strong><br />
-	                            <label>First Name*<br /><input class="txtinp {required:true}" name="br_shipping_fname" value="{br_shipping_fname}" type="text" /></label>
-					            <label>Last Name*<br /><input class="txtinp {required:true}" name="br_shipping_lname" value="{br_shipping_lname}" type="text" /></label>
+	                            <label>First Name*<br /><input class="txtinp required" name="br_shipping_fname" value="{br_shipping_fname}" type="text" /></label>
+					            <label>Last Name*<br /><input class="txtinp required" name="br_shipping_lname" value="{br_shipping_lname}" type="text" /></label>
 					            <label>Company<br /><input class="txtinp" name="br_shipping_company" value="{br_shipping_company}" type="text" /></label>
 					            <label>Country<br />
-					            	{exp:brilliant_retail:countries name="br_shipping_country" id="br_shipping_country" class="listinp {required:true}" value="{br_shipping_country}"}
+					            	{exp:brilliant_retail:countries name="br_shipping_country" id="br_shipping_country" class="listinp required" value="{br_shipping_country}"}
 					            </label>
 					            <label>Address<br /><input class="txtinp txtinp_nospace" name="br_shipping_address1" value="{br_shipping_address1}" type="text" /></label><input class="txtinp" name="br_shipping_address2" value="{br_shipping_address2}" type="text" />
 					            <label>City<br /><input class="txtinp" name="br_shipping_city" value="{br_shipping_city}" type="text" /></label>
 					            <label>State<br />
-					            	{exp:brilliant_retail:states name="br_shipping_state" id="br_shipping_state" class="listinp {required:true}" value="{br_shipping_state}" country_select="br_shipping_country"}
+					            	{exp:brilliant_retail:states name="br_shipping_state" id="br_shipping_state" class="listinp required" value="{br_shipping_state}" country_select="br_shipping_country"}
 					            </label>
 					            <label>Zip/Postal Code<br /><input class="txtinp" name="br_shipping_zip" value="{br_shipping_zip}" type="text" /></label></td>
 	             	</tr>

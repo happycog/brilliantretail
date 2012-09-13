@@ -57,8 +57,8 @@
         
         	{exp:member:login_form return="customer/index" id="login_form"}
         		<h3>Login</h3>
-                <label>Email<br /><input class="txtinp {required:true,email:true}" name="username" type="text" /></label>
-                <label>Password<br /><input class="txtinp {required:true}" name="password" type="password" /></label>
+                <label>Email<br /><input class="txtinp required: email" name="username" type="text" /></label>
+                <label>Password<br /><input class="txtinp required" name="password" type="password" /></label>
                 <p><a href="{exp:brilliant_retail:path src='customer/password'}">forgot password</a></p>
                 <div class="btn">
                     <input class="inpbtn" name="" type="submit" value="Login" />
@@ -120,8 +120,9 @@
 </div> <!-- login -->
 <!-- end of login Page -->
 
+{!-- push the validation into the body close with the js method. !--}
 
-<script type="text/javascript">
+{exp:brilliant_retail:js}
 	$(function(){
 		$('#login_form').validate();
 		$('#register_form').validate({
@@ -131,6 +132,6 @@
 										}
 									});
 	});
-</script>
+{/exp:brilliant_retail:js}
 
 {embed="_assets/footer"}

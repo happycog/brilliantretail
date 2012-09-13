@@ -329,7 +329,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$payment += $p['amount'];
 				}
 				$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
-				$this->vars['order']['order_total_due']		= $this->_currency_round($total-$payment);
+				$this->vars['order']['order_total_due']		= $this->_currency_round($this->vars['order']['order_total']-$this->vars['order']['order_total_paid']);
 			
 			// Now that we have an order lets build some buttons
 				$right[lang('print')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true';
@@ -3448,6 +3448,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 												(product_id, entry_id) 
 													VALUES 
 												(".$rst["product_id"].",".$result[0]["entry_id"].")");
+						
+						// Remove cache file
+							remove_from_cache('product_'.$rst["product_id"]);
 					}
 
 				// Update the br_store table with the new 
@@ -3457,13 +3460,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		               		);
 					$this->EE->db->where('site_id', $store["site_id"]);
 					$this->EE->db->update('br_store', $data);
-
 			}
 		}
 		
 		if($reset_config == TRUE){
 			remove_from_cache('config');
-			$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 		}
 
 	}	

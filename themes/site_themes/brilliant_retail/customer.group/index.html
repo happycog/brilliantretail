@@ -75,10 +75,10 @@
 	                            <strong>Password</strong><br />
 	                            <a href="{exp:brilliant_retail:path src='customer/password'}" id="change_pw_link">change password</a>
 	                            <div id="change_pw">
-		                            {exp:brilliant_retail:customer_pw_form id="profile_edit"}
-		                            	<label>New Password*<br /><input class="txtinp {required:true}" id="new_password" name="new_password" type="password" /></label>
-			                            <label>Confirm New Password*<br /><input class="txtinp {required:true,equalTo:'#new_password'}" id="new_password_confirm" name="new_password_confirm" type="password" /></label>
-			                            <label>Enter Current Password*<br /><input class="txtinp {required:true}" name="password" type="password" /></label>
+		                            {exp:brilliant_retail:customer_pw_form id="password_edit"}
+		                            	<label>New Password*<br /><input class="txtinp required" id="new_password" name="new_password" type="password" /></label>
+			                            <label>Confirm New Password*<br /><input class="txtinp required" id="new_password_confirm" name="new_password_confirm" type="password" /></label>
+			                            <label>Enter Current Password*<br /><input class="txtinp required" name="password" type="password" /></label>
 		                            	<div class="btn">
 											<input class="inpbtn" name="" type="submit" value="Submit" />
 										</div>
@@ -172,7 +172,12 @@
 <!-- end of Account Page -->
 {exp:brilliant_retail:js}
 	$(function(){
-		$('#profile_edit').validate();
+		$('#password_edit').validate({
+										rules: {
+												new_password: {minlength : 7},
+												new_password_confirm : { equalTo: "#new_password" }
+												}
+									});
 		$('#change_pw_link').bind('click',function(){
 			$(this).hide();
 			$('#change_pw').slideDown();

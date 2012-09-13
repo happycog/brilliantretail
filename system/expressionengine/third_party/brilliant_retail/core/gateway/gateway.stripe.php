@@ -215,6 +215,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 			$form .= '<input type="hidden" name="stripe_card_on_file" value="0" />';
 		}
 		$id = "stripe_id_".time();
+		
 		$form .=  ' <div class="general">
 	                    <label>Credit Card Name *</label>
 	                    <input class="txtinp required" id="stripe_name" type="text" />
@@ -255,6 +256,13 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 			$i = str_pad($i, 2, 0, STR_PAD_LEFT);
 			$form .= '	<option value="'.$i.'">'.$i.'</option>';
 		}
+		
+		// Build the JS
+		// We only want to get a Stripe token if stripe is selected
+		// We know that if the value of input = gateway is an md5 of 
+		// the config_id	
+			$config_id = $this->_config['gateway'][$this->site_id]['stripe']['config_data'][0]["config_id"];
+		
 		$form .=  '   	</select>
 	                </div>
 	                <div class="clearboth"><!-- --></div>
@@ -267,30 +275,29 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 									$("#checkoutform").append(\'<input type="hidden" id="stripe_loaded" value="1"/>\');
 									
 									var a = $("#checkoutform");
-									//validator = null;
-									//a.unbind("validate");
-									//delete validator;
+
 									$("#checkoutform").on("submit",function(e){
-										Stripe.setPublishableKey("'.$this->get_publishable_key().'");
-										Stripe.createToken({
-										    number: $("#stripe_num").val(),
-										    cvc: $("#stripe_cvc").val(),
-										    exp_month: $("#stripe_month_exp").val(),
-										    exp_year: $("#stripe_year_exp").val()
-										}, function stripeResponseHandler(status, response) {
-										    if (response.error) {
-										        alert(response.error.message);
-												return false;
-										    } else {
-										    	var token = response["id"];
-										    	$("#checkoutform")
-										    		.append("<input type=\'hidden\' name=\'stripeToken\' value=\'" + token + "\'/>")
-													.get(0).submit();
-											}
-										});	
-										return false;
+										if($("input:radio[name=gateway]:checked").val() == "'.md5($config_id).'"){
+											Stripe.setPublishableKey("'.$this->get_publishable_key().'");
+											Stripe.createToken({
+											    number: $("#stripe_num").val(),
+											    cvc: $("#stripe_cvc").val(),
+											    exp_month: $("#stripe_month_exp").val(),
+											    exp_year: $("#stripe_year_exp").val()
+											}, function stripeResponseHandler(status, response) {
+											    if (response.error) {
+											        alert(response.error.message);
+													return false;
+											    } else {
+											    	var token = response["id"];
+											    	$("#checkoutform")
+											    		.append("<input type=\'hidden\' name=\'stripeToken\' value=\'" + token + "\'/>")
+														.get(0).submit();
+												}
+											});	
+											return false;
+										}
 									});
-									//.validate({ignore:":hidden"});
 								}
 							});
 						});
