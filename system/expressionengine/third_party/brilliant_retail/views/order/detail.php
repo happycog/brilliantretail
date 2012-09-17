@@ -55,7 +55,7 @@ echo $br_header;
 											<img src="<?=$theme?>images/popin-arrow.png" class="popin-arrow" />
 											<div class="popin-top">
 												<img src="<?=$theme?>images/close.png" />
-												<div>Update Status</div>
+												<div><?=lang('br_order_update_status')?></div>
 											</div>
 											<div class="popin-body">
 												<?php
@@ -447,63 +447,6 @@ echo $br_header;
 	for performance. -dpd
 */
 ?>
-<style type="text/css">
-	#order_status
-	{
-		cursor: pointer;
-		padding: 4px 20px 4px 4px;
-		background: url('/themes/third_party/brilliant_retail/images/config.png') right 3px no-repeat #F7F7F7;
-		border-radius: 5px;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border: 1px #EEE solid;
-		color: #777;
-	}
-	#order_status_form
-	{
-		display:none;
-		position:absolute;
-		margin-top: -30px;
-		width:207px;
-	}
-	#order_status_form form {
-		padding: 10px 20px;
-	}
-	
-	img.popin-arrow {
-		position: absolute;
-		margin-left: -10px;
-		margin-top: 28px;
-	}
-	div.popin-top {
-		height: 25px;
-		background: url('/themes/third_party/brilliant_retail/images/popin-top.jpg') no-repeat;
-	}
-	div.popin-top div {
-		width: 70%;
-		font-weight: bold;
-		padding: 6px 0 0 10px;	
-	}
-	div.popin-top img {
-		float: right;
-		margin: 6px 14px 0 0;
-		cursor: pointer;
-	}
-	
-	div.popin-body {
-		background: url('/themes/third_party/brilliant_retail/images/popin-bg.jpg') repeat-y;
-	}
-	div.popin-bottom {
-		height: 17px;
-		background: url('/themes/third_party/brilliant_retail/images/popin-bottom.jpg') no-repeat;
-	}
-
-	#order_customer td,
-	#order_details td 
-	{
-		border: 0;
-	}
-</style>
 <script type="text/javascript">
 	$(function(){
 		$('.rightNav a.submit').filter(":last").attr('target','_blank');

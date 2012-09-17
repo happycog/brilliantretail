@@ -155,6 +155,7 @@ $lang = array(
 	'br_order_customer' 	=> 'Customer',
 	'br_order_amount' 		=> 'Amount',
 	'br_order_status' 		=> 'Status',
+	'br_order_update_status' => 'Update Status',
 	'br_order_status_success' 		=> 'Order status successfully updated',  
 	'br_order_status_updated_to' 	=> 'Order status updated to', 
 	'br_order_remove_note_success' 	=> 'Order note successfully removed', 
