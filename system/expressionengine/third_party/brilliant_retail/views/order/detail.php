@@ -463,9 +463,8 @@ echo $br_header;
 	{
 		display:none;
 		position:absolute;
-		border:1px #CCC solid;
 		margin-top: -30px;
-		width:200px;
+		width:207px;
 	}
 	#order_status_form form {
 		padding: 10px 20px;
@@ -483,11 +482,11 @@ echo $br_header;
 	div.popin-top div {
 		width: 70%;
 		font-weight: bold;
-		padding: 5px 0 0 10px;	
+		padding: 6px 0 0 10px;	
 	}
 	div.popin-top img {
 		float: right;
-		margin: 4px 8px 0 0;
+		margin: 6px 14px 0 0;
 		cursor: pointer;
 	}
 	
@@ -495,7 +494,7 @@ echo $br_header;
 		background: url('/themes/third_party/brilliant_retail/images/popin-bg.jpg') repeat-y;
 	}
 	div.popin-bottom {
-		height: 10px;
+		height: 17px;
 		background: url('/themes/third_party/brilliant_retail/images/popin-bottom.jpg') no-repeat;
 	}
 
