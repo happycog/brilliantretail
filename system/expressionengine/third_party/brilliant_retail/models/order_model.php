@@ -136,7 +136,7 @@ class Order_model extends CI_Model {
 
 		return $order;
 	}
-	function get_order_collection($start_date='',$end_date='',$limit=0,$search='',$offset=0,$sort=0,$dir='',$prefix='exp_'){
+	function get_order_collection($start_date='',$end_date='',$limit=0,$search='',$offset=0,$sort=0,$dir='desc',$prefix='exp_'){
 		
 		// 
 			if (isset($this->session->cache['get_order_collection'])){

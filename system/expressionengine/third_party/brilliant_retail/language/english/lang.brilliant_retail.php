@@ -375,17 +375,18 @@ $lang = array(
 	'br_download_count' => 'Download Count',	
 								
 // Customers 
-	'br_add_customer' => 'Add Customer', 
-	'br_customer_id' => 'ID',
-	'br_customer_username' => 'Customer',
-	'br_customer_email' => 'Email',
-	'br_customer_created' => 'Created', 
-	'br_customer_orders' => 'Customer Orders',
-	'br_customer_history' => 'Order&nbsp;History',
-	'br_order_history'	=> 'Show Orders',
-	'br_line_items'	=> 'Line Items in Order',
-	'br_order_lines'	=> 'Lines in Order',
-	'br_back_to_customers' => 'Back to List',
+	'br_add_customer' 		=> 'Add Customer', 
+	'br_customer'			=> 'Customer',
+	'br_customer_id' 		=> 'ID',
+	'br_customer_username' 	=> 'Customer',
+	'br_customer_email' 	=> 'Email',
+	'br_customer_created' 	=> 'Created', 
+	'br_customer_orders' 	=> 'Customer Orders',
+	'br_customer_history' 	=> 'Order&nbsp;History',
+	'br_order_history'		=> 'Show Orders',
+	'br_line_items'			=> 'Line Items in Order',
+	'br_order_lines'		=> 'Lines in Order',
+	'br_back_to_customers' 	=> 'Back to List',
 
 // Configuration
 	
@@ -456,6 +457,7 @@ $lang = array(
 		'br_permission' => 'Permissions',
 		'br_permission_update_success' => 'Group Permissions Successfully Updated',
 		'nav_br_order_detail' => 'Order Detail',
+		'br_order_details' => 'Order Details',
 		'br_promo_new' => 'Promotion Create',
 		'br_promo_edit' => 'Promotion Edit',
 		'br_report_detail' => 'Report Detail',

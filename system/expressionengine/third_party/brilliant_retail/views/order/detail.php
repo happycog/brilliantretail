@@ -21,47 +21,113 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-?>
 
-<?=$br_header?>
-			
+echo $br_header;
+?>
 	<table id="order_table" width="100%" cellpadding="3" cellspacing="0">
 		<tr>
-			<td colspan="2">
-				<table width="100%" cellpadding="0" cellspacing="0" class="product_edit">
+			<td width="50%" valign="top">
+				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
 					<tr>
 						<th>
-							<?=lang('br_order_number')?>:</b> <?=$order["order_id"]?>
-						</th>
-						<th style="font-weight:normal;color:#888;text-align:right">
-							<em><?=date("F jS, Y",$order["created"])?></em>
-						</th>
+							<?=lang('br_order_details')?></th>
 					</tr>
 					<tr>
-						<td colspan="2">
-						    <?php
-								echo form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_update_status&order_id='.$hidden["order_id"],array('method' => 'POST', 'id' => 'statusForm'),$hidden);
-							?>
-								<b>
-									<?=lang('br_order_status')?>: 
-								</b>
-								<select name="status_id" id="status_id">
-								<?php 
-									ksort($status);
-									foreach($status as $key => $val){
-										$sel = ($key == $order["status_id"]) ? 'selected="selected"' : '';
-										echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
-									}
-								?>
-								</select>
-								<input type="checkbox" name="notify" />&nbsp;<?=lang('br_status_notify')?>
-								<input type="submit" class="submit" value="<?=lang('update')?>" />
-							</form>
-						</td>
+						<td>
+							<table id="order_details" cellspacing="0" width="100%">
+								<tr>
+									<td>
+										<strong><?=lang('br_order_number')?></strong></td>
+									<td>
+										<?=$order["order_id"]?></td>
+								</tr>
+								<tr>
+									<td>
+										<strong><?=lang('br_order_date')?></strong></td>
+									<td>
+										<?=date("m/d/Y h:i:s a",$order["created"])?></td>
+								</tr>
+								<tr>
+									<td>
+										<strong><?=lang('br_order_status')?></strong></td>
+									<td>
+										<div id="order_status_form">
+											<img src="<?=$theme?>images/popin-arrow.png" class="popin-arrow" />
+											<div class="popin-top">
+												<img src="<?=$theme?>images/close.png" />
+												<div>Update Status</div>
+											</div>
+											<div class="popin-body">
+												<?php
+													echo form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_update_status&order_id='.$hidden["order_id"],array('method' => 'POST', 'id' => 'statusForm'),$hidden);
+												?>
+													<select name="status_id" id="status_id">
+													<?php 
+														ksort($status);
+														foreach($status as $key => $val){
+															$sel = ($key == $order["status_id"]) ? 'selected="selected"' : '';
+															echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
+														}
+													?>
+													</select>
+													<br />
+													<br />
+													<p>
+													<input type="checkbox" name="notify" />&nbsp;<?=lang('br_status_notify')?>
+													</p>
+													<input type="submit" class="submit" value="<?=lang('update')?>" />
+												</form>
+											</div>
+											<div class="popin-bottom"></div>
+										</div>
+										<span id="order_status">
+											<?=$status[$order["status_id"]]?>
+										</span>
+									</td>
+								</tr>
+							</table></td>
 					</tr>
-				</table>
-			</td>
+				</table></td>
+			<td width="50%" valign="top">
+				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
+					<tr>
+						<th>
+							<?=lang('br_customer')?></th>
+					</tr>
+					<tr>
+						<td>
+							<table id="order_customer" cellspacing="0" width="100%">
+								<tr>
+									<td>
+										<strong><?=lang('br_customer_username')?></strong></td>
+									<td>
+										<?php
+											echo $order["member"]["br_fname"].' '.$order["member"]["br_fname"];
+										?>		
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<strong><?=lang('br_customer_email')?></strong></td>
+									<td>
+										<?php
+											echo '<a href="mailto:'.$order["member"]["email"].'">'.$order["member"]["email"].'</a>';
+										?></td>
+								</tr>
+								<tr>
+									<td>
+										<strong><?=lang('br_member_group')?></strong></td>
+									<td>
+										<?=$groups[$order["member"]["group_id"]]?></td>
+								</tr>
+							</table></td>
+					</tr>
+				</table></td>
 		</tr>
+		
+		
+		
+		
 		<tr>
 			<td width="50%">
 				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
@@ -381,20 +447,78 @@
 	for performance. -dpd
 */
 ?>
+<style type="text/css">
+	#order_status
+	{
+		cursor: pointer;
+		padding: 4px 20px 4px 4px;
+		background: url('/themes/third_party/brilliant_retail/images/config.png') right 3px no-repeat #F7F7F7;
+		border-radius: 5px;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border: 1px #EEE solid;
+		color: #777;
+	}
+	#order_status_form
+	{
+		display:none;
+		position:absolute;
+		border:1px #CCC solid;
+		margin-top: -30px;
+		width:200px;
+	}
+	#order_status_form form {
+		padding: 10px 20px;
+	}
+	
+	img.popin-arrow {
+		position: absolute;
+		margin-left: -10px;
+		margin-top: 28px;
+	}
+	div.popin-top {
+		height: 25px;
+		background: url('/themes/third_party/brilliant_retail/images/popin-top.jpg') no-repeat;
+	}
+	div.popin-top div {
+		width: 70%;
+		font-weight: bold;
+		padding: 5px 0 0 10px;	
+	}
+	div.popin-top img {
+		float: right;
+		margin: 4px 8px 0 0;
+		cursor: pointer;
+	}
+	
+	div.popin-body {
+		background: url('/themes/third_party/brilliant_retail/images/popin-bg.jpg') repeat-y;
+	}
+	div.popin-bottom {
+		height: 10px;
+		background: url('/themes/third_party/brilliant_retail/images/popin-bottom.jpg') no-repeat;
+	}
+
+	#order_customer td,
+	#order_details td 
+	{
+		border: 0;
+	}
+</style>
 <script type="text/javascript">
 	$(function(){
 		$('.rightNav a.submit').filter(":last").attr('target','_blank');
-		
-		/*
-		$('#order_note').redactor({
-		['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|',
-'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-'image', 'video', 'file', 'table', 'link', '|',
-'fontcolor', 'backcolor', '|', 
-'alignleft', 'aligncenter', 'alignright', 'justify', '|',
-'horizontalrule']
-		
-		});
-		*/
+		$('#order_status').bind('click',
+								function(){
+									var a = $('#order_status_form');
+									if(a.is(':visible')){
+										a.hide();
+									}else{
+										a.css('marginLeft',$(this).width()+40).show();
+									}
+								});
+		$('div.popin-top img').bind('click',function(){
+										$('#order_status_form').hide();
+									});
 	});
 </script>

@@ -340,6 +340,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 				$this->EE->cp->set_right_nav($right);
 			
+			// Get the group names
+				$qry = $this->EE->member_model->get_member_groups();
+				$groups = array();
+				foreach($qry->result_array() as $row){
+					$groups[$row["group_id"]] = $row["group_title"];
+				}
+				$this->vars["groups"] = $groups;
+			
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
 				if($print == TRUE){

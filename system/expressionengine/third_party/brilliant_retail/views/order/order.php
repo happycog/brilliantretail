@@ -95,7 +95,7 @@ $content = $this->table->generate();
 													"sPaginationType": "full_numbers", 
 													"iDisplayLength": 25, 
 													"aoColumns": [
-																		{ "asSorting": [ "desc", "asc" ] }, 
+																		{ "asSorting": [ "desc" ] }, 
 																		null,
 																		null,
 																		null,
