@@ -1,3 +1,19 @@
+/* Validation Error */
+
+div#error {
+	border: 1px #FA7777 solid;
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	background: #FAEDED;
+}
+
+div#error label.error {
+	display: block;
+}
+
 /* Search */
 
 .br_product_search{

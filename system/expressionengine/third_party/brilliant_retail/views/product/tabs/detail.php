@@ -147,12 +147,17 @@
 		<?php
 			foreach($custom as $c){
 		?>			
+				
 				<div class="publish_field publish_<?=$c["settings"]['field_type']?>" id="hold_field_<?=$c["settings"]['field_id']?>">
 
 				<label class="hide_field">
 					<span>
-						<?php if($c["settings"]['field_required'] == 'y'){ required(); } ?>
-							<?=$c["settings"]['field_label']?>
+						<?=$c["settings"]['field_label']?>
+						<?php 
+							if($c["settings"]['field_required'] == 'y'){ 
+								echo '<em class="required">*</em>';
+							}
+						?>
 					</span>
 				</label>
 
