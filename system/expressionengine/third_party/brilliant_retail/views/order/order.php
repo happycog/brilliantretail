@@ -95,7 +95,7 @@ $content = $this->table->generate();
 													"sPaginationType": "full_numbers", 
 													"iDisplayLength": 25, 
 													"aoColumns": [
-																		{ "asSorting": [ "desc" ] }, 
+																		null, 
 																		null,
 																		null,
 																		null,
@@ -106,6 +106,7 @@ $content = $this->table->generate();
 																	], 
 													"bProcessing": true,
 													"bServerSide": true,
+													"aaSorting" : [[0,"desc"]],
 													"sAjaxSource": "<?=str_replace("&amp;","&",$ajax_url)?>", 
 													"fnDrawCallback": function() {
 														$('#toggle_check').click(function(){

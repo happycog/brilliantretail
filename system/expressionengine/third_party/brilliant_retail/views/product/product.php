@@ -107,11 +107,10 @@
 	$(function(){
 		var oTable = $('#productTable').dataTable({
 													"sDom": "lfrt<'dataTables_footer'ip<'clear'>>",
-													"iDisplayLength": 25, 
 													"sPaginationType": "full_numbers", 
-													"bStateSave": true,
-													"aoColumns"	: [
-																		{ "asSorting": [ "desc", "asc" ] }, 
+													"iDisplayLength": 25, 
+													"aoColumns": [
+																		null, 
 																		null,
 																		null,
 																		null,
@@ -121,6 +120,7 @@
 																	], 
 													"bProcessing": true,
 													"bServerSide": true,
+													"aaSorting" : [[0,"desc"]],
 													"sAjaxSource": "<?=str_replace("&amp;","&",$ajax_url)?>", 
 													"fnDrawCallback": function() {
 														$('#toggle_check').click(function(){

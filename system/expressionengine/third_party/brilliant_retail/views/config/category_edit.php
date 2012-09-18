@@ -36,7 +36,7 @@
 
 <div id="b2r_page" class="b2r_category">
 
-<table id="category_update_tbl" cellpadding="0" cellspacing="0" class="mainTable" style="margin-top:0;">
+<table id="category_update_tbl" cellpadding="0" cellspacing="0" class="product_edit" width="100%" style="margin-top:0;">
 	<thead>
 		<tr class="odd">
 			<th width="30%">
@@ -90,7 +90,7 @@
             	<input name="template_path" id="template_path" value="<?=$category["template_path"]?>" type="text" /></td>
     	</tr>	
     </table>
-    <table cellpadding="0" cellspacing="0" class="mainTable">
+    <table cellpadding="0" cellspacing="0"  class="product_edit" width="100%">
 		<thead>
 			<tr class="odd">
 				<th colspan="2">
@@ -118,7 +118,7 @@
 	</tbody>
 </table>
 
-<table id="product_sort_tbl" class="mainTable" cellpadding="0" cellspacing="0">
+<table id="product_sort_tbl"  class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 	<thead>
 		<tr class="odd">
 			<th>

@@ -31,7 +31,7 @@ class Brilliant_retail_ext {
 	public $docs_url		= 'http://www.brilliantretail.com';
 	public $name			= 'Brilliant Retail';
 	public $settings_exist	= 'n';
-	public $version			= '1.0.4.8';
+	public $version			= '1.1.7.3';
 	public $site_id 		= 1;
 	public $base_url 		= '';
 	public $nav_menu 		= array();
@@ -184,9 +184,10 @@ class Brilliant_retail_ext {
 			}
 			
 		// Add the clear cache to the tools dropdown
-			if(isset($menu["tools"]))
+			if(isset($menu["tools"]["tools_data"]))
 			{
-				$menu["tools"]["br_clear_cache"] = $this->base_url.AMP.'method=tools_clear_cache';
+				$menu["tools"]["tools_data"][] = "----";
+				$menu["tools"]["tools_data"]["br_clear_cache"] = $this->base_url.AMP.'method=tools_clear_cache';
 			}
 
 		return $menu;

@@ -11,8 +11,7 @@
 * Added line item payments to order detail in the control panel.  
 * Added CDN links for jquery resources to demo blank theme footer template.
 * Added all US Territories as state options when United States is selected [#0000199]
-* Added 'Tools' section to dropdown menu. 
-* Added 'Clear Cache' to purge BrilliantRetail cached product, category and system files. 
+* Added 'Clear Store Cache' to the 'Tools > Data' section to purge BrilliantRetail cached product, category and system files. 
 * Added popin forms to order status update and report range edit in control panel. 
 * Added Hook: br_payment_options_before to manipulate payment gateway form array prior to output.  
 * Added Hook: br_product_editform_before to manipulate product edit form prior to rendering. 
@@ -36,7 +35,8 @@
 * Fixed an issue with ordering multiple downloadable products. [#0000198]
 * Fixed an issue with creating paired entries for existing products. Entry status set to open or closed based on product enabled value. 
 * Fixed an issue with rebuilding product cache after creating paired entries on installation. 
-* Updated validation class calls to use simply required instead of {required:true}. 
+* Fixed an issue with tax rule edit validation. 
+* Updated validation class calls to use 'required' instead of '{required:true}' format. 
 * Updated demo blank theme to remove metadata style validation rules. jquery.metadata.js is no longer a validation requirement on new installs. 
 * Updated control panel look and feel for better integration. 
 * Updated price and category in catalog_layered tag to use new br_filter_category and br_filter_price language keys. [#0000202]
@@ -49,6 +49,7 @@
 * Updated product fieldtype and related product search to fire after second character. [#0000072]
 * Updated control panel order detail page to include new order detail and customer information boxes. 
 * Updated control panel order detail page to include payment line item information. 
+* Updated store file cache to place files in subdirectories by server URL to solve conflicts when uploading cached system files. 
 * Updated jQuery in demo blank theme to version 1.8.1.
 * Updated jQuery in demo blank theme to version 1.8.23.
 * Updated jQuery dataTables plugin to version 1.9.3.

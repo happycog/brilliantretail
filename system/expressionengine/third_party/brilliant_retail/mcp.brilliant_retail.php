@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.1.7.2';
+		public $version			= '1.1.7.3';
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -66,7 +66,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											"config_category_edit","config_email_edit","config_gateway_install",
 											"config_gateway_edit","config_gateway_remove","config_permission_edit",
 											"config_shipping_install","config_shipping_edit","config_shipping_remove",
-											"config_tax_new","config_tax_edit");
+											"config_tax_new","config_tax_edit","tools_clear_cache");
 											
 			private $disallowed_fieldtypes = array('wygwam','Wyvern');								
 
@@ -2954,11 +2954,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 
-	public function tools()
-	{
-	
-	}
-	
 	public function tools_clear_cache()
 	{
 		// First delete all the cache files
