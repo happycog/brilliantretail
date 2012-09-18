@@ -13,6 +13,7 @@
 * Added all US Territories as state options when United States is selected [#0000199]
 * Added 'Clear Store Cache' to the 'Tools > Data' section to purge BrilliantRetail cached product, category and system files. 
 * Added popin forms to order status update and report range edit in control panel. 
+* Added a check for existing product and channel entry pair to control panel __construct
 * Added Hook: br_payment_options_before to manipulate payment gateway form array prior to output.  
 * Added Hook: br_product_editform_before to manipulate product edit form prior to rendering. 
 * Added Hook: br_product_parse_before to manipulate the products array prior to parsing. 

@@ -88,7 +88,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		// Lets check to makes sure each site/store has 
 		// a channel setup!
 			$this->_check_store_channel();
-						
+					
+		// Let's check to make sure each product has a 
+		// paird channel entry
+			$this->_check_product_entry_pair();
+				
 		// Now we load up stuff. Only do it once! 
 		// Thats what the session->cache check is for
 			if(!isset($this->EE->session->cache['mcp_brilliantretail_construct'])){
@@ -3439,9 +3443,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 										"channel_name"	=> "brilliantretail_".$store["site_id"] 
 									);
 					
-					$channel_id = $this->EE->api_channel_structure->create_channel($channel);
+					$this->br_channel_id = $this->EE->api_channel_structure->create_channel($channel);
 					
-					$this->EE->session->userdata['assigned_channels'][$channel_id] = $channel['channel_title'];
+					$this->EE->session->userdata['assigned_channels'][$this->br_channel_id] = $channel['channel_title'];
 				
 				// Create a matching channel entry for every product
 					$this->EE->db->from('br_product');
@@ -3453,7 +3457,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						        'status'		=> ($rst["enabled"] == 1) ? 'open' : 'closed', 
 						        'entry_date'    => time() 
 						);
-						$this->EE->api_channel_entries->submit_new_entry($channel_id,$data);	
+						$this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$data);	
 						$qry = $this->EE->db->query("SELECT entry_id FROM exp_channel_titles ORDER BY entry_id DESC LIMIT 1");
 						$result = $qry->result_array();
 
@@ -3470,7 +3474,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				// Update the br_store table with the new 
 				// channel_id value	
 					$data = array(
-		               			'channel_id' => $channel_id
+		               			'channel_id' => $this->br_channel_id
 		               		);
 					$this->EE->db->where('site_id', $store["site_id"]);
 					$this->EE->db->update('br_store', $data);
@@ -3482,8 +3486,49 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 
 	}	
+	
+	/* Create a method for verifying that there is a product and 
+	/* entry for all products in the system
+	*/ 
+	function _check_product_entry_pair(){
+		$this->EE->load->database();
+		$sql = "SELECT 
+					p.product_id, 
+					p.title, 
+					p.enabled 
+				FROM 
+					".$this->EE->db->dbprefix."br_product p 
+				WHERE 
+					p.site_id = ".$this->vars["site_id"]." 
+				AND 
+					p.product_id 
+						NOT IN 
+							(SELECT product_id FROM ".$this->EE->db->dbprefix."br_product_entry)";
+		$qry = $this->EE->db->query($sql);
+		if($qry->num_rows() >= 0){
+			
+			foreach($qry->result_array() as $rst){
+				$data = array(
+				        'title'         => $rst["title"],
+				        'status'		=> ($rst["enabled"] == 1) ? 'open' : 'closed', 
+				        'entry_date'    => time() 
+				);
+				$this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$data);	
+				$qry = $this->EE->db->query("SELECT entry_id FROM exp_channel_titles ORDER BY entry_id DESC LIMIT 1");
+				$result = $qry->result_array();
 
-		
+				$this->EE->db->query("	INSERT INTO 
+											exp_br_product_entry 
+										(product_id, entry_id) 
+											VALUES 
+										(".$rst["product_id"].",".$result[0]["entry_id"].")");
+				
+				// Remove cache file
+					remove_from_cache('product_'.$rst["product_id"]);
+			}
+		}
+	}
+
 	/************************************************/
 	/* The section below includes helper functions	*/
 	/* required by the Channel Fieldtypes. 			*/ 
