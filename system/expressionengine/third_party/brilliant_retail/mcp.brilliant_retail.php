@@ -1801,15 +1801,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["input"] 	= '';
 				
 				// Set the title
-					$this->vars['cp_page_title'] = $report->title;
+					$this->vars['cp_page_title'] = lang('br_report_detail');
 					
-				// Do we need to add the range to the title?
-					if($this->vars["detail"]["range"] != "")
-					{
-						$this->vars['cp_page_title'] .= " - (".date("F j, Y",strtotime($this->vars["detail"]["range"]["start"]))." - ".
-														date("F j, Y",strtotime($this->vars["detail"]["range"]["end"])).")";
-					}
-					
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=report', lang('nav_br_report'));
+				
 				foreach($this->vars["detail"]["input"] as $in){
 					$this->vars["input"] .= $this->_build_report_input($in);
 				}
@@ -2959,6 +2954,22 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 
+	public function tools()
+	{
+	
+	}
+	
+	public function tools_clear_cache()
+	{
+		// First delete all the cache files
+			delete_file_cache();
+
+		// Set a success message 
+			$_SESSION["message"] = lang('br_tools_cache_delete');
+
+		// Redirect to dashboard 
+			$this->EE->functions->redirect($this->base_url.'&method=dashboard');
+	}
 		
 	/* Helper Functions */
 		

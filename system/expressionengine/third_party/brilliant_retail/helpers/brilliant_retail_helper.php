@@ -60,6 +60,18 @@ if(!isset($_SESSION["cart"])){
 				unlink($nm);
 			}
 		}
+		
+		function delete_file_cache()
+		{
+			$path = APPPATH.'cache/brilliant_retail/';
+			$file = read_dir_files($path);
+			foreach($file as $f)
+			{
+				if(!is_dir($path.$f)){
+					unlink($path.$f);
+				}
+			}
+		}
 
 	/************************/
 	/* Session Helpers		*/

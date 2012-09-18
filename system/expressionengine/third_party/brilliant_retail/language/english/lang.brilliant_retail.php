@@ -344,6 +344,9 @@ $lang = array(
 	'br_promo_delete_success' 	=> 'The promotion has been successfully deleted.',
 	
 // Reports 
+	'br_report_edit' => 'Edit Report',
+	'br_report_range' => 'Range',
+	'br_report_export' => 'Export',
 	'br_sales' => 'Sales',
 	'br_descr' => 'Description',
 	'br_sales_for' => 'Sales For', 
@@ -364,7 +367,7 @@ $lang = array(
 	'br_coupon' => 'Coupon', 
 	'br_no_results' => 'Your report returned no results. Please adjust the search criteria.',
 	'br_export_csv' => 'Export (csv)',
-	'br_base' => 'Base Price', 
+	'br_base' => 'Base', 
 	'br_tax' => 'Tax',
 	'br_total' => 'Total', 
 	'br_discount' => 'Discount',
@@ -577,6 +580,12 @@ $lang = array(
 		'br_confirm_delete_tax' => 'Are you sure you want to delete the tax rule? Warning: This can not be undone!',
 		'br_tax_update_success' => 'Tax Rule Successfully Updated',	
 		'br_tax_delete_success' => 'Tax Rule Successfully Deleted',		
+
+
+	// Tools 
+		'nav_br_tools' 			=> 'Tools',
+		'nav_br_clear_cache' 	=> 'Clear Store Cache',
+		'br_tools_cache_delete'	=> 'The store file cache has been deleted', 
 
 	// Feildtype 
 		'br_ft_product_search' => 'Use the search box above to add products.',

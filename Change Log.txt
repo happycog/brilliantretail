@@ -1,13 +1,5 @@
 # Version 1.2
 
-* Added Hook: br_payment_options_before to manipulate payment gateway form array prior to output.  
-* Added Hook: br_product_editform_before to manipulate product edit form prior to rendering. 
-* Added Hook: br_product_parse_before to manipulate the products array prior to parsing. 
-* Added Hook: br_product_parse_after to manipulate the output string prior to returning. 
-* Added Hook: br_product_cartadd_before to manipulate the cart post data before adding to the database. 
-* Added Hook: br_product_cartadd_after receives the $data array after the item is added to the cart. 
-* Added Hook: br_cart_parse_before to manipulate the cart items array prior to processing
-* Added Hook: br_customer_download_file_before to modify the $downloads array prior to forcing the download
 * Added member_id to br_order_download table
 * Added endabled/disabled message to gateway overview page
 * Added subtotal variable to items in checkout_thankyou tag. 
@@ -19,6 +11,17 @@
 * Added line item payments to order detail in the control panel.  
 * Added CDN links for jquery resources to demo blank theme footer template.
 * Added all US Territories as state options when United States is selected [#0000199]
+* Added 'Tools' section to dropdown menu. 
+* Added 'Clear Cache' to purge BrilliantRetail cached product, category and system files. 
+* Added popin forms to order status update and report range edit in control panel. 
+* Added Hook: br_payment_options_before to manipulate payment gateway form array prior to output.  
+* Added Hook: br_product_editform_before to manipulate product edit form prior to rendering. 
+* Added Hook: br_product_parse_before to manipulate the products array prior to parsing. 
+* Added Hook: br_product_parse_after to manipulate the output string prior to returning. 
+* Added Hook: br_product_cartadd_before to manipulate the cart post data before adding to the database. 
+* Added Hook: br_product_cartadd_after receives the $data array after the item is added to the cart. 
+* Added Hook: br_cart_parse_before to manipulate the cart items array prior to processing
+* Added Hook: br_customer_download_file_before to modify the $downloads array prior to forcing the download
 * Fixed an issue with download remaining count on limited download products.  
 * Fixed an issue with merging products in cart when supplying variation of the same configurable product. 
 * Fixed an issue with Configurable product option display when there was only one option and with an adjustment. 
@@ -44,6 +47,8 @@
 * Updated BrilliantRetail Product fieldtype with total_count variable
 * Updated admin view templates with additional changes to match EE default code styling.
 * Updated product fieldtype and related product search to fire after second character. [#0000072]
+* Updated control panel order detail page to include new order detail and customer information boxes. 
+* Updated control panel order detail page to include payment line item information. 
 * Updated jQuery in demo blank theme to version 1.8.1.
 * Updated jQuery in demo blank theme to version 1.8.23.
 * Updated jQuery dataTables plugin to version 1.9.3.

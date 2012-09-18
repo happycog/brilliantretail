@@ -182,6 +182,13 @@ class Brilliant_retail_ext {
 					}
 				}
 			}
+			
+		// Add the clear cache to the tools dropdown
+			if(isset($menu["tools"]))
+			{
+				$menu["tools"]["br_clear_cache"] = $this->base_url.AMP.'method=tools_clear_cache';
+			}
+
 		return $menu;
 	}
 
