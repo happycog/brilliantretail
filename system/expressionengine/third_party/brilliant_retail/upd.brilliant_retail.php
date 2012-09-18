@@ -4527,9 +4527,9 @@ class Brilliant_retail_upd {
 	}
 	
 	function reset_cache(){
-		$files = $this->read_dir_files(APPPATH.'cache/brilliant_retail');
+		$files = $this->read_dir_files(APPPATH.'cache/brilliant_retail/'.$_SERVER["HTTP_HOST"]);
 		foreach($files as $f){
-			$nm = APPPATH.'cache/brilliant_retail/'.$f;
+			$nm = APPPATH.'cache/brilliant_retail/'.$_SERVER["HTTP_HOST"].'/'.$f;
 			if(file_exists($nm)){
 				unlink($nm);
 			}
