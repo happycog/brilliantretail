@@ -47,31 +47,39 @@
 							<td>
 								<?=$title?></td>
 						</tr>
-						<tr>
-							<td>
-								<strong><?=lang('br_report_range')?></strong></td>
-							<td>
-								<div id="popin-container">
-									<img src="<?=$theme?>images/popin-arrow.png" class="popin-arrow" />
-									<div class="popin-top">
-										<img src="<?=$theme?>images/close.png" />
-										<div><?=lang('br_report_edit')?></div>
-									</div>
-									<div class="popin-body">
-										<div id="report-input-body">
-											<?=$input?>
-											<input type="submit" class="submit" id="report_submit" name="submit" value="<?=lang('submit')?>" />
-											<div class="b2r_clearboth"><!-- --></div>
+						
+						<?php
+							if($input != '')
+							{
+						?>
+							<tr>
+								<td>
+									<strong><?=lang('br_report_range')?></strong></td>
+								<td>
+									<div id="popin-container">
+										<img src="<?=$theme?>images/popin-arrow.png" class="popin-arrow" />
+										<div class="popin-top">
+											<img src="<?=$theme?>images/close.png" />
+											<div><?=lang('br_report_edit')?></div>
 										</div>
+										<div class="popin-body">
+											<div id="report-input-body">
+												<?=$input?>
+												<input type="submit" class="submit" id="report_submit" name="submit" value="<?=lang('submit')?>" />
+												<div class="b2r_clearboth"><!-- --></div>
+											</div>
+										</div>
+										<div class="popin-bottom"></div>
 									</div>
-									<div class="popin-bottom"></div>
-								</div>
-								<span id="report-range">
-									<?php
-										echo date("F j, Y",strtotime($detail["range"]["start"]))." - ".date("F j, Y",strtotime($detail["range"]["end"]));
-									?>
-								</span></td>
-						</tr>
+									<span id="report-range">
+										<?php
+											echo date("F j, Y",strtotime($detail["range"]["start"]))." - ".date("F j, Y",strtotime($detail["range"]["end"]));
+										?>
+									</span></td>
+							</tr>
+						<?php
+							}
+						?>
 						<tr>
 							<td>
 								<strong><?=lang('br_report_export')?></strong></td>
@@ -168,17 +176,11 @@
 			$('#report_submit').trigger('click');
 			return false;
 		});
-	});
-</script>
-
-
-
-
-<script type="text/javascript">
-	$(function(){
+		
 		$('#report-range').bind('click',
 								function(){
 									var a = $('#popin-container');
+									$('#export').val(0);
 									if(a.is(':visible')){
 										a.hide();
 									}else{

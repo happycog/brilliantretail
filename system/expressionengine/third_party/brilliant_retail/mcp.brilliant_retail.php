@@ -1812,7 +1812,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				foreach($this->vars["detail"]["input"] as $in){
 					$this->vars["input"] .= $this->_build_report_input($in);
 				}
-			
 			// Export it as a csv 	
 				if(isset($_POST["export"]) && $_POST["export"] == 1){
 					$this->_build_report_csv($this->vars["detail"]);

@@ -38,6 +38,9 @@
 * Fixed an issue with creating paired entries for existing products. Entry status set to open or closed based on product enabled value. 
 * Fixed an issue with rebuilding product cache after creating paired entries on installation. 
 * Fixed an issue with tax rule edit validation. 
+* Fixed an issue with the quantity value in the Best Selling Products report [#0000208]
+* Fixed an issue with report view when input values do not exist [#0000217]
+* Fixed an issue with reports when first exporting then trying to adjust the filters [#0000218]
 * Updated validation class calls to use 'required' instead of '{required:true}' format. 
 * Updated demo blank theme to remove metadata style validation rules. jquery.metadata.js is no longer a validation requirement on new installs. 
 * Updated control panel look and feel for better integration. 

@@ -353,7 +353,7 @@ class Order_model extends CI_Model {
 	}
 	
 	function get_best_products($start_date='',$end_date='',$limit=''){
-		$this->db->select('product_id,count(i.product_id)*quantity AS qty, title, SUM((i.price-i.discount)*i.quantity) AS total_sales');
+		$this->db->select('product_id,SUM(quantity) AS qty, title, SUM((i.price-i.discount)*i.quantity) AS total_sales');
 		$this->db->from('br_order_item i');
 		$this->db->join("br_order o","o.order_id = i.order_id");
 		

@@ -62,7 +62,7 @@ class Report_best_products extends Brilliant_retail_report {
 		$this->EE->load->model('order_model');
 		$products =  $this->EE->order_model->get_best_products($range["start"],$range["end"]);
 
-		$header = array(lang('br_order_id'),lang('br_product_title'),lang('br_qty_sold'),lang('br_total_value'));
+		$header = array(lang('br_product_title'),lang('br_qty_sold'),lang('br_total_value'));
 		
 		// Results array 	
 			$result = array();
@@ -81,7 +81,7 @@ class Report_best_products extends Brilliant_retail_report {
 		
 			foreach($products as $row){
 					$result[] = array(
-										'<a href="'.$base_url.'&method=product_edit&product_id='.$row['product_id'].'">'.$row['product_id'].'</a>',
+										#'<a href="'.$base_url.'&method=product_edit&product_id='.$row['product_id'].'">'.$row['product_id'].'</a>',
 										$row['title'],
 										$row['qty'],										
 										$this->_currency_round($row['total_sales'])										
@@ -91,7 +91,6 @@ class Report_best_products extends Brilliant_retail_report {
 			}
 
 		$footer = array(
-							'',
 							strtoupper(lang('br_total')),
 							$qty,
 							$this->_currency_round($ttl)
