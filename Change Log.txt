@@ -1,5 +1,8 @@
 # Version 1.2
 
+**IMPORTANT** If you are using the Stripe payment gateway you will need to remove and reinstall it from the 
+Settings > Payment Gateway section of your website. 
+
 * Added member_id to br_order_download table
 * Added endabled/disabled message to gateway overview page
 * Added subtotal variable to items in checkout_thankyou tag. 
