@@ -3986,12 +3986,12 @@ class Brilliant_retail_upd {
 		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'Hong Kong','HK')";
 		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'Kowloon','KLN')";
 		$sql[] = "INSERT INTO `exp_br_state` (zone_id,title,code) VALUES (98,'New Territories','NT')";
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'FM','Federated States of Micronesia');"; 
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'GU','Guam');"; 
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'PR','Puerto Rico');"; 
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'PW','Republic of Palau');"; 
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'MH','Republic of the Marshall Islands');"; 
-		$sql[] = "INSERT INTO `exp_br_state` VALUES (zone_id,code,title) VALUES (1,'VI','U.S. Virgin Islands');"; 
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,code,title) VALUES (1,'FM','Federated States of Micronesia');"; 
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,code,title) VALUES (1,'GU','Guam');"; 
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,code,title) VALUES (1,'PR','Puerto Rico');"; 
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,code,title) VALUES (1,'PW','Republic of Palau');"; 
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,code,title) VALUES (1,'MH','Republic of the Marshall Islands');"; 
+		$sql[] = "INSERT INTO `exp_br_state` (zone_id,code,title) VALUES (1,'VI','U.S. Virgin Islands');"; 
 
 		
 ## ----------------------------
