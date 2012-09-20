@@ -196,7 +196,7 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
 		$('#add_cat').ajaxSubmit({
 										beforeSubmit:  _block_ui,
 										success: function(data){
-								        	$('<li id="cat_'+data+'" class="cat_'+$('#parent_id').val()+'"><img src="<?=$theme?>images/move.png" class="cat_handle"><div class="cat_action"><a href="<?=str_replace("&amp;","&",BASE)?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='+data+'"><img src="<?=$theme?>images/config.png" /></a></div><span>'+cat_nm+'</span></li>').insertAfter(where);
+								        	$('<li id="cat_'+data+'" class="cat_'+$('#parent_id').val()+'"><div class="cat_action"><a href="<?=str_replace("&amp;","&",BASE)?>&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_edit&cat_id='+data+'"><img src="<?=$theme?>images/config.png" /></a></div><img src="<?=$theme?>images/move.png" class="cat_handle"><span>'+cat_nm+'</span></li>').insertAfter(where);
 								        	$.unblockUI();
 								        	_bind_cat_sort();
 											_bind_cat_click();

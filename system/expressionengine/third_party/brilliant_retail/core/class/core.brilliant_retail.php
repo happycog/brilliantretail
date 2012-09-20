@@ -1286,7 +1286,7 @@ class Brilliant_retail_core {
 		
 		foreach($rates as $q)
 		{
-			$output .= '<p class="shipping">
+			$output .= '<p id="shipping_'.$q["code"].'" class="shipping">
 							<label>'.$q["label"].'</label>';
 			foreach($q["quote"] as $q){
 				$hash = md5($ship["code"].$q["rate"].$i.time());

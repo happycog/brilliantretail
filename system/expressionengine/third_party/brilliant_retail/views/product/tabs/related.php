@@ -71,7 +71,7 @@
 										<td width="10%" class="move_related_row" style="text-align:center">
 											<img src="'.$theme.'images/move.png" /></td>
 										<td width="10%">
-											<a class="remove_related" href="#"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a><input type="hidden" value="'.$rel["product_id"].'" name="related['.$rel["product_id"].']">
+											<a class="remove_related" href="#"><img src="'.$theme.'images/delete.png" alt="'.lang('delete').'" title="'.lang('delete').'" /></a><input type="hidden" value="'.$rel["product_id"].'" name="related[]">
 										</td>
 									</tr>';
 							$i++;

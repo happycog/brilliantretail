@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.1.7.4';
+		public $version			= '1.2.0.0';
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -151,7 +151,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
-						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css?v='.$this->version).'" />');
+						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style_v1200.css').'" />');
 							
 					// Set our admin theme 	
 						$this->vars['theme'] = $this->_theme();	

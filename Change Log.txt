@@ -15,6 +15,7 @@
 * Added popin forms to order status update and report range edit in control panel. 
 * Added a check for existing product and channel entry pair to control panel __construct
 * Added support for NSM Addon Updater (http://ee-garage.com/nsm-addon-updater)
+* Added id value to p tag in shipping option ajax response. 
 * Added Hook: br_payment_options_before to manipulate payment gateway form array prior to output.  
 * Added Hook: br_product_editform_before to manipulate product edit form prior to rendering. 
 * Added Hook: br_product_parse_before to manipulate the products array prior to parsing. 
@@ -33,8 +34,6 @@
 * Fixed an issue with cart_add feature when using an image to post to cart with a custom name on the image input. 
 * Fixed an issue with creating products with a custom channel fieldtype that is required. (Added additional validation rules)
 * Fixed the authorize.net payment gateway to remove extra closing label tag. 
-* Fixed a number of minor language key settings. 
-* Fixed a number of minor html errors in the demo blank theme.
 * Fixed an issue with ordering multiple downloadable products. [#0000198]
 * Fixed an issue with creating paired entries for existing products. Entry status set to open or closed based on product enabled value. 
 * Fixed an issue with rebuilding product cache after creating paired entries on installation. 
@@ -42,6 +41,10 @@
 * Fixed an issue with the quantity value in the Best Selling Products report [#0000208]
 * Fixed an issue with report view when input values do not exist [#0000217]
 * Fixed an issue with reports when first exporting then trying to adjust the filters [#0000218]
+* Fixed an issue with related product ordering when editing an existing product. 
+* Fixed an issue with deleting all related products when editing an existing product. 
+* Fixed a number of minor language key settings. 
+* Fixed a number of minor html errors in the demo blank theme.
 * Updated validation class calls to use 'required' instead of '{required:true}' format. 
 * Updated demo blank theme to remove metadata style validation rules. jquery.metadata.js is no longer a validation requirement on new installs. 
 * Updated control panel look and feel for better integration. 

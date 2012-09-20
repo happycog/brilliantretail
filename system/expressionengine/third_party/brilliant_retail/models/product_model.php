@@ -895,9 +895,9 @@ class Product_model extends CI_Model {
 					}			
 				}
 				
-			// Related Products 
+			// Related Products
+				$this->db->delete('br_product_related', array('parent_id' => $product_id)); 
 				if(isset($related)){
-					$this->db->delete('br_product_related', array('parent_id' => $product_id)); 
 					foreach($related as $r){
 						$data = array(	
 							'product_id' => $r, 
@@ -906,7 +906,6 @@ class Product_model extends CI_Model {
 						$this->db->insert('br_product_related',$data);
 					}			
 				}	
-		
 			// Clear from cache
 				remove_from_cache('product_'.$product_id);
 			
@@ -1095,9 +1094,9 @@ class Product_model extends CI_Model {
 		if (isset($this->session->cache['get_product_related'][$product_id])){
 			$related = $this->session->cache['get_product_related'][$product_id];
 		}else{
-			$this->db->select('*');
 			$this->db->where('parent_id',$product_id);
-			$this->db->from('br_product_related');		
+			$this->db->from('br_product_related');
+			$this->db->order_by('related_id');		
 			$query = $this->db->get();
 			$related = array();
 			$i = 0;
