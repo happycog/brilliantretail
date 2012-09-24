@@ -63,8 +63,6 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 		
 		// =debug
 		header('Content-Type: text/plain; charset=iso-8859-1');
-		print_r($data);
-		exit;
 		
 		require_once('assets/google-checkout/library/googlecart.php');
 		require_once('assets/google-checkout/library/googleitem.php');

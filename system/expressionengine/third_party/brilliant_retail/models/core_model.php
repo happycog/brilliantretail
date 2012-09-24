@@ -36,11 +36,16 @@ class Core_model extends CI_Model {
 		
 		// Try to get the configuration data 
 		// from a cached config file
-			if($str=read_from_cache('config')){
-				$arr = unserialize($str);
-				return $arr;
+		// 
+		// Added a disable option in 1.2.1 - dpd
+			$disable_cache = ($this->config->item('br_disable_system_cache') === TRUE) ? 1 : 0;
+			if($disable_cache == 0){
+				if($str=read_from_cache('config')){
+					$arr = unserialize($str);
+					return $arr;
+				}
 			}
-
+			
 		// Get the store config 
 			$this->db->select('	s.*, 
 								c.code as currency,

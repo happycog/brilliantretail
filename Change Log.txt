@@ -1,3 +1,4 @@
-# Version 1.2.0.1
+# Version 1.2.1.0
 
 * Updated get_shipping request to include selected country and state
+* Added configuration variable 'br_disable_system_cache' to disable system cache
