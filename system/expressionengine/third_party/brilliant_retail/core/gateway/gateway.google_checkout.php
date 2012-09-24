@@ -60,79 +60,95 @@ class Gateway_google_checkout extends Brilliant_retail_gateway {
 	// Start IPN handoff to Google Checkout for payment
 		public function start_ipn($data,$config)
 		{
-		
-		// =debug
-		header('Content-Type: text/plain; charset=iso-8859-1');
-		
-		require_once('assets/google-checkout/library/googlecart.php');
-		require_once('assets/google-checkout/library/googleitem.php');
-		require_once('assets/google-checkout/library/googleshipping.php');
-		require_once('assets/google-checkout/library/googletax.php');
-		
-		$merchant_id = $config['merchant_id'];  // Your Merchant ID
-		$merchant_key = $config['merchant_key'];  // Your Merchant Key
-		$server_type = $config['sandbox'];
-		$currency = "USD";
-		
-		$cart = new GoogleCart($merchant_id, $merchant_key, $server_type, $currency);
-		
-		$cart->SetMerchantPrivateData(new MerchantPrivateData(array("transaction_id" =>$data['transaction_id'])));
-		
-		
-		$i = 1;
-		foreach($data["cart"]["items"] as $items){
+			require_once('assets/google-checkout/library/googlecart.php');
+			require_once('assets/google-checkout/library/googleitem.php');
+			require_once('assets/google-checkout/library/googleshipping.php');
+			require_once('assets/google-checkout/library/googletax.php');
+			
+			$merchant_id 	= $config['merchant_id'];  // Your Merchant ID
+			$merchant_key 	= $config['merchant_key'];  // Your Merchant Key
+			$server_type 	= $config['sandbox'];
+			$currency 		= "USD";
+			
+			$cart = new GoogleCart($merchant_id, $merchant_key, $server_type, $currency);
+			
+			$cart->SetMerchantPrivateData(new MerchantPrivateData(array("transaction_id" =>$data['transaction_id'])));
 			
 			
-			${'item_'.$i} = new GoogleItem($items['title'],
-									"",
-									$items['quantity'],
-									$this->_currency_round($items["price"])
-									);
-			${'item_'.$i}->SetMerchantItemId($items["product_id"]);
+			$i = 1;
+			foreach($data["cart"]["items"] as $items){
+				
+				
+				${'item_'.$i} = new GoogleItem($items['title'],
+										"",
+										$items['quantity'],
+										$this->_currency_round($items["price"])
+										);
+				${'item_'.$i}->SetMerchantItemId($items["product_id"]);
+				
+				$cart->AddItem(${'item_'.$i});
+				
+				$i++;
+			}
 			
-			$cart->AddItem(${'item_'.$i});
 			
-			$i++;
-		}
-		
-		
-		// Applying a discount
-		if ($data['cart_discount']!="")
-		{
-			${'item_'.$i} = new GoogleItem("Discount Applied",
-									"",
-									1,
-									"-".$this->_currency_round($data['cart_discount'])
-									);
-												
-			$cart->AddItem(${'item_'.$i});
+			// Applying a discount
+			if ($data['cart_discount'] != 0)
+			{
+				${'item_'.$i} = new GoogleItem("Discount Applied",
+										"",
+										1,
+										"-".$this->_currency_round($data['cart_discount'])
+										);
+													
+				$cart->AddItem(${'item_'.$i});
+				
+			}
 			
-		}
-		
-		// Calculating the Tax by taking the subtotal, subtracting the discount and 
-		// dividing by the pre-calculated rate.
-		// -- Then formatting the number by 2 decimal places
-		$taxrate = number_format(($data['cart_subtotal']-$data['cart_discount']/$data['cart_tax']),2);
-		
-		$tax_rule = new GoogleDefaultTaxRule($taxrate);
-		$tax_rule->SetWorldArea(true);
-		$cart->AddDefaultTaxRules($tax_rule);
+			// Calculating the Tax by taking the subtotal, subtracting the discount and 
+			// dividing by the pre-calculated rate.
+			// -- Then formatting the number by 2 decimal places
+			if($data['cart_tax'] == 0){
+				$taxrate = 0;
+			}else{
+				$taxrate = number_format(($data['cart_subtotal']-$data['cart_discount']/$data['cart_tax']),2);
+			}
 			
-		
-		$ship_1 = new GoogleFlatRateShipping("Shipping", $data['cart_shipping']);
-		$cart->AddShipping($ship_1);
-		
-		// Specify <edit-cart-url>
-		$cart->SetEditCartUrl($data['return']);
-
-	    // Specify "Return to xyz" link
-	    $cart->SetContinueShoppingUrl($data['cancel_return']);
+			$tax_rule = new GoogleDefaultTaxRule($taxrate);
+			$tax_rule->SetWorldArea(true);
+			$cart->AddDefaultTaxRules($tax_rule);
+				
+			
+			$ship_1 = new GoogleFlatRateShipping("Shipping", $data['cart_shipping']);
+			$cart->AddShipping($ship_1);
+			
+			// Specify <edit-cart-url>
+			$cart->SetEditCartUrl($data['return']);
 	
-	    // Define rounding policy
-	    $cart->AddRoundingPolicy("CEILING", "TOTAL");
-    
-		// =debug
-		echo $cart->CheckoutButtonCode("SMALL");
+		    // Specify "Return to xyz" link
+		    $cart->SetContinueShoppingUrl($data['cancel_return']);
+		
+		    // Define rounding policy
+		    $cart->AddRoundingPolicy("CEILING", "TOTAL");
+	    
+   	        echo '	<html>
+   	        			<head>
+   	        				<title>Google Checkout</title>
+   	        			</head>
+   	        			<body onLoad="document.forms[\'gateway_form\'].submit();">
+							<form method="post" name="gateway_form" action="'.$cart->checkout_url.'">
+			    				<input type="hidden" name="cart" value="'.base64_encode($cart->GetXML()).'"/>
+								<input type="hidden" name="signature" value="'.base64_encode($cart->CalcHmacSha1($cart->GetXML())).'" />
+								<p style="text-align:center;">
+									Your order is being processed... will be redirected to the payment website.
+								 	<br />
+								 	<br />
+								 	If you are not automatically redirected to Google Checkout within 5 seconds...<br /><br />
+									<input type="submit" value="Click Here">
+								</p>
+							</form>
+						</body>
+					</html>';
 		}
 	
 	// Process IPN Calls which come back from Google 
