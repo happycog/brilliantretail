@@ -2399,7 +2399,7 @@ class Brilliant_retail_core {
 			$this->EE->load->model('tax_model');
 			$rate = $this->EE->tax_model->get_tax($country,$state,$zip);
 			
-			// Add extension hook to manipulate emails before they are sent out
+			// Add extension hook to manipulate the tax rate
 			if($this->EE->extensions->active_hook('br_cart_tax_rate') === TRUE){
 				$data = array(
 									"cart" 		=> $cart,

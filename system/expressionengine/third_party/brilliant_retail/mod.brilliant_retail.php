@@ -1605,7 +1605,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 																			if($('#br_billing_zip').val() != ''){
 																				_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());
 																			}else{
-																				_get_shipping_quote();
+																				_get_shipping_quote('',$('#br_billing_country').val(),$('#br_billing_state').val());
 																			}
 																			
 																			$('#get_shipping_rates').bind('click',function(){
