@@ -1,4 +1,5 @@
 # Version 1.2.1.0
 
-* Updated get_shipping request to include selected country and state
 * Added configuration variable 'br_disable_system_cache' to disable system cache
+* Fixed an issue with image resizing when imageconvolution method does not exist in the GD build
+* Updated get_shipping request to include selected country and state

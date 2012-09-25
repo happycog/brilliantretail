@@ -458,7 +458,12 @@
 				$div	= $sharpness;
 				$offset	= 0;
 				
-				@imageconvolution($this->tmp_im, $matrix, $div, $offset);
+				// This function doesn't exist in all GD builds. -dpd
+					if(function_exists('imageconvolution'))
+					{
+						imageconvolution($this->tmp_im, $matrix, $div, $offset);
+					}
+				
 				imagecopyresampled($this->tmp_im, $this->im, 0, 0, 0, 0, $new_width, $new_height, $this->getX(), $this->getY());
 				
 				$this->im = $this->tmp_im;
