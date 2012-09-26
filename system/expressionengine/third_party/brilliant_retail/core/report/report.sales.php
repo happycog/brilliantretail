@@ -131,12 +131,17 @@ class Report_sales extends Brilliant_retail_report {
 		for($i=0;$i<=23;$i++){
 			$hours[$i] = 0;
 		}
+		
+		$max_hour = 0;
 		foreach($orders as $row){
 			// Set a max hour
-				$max_hour = date("G",$row["created"]);
-
+				$hr = date("G",$row["created"]);
+				if($hr > $max_hour){
+					$max_hour = $hr;
+				}
+			
 			// Calculate the running total			
-				$hours[date("G",$row["created"])] += $row["total"];
+				$hours[$hr] += $row["total"];
 		}
 
 		// Remove empty right times
