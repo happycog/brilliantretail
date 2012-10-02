@@ -54,6 +54,18 @@
 		color: #468847;
 	}
 	
+	#alert_message {
+		border-radius: 5px; 
+		-moz-border-radius: 5px; 
+		-webkit-border-radius: 5px; 
+		font-weight: bold;
+		background-color: #ffe5e5;
+		margin:	0 0 7px;
+		padding: 9px 14px 8px 14px;
+		border: 1px #FF0000 solid;
+		color: #FF0000;
+	}
+	
 	#mainContent .pageContents p#b2r_status_alert {
 		border-radius: 5px; 
 		-moz-border-radius: 5px; 

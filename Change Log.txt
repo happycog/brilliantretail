@@ -1,5 +1,6 @@
 # Version 1.2.1.0
 
 * Added configuration variable 'br_disable_system_cache' to disable system cache
+* Fixed an issue with the control panel stylesheet naming which broke extensions relying on BR core styles. 
 * Fixed an issue with image resizing when imageconvolution method does not exist in the GD build
 * Updated get_shipping request to include selected country and state

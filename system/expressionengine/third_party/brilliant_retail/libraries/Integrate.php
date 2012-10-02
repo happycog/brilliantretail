@@ -6,7 +6,7 @@ class Integrate extends Brilliant_retail_core{
 	function __construct()
 	{
 		parent::__construct();
-		$this->service_path = PATH_THIRD.'brilliant_retail/libraries/integrate_services/';	
+		$this->service_path = PATH_THIRD.'brilliant_retail/core/service/';	
 	}
 	
 	function __call($name,$args)
@@ -14,7 +14,7 @@ class Integrate extends Brilliant_retail_core{
 		$parts 	= explode('_',$name);
 		$class 	= strtolower($parts[0]);
 		$method = strtolower($parts[1]); 
-		$file 	= $this->service_path.$class.'.php';
+		$file 	= $this->service_path.'service'.$class.'.php';
 		if(file_exists($file)){
 			include_once($file);
 			$service = new $class();
