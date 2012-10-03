@@ -26,7 +26,8 @@ class Gateway_mailin extends Brilliant_retail_gateway {
 	public $title 	= 'Mail In';
 	public $label 	= 'Mail in Payment';
 	public $descr 	= 'Allow users to mail in payment after the purchase.';
-	public $enabled = true;
+	public $enabled 		= TRUE;
+	public $admin_enabled 	= TRUE;
 	public $version = .5;
 	
 	function form(){

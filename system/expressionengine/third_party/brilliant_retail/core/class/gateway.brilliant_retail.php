@@ -28,10 +28,11 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 	public $osc_enabled 			= TRUE;			# One step checkout enabled 
 	public $ipn_enabled 			= FALSE;		# Instant Payment Notification Enabled
 	public $ipn_url					= '';			# IPN Url
-	public $subscription_enabled 	= FALSE;		# Subscription Enabled (not ready for primetime)
+	public $subscription_enabled 	= FALSE;		# Subscription Enabled
 	public $cart_button 			= FALSE;		# Show cart button
 	public $zero_checkout 			= FALSE;		# Allow $0 checkout
 	public $cart_total 				= 0;			# Cart total
+	public $admin_enabled			= FALSE;		# Admin order entry enabled
 	public $admin_order				= FALSE;		# Add a flag so we can differentiate admin / frontend orders
 
 	/* 

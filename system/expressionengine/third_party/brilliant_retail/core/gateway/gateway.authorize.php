@@ -27,8 +27,9 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 		public $title 	= 'Authorize.net';
 		public $label 	= 'Credit Card Payment (Authorize.net)';
 		public $descr 	= 'Accept credit cards directly from your site with an Authorize.net payment gateway account using the AIM method.';
-		public $enabled = true;
-		public $version = '1.0';
+		public $enabled 		= TRUE;
+		# public $admin_enabled 	= TRUE;
+		public $version 		= '1.1';
 		
 	// Some internal variables
 		protected $nice_keys = array (

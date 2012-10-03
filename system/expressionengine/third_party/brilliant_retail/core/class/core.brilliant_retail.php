@@ -1167,7 +1167,17 @@ class Brilliant_retail_core {
 					$total = $this->_get_cart_total() + $tax + $shipping;
 					$tmp = new $str($total);
 					$tmp->admin_order = $admin_order;
+					
 					$proceed = TRUE;
+					
+					// If its an admin order make sure that its 
+					// allowed in the admin order form
+						if($admin_order === TRUE){
+							if($tmp->admin_enabled !== TRUE){
+								$proceed = FALSE;
+							}	
+						}
+
 					if($total == 0 && $admin_order === FALSE){
 						if($tmp->zero_checkout != TRUE){
 							$proceed = FALSE;
