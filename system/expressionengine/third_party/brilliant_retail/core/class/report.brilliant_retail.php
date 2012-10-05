@@ -32,8 +32,7 @@ class Brilliant_retail_report extends Brilliant_retail_core{
 	public $report = array();
 	
 	function __construct(){
-		$this->EE =& get_instance();
-		$this->EE->load->helper('brilliant_retail');
+		parent::__construct();
 	}	
 
 	function get_report(){	

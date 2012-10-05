@@ -1386,30 +1386,22 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$entry_id = $result[0]["entry_id"];
 						}
 						
-					}else{
-						// Get the data for the entry_id 	
-						$sql = "SELECT 
-									p.*, 
-									d.* 
-								FROM 
-									".$prefix."br_product_entry p, 
-									".$prefix."channel_data d 
-								WHERE 
-									p.entry_id = d.entry_id 
-								AND 
-									p.product_id = ".$data["product_id"];
-					
-						$qry = $this->EE->db->query($sql);
-						$result = $qry->result_array();
 					}
 
 				// Check for custom fields
 					$data["title"]		= $data["title"];
+					$data["allow_comments"] = 'y';
 					$data["url_title"]	= $data["url"];
 					$data["entry_id"] 	= $entry_id;
 					$data["channel_id"]	= $this->br_channel_id;
 					$data["entry_date"]	= time();
 					$data["status"]		= ($data["enabled"] == 1) ? 'open' : 'closed';
+
+					// Get the comment setting for the channel
+						$comment_setting = $this->EE->api_channel_structure->get_channel_info($this->br_channel_id);
+						$comment = $comment_setting->result_object();
+						$data["allow_comments"] = $comment[0]->comment_system_enabled;
+
 					foreach($id as $key => $val){
 						$this->EE->api_channel_fields->setup_handler($key);
 							if($this->EE->api_channel_fields->apply('validate', array($data["field_id_".$key]))){
@@ -2008,7 +2000,16 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->product_model->update_attribute_set();
 			remove_from_cache('config');
 			$_SESSION["message"] = lang('br_attribute_set_update_success');
-			return $this->config_attributeset();
+			if(isset($_POST["continue"])){
+				// stay on the edit screen
+				header('location: '.$this->base_url.'&method=config_attributeset_edit&attribute_set_id='.$_POST["attribute_set_id"]);
+			}
+			else
+			{
+				// go to the overview
+				header('location: '.$this->base_url.'&method=config_attributeset');
+			}
+			exit();
 		}
 
 		function config_attributeset_delete()
@@ -2776,6 +2777,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$config_id = $this->EE->input->get("config_id",TRUE);
 			$code 	= $this->EE->input->get("code",TRUE);
 			$str 	= 'Shipping_'.$code;
+			
+			// We need to make sure the class is included. 
+				if(!class_exists($str)){
+					$local_path = PATH_THIRD.'_local/brilliant_retail/shipping/shipping.'.$_GET["code"].'.php';
+					if(file_exists($local_path)){
+						include_once($local_path);
+					}else{
+						include_once(PATH_THIRD.'brilliant_retail/core/shipping/shipping.'.$_GET["code"].'.php');
+					}
+				}
+
 			$class 	= new $str();
 			$class->remove($config_id);
 			$this->EE->core_model->module_remove($config_id);

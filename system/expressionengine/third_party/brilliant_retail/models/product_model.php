@@ -317,17 +317,18 @@ class Product_model extends CI_Model {
 	
 	function get_low_stock($threshold)
 	{
-		$this->db->select("product_id,title,sku,quantity");
-		$this->db->from("br_product");
-		$this->db->where("type_id","1"); //Only Basic Products
-		$this->db->where("enabled","1"); //Only Enabled Products
-		$this->db->where("quantity <",$threshold); //Only Basic Products
-		
+		$this->db->select("	e.entry_id,
+							p.product_id,
+							p.title,
+							p.sku,
+							p.quantity")
+				->from("br_product p")
+				->join('br_product_entry e', 'p.product_id=e.product_id')
+				->where("p.type_id","1") 				// Only Basic Products
+				->where("p.enabled","1") 				// Only Enabled Products
+				->where("p.quantity <",$threshold); 	// Only Basic Products
 		$query = $this->db->get();
-	
-			$products = array();
-			
-			return $query->result_array();
+		return $query->result_array();
 	}
 	
 	function get_product_basic($product_id)

@@ -102,7 +102,7 @@ echo $br_header;
 										<strong><?=lang('br_customer_username')?></strong></td>
 									<td>
 										<?php
-											echo $order["member"]["br_fname"].' '.$order["member"]["br_fname"];
+											echo $order["member"]["br_fname"].' '.$order["member"]["br_lname"];
 										?>		
 									</td>
 								</tr>

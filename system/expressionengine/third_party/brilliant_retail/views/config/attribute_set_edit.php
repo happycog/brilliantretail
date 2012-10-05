@@ -78,12 +78,12 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
 	</tbody>
 </table>
 	<div id="bottom_buttons">
-	    <?=form_submit(array('name' => 'submit', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
-		<?=form_submit(array('name' => 'submit', 'value' => lang('save'), 'class'=>'submit'))?>
+	    <?=form_submit(array('name' => 'continue', 'value' => lang('br_save_continue'), 'class'=>'submit'))?>
+		<?=form_submit(array('name' => 'save', 'value' => lang('save'), 'class'=>'submit'))?>
 		<?php 
 			if($attribute_set_id != 0){
 		?>
-				<?=form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit'))?>
+				<?php /* form_submit(array('name' => 'duplicate', 'value' => lang('br_duplicate'), 'class'=>'submit')) */ ;?>
 				<?=form_submit(array('name' => 'delete', 'id' => 'delete', 'value' => lang('delete'), 'class'=>'submit'))?>
 		<?php
 			}

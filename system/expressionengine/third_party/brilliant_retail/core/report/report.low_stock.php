@@ -30,7 +30,6 @@ class Report_low_stock extends Brilliant_retail_report {
 	public $date_range 	= '';
 
 	function get_report(){	
-
 		
 		// Inputs for our report are passed in the following format : Format (type, label, name)
 		// Currently supported include: 
@@ -64,9 +63,9 @@ class Report_low_stock extends Brilliant_retail_report {
 		$this->EE->load->model('store_model');
 		$this->EE->load->model('product_model');
 		
-		$config = $this->EE->store_model->get_store_by_id($this->EE->config->item('site_id'));
-		
-		$products =  $this->EE->product_model->get_low_stock($config[0]['low_stock']);
+		$low_stock = $this->_config["store"][$this->EE->config->item('site_id')]["low_stock"];
+
+		$products =  $this->EE->product_model->get_low_stock($low_stock);
 
 		//print_r($products);
 		//exit;
@@ -84,7 +83,7 @@ class Report_low_stock extends Brilliant_retail_report {
 		
 			foreach($products as $row){
 					$result[] = array(
-										'<a href="'.$base_url.'&method=product_edit&product_id='.$row['product_id'].'">'.$row['product_id'].'</a>',
+										'<a href="'.$base_url.'&method=product_edit&product_id='.$row['product_id'].'&channel_id='.$this->br_channel_id.'&entry_id='.$row['entry_id'].'">'.$row['product_id'].'</a>',
 										$row['title'],
 										$row['sku'],			
 										$row['quantity']										
@@ -93,7 +92,7 @@ class Report_low_stock extends Brilliant_retail_report {
 
 		$footer = array(
 							'',
-							'Low Stock Threshold limit set to '.$config[0]['low_stock'].'.',
+							'Low Stock Threshold limit set to '.$low_stock.'.',
 							'',
 							''
 						);

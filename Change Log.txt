@@ -3,4 +3,9 @@
 * Added configuration variable 'br_disable_system_cache' to disable system cache
 * Fixed an issue with the control panel stylesheet naming which broke extensions relying on BR core styles. 
 * Fixed an issue with image resizing when imageconvolution method does not exist in the GD build
+* Fixed an issue with the default allow comments setting on hidden [BrilliantRetail] channel when saving products. [#0000197]
+* Fixed an issue with deleting disabled shipping methods. [#0000239]
+* Fixed an issue when clicking to the product edit form from the low stock report [#0000238]
+* Fixed an issue with the display of customer names on order detail (first name shown twice) [#0000233]
+* Removed duplicate button from attribute set edit form [#0000231]
 * Updated get_shipping request to include selected country and state
