@@ -415,9 +415,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			foreach($_POST as $key => $val){
 				$data[$key] = $this->EE->input->post($key);
 			}
-			
-			// Lets get some info from the stored order
+
+			// Order ID
 				$order_id = $data["order_id"];
+			
+			// Lets make sure they posted an ammount
+				if($data["order_amount"] <= 0){
+					$_SESSION["alert"] = lang('br_order_payment_errror').': '.lang('br_payment_amount_error');
+					$this->EE->functions->redirect($this->base_url.'&method=order_detail_add_payment&order_id='.$order_id);
+				}
+
+			// Lets get some info from the stored order
 				$order = $this->EE->order_model->get_order($order_id);
 			
 				// Lets get all the order address stuff we need.
@@ -1390,7 +1398,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 				// Check for custom fields
 					$data["title"]		= $data["title"];
-					$data["allow_comments"] = 'y';
 					$data["url_title"]	= $data["url"];
 					$data["entry_id"] 	= $entry_id;
 					$data["channel_id"]	= $this->br_channel_id;

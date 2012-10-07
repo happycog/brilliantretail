@@ -24,6 +24,7 @@
 
 echo $br_header;
 ?>
+<div id="popin-overlay" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display:none;"></div>
 	<table id="order_table" width="100%" cellpadding="3" cellspacing="0">
 		<tr>
 			<td width="50%" valign="top">
@@ -410,6 +411,29 @@ echo $br_header;
     								$remove = '<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'"><img src="'.$theme.'images/delete-grey.png" /></a>';
     							}
     							
+								// prep note in case there are strings that are too long which will 
+								// blow up the design. We do that by simply testing string length 
+								// and injecting spaces when needed.
+									// Break the note up into parts per word 
+   	 									$arr = explode(" ",$note);
+    								// Reset the note varialbe
+  	  									$note = '';
+									// Loop 
+		    							foreach($arr as $a){
+		    								if(strlen($a) > 80){
+		    									if(strpos($a,"\n") !== false){
+		    										$b = explode("\n",$a);
+		    										foreach($b as $c){
+		    											$note .= "\n".wordwrap($c,80," ",true);
+		    										}
+		    									}else{
+		    										$note .= " ".wordwrap($a,80," ",true);
+		    									}
+		    								}else{
+		    									$note .= " ".$a;
+		    								}
+		    							}
+    								
     							echo '	<table width="100%" class="order_notes" cellpadding="0" cellspacing="0">
         									<thead>
         										<tr>
@@ -453,14 +477,19 @@ echo $br_header;
 		$('#order_status').bind('click',
 								function(){
 									var a = $('#order_status_form');
+									var b = $('#popin-overlay');
 									if(a.is(':visible')){
 										a.hide();
+										b.hide();
 									}else{
 										a.css('marginLeft',$(this).width()+40).show();
+										b.show();
 									}
 								});
-		$('div.popin-top img').bind('click',function(){
-										$('#order_status_form').hide();
+
+		$('div.popin-top img,#popin-overlay').bind('click',function(){
+										$('#popin-overlay').hide();
+										$('#order_status_form').fadeOut();
 									});
 	});
 </script>

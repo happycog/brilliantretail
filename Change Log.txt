@@ -7,5 +7,10 @@
 * Fixed an issue with deleting disabled shipping methods. [#0000239]
 * Fixed an issue when clicking to the product edit form from the low stock report [#0000238]
 * Fixed an issue with the display of customer names on order detail (first name shown twice) [#0000233]
+* Fixed an issue with order detail page notes when adding long strings in note textarea [#0000243]
 * Removed duplicate button from attribute set edit form [#0000231]
 * Updated get_shipping request to include selected country and state
+
+### In progress
+
+* Need language keys for [#0000244]

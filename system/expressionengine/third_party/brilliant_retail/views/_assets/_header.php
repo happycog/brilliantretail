@@ -39,3 +39,18 @@ $(function(){
 <?php
 }
 ?>
+
+<?php
+if($alert != ''){
+?>
+<div id="alert_message">
+	<?=$alert?>
+</div>
+<script type="text/javascript">
+$(function(){
+	setTimeout("$('#alert_message').slideUp();",3000);
+});
+</script>
+<?php
+}
+?>
