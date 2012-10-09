@@ -1,6 +1,8 @@
 # Version 1.2.0.3
 
 * Added configuration variable 'br_disable_system_cache' to disable system cache
+* Added {total_orders} variable to return the number of orders in the customer_orders tag.
+* Added {row_count} per order in the customer_orders internal {orders} tag pair. 
 * Fixed an issue with the control panel stylesheet naming which broke extensions relying on BR core styles. 
 * Fixed an issue with image resizing when imageconvolution method does not exist in the GD build
 * Fixed an issue with the default allow comments setting on hidden [BrilliantRetail] channel when saving products. [#0000197]

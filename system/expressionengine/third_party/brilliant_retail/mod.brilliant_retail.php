@@ -2905,8 +2905,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$orders[$i]["total"] = $this->_currency_round($orders[$i]["base"]+$orders[$i]["tax"]+$orders[$i]["shipping"]-$orders[$i]["discount"]);
 				// Set the status
 					$orders[$i]["status"] = $this->_config["status"][$orders[$i]["status_id"]];
+				// add a row count
+					$orders[$i]["row_count"] = $i+1;
 			}
-			$vars[0] = array('currency_marker'=>$this->_config["currency_marker"],'orders'=>$orders);
+			$vars[0] = array(	'currency_marker'	=>$this->_config["currency_marker"],
+								'total_orders'		=> count($orders),
+								'orders'			=>$orders);
 			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 			$this->return_data = $output;
 			return $this->return_data;
