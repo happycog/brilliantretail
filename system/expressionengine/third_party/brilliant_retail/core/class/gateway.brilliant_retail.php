@@ -182,7 +182,7 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 				$vars[0] = array(
 								"fname" 			=> $order["member"]["br_fname"],
 								"lname" 			=> $order["member"]["br_lname"],
-								"email" 			=> $order["email"], 
+								"email" 			=> $order["member"]["email"], 
 								"address" 			=> $order["address"],
 								"payment" 			=> $order["payment"],
 								"order_id"			=> $order["order_id"], 

@@ -14,7 +14,7 @@
 		{
 			"name" : "brilliant_retail",
 			"label": "BrilliantRetail",
-			"version": "1.2.0.1",
+			"version": "1.2.0.3",
 			"types": ["module","fieldtype","extension"],
 			"paths": {
 				"system": [
@@ -25,16 +25,6 @@
 				],
 				"root": [
 					"media"
-				]
-			}
-		},{
-			"name" : "cron",
-			"label": "ExpressionEngine Cron",
-			"version": "1.1.1",
-			"types": ["plugin"],
-			"paths": {
-				"system": [
-					"system/expressionengine/third_party/cron"
 				]
 			}
 		},{
