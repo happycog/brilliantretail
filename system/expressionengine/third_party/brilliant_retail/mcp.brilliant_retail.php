@@ -29,7 +29,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '1.2.0.3';
+		public $version			= '';
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -73,6 +73,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	function __construct($switch = TRUE,$extended = FALSE)
 	{
 		parent::__construct();
+		
+		// BrilliantRetail Version Number
+			$upd = new Brilliant_retail_upd();
+			$this->version = $upd->version;
+			$this->vars['version'] = $this->version;
+
 		$this->vars["media_dir"] 	= $this->_config["media_dir"];
 		$this->vars["media_url"] 	= $this->_config["media_url"];
 		$this->vars["site_url"] 	= $this->EE->config->item('site_url');
@@ -131,8 +137,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								$this->vars['alert'] = br_get('alert');	
 								br_unset('alert');
 							}
-					// BrilliantRetail Version Number
-						$this->vars['version'] = $this->version;
 	
 					// Make sure all emails are initiated
 						$this->_init_emails();
@@ -2850,11 +2854,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				unset($data["countries"]);
 			
 			if(isset($_FILES)){
-					$config['upload_path'] 	= $this->vars["media_dir"];
-					$config['allowed_types'] = 'gif|jpg|png';
-					$config['max_size'] = '1000'; 
-					$config['max_width'] = '1024';
-					$config['max_height'] = '768';
+					$config['upload_path'] 		= $this->vars["media_dir"];
+					$config['allowed_types'] 	= 'gif|jpg|png';
+					$config['max_size'] 		= '1000'; 
+					$config['max_width'] 		= '1024';
+					$config['max_height'] 		= '768';
 					$this->EE->load->library('upload',$config);
 					if($this->EE->upload->do_upload('logo')){
 						$result = array('upload_data' => $this->EE->upload->data()); 
@@ -2866,6 +2870,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->session->set_flashdata('message_failure',lang('br_invalid_license'));
 			}
 			$this->EE->store_model->update_store($data);
+			
+			// Clear the cache file before we redirect
+				remove_from_cache('config');
+				$this->EE->core_model->get_config();
+			
 			$_SESSION["message"] = lang('br_store_update_success');
 			header('location: '.$this->base_url.'&method=config_site');
 			exit();

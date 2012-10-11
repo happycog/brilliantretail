@@ -23,11 +23,12 @@
 /************************************************************/
 
 class Report_customer_sales extends Brilliant_retail_report {
-	public $title 	= 'Customer Sales';
-	public $descr 	= 'List of orders by customer over a given time period';
+
+	public $title 		= 'Customer Sales';
+	public $descr 		= 'List of orders by customer over a given time period';
 	public $category	= 'sales'; #(Options: sales, customers, products, general)
-	public $version 	= '0.5';
-	public $date_range = '';
+	public $version 	= '1.0';
+	public $date_range 	= '';
 
 	function get_report(){	
 
@@ -58,19 +59,19 @@ class Report_customer_sales extends Brilliant_retail_report {
 			$range = get_range($range_type);		
 		}
 		
-		$this->EE->load->model('order_model');
-		$orders =  $this->EE->order_model->get_order_collection($range["start"],$range["end"]);
+		// Get the orders
+			$orders =  $this->EE->order_model->get_order_collection($range["start"],$range["end"]);
+		
 		// Header row 
-			
 			$header = array(lang('br_order_id'),lang('br_customer_email'),lang('br_date'),lang('br_base'),lang('br_tax'),lang('br_shipping'),lang('br_discount'),lang('br_total'));
 	
 		// Results array 	
-			$base = 0;
-			$tax = 0;
-			$total = 0;
-			$shipping = 0;
-			$discount = 0;
-			$result = array();
+			$base 		= 0;
+			$tax 		= 0;
+			$total 		= 0;
+			$shipping 	= 0;
+			$discount 	= 0;
+			$result 	= array();
 			
 			if(count($orders["results"]) == 0){
 				$result = array();
@@ -84,37 +85,39 @@ class Report_customer_sales extends Brilliant_retail_report {
 				// only add orders if they are not canceled
 				if($row["status_id"] >= 1){
 					$result[] = array(
-										$row['order_id'],
+										"<strong>".$row['order_id']."</strong>",
 										"<strong>".$row["customer"]."</strong>",
-										date("m/d/Y",$row["created"]),
-										$this->_currency_round($row["base"]),
-										$this->_currency_round($row["tax"]),
-										$this->_currency_round($row["shipping"]),
-										$this->_currency_round($row["discount"]),
-										$this->_currency_round($row["total"])
+										"<strong>".date("m/d/Y",$row["created"])."</strong>",
+										"<strong>".$this->_currency_round($row["base"])."</strong>",
+										"<strong>".$this->_currency_round($row["tax"])."</strong>",
+										"<strong>".$this->_currency_round($row["shipping"])."</strong>",
+										"<strong>".$this->_currency_round($row["discount"])."</strong>",
+										"<strong>".$this->_currency_round($row["total"])."</strong>" 
 									);
 					
 					$orders = $this->EE->order_model->get_order($row["order_id"]);
-					
+
+					// Display the individual rows
 					   	foreach($orders['items'] as $item)
 					   		{
 					   			$result[] = array(
 					   				"",
 					   				$item['quantity']." x ". $item['title'],
 					   				"",
+					   				$this->_currency_round($item['price']*$item['quantity']),
 					   				"",
-					   				$this->_currency_round($item['base']),
 					   				"",
 					   				$this->_currency_round($item['discount']),
 					   				""				   		
 					   			);
 					   		}				
 					
-					$base 	+= $row["base"];
-					$tax 	+= $row["tax"];
-					$shipping += $row["shipping"];
-					$total 	+= $row["total"];
-					$discount += $row["discount"];
+					// Create the running totals
+						$base 		+= $row["base"];
+						$tax 		+= $row["tax"];
+						$shipping 	+= $row["shipping"];
+						$total 		+= $row["total"];
+						$discount 	+= $row["discount"];
 				}
 			}
 
@@ -130,13 +133,14 @@ class Report_customer_sales extends Brilliant_retail_report {
 						);
 						
 		$report = array(
-							'input' => $input,
-							'range' => $range,   
-							'graph' => $graph,
-							'header' => $header,
-							'results' => $result,
-							'footer' => $footer
+							'input' 	=> $input,
+							'range' 	=> $range,   
+							'graph' 	=> $graph,
+							'header' 	=> $header,
+							'results' 	=> $result,
+							'footer' 	=> $footer
 						);
 		return $report;
 	}
 }
+// End report

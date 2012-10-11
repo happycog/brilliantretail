@@ -99,17 +99,30 @@ class Core_model extends CI_Model {
 	}
 	
 	function module_update($data){
+		
 		// Need to update the label first
 			if(isset($data["label"])){
-				$this->db->update(	'br_config',
+				$this->db->update(	
+									'br_config',
 									array(
 											'sort' 		=> round($data["sort"] * 1),
 											'label' 	=> $data["label"],
-											'enabled' 	=> $data["enabled"]), 
-											"config_id = ".$data["config_id"]);
+											'enabled' 	=> $data["enabled"]
+										), 
+									"config_id = ".$data["config_id"]
+								);
 				unset($data["sort"]);
 				unset($data["label"]);
 				unset($data["enabled"]);
+			}
+			
+		// We are going to build an array of all config elements so we can 
+		// handle if the user submits no value for a checkbox for instance. 
+			$this->db->from('br_config_data')->where('config_id',$data["config_id"]); 
+			$qry = $this->db->get();
+			foreach($qry->result_array() as $rst)
+			{
+				$list[$rst["config_data_id"]] = TRUE;
 			}
 			
 		// Now update the params				
@@ -118,17 +131,27 @@ class Core_model extends CI_Model {
 					// Custom Attributes
 					$config_data_id = str_replace('0_cAttribute_','',$key);
 					$this->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
+					unset($list[$config_data_id]);
 				}
 				if(strpos($key,'cAttributePW_') !== false){ 
 					// Custom Attributes
 					if($val != '************************'){
 						$config_data_id = str_replace('0_cAttributePW_','',$key);
 						$this->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
+						unset($list[$config_data_id]);
 					}
 				}
-			
+			}
+		
+		// If there are any empty settings left we need to clear them
+			if(isset($list)){
+				foreach($list as $key => $val)
+				{
+					$this->db->update('br_config_data',array('value' => ''), "config_data_id = ".$key);
+				}	
 			}
 	}
+	
 	function module_remove($config_id){
 		// Remove the primary entry
 			$this->db->delete('br_config', array('config_id' => $config_id)); 
@@ -186,7 +209,7 @@ class Core_model extends CI_Model {
 			$sql  = "	INSERT INTO exp_br_store 
 						(site_id,channel_id,logo,license,phone,address1,address2,city,state,country,zipcode,fax,currency_id,result_limit,result_per_page,result_paginate,register_group,guest_checkout,media_url,media_dir,meta_title,meta_keywords,meta_descr,subscription_enabled,first_notice,second_notice,third_notice,cancel_subscription,secure_url,cart_url,checkout_url,customer_url,product_url,low_stock)
 							VALUES 
-						(".$site_id.",'0','logo.png', '', '(888) 555-5555', '12207 Wilshire Blvd', 'Suite 201', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', '/media/','/media/','','','',0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','customer','product','25')";
+						(".$site_id.",'0','logo.png', '', '(888) 555-5555', '1234 First Steet Ln.', '', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', '/media/','/media/','','','',0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','customer','product','25')";
 			$this->db->query($sql);
 		// Create the store system config record
 			

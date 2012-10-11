@@ -23,6 +23,7 @@
 /************************************************************/
 
 class Report_sales extends Brilliant_retail_report {
+
 	public $title 	= 'General Sales';
 	public $descr 	= 'General sales report for orders over a given time period';
 	public $category	= 'sales'; #(Options: sales, customers, products, general)
