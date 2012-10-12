@@ -75,6 +75,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		parent::__construct();
 		
 		// BrilliantRetail Version Number
+			if(!class_exists('Brilliant_retail_upd'))
+			{
+				// If we are including from an extension
+				include_once(PATH_THIRD.'brilliant_retail/upd.brilliant_retail.php');
+			}
 			$upd = new Brilliant_retail_upd();
 			$this->version = $upd->version;
 			$this->vars['version'] = $this->version;

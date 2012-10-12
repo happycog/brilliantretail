@@ -1,9 +1,10 @@
-# Version 1.2.0.6
+# Version 1.2.0.7
 
 * Added configuration variable 'br_disable_system_cache' to disable system cache
 * Added {total_orders} variable to return the number of orders in the customer_orders tag.
 * Added {row_count} per order in the customer_orders internal {orders} tag pair. 
 * Added Armed Forces addresses to United States state selector [#0000237]
+* Added category to google base feed template.
 * Fixed an issue with the control panel stylesheet naming which broke extensions relying on BR core styles. 
 * Fixed an issue with image resizing when imageconvolution method does not exist in the GD build
 * Fixed an issue with the default allow comments setting on hidden [BrilliantRetail] channel when saving products. [#0000197]
@@ -17,6 +18,7 @@
 * Fixed an issue with updating logo in store > settings > site settings [#0000221]
 * Removed duplicate button from attribute set edit form [#0000231]
 * Removed cron add-on from BrilliantRetail package. 
+* REmoved forced redirect from customer_orders tag. 
 * Updated counties (states) for United Kingdom [#0000191]
 * Updated get_shipping request to include selected country and state on checkout template
 * Updated version number in mcp file to pull from upd file to eliminate double entry

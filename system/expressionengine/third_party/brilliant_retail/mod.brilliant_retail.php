@@ -2882,7 +2882,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			$member_id = $this->EE->session->userdata["member_id"];
 			if($member_id == ''){
-				$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"].'/login'));
+				return '';
 			}
 			$this->EE->load->model('order_model');
 			$order_id = $this->EE->TMPL->fetch_param('order_id');
