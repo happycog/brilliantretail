@@ -30,7 +30,7 @@
 {exp:brilliant_retail:feed code="google_base"}
 	<item>
 		<title>{title}</title>
-		<link>{site_url}products/{url}</link>
+		<link>{path='product/{url}'}</link>
 		<description><![CDATA[{detail}]]></description>
 		<g:id>{sku}</g:id>
 		<g:condition>new</g:condition>

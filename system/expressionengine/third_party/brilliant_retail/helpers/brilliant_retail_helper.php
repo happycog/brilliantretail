@@ -239,7 +239,15 @@ if(!isset($_SESSION["cart"])){
 		}
 		return $arr;	
 	}
-
+	
+	/************************/
+	/* Test for https 		*/
+	/************************/
+	
+	function is_secure() {
+  		return (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == TRUE)) ? TRUE : FALSE;
+	}
+	
 	/************************/
 	/* Image Management	 	*/
 	/************************/

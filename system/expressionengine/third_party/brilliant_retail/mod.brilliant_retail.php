@@ -450,9 +450,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Image attributes & sizing
 					$title 			= $this->EE->TMPL->fetch_param('title');
 					$alt 			= $this->EE->TMPL->fetch_param('alt');
-					$width 			= ( $this->EE->TMPL->fetch_param('width')) ? (int) $this->EE->TMPL->fetch_param('width') : 0 ;
-					$height 		= ( $this->EE->TMPL->fetch_param('height')) ? (int) $this->EE->TMPL->fetch_param('height') : 0;
-					$mode 			= ( $this->EE->TMPL->fetch_param('mode')) ? $this->EE->TMPL->fetch_param('mode') : 'matte';
+					$width 			= (int) $this->EE->TMPL->fetch_param('width',250);
+					$height 		= (int) $this->EE->TMPL->fetch_param('height',250);
+					$mode 			= $this->EE->TMPL->fetch_param('mode','matte');
 					
 				// Image effects 
 					## Reflection
@@ -2723,6 +2723,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Form ID 
 			$id = ($this->EE->TMPL->fetch_param('id')) ? ($this->EE->TMPL->fetch_param('id')) : 'password_edit';
 			$action = $this->EE->functions->fetch_site_index(0,0);
+			if(is_secure())
+			{
+				$action = str_replace("http://","https://",$action);
+			}
 			$tagdata = $this->EE->TMPL->tagdata;
 			$hidden = array(
 							"ACT" 		=> $this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_pw_update'),
@@ -2799,6 +2803,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($member){
 					$vars[0] = $member;
 					$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_profile_update');
+					if(is_secure())
+					{
+						$action = str_replace("http://","https://",$action);
+					}
 					$vars[0]["form_open"] = form_open($action,array('id'=>'profile_edit'));
 					$vars[0]["form_close"] = '</form>';
 					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
