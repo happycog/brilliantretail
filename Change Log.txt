@@ -1,4 +1,4 @@
-# Version 1.2.0.8
+# Version 1.2.1.0
 
 * Added configuration variable 'br_disable_system_cache' to disable system cache
 * Added {total_orders} variable to return the number of orders in the customer_orders tag.
@@ -24,5 +24,5 @@
 * Removed forced redirect from customer_orders tag. 
 * Updated counties (states) for United Kingdom [#0000191]
 * Updated get_shipping request to include selected country and state on checkout template
-* Updated version number in mcp file to pull from upd file to eliminate double entry
+* Updated version number to pull from config.php file to eliminate double entry
 * Updated customer_profile and customer_pw_form tag to respect https in the form action. 
