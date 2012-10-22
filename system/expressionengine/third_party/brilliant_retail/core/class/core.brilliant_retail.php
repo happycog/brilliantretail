@@ -1885,13 +1885,19 @@ class Brilliant_retail_core {
 				if($curr_page != 'all'){
 					$lim_lower = ($curr_page - 1) * $this->_config["result_per_page"];
 					$lim_upper = ($curr_page) * $this->_config["result_per_page"];
+					
+					$vars[0]["results"] = array_values($vars[0]["results"]);
+
 					for($i=0;$i<$lim_lower;$i++){
 						unset($vars[0]["results"][$i]);
 					}
+
+					$vars[0]["results"] = array_values($vars[0]["results"]);
+					
 					for($i=$lim_upper;$i<$lim_total;$i++){
 						unset($vars[0]["results"][$i]);
 					}
-					
+
 					if($total_pages > 1){
 						for($i=0;$i<$total_pages;$i++){
 							$link_active = (($i+1) == $curr_page) ? 'yes' : 'no' ;
