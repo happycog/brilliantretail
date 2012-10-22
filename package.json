@@ -14,7 +14,7 @@
 		{
 			"name" : "brilliant_retail",
 			"label": "BrilliantRetail",
-			"version": "1.2.0.7",
+			"version": "1.2.1.0",
 			"types": ["module","fieldtype","extension"],
 			"paths": {
 				"system": [

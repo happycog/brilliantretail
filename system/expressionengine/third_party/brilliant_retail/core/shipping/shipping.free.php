@@ -43,7 +43,7 @@ class Shipping_free extends Brilliant_retail_shipping {
 		if($data["total"] >= $config["amount"]){
 			$this->rates['free'] = array(
 											'code' => 'free',
-											'rate' => '',
+											'rate' => '0.00',
 											'label' => $config["label"]
 										);
 		}

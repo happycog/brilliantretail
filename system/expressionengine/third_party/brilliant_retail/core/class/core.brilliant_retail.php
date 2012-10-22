@@ -27,6 +27,8 @@ session_start();
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+
+include_once(PATH_THIRD.'brilliant_retail/config.php');
 include_once(PATH_THIRD.'brilliant_retail/core/class/shipping.brilliant_retail.php');
 include_once(PATH_THIRD.'brilliant_retail/core/class/gateway.brilliant_retail.php');
 include_once(PATH_THIRD.'brilliant_retail/core/class/report.brilliant_retail.php');
@@ -1281,27 +1283,30 @@ class Brilliant_retail_core {
 				$quote = $class->quote($data,$config);
 				if($quote){
 					$rates[] = 	array(
-										'label' => $ship["label"], 
-										'code' 	=> $ship["code"],
-										'quote' => $quote
+										'method' 	=> $ship["code"],
+										'label' 	=> $ship["label"], 
+										'code' 		=> $ship["code"],
+										'quote' 	=> $quote
 									);
 				}
 			}
 		}
-	
+
 		// Adding a hook to modify the $rates array v1.1.0.1
 			if($this->EE->extensions->active_hook('br_cart_shipping_rate') === TRUE){
 				$rates = $this->EE->extensions->call('br_cart_shipping_rate', $rates); 
 			}
 		
-		foreach($rates as $q)
+		foreach($rates as $r)
 		{
-			$output .= '<p id="shipping_'.$q["code"].'" class="shipping">
-							<label>'.$q["label"].'</label>';
-			foreach($q["quote"] as $q){
+			$output .= '<p id="shipping_'.$r["code"].'" class="shipping">
+							<label>'.$r["label"].'</label>';
+			foreach($r["quote"] as $q){
 				$hash = md5($ship["code"].$q["rate"].$i.time());
 				$_SESSION["shipping"][$hash] = $q;
-				$_SESSION["shipping"][$hash]["method"] = $ship["code"];
+				// Add the method to each option as well
+					$_SESSION["shipping"][$hash]["method"] = $r["method"];
+				
 				$price = ($q["rate"] > 0) ? $this->_config["currency_marker"].$q["rate"].' - ' : '' ;
 				$chk = ($i == 0) ? 'checked="checked"' : '';
 				$output .= '<br />
@@ -1311,7 +1316,6 @@ class Brilliant_retail_core {
 			}
 			$output .= '</p>';
 		}
-
 		return $output;
 	}
 

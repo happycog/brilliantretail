@@ -23,9 +23,11 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
+include_once(PATH_THIRD.'brilliant_retail/config.php');
+
 class Brilliant_retail_upd {
 
-	public $version	= '1.2.0.7';
+	public $version	= BR_VERSION;
 	
 	function Brilliant_retail_upd()
 	{
@@ -50,7 +52,7 @@ class Brilliant_retail_upd {
 			$sql[] = "INSERT INTO exp_modules 
 					  (module_name, module_version, has_cp_backend) 
 					  VALUES 
-					  ('Brilliant_retail', '$this->version', 'y')";
+					  ('Brilliant_retail', '".BR_VERSION."', 'y')";
 		
 		## ----------------------------
 		##  Records of exp_actions
@@ -4417,16 +4419,16 @@ class Brilliant_retail_upd {
 		$sql[] = "	INSERT INTO exp_extensions  
 						(class,method,hook,settings,priority,version,enabled) 
 					VALUES
-						('Brilliant_retail_ext', 'br_edit_entries_additional_where', 'edit_entries_additional_where', '', '10', '".$this->version."', 'y')";
+						('Brilliant_retail_ext', 'br_edit_entries_additional_where', 'edit_entries_additional_where', '', '10', '".BR_VERSION."', 'y')";
 		$sql[] = "	INSERT INTO exp_extensions  
 						(class,method,hook,settings,priority,version,enabled) 
 					VALUES
-						('Brilliant_retail_ext', 'br_cp_menu_array', 'cp_menu_array', '', '10', '".$this->version."', 'y')";
+						('Brilliant_retail_ext', 'br_cp_menu_array', 'cp_menu_array', '', '10', '".BR_VERSION."', 'y')";
 		
 		$sql[] = "	INSERT INTO exp_extensions  
 						(class,method,hook,settings,priority,version,enabled) 
 					VALUES
-						('Brilliant_retail_ext', 'br_template_post_parse', 'template_post_parse', '', '10', '".$this->version."', 'y')";
+						('Brilliant_retail_ext', 'br_template_post_parse', 'template_post_parse', '', '10', '".BR_VERSION."', 'y')";
 	
 		foreach ($sql as $query)
 		{
@@ -4522,7 +4524,7 @@ class Brilliant_retail_upd {
 			$sql = array();
 		
 		// Get the current version
-			$version = str_replace(".","",$this->version)*1;
+			$version = str_replace(".","",BR_VERSION)*1;
 		
 		// The first update file should be point above current
 		

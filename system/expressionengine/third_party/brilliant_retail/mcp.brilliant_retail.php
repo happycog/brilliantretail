@@ -21,6 +21,7 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
+
 include_once(PATH_THIRD.'brilliant_retail/core/class/core.brilliant_retail.php');
 
 class Brilliant_retail_mcp extends Brilliant_retail_core {
@@ -29,7 +30,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Variables 			*/
 	/************************/
 
-		public $version			= '';
+		public $version			= BR_VERSION;
 		public $vars 			= array();
 		public $site_id 		= '';
 		
@@ -75,15 +76,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		parent::__construct();
 		
 		// BrilliantRetail Version Number
-			if(!class_exists('Brilliant_retail_upd'))
-			{
-				// If we are including from an extension
-				include_once(PATH_THIRD.'brilliant_retail/upd.brilliant_retail.php');
-			}
-			$upd = new Brilliant_retail_upd();
-			$this->version = $upd->version;
-			$this->vars['version'] = $this->version;
-
+			$this->vars['version'] = BR_VERSION;
+			
 		$this->vars["media_dir"] 	= $this->_config["media_dir"];
 		$this->vars["media_url"] 	= $this->_config["media_url"];
 		$this->vars["site_url"] 	= $this->EE->config->item('site_url');
@@ -160,7 +154,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
-						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css?v='.str_replace('.','',$this->version)).'" />');
+						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css?v='.str_replace('.','',BR_VERSION)).'" />');
 							
 					// Set our admin theme 	
 						$this->vars['theme'] = $this->_theme();	

@@ -1,4 +1,4 @@
-# Version 1.2.0.7
+# Version 1.2.0.8
 
 * Added configuration variable 'br_disable_system_cache' to disable system cache
 * Added {total_orders} variable to return the number of orders in the customer_orders tag.
@@ -17,6 +17,8 @@
 * Fixed an issue with shipping method configuration when unselecting all checkboxes from a setting [#0000183]
 * Fixed an issue with customer sales report column totals [#0000182]
 * Fixed an issue with updating logo in store > settings > site settings [#0000221]
+* Fixed an issue with the extension priority on the template_post_parse hook
+* Fixed an issue with shipping method always displaying as UPS in some instances [#0000241]
 * Removed duplicate button from attribute set edit form [#0000231]
 * Removed cron add-on from BrilliantRetail package. 
 * Removed forced redirect from customer_orders tag. 
@@ -24,7 +26,3 @@
 * Updated get_shipping request to include selected country and state on checkout template
 * Updated version number in mcp file to pull from upd file to eliminate double entry
 * Updated customer_profile and customer_pw_form tag to respect https in the form action. 
-
-### In progress
-
-* Need language keys for [#0000244]

@@ -32,7 +32,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 	public $label 			= 'Credit Card Payment (Stripe)';
 	public $descr 			= 'Accept credit cards securely with a <a href="https://stripe.com/">Stripe</a> account.';
 	public $instructions 	= 'Accept credit cards securely with a <a href="https://stripe.com/">Stripe</a> account.';
-	public $zero_checkout = true;
+	public $zero_checkout 	= true;
 	
 	public $enabled = TRUE;
 	public $version = 2.0;
