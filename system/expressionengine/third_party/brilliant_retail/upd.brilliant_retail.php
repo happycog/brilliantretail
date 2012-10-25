@@ -4550,6 +4550,9 @@ class Brilliant_retail_upd {
 				// Clear the cache settings file so that the system 
 				// is forced to rebuild it
 					$this->reset_cache();
+
+				// Rebuild the config file
+					$this->EE->core_model->get_config();
 			}
 		return TRUE;
 	}
