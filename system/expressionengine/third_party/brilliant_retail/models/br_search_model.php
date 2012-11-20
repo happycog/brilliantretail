@@ -22,7 +22,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-class Search_model extends CI_Model {
+class Br_search_model extends CI_Model {
 
 	function get_search_results($start_date='',$end_date='',$limit='')
 	{

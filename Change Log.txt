@@ -1,29 +1,21 @@
-# Version 1.2.1.0
+# Version 1.2.1.1 (Development Version)
 
-* Added configuration variable 'br_disable_system_cache' to disable system cache
-* Added {total_orders} variable to return the number of orders in the customer_orders tag.
-* Added {row_count} per order in the customer_orders internal {orders} tag pair. 
-* Added Armed Forces addresses to United States state selector [#0000237]
-* Added category to google base feed template.
-* Added is_secure helper function
-* Fixed an issue with the control panel stylesheet naming which broke extensions relying on BR core styles. 
-* Fixed an issue with image resizing when imageconvolution method does not exist in the GD build
-* Fixed an issue with the default allow comments setting on hidden [BrilliantRetail] channel when saving products. [#0000197]
-* Fixed an issue with deleting disabled shipping methods. [#0000239]
-* Fixed an issue when clicking to the product edit form from the low stock report [#0000238]
-* Fixed an issue with the display of customer names on order detail (first name shown twice) [#0000233]
-* Fixed an issue with order detail page notes when adding long strings in note textarea [#0000243]
-* Fixed an issue with IPN based gateways sending notification email to customers [#0000254]
-* Fixed an issue with shipping method configuration when unselecting all checkboxes from a setting [#0000183]
-* Fixed an issue with customer sales report column totals [#0000182]
-* Fixed an issue with updating logo in store > settings > site settings [#0000221]
-* Fixed an issue with the extension priority on the template_post_parse hook
-* Fixed an issue with shipping method always displaying as UPS in some instances [#0000241]
-* Fixed an issue with pagination in some instances which would result in multiple display of the same product [#0000141]
-* Removed duplicate button from attribute set edit form [#0000231]
-* Removed cron add-on from BrilliantRetail package. 
-* Removed forced redirect from customer_orders tag. 
-* Updated counties (states) for United Kingdom [#0000191]
-* Updated get_shipping request to include selected country and state on checkout template
-* Updated version number to pull from config.php file to eliminate double entry
-* Updated customer_profile and customer_pw_form tag to respect https in the form action. 
+* Added product_id to the $amt variable in the _check_product_price method
+* Added 'ajax' parameter to product tag to allow for ajax add to cart post. Set ajax='yes' to return json_encoded array of cart data.
+* Fixed an issue with Rate Matrix images.
+* Removed cron_model.php file
+* Removed log_model.php file
+* Removed exp_br_cron table
+* Updated search_model to Br_search_model to avoid namespace conflict with EE core model. 
+
+## Working On
+
+* Remove all serialized content (completely normalize database!)
+	* exp_br_cart
+	* exp_br_order_payment
+	* exp_br_product_configurable	
+	* exp_br_product_options
+	* exp_br_promo
+
+* Add a way to order the countries in the admin: 
+	* http://www.brilliantretail.com/forum/viewthread/224/

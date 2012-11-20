@@ -805,8 +805,7 @@ class Brilliant_retail_core {
 				$str = "<a href='#' id='add_row_".$attribute_id."'>".lang('br_add_row')."</a><br />
 						<table id='table_".$attribute_id."' cellpadding='0' cellspacing='0' width=\"100%\" class=\"ft_table\">
 							<thead>
-								<tr>
-									<th>&nbsp;</th>";
+								<tr>";
 	
 			// Insert the header rows
 				$theads = explode("|",$opts);
@@ -815,6 +814,7 @@ class Brilliant_retail_core {
 				}		
 			
 			$str .= "				<th>&nbsp;</th>
+									<th>&nbsp;</th>
 								</tr>
 							</thead>
 							<tbody>";
@@ -823,12 +823,12 @@ class Brilliant_retail_core {
 				$i = 1;
 				if($rows){
 					foreach($rows as $r){
-						$str .= "<tr>
-									<td class='dragHandle'>&nbsp;</td>";
+						$str .= "<tr>";
 						foreach($r as $cell){
 							$str .= "<td><input type='text' name='0_cAttribute_".$attribute_id."[".$i."][]' value='".$cell."' /></td>";
 						}
-						$str .= "	<td class='remove'>&nbsp;</td>
+						$str .= "	<td class='dragHandle'><img src=\"".$this->_theme('images/move.png')."\" /></td>
+									<td class='remove'><img src=\"".$this->_theme('images/delete.png')."\" /></td>
 								</tr>";
 						$i++;
 					}
@@ -858,11 +858,14 @@ class Brilliant_retail_core {
 								$(this).parent().remove();
 							});
 							$('#add_row_".$attribute_id."').bind('click',function(){
-								var str = '<tr><td class=\"dragHandle\">&nbsp;</td>';
+								var str = '<tr>';
+								
 								for(i=1;i<(col_size-1);i++){
 									str += '<td><input type=\"text\" name=\"0_cAttribute_".$attribute_id."['+row_cnt+'][]\" /></td>';
 								}
-								str += '<td class=\"remove\">&nbsp;</td></tr>';
+								
+								str += 	'<td class=\"dragHandle\"><img src=\"".$this->_theme('images/move.png')."\" /></td>'+
+										'<td class=\"remove\"><img src=\"".$this->_theme('images/delete.png')."\" /></td></tr>';
 								
 								$(str).appendTo(tbl_".$attribute_id.");
 								
@@ -983,7 +986,7 @@ class Brilliant_retail_core {
 		}
 		
 		function _index_products($product_id=''){
-			$this->EE->load->model('search_model');
+			$this->EE->load->model('br_search_model');
 			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 			
@@ -1010,7 +1013,7 @@ class Brilliant_retail_core {
 			// Give the index writable permissions
 				Zend_Search_Lucene_Storage_Directory_Filesystem::setDefaultFilePermissions(0755);
 			
-				$products = $this->EE->search_model->get_search_products($product_id);
+				$products = $this->EE->br_search_model->get_search_products($product_id);
 				if(count($products) >= 1){
 					$hits = $index->find('product_id:' . $products[0]["product_id"]);
 					foreach ($hits as $hit) {
@@ -2026,6 +2029,7 @@ class Brilliant_retail_core {
 		{
 			$group_id = $this->EE->session->userdata["group_id"];
 			$amt = array(
+							'product_id'		=> $p["product_id"],
 							'on_sale' 			=> FALSE, 
 							'base' 				=> '',
 							'price' 			=> '',
@@ -2498,6 +2502,12 @@ class Brilliant_retail_core {
 						}
 				}
 			}
+			
+			//  
+				if($this->EE->extensions->active_hook('br_get_cart_discount_end') === TRUE){
+					$discount = $this->EE->extensions->call('br_get_cart_discount_end', $discount); 
+				}
+
 			return $this->_currency_round($discount);
 		}
 	

@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -22,31 +22,6 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-class Cron_model extends CI_Model {
-
-	/**
-	 * Get Cron
-	 *
-	 * Get the current list of cron tasks
-	 *
-	 * @access public
-	 * @return array 
-	 */
-
-	public function get_tasks(){
-		$tasks = array();
-		$this->db->from('br_cron');
-		$this->db->where('status',1);
-		$qry = $this->db->get();
-		$i = 0;
-		foreach($qry->result() as $row){
-			$tasks[$i] = array(
-								"class" 	=> $row->class, 
-								"method"	=> $row->method, 
-								"params"	=> $row->params
-							);
-			$i++;
-		}
-		return $tasks;
-	}
-}
+	// Remove CRON table if it exists
+		$sql[] = "DROP TABLE IF EXISTS exp_br_cron";
+		$sql[] = "DROP TABLE IF EXISTS exp_br_log";

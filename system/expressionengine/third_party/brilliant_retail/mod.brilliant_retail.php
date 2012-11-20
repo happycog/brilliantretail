@@ -130,9 +130,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			include_once(APPPATH.'modules/channel/mod.channel.php');
 			
-			$product_id = ( $this->EE->TMPL->fetch_param('product_id') ) ? $this->EE->TMPL->fetch_param('product_id') : '';
-			$form = ( $this->EE->TMPL->fetch_param('form') ) ? $this->EE->TMPL->fetch_param('form') : 'yes';
-			$products = $this->_get_product($product_id);
+			$product_id = $this->EE->TMPL->fetch_param('product_id');
+			$form 		= $this->EE->TMPL->fetch_param('form','yes');
+			$products 	= $this->_get_product($product_id);
+			$ajax 		= $this->EE->TMPL->fetch_param('ajax','no');
 			
 			$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
 			if(!$products){
@@ -158,6 +159,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Form post url
 				$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
 
+				if($ajax == 'yes')
+				{
+					$action .= '&ajax=yes';
+				}
+				
 			// Parse Tags	
 				$tagdata = preg_replace($pattern,"",$tagdata);
 				
@@ -924,6 +930,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 	
 		function cart_add()
 		{
+			$ajax = $this->EE->input->get('ajax','no');
+			
 			// If its an image submit remove the x/y values
 				if(isset($_POST["x"])){ unset($_POST["x"]); }
 				if(isset($_POST["y"])){ unset($_POST["y"]); }
@@ -956,9 +964,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 				}
 		
+		// Create an array of products that we have added
+			$added = array();
+			
 		// Now add them
 			foreach($post as $data){
-			
+				
 				if(!isset($data["product_id"])){
 					$_SESSION["br_alert"] = lang('br_product_configuration_required');
 					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
@@ -1105,6 +1116,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$data = $this->EE->extensions->call('br_product_cartadd_after', $data); 
 					}
 
+				$added[] = array(
+									'product_id'	=> $product[0]["product_id"],
+									'thumbnail'		=> $product[0]["image_thumb"], 
+									'title' 		=> $product[0]["title"] 
+								);
+
 			} // End Data Loop
 
 
@@ -1164,7 +1181,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$this->_check_inventory($cart);
 					}
 					
-			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
+			// If its an AJAX post then return the cart array:
+			if($ajax == 'yes'){
+				$cart = $this->EE->product_model->cart_get();
+				$return = array(
+								'added'			=> $added, 
+								'items' 		=> $cart["items"], 
+								'subtotal'		=> $this->cart_subtotal(),
+								'discount'		=> $this->cart_discount(),
+								'total'			=> $this->cart_total()
+								);
+				exit(json_encode($return));
+			}else{
+				$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
+			}		
 		}
 	
 		function cart_remove()

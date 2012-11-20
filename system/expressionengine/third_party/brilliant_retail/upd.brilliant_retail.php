@@ -4373,20 +4373,6 @@ class Brilliant_retail_upd {
 	$sql[] = "INSERT INTO exp_br_feeds (feed_title,feed_code) VALUES ('Google Base','google_base');";
 	
 ## ----------------------------
-##  Table structure for exp_br_cron
-## ----------------------------
-
-	$sql[] = "CREATE TABLE exp_br_cron (
-				  cron_id int(11) NOT NULL AUTO_INCREMENT,
-				  status int(11) NOT NULL DEFAULT '0',
-				  class varchar(128) NOT NULL DEFAULT '',
-				  method varchar(128) NOT NULL DEFAULT '',
-				  params text,
-				  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				  PRIMARY KEY (cron_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-
-## ----------------------------
 ##  Table structure for exp_br_wishlist
 ## ----------------------------
 
@@ -4463,7 +4449,6 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_category;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_config;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_config_data;";
-			$sql[] = "DROP TABLE IF EXISTS exp_br_cron";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_currencies;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_email;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_feeds;";
