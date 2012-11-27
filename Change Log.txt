@@ -1,7 +1,10 @@
 # Version 1.2.1.1 (Development Version)
 
+### IMPORTANT - FedEx shipping module must be reconfigured to work properly. 
+
 * Added product_id to the $amt variable in the _check_product_price method
 * Added 'ajax' parameter to product tag to allow for ajax add to cart post. Set ajax='yes' to return json_encoded array of cart data.
+* Fixed an issue with the FedEx shipping method
 * Fixed an issue with Rate Matrix images.
 * Removed cron_model.php file
 * Removed log_model.php file
