@@ -152,6 +152,10 @@ class Core_model extends CI_Model {
 			}
 	}
 	
+	function module_update_version($version,$config_id){
+		$this->db->update('br_config',array('version'=>$version),"config_id = ".$config_id);
+	}
+	
 	function module_remove($config_id){
 		// Remove the primary entry
 			$this->db->delete('br_config', array('config_id' => $config_id)); 

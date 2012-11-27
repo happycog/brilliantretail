@@ -2629,14 +2629,20 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						if(!class_exists($str)){
 							include_once($f["path"]);
 						}
-						$class = new $str();
-						$version = $class->version;
-						$installed = $this->_config["shipping"][$this->site_id][$f["code"]]["version"];
-						if($version > $installed){
-							$class->update($installed,$this->_config["shipping"][$this->site_id][$f["code"]]["config_id"]);
-						}else{
-							$version = $installed;
-						}
+						$class 		= new $str();
+						
+						// Test for the version 
+							$version 	= $class->version;
+							$installed 	= $this->_config["shipping"][$this->site_id][$f["code"]]["version"];
+							$config_id 	= $this->_config["shipping"][$this->site_id][$f["code"]]["config_id"];
+							if($version > $installed){
+								$class->update($installed,$config_id);
+								$this->EE->core_model->module_update_version($version,$config_id);
+								echo remove_from_cache('config');
+							}else{
+								$version = $installed;
+							}
+						
 						$shipping[$this->_config["shipping"][$this->site_id][$f["code"]]["title"]] = array(
 												'config_id'	=> $this->_config["shipping"][$this->site_id][$f["code"]]["config_id"],
 												'title' 	=> $this->_config["shipping"][$this->site_id][$f["code"]]["title"],
