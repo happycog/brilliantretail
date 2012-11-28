@@ -2638,7 +2638,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							if($version > $installed){
 								$class->update($installed,$config_id);
 								$this->EE->core_model->module_update_version($version,$config_id);
-								echo remove_from_cache('config');
+								remove_from_cache('config');
 							}else{
 								$version = $installed;
 							}
