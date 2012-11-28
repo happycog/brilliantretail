@@ -899,6 +899,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$output = '';
 			if(strtolower($show_form) == "yes"){ 
 				$output = form_open($update);
+				// Check to see if the page is secure and use the right 
+				// http(s) protocol
+				if(is_secure())
+				{
+					$output = str_replace("http:","https:",$output);
+				}
 			}
 			
 			// Manipulate the cart items array prior to processing
