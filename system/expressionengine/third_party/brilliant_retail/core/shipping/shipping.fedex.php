@@ -1,6 +1,4 @@
 <?php
-ini_set("soap.wsdl_cache_enabled", "0");
-
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -24,6 +22,15 @@ ini_set("soap.wsdl_cache_enabled", "0");
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 require_once('assets/fedex/library/fedex-common.php');
+
+/*
+For testing we disabled the wsdl cache during 
+shipping method development. It should be fine 
+to cache the wsdl file while using test mode and live 
+shipping rates. 
+
+ini_set("soap.wsdl_cache_enabled", "0");
+*/
 
 class Shipping_fedex extends Brilliant_retail_shipping {
 	public $title 	= 'FedEx Shipping';
@@ -189,7 +196,7 @@ class Shipping_fedex extends Brilliant_retail_shipping {
 
 		$data[] = array(
 							'config_id' => $config_id, 
-							'label'	 	=> 'Meter Number', 
+							'label'	 	=> 'Password', 
 							'code' 		=> 'fedex_password',
 							'type' 		=> 'text',
 							'sort' 		=> 4
@@ -293,6 +300,7 @@ class Shipping_fedex extends Brilliant_retail_shipping {
 	
 	function update($current = '',$config_id = ''){
 		
+		$data 	= array();
 		$prefix = $this->EE->db->dbprefix;
 		
 		// ADDED 1.3
@@ -340,9 +348,6 @@ class Shipping_fedex extends Brilliant_retail_shipping {
 									'type' 		=> 'text',
 									'sort' 		=> 4
 								);
-				foreach($data as $d){
-					$this->EE->db->insert('br_config_data',$d);
-				}
 			}
 			
 		// ADDED 1.4	
@@ -394,10 +399,6 @@ class Shipping_fedex extends Brilliant_retail_shipping {
 										'descr'		=> 'Enter the standard box height in inches',
 										'sort' 		=> 13
 									);
-			
-				foreach($data as $d){
-					$this->EE->db->insert('br_config_data',$d);
-				}
 			}
 			
 		// ADDED 1.5
@@ -411,9 +412,11 @@ class Shipping_fedex extends Brilliant_retail_shipping {
 						'value' 	=> 'true', 
 						'sort' 		=> 0
 					);
-				foreach($data as $d){
-					$this->EE->db->insert('br_config_data',$d);
-				}
+			}
+		
+		// Run any db updates
+			foreach($data as $d){
+				$this->EE->db->insert('br_config_data',$d);
 			}
 			
 		return true;
