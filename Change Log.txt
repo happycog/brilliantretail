@@ -1,15 +1,21 @@
-# Version 1.2.2.0
+# Version 1.2.3.0
 
-### IMPORTANT - FedEx shipping module must be reconfigured to work properly. 
+* Fixed an issue when adding BrilliantRetail Product fieldtype to the Product Edit Form
+* Fixed an issue with cache directory naming by using md5 hash of HTTP_HOST variable 
+* Fixed an issue with initiating notifications from files when there are hidden files in the directory 
+* Fixed an issue with the is_secure method in the BR helper function. On some server settings it was not correctly detecting https protocol
+* Removed depreciated sidebar menu, sub_menu selected and help variables from methods in the mcp file. 
 
-* Added product_id to the $amt variable in the _check_product_price method
-* Added 'ajax' parameter to product tag to allow for ajax add to cart post. Set ajax='yes' to return json_encoded array of cart data.
-* Fixed an issue with the FedEx shipping method
-* Fixed an issue with Rate Matrix images.
-* Fixed an issue with the action url when updating the cart from a secure (https) url. 
-* Removed cron_model.php file
-* Removed log_model.php file
-* Removed exp_br_cron table
-* Updated the FedEx shipping method to use the new shipping api. 
-* Updated search_model to Br_search_model to avoid namespace conflict with EE core model. 
+### Working On
 
+* Admin Order Entry! 
+
+* Remove all serialized content (completely normalize database!)
+	* exp_br_cart
+	* exp_br_order_payment
+	* exp_br_product_configurable	
+	* exp_br_product_options
+	* exp_br_promo
+
+* Add a way to order the countries in the admin: 
+	* http://www.brilliantretail.com/forum/viewthread/224/

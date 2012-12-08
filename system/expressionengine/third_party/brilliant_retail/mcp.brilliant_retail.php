@@ -195,10 +195,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_dashboard');
 
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			// Get the sales report
 				$dir = PATH_THIRD.'brilliant_retail/core/report/report.sales.php';
 				include_once($dir);
@@ -237,18 +233,26 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function order()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_order');
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-			$this->vars["status"] = $this->_config["status"];			
-				
-			$this->EE->cp->set_breadcrumb($this->base_url.'&method=orders', 'BrilliantRetail '.lang('nav_br_order'));
+			// Page Title 
+				$this->vars['cp_page_title'] = lang('nav_br_order');
+	
+			// Breadcrumb
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=orders', 'BrilliantRetail '.lang('nav_br_order'));
 		
-			$this->vars['action']	= $this->base_url.'&method=order_batch';
+			// Right Button (Create Order)
+				$this->EE->cp->set_right_nav(array(
+					'br_new_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_new'
+				));
+			
+			// Get the status options from the config variable
+				$this->vars["status"] = $this->_config["status"];			
+				
+			// Batch Action
+				$this->vars['action']	= $this->base_url.'&method=order_batch';
 
-			// ajax url to get order_collection from data tables
+			// AJAX url to get order_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
+			
 			
 			return $this->_view('order/order', $this->vars);	
 		}
@@ -311,8 +315,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 			// Page title
 				$this->vars['cp_page_title'] = lang('nav_br_order_detail');
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 		
 				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order', 'BrilliantRetail '.lang('nav_br_order'));
 
@@ -377,9 +379,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			// Page title
 				$this->vars['cp_page_title'] = lang('nav_br_order_detail_add_payment');
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
+		
 			// Add breadcrumb back to order detail
 				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order_detail&order_id='.$order_id, 'BrilliantRetail '.lang('nav_br_order_detail').' '.$order_id.'');
 			
@@ -638,6 +638,75 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				exit();
 		}
 		
+		/************************/
+		/* Create a new order 	*/
+		/************************/
+	
+		function order_new()
+		{
+			
+			// Add the create product button
+				$this->EE->cp->set_right_nav(array(
+					'br_orders' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order'
+				));
+			
+			
+			$this->vars['cp_page_title'] = lang('nav_br_order_new');
+
+
+			$member_id = (int) $this->EE->input->get('member_id');
+			if($member_id == 0)
+			{
+				// ajax url to get customer_collection from data tables
+				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_new_customer_ajax';
+			
+				return $this->_view('order/order_new_customer', $this->vars);	
+			}else{
+				// Get the info for the selected member
+					$this->vars["member"] = $this->EE->customer_model->get_customer_profile($member_id);
+				
+				// Get the group names
+					$qry = $this->EE->member_model->get_member_groups();
+					$groups = array();
+					foreach($qry->result_array() as $row){
+						$groups[$row["group_id"]] = $row["group_title"];
+					}
+					$this->vars["groups"] = $groups;
+				
+				return $this->_view('order/order_new', $this->vars);	
+			}
+		}
+		
+		function order_new_customer_ajax()
+		{
+			// Member Collection	
+				$members = $this->EE->customer_model->get_customers('',$_GET["iDisplayLength"],$_GET["iDisplayStart"],$_GET["sSearch"],$_GET["iSortCol_0"],$_GET["sSortDir_0"]);
+			
+			// Container for member rows
+				$member = array();
+				foreach ($members["results"] as $row){
+					if($row["customer"] == ''){
+						$row["customer"] = '('.lang('empty').')';
+					}
+					$member[] = array(	'<b>'.$row["customer"].'</b>',
+										$row["email"],
+										$row["group_title"],
+										'<a href="'.BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_new&member_id='.$row["member_id"].'">'.lang('br_order_select_customer').'</a>'
+									);
+				}
+			// Build the response array
+				$output = array(
+									"sEcho" => $_GET["sEcho"],
+									"iTotalRecords" => $members["total"],
+									"iTotalDisplayRecords" => $members["displayTotal"],
+									"aaData" => $member  
+								);
+			// Return the json data 
+				@header("HTTP/1.1 200 OK");
+				echo json_encode($output);
+				exit();
+		}
+		
 	/************************/
 	/* Customer Tab		 	*/
 	/************************/
@@ -645,9 +714,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function customer()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_customer');
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 
 			// ajax url to get customer_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=customer_ajax';
@@ -693,9 +759,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$member_id = $this->EE->input->get('memberid');
 
 			$this->vars['cp_page_title'] = lang('nav_br_customer_orders');
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 			
 			// Get the order collection
 				$query = $this->EE->order_model->get_order_by_member($member_id);
@@ -737,8 +800,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 				$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
 				$this->vars['cp_page_title'] = lang('view').' '.lang('nav_br_products');
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
 
 			// Get the categories & product types for filtering
 				$this->vars['categories'] 	= $this->EE->product_model->get_all_categories();
@@ -997,10 +1058,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}else{
 					$this->vars['cp_page_title'] = lang('nav_br_products');
 				}
-				
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 
 			// Generate the list of products based 
 			// on the search terms provided. 
@@ -1553,9 +1610,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					'br_new_promo' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_new'
 				));
 			
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 			$this->EE->cp->add_js_script( array(
 												'ui' => 'tabs,datepicker' 
 												));
@@ -1570,11 +1624,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$this->vars['cp_page_title'] = lang('nav_br_promotion');
 			
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
-
 			$this->EE->cp->add_js_script(  array(
 										'ui' => 'datepicker' 
 									));
@@ -1627,10 +1676,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									'ui' => 'accordion,datepicker' 
 									));
 									
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			// Get the promo details 
 				$this->vars["promo"] = $this->EE->promo_model->get_promo($promo_id);
 				
@@ -1763,9 +1808,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$i++;
 				}
 			$this->vars["reports"] = $reports;
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 
 			return $this->_view('report/report', $this->vars);	
 		}
@@ -1777,12 +1819,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		*/
 		function report_detail()
 		{
-
-			// Set the header/breadcrumb 
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			// Add the data picker js
 				$this->EE->cp->add_js_script(array('ui' => 'datepicker'));
 			
@@ -1846,10 +1882,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				'br_new_attribute' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attribute_create'
 			));
 			
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			$this->vars["content"] = $this->_view('config/attribute', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -1917,10 +1949,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 												'default_text' => '',
 												'options' => ''
 												);
-			$this->vars["sub_selected"] = 'config_attribute';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 
 			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
 			
@@ -1932,10 +1960,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$attribute_id = $this->EE->input->get('attribute_id');
 			$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_by_id($attribute_id);
-			$this->vars["sub_selected"] = 'config_attribute';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 
 			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
 			$_SESSION["message"] = lang('br_attribute_update_success');
@@ -1953,12 +1977,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					'br_new_attribute_set' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attributeset_create'
 				));
 
-			// Set the selected menu
-			$this->vars["sub_selected"] = 'config_attributeset';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			$this->vars["content"] = $this->_view('config/attribute_set', $this->vars);
 			return $this->_view('config/index', $this->vars);	
 		}
@@ -1974,12 +1992,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["attribute_set_id"] = $attribute_set_id;
 			$this->vars["title"] = '';
 
-			// Set the selected menu
-			$this->vars["sub_selected"] = 'config_attribute';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			$this->vars["content"] = $this->_view('config/attribute_set_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);	
 		}
@@ -1994,12 +2006,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			$this->vars["attribute_set_id"] = $attribute_set_id;
 			$this->vars["title"] = $attribute_set[0]["title"];
-
-			// Set the selected menu
-			$this->vars["sub_selected"] = 'config_attributeset';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 
 			$this->vars["content"] = $this->_view('config/attribute_set_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);	
@@ -2037,12 +2043,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Set the selected menu
 			$this->vars['cp_page_title'] = lang('nav_br_config_category');
 
-			$this->vars["sub_selected"] = 'config_category';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
-			
 			$this->EE->cp->add_js_script( array(
 												'ui' => 'droppable' 
 												));
@@ -2063,7 +2063,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_category_edit()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_config_category');
-			$this->vars["sub_selected"] = 'config_category';
+
 			$cat = $this->EE->product_model->get_category($this->EE->input->get('cat_id'));
 			
 			$prod = $this->EE->product_model->get_product_by_category($this->EE->input->get('cat_id'),"TRUE");
@@ -2099,9 +2099,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			$this->vars['products'] = $prod_ary;
 			$this->vars["category"] = $cat[0];
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 			$this->vars["content"] = $this->_view('config/category_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -2196,13 +2193,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// templates in the DB for the site id
 				
 				$this->vars['cp_page_title'] = lang('nav_br_config_email');
-				$this->vars["sub_selected"] = 'config_email';
-			
-			// we used to 
-			
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 				$this->vars["content"] = $this->_view('config/email', $this->vars);
 				return $this->_view('config/index', $this->vars);	
 		}
@@ -2212,11 +2202,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$list = $this->EE->email_model->get_emails_by_site_id($this->site_id);
 			$email_id = $this->EE->input->get('email_id');
 			$this->vars["email"] = $this->EE->email_model->get_email_by_id($email_id);
-			$this->vars["sub_selected"] = 'config_email';
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			$this->vars["content"] = $this->_view('config/email_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -2245,9 +2230,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				'br_new_config_feeds' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_feeds_edit'
 			));	
 			
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"]         = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"]      = $this->_view('_assets/_menu', $this->vars);
 			$this->vars["feeds"]        = $this->EE->feed_model->get_feeds();
 			$this->vars['feed_aid']     = $this->EE->core_model->get_aid('Brilliant_retail','pull_feed');
 			$this->vars["content"]      = $this->_view('config/feed', $this->vars);
@@ -2333,9 +2315,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Prepare Interface
 				$this->vars['feed']         = $feed_data;
 				$this->vars['categories']   = $this->EE->product_model->get_all_categories();
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"]         = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"]      = $this->_view('_assets/_menu', $this->vars);
 				$this->vars['products']     = $this->EE->product_model->get_products_by_feed($feed_id);
 				$this->vars["content"]      = $this->_view('config/feed_edit', $this->vars);
 				
@@ -2352,9 +2331,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			// Set the selected menu
 				$this->vars['cp_page_title'] = lang('nav_br_config_gateway');
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 
 			// Load the content
 				$files = read_system_files('gateway');		
@@ -2502,10 +2478,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["enabled"] 		= $this->_config["gateway"][$this->site_id][$code]["enabled"];
 			$this->vars["fields"] 		= $fields;
 
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			$this->vars["content"] = $this->_view('config/gateway_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -2553,9 +2525,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["groups"] = $this->EE->access_model->get_member_groups();
 
 			// Set the selected menu
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 			$this->vars["content"] = $this->_view('config/permission', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -2566,10 +2535,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$group_id = $this->EE->input->get("group_id",TRUE);
 			$this->vars["permissions"] = $this->_admin_permission_tree($group_id);
 			$this->vars["group"] = $this->EE->access_model->get_group_title($group_id);
-			
-			// Set the selected menu
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
+
 			// Form stuff 
 				$this->vars["hidden"] = array(
 												'site_id' => $this->site_id,
@@ -2577,7 +2543,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											);
 				$this->vars["store"] = $this->EE->store_model->get_store_by_id($this->site_id);
 
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 			$this->vars["content"] = $this->_view('config/permission_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}		
@@ -2612,10 +2577,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// Set the selected menu
 				$this->vars['cp_page_title'] = lang('nav_br_config_shipping');
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 
 			// Load the content
 				
@@ -2764,10 +2725,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["enabled"] 	= $this->_config["shipping"][$this->site_id][$code]["enabled"];
 			$this->vars["sort"] 	= $this->_config["shipping"][$this->site_id][$code]["sort"];
 			
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
 			$this->vars["content"] = $this->_view('config/shipping_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -2822,10 +2779,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									'ui' => 'accordion' 
 									));
 
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-			
 			$this->vars["show_subs"] = FALSE; #TRUE;
 			
 			$this->vars["hidden"] = array(
@@ -2891,9 +2844,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			$this->EE->cp->set_right_nav(array('br_new_tax' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_new'));
 			
-			$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-			$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-			$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
 			$this->vars["tax"] = $this->EE->tax_model->list_taxes();
 			$this->vars["content"] = $this->_view('config/tax', $this->vars);	
 			return $this->_view('config/index', $this->vars);
@@ -2906,12 +2856,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// GET THE TAX ID 
 				$tax_id = 0;
 
-			// Load Menu			
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
-			// 
 				$this->vars["hidden"] = array('tax_id' => $tax_id);
 			// Get the tax info 				
 				$this->vars["states"] = $this->EE->tax_model->get_state();
@@ -2936,13 +2880,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			// GET THE TAX ID 
 				$tax_id = (int) $_GET["tax_id"];
-			
-			// Load Menu			
-				$this->vars["sidebar_help"] = $this->_get_sidebar_help();
-				$this->vars["help"] = $this->_view('_assets/_help', $this->vars);
-				$this->vars["br_menu"] = $this->_view('_assets/_menu', $this->vars);
-
-			// 
 				$this->vars["hidden"] = array('tax_id' => $tax_id);
 
 			// Get the tax info 				
@@ -3004,7 +2941,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 	/* Helper Functions */
 		
-		
 		function _ajax_url()
 		{
 			$url = $this->EE->functions->fetch_site_index(0,0);
@@ -3026,30 +2962,35 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$emails = array();
 		
 			foreach($files as $f){
-				$nm = substr($f,0,-4);
-				if(isset($list[$nm])){
-					$emails[$list[$nm]["title"]] = array(
-															'email_id' => $list[$nm]["email_id"], 
-															'title' => lang($nm),
-															'version' => $list[$nm]["version"] 
-														);
-				}else{
-					include_once(rtrim($path,"/")."/".$f);
-					$url = rtrim($this->EE->config->item('site_url'),"/");
-					$a = explode('/',$url);
-					$email = rtrim('contact@'.$a[count($a)-1]);
-					$data = array(
-									'site_id' => $this->EE->config->item('site_id'),
-									'title' => $nm,
-									'version' => $msg["version"],
-									'content' => $msg["content"],
-									'subject' => isset($msg["subject"]) ? $msg["subject"] : lang($nm),   
-									'from_name' => $this->EE->config->item('site_name'), 
-									'from_email' => $email 
-								);
-					$data["email_id"] = $this->EE->email_model->create_email($data);							
-					$emails[$nm] = $data;
-				}
+				
+				// skip hidden files
+					if(substr($f,0,1) == '.') continue;
+
+				// proceed
+					$nm = substr($f,0,-4);
+					if(isset($list[$nm])){
+						$emails[$list[$nm]["title"]] = array(
+																'email_id' => $list[$nm]["email_id"], 
+																'title' => lang($nm),
+																'version' => $list[$nm]["version"] 
+															);
+					}else{
+						include_once(rtrim($path,"/")."/".$f);
+						$url = rtrim($this->EE->config->item('site_url'),"/");
+						$a = explode('/',$url);
+						$email = rtrim('contact@'.$a[count($a)-1]);
+						$data = array(
+										'site_id' => $this->EE->config->item('site_id'),
+										'title' => $nm,
+										'version' => $msg["version"],
+										'content' => $msg["content"],
+										'subject' => isset($msg["subject"]) ? $msg["subject"] : lang($nm),   
+										'from_name' => $this->EE->config->item('site_name'), 
+										'from_email' => $email 
+									);
+						$data["email_id"] = $this->EE->email_model->create_email($data);							
+						$emails[$nm] = $data;
+					}
 			}
 
 			// Send all templates to the view
@@ -3398,6 +3339,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$output = $this->EE->load->view($view,$vars,TRUE);	
 				$this->EE->load->remove_package_path();
 			}else{
+				$this->EE->load->add_package_path(PATH_THIRD.'brilliant_retail');
 				$output = $this->EE->load->view($view,$vars,TRUE);	
 			}
 			return $output;

@@ -31,7 +31,7 @@ if(!isset($_SESSION["cart"])){
 	/************************/
 
 		function save_to_cache($type,$str){
-			$path = APPPATH.'cache/brilliant_retail/'.$_SERVER["HTTP_HOST"];
+			$path = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]);
 			if(!file_exists($path)){
 				mkdir($path);
 			}
@@ -42,7 +42,7 @@ if(!isset($_SESSION["cart"])){
 		}
 		
 		function read_from_cache($type){
-			$nm = APPPATH.'cache/brilliant_retail/'.$_SERVER["HTTP_HOST"].'/'.md5($type);
+			$nm = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/'.md5($type);
 			if(!file_exists($nm)){
 				return false;
 			}else{
@@ -55,7 +55,7 @@ if(!isset($_SESSION["cart"])){
 		}
 		
 		function remove_from_cache($type){
-			$nm = APPPATH.'cache/brilliant_retail/'.$_SERVER["HTTP_HOST"].'/'.md5($type);
+			$nm = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/'.md5($type);
 			if(file_exists($nm)){
 				unlink($nm);
 			}
@@ -63,7 +63,7 @@ if(!isset($_SESSION["cart"])){
 		
 		function delete_file_cache()
 		{
-			$path = APPPATH.'cache/brilliant_retail/'.$_SERVER["HTTP_HOST"].'/';
+			$path = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/';
 			$file = read_dir_files($path);
 			foreach($file as $f)
 			{
@@ -243,9 +243,8 @@ if(!isset($_SESSION["cart"])){
 	/************************/
 	/* Test for https 		*/
 	/************************/
-	
 	function is_secure() {
-  		return (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == TRUE)) ? TRUE : FALSE;
+  		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443)  ? TRUE : FALSE;
 	}
 	
 	/************************/
