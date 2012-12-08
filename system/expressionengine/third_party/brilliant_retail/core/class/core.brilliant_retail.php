@@ -154,7 +154,7 @@ class Brilliant_retail_core {
 			
 		// Build search index if it is not 
 		// present
-		if(!file_Exists(APPPATH.'cache/brilliant_retail/search')){
+		if(!file_Exists(APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/search')){
 			$this->_index_products();
 		}
 
@@ -995,7 +995,7 @@ class Brilliant_retail_core {
 			    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
 			);
 
-			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.'search';
+			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
 			if(!file_exists($path)){
 				mkdir($path,DIR_WRITE_MODE,TRUE);
 			}
@@ -1048,7 +1048,7 @@ class Brilliant_retail_core {
 				    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
 				);
 
-				$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.'search';
+				$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
 				if(!file_exists($path)){
 					mkdir($path,DIR_WRITE_MODE,TRUE);
 				}
@@ -1146,7 +1146,8 @@ class Brilliant_retail_core {
 		    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
 		);
 
-		$path = APPPATH.'cache/brilliant_retail/search';
+		$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
+			
 		$index = Zend_Search_Lucene::open($path);
 		$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr, 'utf-8');
 	

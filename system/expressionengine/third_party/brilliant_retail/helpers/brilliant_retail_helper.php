@@ -31,14 +31,26 @@ if(!isset($_SESSION["cart"])){
 	/************************/
 
 		function save_to_cache($type,$str){
-			$path = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]);
-			if(!file_exists($path)){
-				mkdir($path);
-			}
-			$nm = $path.'/'.md5($type);
-			$file = fopen($nm, 'w');
-			fwrite($file,base64_encode($str));
-			fclose($file);
+
+			// First check to make sure we have the root brilliant_retail folder in the cache directory
+				$br = APPPATH.'cache/brilliant_retail';
+				if(!file_exists($br)){
+					mkdir($br);
+				}
+			
+			// Check for the namespaced directory (md5 of http_host) 
+			// Added to avoid cache conflicts when people were uploading their
+			// local cache to stating or production. 
+				$path = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]);
+				if(!file_exists($path)){
+					mkdir($path);
+				}
+
+			// Save the file
+				$nm = $path.'/'.md5($type);
+				$file = fopen($nm, 'w');
+				fwrite($file,base64_encode($str));
+				fclose($file);
 		}
 		
 		function read_from_cache($type){

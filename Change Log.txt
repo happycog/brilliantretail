@@ -2,6 +2,8 @@
 
 * Fixed an issue when adding BrilliantRetail Product fieldtype to the Product Edit Form
 * Fixed an issue with cache directory naming by using md5 hash of HTTP_HOST variable 
+* Fixed an issue with cache directory not existing when the BrilliantRetail extension calls the cp_menu_array hook. 
+* Moved the search index into the url specific cache directory
 * Fixed an issue with initiating notifications from files when there are hidden files in the directory 
 * Fixed an issue with the is_secure method in the BR helper function. On some server settings it was not correctly detecting https protocol
 * Removed depreciated sidebar menu, sub_menu selected and help variables from methods in the mcp file. 
