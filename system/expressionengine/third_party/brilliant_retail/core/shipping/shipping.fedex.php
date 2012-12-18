@@ -102,7 +102,7 @@ class Shipping_fedex extends Brilliant_retail_shipping {
 					'Address' => array(
 						'StreetLines' 			=> array(),
 						'City' 					=> '',
-						'StateOrProvinceCode' 	=> $data["to_state"],
+						'StateOrProvinceCode' 	=> substr($data["to_state"],0,2),
 						'PostalCode' 			=> $data["to_zip"],
 						'CountryCode' 			=> $data["to_country"],
 						'Residential' 			=> true)

@@ -973,17 +973,10 @@ class Brilliant_retail_core {
 					'</select>';
 			return $sel;
 		}
-		function index_products(){
-			echo 'Begin product index';
-			echo '<hr />';
-			echo $st = microtime();
-			$this->_index_products();
-			echo '<hr />';
-			echo $end = microtime();
-			echo '<hr />';
-			echo $total = $end - $st;
-			exit();
-		}
+
+/************************/
+/* SEARCH METHOD		*/
+/************************/
 		
 		function _index_products($product_id=''){
 			$this->EE->load->model('br_search_model');
@@ -1072,6 +1065,36 @@ class Brilliant_retail_core {
 					}
 			}
 
+		
+		function _search_index($queryStr){
+			// Need at least 3 characters in the last word for wildcard searches 
+			if(strlen($queryStr) >= 3){
+				// Dashes don't play nicely with our wildcard search
+				$queryStr = str_replace("-"," ",$queryStr);
+				$a = explode(" ",$queryStr);
+				if(strlen($a[count($a)-1] >= 3))
+				{
+					$queryStr += "*";
+				}
+			}
+			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
+			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
+			
+			Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+			Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+			    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
+			);
+	
+			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
+				
+			$index = Zend_Search_Lucene::open($path);
+			$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr, 'utf-8');
+		
+			$hits = $index->find($query);
+			return $hits;
+		}
+
+
 		function _validate_license($lic){
 			if(uuid_validate($lic)){
 				$this->vars["system_message"] = '';
@@ -1125,34 +1148,6 @@ class Brilliant_retail_core {
 		}
 		return true;
 	
-	}
-	
-	function _search_index($queryStr){
-		// Need at least 3 characters in the last word for wildcard searches 
-		if(strlen($queryStr) >= 3){
-			// Dashes don't play nicely with our wildcard search
-			$queryStr = str_replace("-"," ",$queryStr);
-			$a = explode(" ",$queryStr);
-			if(strlen($a[count($a)-1] >= 3))
-			{
-				$queryStr += "*";
-			}
-		}
-		ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
-		include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
-		
-		Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
-		Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-		    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
-		);
-
-		$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
-			
-		$index = Zend_Search_Lucene::open($path);
-		$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr, 'utf-8');
-	
-		$hits = $index->find($query);
-		return $hits;
 	}
 	
 	function _payment_options($osc_enabled=TRUE,$tax=0,$shipping=0,$admin_order=FALSE){
