@@ -26,28 +26,6 @@
 /* Details Tab	*/
 /****************/
 ?>
-				<div class="publish_field" id="hold_br_detail">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_product_detail')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_detail">
-						<fieldset class="holder">
-							<?=form_textarea(
-												array(	'name' => 'detail', 
-														'value' => $products[0]["detail"],
-														'title' => lang('br_details').' - '.lang('br_description').' '.lang('br_is_required'),
-														'style' => 'width:400px')
-											)?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-
-
 				<div class="publish_field" id="hold_br_details">
 					
 					<label class="hide_field">
@@ -143,6 +121,23 @@
 					</div>
 					
 				</div>
+				
+				<div class="publish_field" id="hold_br_detail">
+
+					<label class="hide_field">
+						<span>
+							<?=lang('br_product_detail')?>
+						</span>
+					</label>
+	
+					<div id="sub_hold_br_detail">
+						<fieldset class="holder">
+							<?=$detail_field?>
+						</fieldset>
+					</div> <!-- /sub_hold_field -->
+
+				</div>
+				
 
 		<?php
 			foreach($custom as $c){
@@ -304,15 +299,6 @@
 	 										a.show();
 	 									}
 	 								});
-	 
-	// Lets go ahead and initiate the
-	// our ckEditor. Thanks Brandon Kelly for 
-	// the insight into a lazy loading method… 
-	 
-		window.CKEDITOR_BASEPATH = '<?=$detail_ckeditor_path?>';
-
-		CKEDITOR.replace('detail');
-	
 	});
 
 	

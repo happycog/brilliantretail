@@ -4505,9 +4505,6 @@ class Brilliant_retail_upd {
 	{
 		$this->EE->load->dbforge();
 		
-		// Required for updating member fields
-			$sql = array();
-		
 		// Get the current version
 			$version = str_replace(".","",BR_VERSION)*1;
 		
@@ -4517,21 +4514,26 @@ class Brilliant_retail_upd {
 		
 		// Do we need to do any updates?
 			if($curr < $version){
+				
 				$start = $curr + 1;
 				
 				// Loop through possible udate files
 					for($i = $start; $i <= $version; $i++){
 						$fl = PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'update'.DIRECTORY_SEPARATOR.$i.'.php';
 						if(file_exists($fl)){
-							include($fl);
+							// Set a container for the sql statments
+								$sql = array();
+							
+							// Include the file
+								include($fl);
+							
+							// Run DB updates
+								foreach ($sql as $query){
+									$this->EE->db->query($query);
+								}
 						}
 					}
-		
-				// Run DB updates
-					foreach ($sql as $query){
-						$this->EE->db->query($query);
-					}
-		
+
 				// Clear the cache settings file so that the system 
 				// is forced to rebuild it
 					$this->reset_cache();

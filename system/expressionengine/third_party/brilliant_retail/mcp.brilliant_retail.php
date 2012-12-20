@@ -908,10 +908,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 		
 		function product_edit()
-		{
-			$this->vars["detail_ckeditor_path"] = $this->_theme('/script/ckeditor',TRUE);
-			$this->vars["detail_ckeditor_url"] = $this->_theme('/script/ckeditor/ckeditor.js');
-			
+		{			
 			$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
 
 			// Load Resources Required for custom fields
@@ -1265,7 +1262,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->vars["options"] = array();
 						$this->vars["images"] = array();
 						
-						$products = array();
 						$this->vars['title'] 	= lang('br_new_product');
 						$this->vars['hidden'] 	= array(
 															'site_id' => $this->site_id,
@@ -1284,7 +1280,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								}
 								$this->vars["categories"] = $categories;
 			}
+					
+			// What editor should we use for the detail field
+				
+				$this->EE->load->library('product_form');
+				$this->vars["detail_field"] = $this->EE->product_form->select_editor($products[0]["detail"]);
 			
+				
 			$this->_markitup();
 
 			$this->vars['feeds'] = $this->EE->feed_model->get_feeds();
