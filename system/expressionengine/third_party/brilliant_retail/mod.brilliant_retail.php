@@ -454,6 +454,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 				} 
 					
 				// Image attributes & sizing
+					$id 			= $this->EE->TMPL->fetch_param('id');
+					$class 			= $this->EE->TMPL->fetch_param('class');
 					$title 			= $this->EE->TMPL->fetch_param('title');
 					$alt 			= $this->EE->TMPL->fetch_param('alt');
 					$width 			= (int) $this->EE->TMPL->fetch_param('width',250);
@@ -591,14 +593,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 						return $this->_config["media_url"].'cache/'.$cache_file;
 					}else{
 						$this->EE->TMPL->log_item('BrilliantRetail: returning newly created cached image file ('.$this->_config["media_url"].'cache/'.$cache_file.')');
-						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" />';
+						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" id="'.$id.'" class="'.$class.'" title="'.$title.'" alt="'.$alt.'" />';
 					}
 				}else{
 					$this->EE->TMPL->log_item('BrilliantRetail: returning cached image file ('.$this->_config["media_url"].'cache/'.$cache_file.')');
 					if(strtolower($url_only) == "yes"){
 						return $this->_config["media_url"].'cache/'.$cache_file;
 					}else{
-						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" title="'.$title.'" alt="'.$alt.'" />';
+						return '<img src="'.$this->_config["media_url"].'cache/'.$cache_file.'" id="'.$id.'" class="'.$class.'" title="'.$title.'" alt="'.$alt.'" />';
 					}
 				}
 		}

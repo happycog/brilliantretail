@@ -1,5 +1,6 @@
 # Version 1.2.3.0
 
+* Added class and id parameters to the image template tag 
 * Fixed an issue when adding BrilliantRetail Product fieldtype to the Product Edit Form
 * Fixed an issue with cache directory naming by using md5 hash of HTTP_HOST variable 
 * Fixed an issue with cache directory not existing when the BrilliantRetail extension calls the cp_menu_array hook. 
