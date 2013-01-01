@@ -805,11 +805,21 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$path = $this->EE->TMPL->fetch_param('path','catalog');
 					
 				// Active Category
-					$product_selected = $this->EE->TMPL->fetch_param('active_cat');
+					$product_selected = $this->EE->TMPL->fetch_param('active_cat',$this->EE->uri->segment(2));
 
 				// Active Parent Category
-					$parent_selected = $this->EE->TMPL->fetch_param('active_parent_cat');
-				
+					$parent_selected = $this->EE->TMPL->fetch_param('active_parent_cat','');
+			
+					// If the user didn't pass in the active or parent categories lets try to calculate it
+					if($product_selected != ""){
+						if($parent_selected == ""){
+							// get parents recursively
+							$parent_selected = $this->_get_parent_category($product_selected);
+						}else{
+							$parent_selected = explode("|",$parent_selected);
+						}
+					}
+					
 			// Get the categories
 				$cat = $this->EE->product_model->get_categories(1,$sort);
 	
@@ -3515,5 +3525,45 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$option = $this->switch_cnt % count($options);
 			$this->switch_cnt++;
 			return $options[$option];
+		}
+		
+	/* 
+	*/
+		public function _get_parent_category($active){
+			
+			// Initiate a session array to hold the parents
+				if(!isset($this->EE->session->cache['category_menu_parents'])){
+					$this->EE->session->cache['category_menu_parents'] = array();
+				}
+			
+			// 
+			$this->EE->db->from('br_category')
+						->where('url_title',$active);
+			$qry = $this->EE->db->get();
+		
+			// test to make sure we matched a category
+				if($qry->num_rows() == 0){
+					return $this->EE->session->cache['category_menu_parents']; 
+				}
+			
+			// We matched - lets start our walk up
+				$rst = $qry->result_array();
+				if($rst[0]["parent_id"] != 0){
+					$this->EE->db->from('br_category')
+								->where('category_id',$rst[0]["parent_id"]);
+					$qry = $this->EE->db->get();
+					$rst = $qry->result_array();
+					
+					// Whats the url title?
+						$url_title = $rst[0]["url_title"];
+	
+					// Set it to the session array
+						$this->EE->session->cache['category_menu_parents'][] = $rst[0]["url_title"];
+					
+					// Recursively walk on up 
+						$this->_get_parent_category($url_title);
+				}
+			
+			return $this->EE->session->cache['category_menu_parents']; 
 		}
 }

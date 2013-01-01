@@ -7,6 +7,7 @@
 * Added parameter form_class to the product tag
 * Added parameter form_class to the catalog tag
 * Added parameter ajax to catalog tag
+* Added automatic active and parent_active classes to the li and a elements on the category_menu tag
 * Fixed an issue with missing form_close decloration on forgot_password tag (Thanks Max Lazar)
 * Fixed an issue when adding BrilliantRetail Product fieldtype to the Product Edit Form
 * Fixed an issue with cache directory naming by using md5 hash of HTTP_HOST variable 

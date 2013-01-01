@@ -694,23 +694,26 @@ class Brilliant_retail_core {
 				}
 
 				if ($val['url_title']==$product_selected){
-					$class="class=\"active\"";
+					$class 		= 'class="active"';
+					$ul_class 	= 'class="active"';
 				}
-				elseif ($val['url_title']==$parent_selected)
+				elseif (is_array($parent_selected) && in_array($val["url_title"],$parent_selected))
 				{
-					$class="class=\"active_parent\"";
+					$class 		= 'class="active_parent"';
+					$ul_class 	= 'class="active"';
 				}
 				else
 				{
-					$class="";
+					$class		= "";
+					$ul_class 	= "";
 				}
 				
-				$this->cats .= "<li ".$class."><a href=\"".$url."\">".$val['title']."</a>\n";
+				$this->cats .= "<li ".$class."><a href=\"".$url."\" ".$class.">".$val['title']."</a>\n";
 				
 				if($parent == ''){
 					if(isset($cat[$key])){
 						$level++;
-						$this->cats .= "<ul>\n";
+						$this->cats .= "<ul ".$ul_class.">\n";
 						$this->_menu_category_tree($cat[$key],$cat,$level,$product_selected,$parent_selected,$path,$parent,$exclude);	
 						$this->cats .= "</ul>\n";
 						$level--;
