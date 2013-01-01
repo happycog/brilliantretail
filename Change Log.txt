@@ -1,6 +1,13 @@
 # Version 1.2.3.0
 
-* Added class and id parameters to the image template tag 
+* Added product search / add feature on category edit page to easily add products to a category
+* Added product delete on the category edit page to easily remove products from a category
+* Added parameter class to the image template tag 
+* Added parameter id to the image template tag 
+* Added parameter form_class to the product tag
+* Added parameter form_class to the catalog tag
+* Added parameter ajax to catalog tag
+* Fixed an issue with missing form_close decloration on forgot_password tag (Thanks Max Lazar)
 * Fixed an issue when adding BrilliantRetail Product fieldtype to the Product Edit Form
 * Fixed an issue with cache directory naming by using md5 hash of HTTP_HOST variable 
 * Fixed an issue with cache directory not existing when the BrilliantRetail extension calls the cp_menu_array hook. 
@@ -9,17 +16,3 @@
 * Fixed an issue with the FedEx shipping method that would not return rates with some international addresses 
 * Moved the search index into the url specific cache directory
 * Removed depreciated sidebar menu, sub_menu selected and help variables from methods in the mcp file. 
-
-### Working On
-
-* Admin Order Entry! 
-
-* Remove all serialized content (completely normalize database!)
-	* exp_br_cart
-	* exp_br_order_payment
-	* exp_br_product_configurable	
-	* exp_br_product_options
-	* exp_br_promo
-
-* Add a way to order the countries in the admin: 
-	* http://www.brilliantretail.com/forum/viewthread/224/

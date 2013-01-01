@@ -22,6 +22,17 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
+<style type="text/css">
+	#close_search 
+	{
+		position:absolute;
+		right:55px;
+		margin-top:5px;
+		cursor: pointer;
+		display: none;
+	}
+</style>
+
 
 <?php
 	echo form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_update',
@@ -118,23 +129,32 @@
 	</tbody>
 </table>
 
+
+
+
+
 <table id="product_sort_tbl"  class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 	<thead>
+		<tr>
+			<td colspan="3">
+				<img src="<?=$theme?>images/close.png" id="close_search" />
+				<input type="text" id="br_search" placeholder="<?=lang('br_category_edit_product_search')?>" />
+				<br />
+				<div id="results_div" style="border:1px #CCC solid;margin-bottom:10px;height:200px;overflow:auto;display:none;">
+					<table id="br_result" width="100%" cellpadding="0" cellspacing="0">
+						<tbody></tbody>
+					</table>				
+				</div>
+			</td>
+		</tr>
 		<tr class="odd">
 			<th>
 				<?=lang('br_category_products')?></th>
-			<th width="5%"> 
+			<th width="5%" colspan="2"> 
 				<?=lang('br_actions')?></th>
-		<?php
-			/*
-				</tr>
-					<td colspan="2" style="background-color: #FFF">
-						Product Lookup Field Goes Here</td>
-				</tr>
-			*/
-		?>
+		</tr>
 	</thead>
-	<tbody>
+	<tbody id="selection">
 	<?php foreach($products as $items) { ?>
 		<tr class="odd">
         	<td style="vertical-align:middle;">
@@ -143,6 +163,8 @@
         	<td class="move_image_row">
 	        	<img src="<?=$theme?>images/move.png">
 	        	<input name="items[<?= $items['id']?>]" value="<?= $items['sort_order'] ?>" type="hidden" /></td>
+	    	<td>
+	    		<a href="#" class="delete_product"><img src="<?=$theme?>images/delete.png"></a></td>
 	    </tr>
 	<?php } ?>
 	</tbody>
@@ -156,12 +178,72 @@
 <script type="text/javascript">
 <!--
 $(function() {
+	
+	_init_cat();
+	
 	$('#delete').bind('click',function(){
 		if(confirm('<?=lang('br_confirm_delete_category')?>')){
 			$('#action').val('delete');
 			$('#category_update_order').submit();
 		}
 	});
+	
+	
+	$('#br_search').keyup(function(e){
+		var term = $(this).val();
+		if(term.length < 2){
+			//return;
+		}
+
+		$.getJSON("<?=$product_search?>",{'type':'related','term':term},function(data){
+            	$('#br_result').find('tbody tr').remove();
+				var i = 0;
+				$.each(data, function(i,item){
+            		i++;
+            		$('<tr id="product_'+item.product_id+'">'+
+            		  	'<td>'+item.title+'</td>'+
+            		  	'<td width="10%">'+
+            		  		'<a href="#" class="add_related" data-title="'+item.title+'" data-product_id="'+item.product_id+'" ><img src="<?=$theme?>images/add.png" /></a>'+
+            		  	'</td>'+
+            		  '</tr>').appendTo($('#br_result tbody'));
+            	});
+            	if(1 > 0){
+            		$('#results_div').slideDown();
+					$('#close_search').show();
+				}
+            	$('.add_related').unbind('click').bind('click',function(){
+					_add_row($(this).data('title'),$(this).data('product_id'));
+					$(this).parent().parent().remove();
+					return false;
+				});
+				
+        	_init_cat();
+        
+        });
+	}).keypress( function(e) {
+		/* Prevent default */
+		if ( e.keyCode == 13 )
+		{
+			return false;
+		}
+	});
+
+});
+
+function _init_cat()
+{
+	$('#close_search').bind('click',function(){
+		$('#br_search').val('');
+		$('#results_div').slideUp();
+		$('#close_search').hide();
+	});
+	
+	$('.delete_product').bind('click',
+	function(e){
+		e.preventDefault();
+		$(this).parent().parent().remove();	
+	});
+
 	$('#product_sort_tbl tbody').sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
 						helper:function(e, ui) {
 							ui.children().each(function() {
@@ -177,7 +259,22 @@ $(function() {
 							});	
 						}
 					});
+}
 
-});
+function _add_row(title,product_id)
+{
+	$('	<tr class="odd">'+
+			'<td style="vertical-align:middle;">'
+				+title+
+			'</td>'+
+			'<td class="move_image_row">'+
+    			'<img src="<?=$theme?>images/move.png">'+
+    			'<input name="items['+product_id+']" value="" type="hidden" /></td>'+
+			'<td>'+
+			'<a href="#" class="delete_product"><img src="<?=$theme?>images/delete.png"></a></td>'+
+		'</tr>').prependTo($('#product_sort_tbl tbody#selection'));
+		$('#product_sort_tbl tbody#selection tr').effect("highlight", {}, 3000);
+}
+
 -->
 </script>

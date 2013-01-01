@@ -2066,6 +2066,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_config_category');
 
+			$this->vars['product_search'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
+
 			$cat = $this->EE->product_model->get_category($this->EE->input->get('cat_id'));
 			
 			$prod = $this->EE->product_model->get_product_by_category($this->EE->input->get('cat_id'),"TRUE");
@@ -2152,14 +2154,27 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					if($image != ''){
 						$data["image"] = $image;
 					}
+				
 				// lets deal with the product ordering process
-				if(!empty($_POST['items']))
-				{
-					foreach($_POST['items'] as $key => $val)
+					
+					// Drop all of the products for the category
+						$this->EE->db->delete('br_product_category', array('category_id' => $_POST['category_id']));
+
+					if(!empty($_POST['items']))
 					{
-						$this->EE->product_model->update_product_order($key,$_POST['category_id'],$val);
+					
+						// Rebuild them
+							foreach($_POST['items'] as $key => $val)
+							{
+								$row = array(
+												'site_id' 		=> $this->site_id,
+												'category_id'	=> $_POST['category_id'],
+												'product_id'	=> $key, 
+												'sort_order'	=> $val
+											);
+								$this->EE->db->insert('br_product_category', $row);
+							}
 					}
-				}
 				
 				$data["url_title"] = $this->_check_category_url($data,$_POST["category_id"]);
 				$this->EE->product_model->update_category($_POST["category_id"],$data);

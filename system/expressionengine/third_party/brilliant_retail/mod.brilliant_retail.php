@@ -134,7 +134,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$form 		= $this->EE->TMPL->fetch_param('form','yes');
 			$products 	= $this->_get_product($product_id);
 			$ajax 		= $this->EE->TMPL->fetch_param('ajax','no');
-			
+			$form_class = $this->EE->TMPL->fetch_param('form_class','');
+
 			$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
 			if(!$products){
 				preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
@@ -196,7 +197,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				if($form == 'yes'){
 					$hidden = 	'<input type="hidden" name="'.$products[0]["product_id"].'_product_id" value="'.$products[0]["product_id"].'" />';
-					$output = 	'<form id="form_'.$products[0]["product_id"].'" action="'.$action.'" method="post">
+					$output = 	'<form id="form_'.$products[0]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
 									'.$hidden.' 
 									'.$output.'
 								</form>';
@@ -461,6 +462,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$width 			= (int) $this->EE->TMPL->fetch_param('width',250);
 					$height 		= (int) $this->EE->TMPL->fetch_param('height',250);
 					$mode 			= $this->EE->TMPL->fetch_param('mode','matte');
+					$background 	= $this->EE->TMPL->fetch_param('bgcolor','#FFFFFF');
 					
 				// Image effects 
 					## Reflection
@@ -551,16 +553,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 								$use_width = TRUE;
 							}
 						}
-					
+						
 						$this->EE->image_tools->create($this->_config["media_dir"].$src);
-					
+
 					// Do we have a relection?
 						if($reflect > 0){
 							$this->EE->image_tools->reflect($reflect, $reflect_bg, $reflect_space); // drop shadow percentage, background color, spacing
 						}
 
 					// Do resize pre watermarking
-
+						
 						if($mode == 'fit'){
 							// stretch the image to the exact specs 
 							// provided in the height and width fields 
@@ -575,9 +577,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}else{
 							// scale and matte to size provided 
 							if($use_width === TRUE){
-								$this->EE->image_tools->resizeNewByWidth($width,$height,$n_width); // new width, new height
+								$this->EE->image_tools->resizeNewByWidth($width,$height,$n_width,$background); // new width, new height
 							}else{
-								$this->EE->image_tools->resizeNewByHeight($width,$height,$n_height); // new width, new height
+								$this->EE->image_tools->resizeNewByHeight($width,$height,$n_height,$background); // new width, new height
 							}
 						}
 						
@@ -614,8 +616,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		public function catalog()
 		{ 
-			$key = $this->EE->TMPL->fetch_param('url_title');
-			
+			$key 	= $this->EE->TMPL->fetch_param('url_title');
+			$ajax 	= $this->EE->TMPL->fetch_param('ajax','no');
+			$form_class = $this->EE->TMPL->fetch_param('form_class','');
+
 			if($key == ''){
 				$this->EE->TMPL->log_item('BrilliantRetail: No url_title provided. segment_2 assigned');
 				$key = $this->EE->uri->segment(2);
@@ -687,11 +691,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 			// Add form_open / form_close tags
 				$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
-	
+
+				if($ajax == 'yes')
+				{
+					$action .= '&ajax=yes';
+				}
+
 				$i = 0;
 				foreach($vars[0]["results"] as $row){
 					$vars[0]["results"][$i]["product_count"] = $i+1;
-					$vars[0]["results"][$i]["form_open"] 	= '	<form id="form_'.$row["product_id"].'" action="'.$action.'" method="post">
+					$vars[0]["results"][$i]["form_open"] 	= '	<form id="form_'.$row["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
 																<input type="hidden" name="product_id" value="'.$row["product_id"].'" />';
 					$vars[0]["results"][$i]["form_close"] 	= '	</form>';
 					$i++;
@@ -3367,7 +3376,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 								  );  	
 	
 			$form = $this->EE->functions->form_declaration($form_details);
-			return $form.$this->EE->TMPL->tagdata;
+			return $form.$this->EE->TMPL->tagdata.form_close();
 	    }
 
 		function retrieve_password()

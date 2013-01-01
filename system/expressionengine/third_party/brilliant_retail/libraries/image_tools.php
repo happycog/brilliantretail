@@ -1,4 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+ini_set('display_errors','on');
+error_reporting(E_ALL);
+
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -535,9 +539,7 @@
 		
 		public function resizeNewByWidth($width, $height, $resize_width, $bgcolor = "#FFF")
 		{
-			$bgcolor = $this->getColor($bgcolor);
-			
-			if( !$bgcolor ||  !is_numeric($width) || !is_numeric($width) || !is_numeric($resize_width) || $width <= 0 || $height <= 0 || $resize_width <= 0 )
+			if( !is_numeric($width) || !is_numeric($width) || !is_numeric($resize_width) || $width <= 0 || $height <= 0 || $resize_width <= 0 )
 			{
 				$this->parseError("Resize new size must be numeric and positive for each one width and height");
 			}
@@ -545,7 +547,9 @@
 			{
 				$tmp_im = imagecreatetruecolor($width, $height);
 				
-				imagefill($tmp_im, 0, 0, $bgcolor);
+				$rgb = $this->hexToRGB($bgcolor);
+				$color = imagecolorallocate($tmp_im, $rgb[0], $rgb[1], $rgb[2]);
+				imagefill($tmp_im, 0, 0, $color);
 				
 				$this->resizeWidth($resize_width);
 				
@@ -570,9 +574,7 @@
 		
 		public function resizeNewByHeight($width, $height, $resize_height, $bgcolor = "#FFF")
 		{
-			$bgcolor = $this->getColor($bgcolor);
-			
-			if( !$bgcolor ||  !is_numeric($width) || !is_numeric($width) || !is_numeric($resize_height) || $width <= 0 || $height <= 0 || $resize_height <= 0 )
+			if(!is_numeric($width) || !is_numeric($width) || !is_numeric($resize_height) || $width <= 0 || $height <= 0 || $resize_height <= 0 )
 			{
 				$this->parseError("Resize new size must be numeric and positive for each one width and height");
 			}
@@ -580,7 +582,9 @@
 			{
 				$tmp_im = imagecreatetruecolor($width, $height);
 				
-				imagefill($tmp_im, 0, 0, $bgcolor);
+				$rgb = $this->hexToRGB($bgcolor);
+				$color = imagecolorallocate($tmp_im, $rgb[0], $rgb[1], $rgb[2]);
+				imagefill($tmp_im, 0, 0, $color);
 				
 				$this->resizeHeight($resize_height);
 				
@@ -908,18 +912,22 @@
 					{
 						case "PNG":
 							imagepng($this->im, $path . $name);
+							imagedestroy($this->im);
 							break;
 						
 						case "JPG":
 							imagejpeg($this->im, $path . $name, $quality);
+							imagedestroy($this->im);
 							break;
 							
 						case "JPEG":
 							imagejpeg($this->im, $path . $name, $quality);
+							imagedestroy($this->im);
 							break;
 						
 						case "GIF":
 							imagegif($this->im, $path . $name);
+							imagedestroy($this->im);
 							break;
 						
 						default:
