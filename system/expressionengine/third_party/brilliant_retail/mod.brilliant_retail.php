@@ -59,11 +59,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			$output = '';
 			if(isset($_SESSION["br_message"])){
-				$output = '<div id="br_message"><p>'.$_SESSION["br_message"].'</p></div>';
+				$snippetdata = $this->vars["snippets"]["br_system_message"];
+				$vars[0] = array(
+									'message' => $_SESSION["br_message"]
+								);
+				$output = $this->EE->TMPL->parse_variables($snippetdata, $vars);
 				unset($_SESSION["br_message"]);
 			}
+			
 			if(isset($_SESSION["br_alert"])){
-				$output = '<div id="br_alert"><p>'.$_SESSION["br_alert"].'</p></div>';
+				$snippetdata = $this->vars["snippets"]["br_system_alert"];
+				$vars[0] = array(
+									'alert' => $_SESSION["br_alert"]
+									);
+				$output = $this->EE->TMPL->parse_variables($snippetdata, $vars);
 				unset($_SESSION["br_alert"]);
 			}
 			return $this->return_data = $output;
@@ -1686,11 +1695,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 																		});
 																	
 																		function _bind_payment_options(){
-																			var first = $('.payment_form:eq(0)');
-																			if(first.html() != ''){
-																				first.show();
-																			}
-																			
 																			$('.gateway').unbind().bind('click',function(){
 																				$('.payment_form:visible').hide();
 																				var a = $(this).parent().parent();
@@ -1755,7 +1759,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 																							$('#total_container').html(data[0].marker+data[0].total);
 																							_bind_payment_options();
 																							// Only show the button if we have shipping options
-																							if($('#shipping_options p.shipping').size() > 0){
+																							if($('#shipping_options_available').val() == 1){
 																								$('#checkout_btn').show();						
 																							}
 																							_checkout_callback(data[0]);
@@ -2365,10 +2369,27 @@ class Brilliant_retail extends Brilliant_retail_core{
 														"label" => "N/A", 
 														"method" => "N/A"
 													);
-				$opts = '<p class="shipping">
-							<input type="radio" name="shipping" class="shipping" value="'.$hash.'" id="shipping_0" checked />'.
-							'&nbsp; '.lang('br_no_shipping_required').'</p>';
+				
+				$vars[0]["shipping_id"]		= "";
+				$vars[0]["shipping_label"] 	= "";
+				$vars[0]["rates"][] 		= array(
+														"rate"			=>	"",
+														"rate_id"		=> 	"shipping_0", 
+														"rate_label"	=> 	lang('br_no_shipping_required'),
+														"rate_value" 	=> 	$hash,
+														"rate_checked"	=> 	'checked="checked"' 
+													);
+			
+				// Get the snippet data
+					$snippetdata = $this->vars["snippets"]["br_shipping_layout"];
+					$tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
+					$this->EE->TMPL->parse($tmp);
+				
+				$opts = $tmp;
+				$shipping_options_available = 1;
+			
 			}else{
+			
 				$data = array(
 							"to_zip" 		=> $this->EE->input->post('zip',TRUE),
 							"to_state" 		=> $this->EE->input->post('state',TRUE),
@@ -2379,8 +2400,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$opts = $this->_shipping_options($data);
 				if($opts == ''){
 					$opts = lang('br_no_shipping_options_available');
+					$shipping_options_available = 0;
+				}else{
+					$shipping_options_available = 1;
 				}
 			}
+			$opts .= '<input type="hidden" name="shipping_options_available" id="shipping_options_available" value="'.$shipping_options_available.'" />';
 			echo $opts;
 			exit();
 		}
@@ -3262,13 +3287,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$product = array();
 				foreach($hits as $hit){
 					$tmp =  $this->EE->product_model->get_products($hit->product_id);
-					if($tmp[0]["site_id"] == $this->site_id){
-						$product[$i] = $tmp[0];
-						$product[$i]["score"] = round(100*$hit->score,2);
-						$product[$i]["row_count"] = ($i +1);
-						$i++;
-					}
+					// Check to make sure that a product is returned 
+						if(isset($tmp[0])){
+							if($tmp[0]["site_id"] == $this->site_id){
+								$product[$i] = $tmp[0];
+								$product[$i]["score"] = round(100*$hit->score,2);
+								$product[$i]["row_count"] = ($i +1);
+								$i++;
+							}
+						}
 				}
+				
 				// Count the products but set 
 				// a reasonable search result 
 				// limit

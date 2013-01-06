@@ -36,20 +36,28 @@ include_once(PATH_THIRD.'brilliant_retail/core/class/product.brilliant_retail.ph
 
 class Brilliant_retail_core {
 	
-	public $_config = array();
-	public $site_id = '';
-	public $br_channel_id = '';
-	
-	private $cat_tree 	= 0;
-	private $cat = array();
-	private $cat_count = 0;
-	private $attr_single = array();	//Used to call individual products
+	public $_config 		= array();
+	public $vars 			= array();
+	public $site_id 		= '';
+	public $br_channel_id 	= '';
+
+	private $cat_tree 		= 0;
+	private $cat 			= array();
+	private $cat_count 		= 0;
+	private $attr_single 	= array();	//Used to call individual products
 
 	function __construct(){
 
 		$this->EE =& get_instance();
 		
 		$this->EE->load->add_package_path(PATH_THIRD.'brilliant_retail/'); // This is required so we can create third party extensions! 
+
+		// We need to make sure we have an instance of the template parser loaded 
+		// incase we are doing any ACT processing
+			if(!isset($this->EE->TMPL)){
+				$this->EE->load->library('template');
+				$this->EE->TMPL = new EE_Template();
+			}
 
 		// Load libraries we use throughout
 			
@@ -161,6 +169,9 @@ class Brilliant_retail_core {
 		// Make a global reference to the currency_marker variable that we 
 		// can use in all of our view files
 			$this->vars["currency_marker"] = $this->_config["currency_marker"];
+			
+		// Create a snippets vars	
+			$this->vars["snippets"] = $this->EE->config->_global_vars;
 	}
 	
 	
@@ -1207,16 +1218,28 @@ class Brilliant_retail_core {
 				$gateways = $this->EE->extensions->call('br_payment_options_before',$gateways); 
 			}
 			
+			// Get the snippet data
+				$snippetdata = $this->vars["snippets"]["br_payment_layout"];
+			
 			$i = 0;
 			foreach($gateways as $g){
-				$sel = ($i == 0) ? 'checked="checked"' : '';
-				$display = ($i == 0) ? ' style="display:block"' : '';
-				$output .= ' <div id="gateway_'.$g["code"].'" class="gateways">
-								<label>
-			                    <input type="radio" name="gateway" value="'.md5($g["config_id"]).'" class="gateway required" id="gateway_'.$i.'" '.$sel.' />
-			                    '.$g["label"].'</label>
-			                    <div class="payment_form" '.$display.'>'.trim($g["form"]).'</div>
-			               	</div>';
+				$sel 		= ($i == 0) ? 'checked="checked"' : '';
+				$display 	= ($i == 0) ? 'style="display:block"' : '';
+				
+				$vars[0]	= array(
+										"payment_id"		=> 	'gateway_'.$g["code"], 
+										"gateway_value"		=>	md5($g["config_id"]),
+										"gateway_id"		=> 	'gateway_'.$i, 
+										"gateway_checked"	=> 	$sel, 
+										"gateway_label"		=> 	$g["label"], 
+										"gateway_display"	=> 	$display,
+										"gateway_form"		=> 	trim($g["form"]), 
+										"has_form"			=> 	(trim($g["form"]) == "") ? FALSE : TRUE 
+									);
+
+				$tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
+				$this->EE->TMPL->parse($tmp);
+				$output .= $tmp;
 				$i++;
 			}
 		
@@ -1299,26 +1322,44 @@ class Brilliant_retail_core {
 				$rates = $this->EE->extensions->call('br_cart_shipping_rate', $rates); 
 			}
 		
-		foreach($rates as $r)
-		{
-			$output .= '<p id="shipping_'.$r["code"].'" class="shipping">
-							<label>'.$r["label"].'</label>';
-			foreach($r["quote"] as $q){
-				$hash = md5($ship["code"].$q["rate"].$i.time());
-				$_SESSION["shipping"][$hash] = $q;
-				// Add the method to each option as well
-					$_SESSION["shipping"][$hash]["method"] = $r["method"];
+		// Get the snippet data
+			$snippetdata = $this->vars["snippets"]["br_shipping_layout"];
+			
+		// Build the variable to parse out the available rate quotes
+			foreach($rates as $r)
+			{
+				$vars[0] = array();
+				$vars[0]["shipping_id"] 	= 'shipping_'.$r["code"];
+				$vars[0]["shipping_label"] 	= $r["label"];
 				
-				$price = ($q["rate"] > 0) ? $this->_config["currency_marker"].$q["rate"].' - ' : '' ;
-				$chk = ($i == 0) ? 'checked="checked"' : '';
-				$output .= '<br />
-							<input type="radio" name="shipping" class="shipping" value="'.$hash.'" id="shipping_'.$i.'" '.$chk.' />&nbsp;'.
-							$price.$q["label"];
-				$i++;
+				foreach($r["quote"] as $q){
+					$hash = md5($ship["code"].$q["rate"].$i.time());
+					$_SESSION["shipping"][$hash] = $q;
+					
+					// Add the method to each option as well
+						$_SESSION["shipping"][$hash]["method"] = $r["method"];
+					
+					$price = ($q["rate"] > 0) ? $this->_config["currency_marker"].$q["rate"] : '' ;
+					$chk = ($i == 0) ? 'checked="checked"' : '';
+					
+					$vars[0]["rates"][] = array(
+													"rate"			=>	$price,
+													"rate_id"		=> 	'shipping_'.$i, 
+													"rate_label"	=> 	$q["label"], 
+													"rate_value" 	=> 	$hash,
+													"rate_checked"	=> 	$chk
+												);
+					$i++;
+				}
+				
+				$tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
+				$this->EE->TMPL->parse($tmp);
+				$output .= $tmp;
 			}
-			$output .= '</p>';
-		}
-		return $output;
+
+		// Put a hide count of the available shipping options so that we can 
+		// test for availablity with jquery
+			return $output;	
 	}
 
 	/* 
@@ -2003,7 +2044,7 @@ class Brilliant_retail_core {
 		foreach($vars[0]["results"] as $key => $val){
 			// Check the price setup 
 				if($amt = $this->_check_product_price($val)){
-					$vars[0]["results"][$key]["price_html"] = '<p class="price">'.$amt["price_html"].'</p>';
+					$vars[0]["results"][$key]["price_html"] = $this->_snippet_format_price_html($amt["price_html"]);
 				}
 			// Set default images
 			 	if($vars[0]["results"][$key]["image_large"] == ''){
@@ -2066,7 +2107,7 @@ class Brilliant_retail_core {
 						if($valid == 1){
 							$amt['base'] 		= $price["price"];
 							$amt['price'] 		= $price["price"];
-							$amt['price_html']	= '<p class="price">'.$this->_format_money($price["price"]).'</p>';
+							$amt['price_html']	= $this->_snippet_format_price_html($this->_format_money($price["price"]));
 				 			$amt['price_start'] = ($price["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["start_dt"]);
 				 			$amt['price_end'] 	= ($price["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["end_dt"]);
 				 		}
@@ -2104,10 +2145,7 @@ class Brilliant_retail_core {
 					 		$amt['on_sale'] 			= TRUE; 
 							$amt['base'] 				= $amt["price"];
 							$amt['price'] 				= $sale["price"]; 
-							$amt['price_html'] 			= '	<p class="price">
-																<span class="original">'.$this->_format_money($original).'</span>
-																<span class="sale">'.$this->_format_money($sale["price"]).'</span>
-															</p>';  
+							$amt['price_html'] 			= $this->_snippet_format_sale_price_html($this->_format_money($original),$this->_format_money($sale["price"]));
 							$amt['sale_price'] 			= $sale["price"];
 							$amt['sale_price_start'] 	= ($sale["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["start_dt"]);
 				 			$amt['sale_price_end'] 		= ($sale["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["end_dt"]);
@@ -2657,7 +2695,31 @@ class Brilliant_retail_core {
 	/** 
 	* Helper function to sort product types alphabetically.
 	*/	
-	private function _product_type_sort($a,$b){
-		return ($a > $b) ? +1 : -1;
+		private function _product_type_sort($a,$b){
+			return ($a > $b) ? +1 : -1;
+		}
+
+	/*************************/
+	/* SNIPPET FORMAT HELPER */
+	/*************************/
+
+	function _snippet_format_price_html($price)
+	{
+		$snippetdata = $this->vars["snippets"]["br_price_html"];
+		$vars[0] = array(
+							'price' => $price
+						);
+		
+		return $this->EE->TMPL->parse_variables($snippetdata, $vars);
+	}	
+	
+	function _snippet_format_sale_price_html($price,$sale_price)
+	{
+		$snippetdata = $this->vars["snippets"]["br_sale_price_html"];
+		$vars[0] = array(
+							'price' 		=> $price,
+							'sale_price'	=> $sale_price
+						);
+		return $this->EE->TMPL->parse_variables($snippetdata, $vars);
 	}
 }

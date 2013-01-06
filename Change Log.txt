@@ -1,5 +1,12 @@
 # Version 1.2.3.0
 
+* New Feature - Converted html automatically created by BrilliantRetail into ExpressionEngine snippets:
+    * BR Message 
+    * BR Alert  
+    * Price Html 
+    * Sale Price Html 
+    * Shipping Layout 
+    * Payment Layout  
 * Added product search / add feature on category edit page to easily add products to a category
 * Added product delete on the category edit page to easily remove products from a category
 * Added parameter class to the image template tag 
@@ -15,5 +22,6 @@
 * Fixed an issue with initiating notifications from files when there are hidden files in the directory 
 * Fixed an issue with the is_secure method in the BR helper function. On some server settings it was not correctly detecting https protocol
 * Fixed an issue with the FedEx shipping method that would not return rates with some international addresses 
+* Fixed an issue with disabled products in search results 
 * Moved the search index into the url specific cache directory
 * Removed depreciated sidebar menu, sub_menu selected and help variables from methods in the mcp file. 

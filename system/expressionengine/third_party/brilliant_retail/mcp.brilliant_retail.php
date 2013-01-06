@@ -140,6 +140,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					// Make sure all emails are initiated
 						$this->_init_emails();
 
+					// Make sure the snippets are all initiated
+						$this->_init_snippets();
+
 					// Product Types
 						$this->vars['product_type'] = $this->_config['product_type'];	
 					
@@ -3014,7 +3017,39 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["emails"] = $emails;
 		}
 		
-		
+		private function _init_snippets()
+		{
+			$path = PATH_THIRD.'brilliant_retail/core/snippets';
+			$files = read_dir_files($path);
+			
+			$this->EE->load->model('snippet_model');
+			
+			$list_snippets = $this->EE->snippet_model->get_snippets_by_site_id($this->site_id);
+			$snippents = array();
+
+			foreach($files as $f){
+				
+				// skip hidden files
+					if(substr($f,0,1) == '.') continue;
+
+				// proceed
+					$nm = substr($f,0,-5);
+					if(isset($list_snippets[$nm])){
+						$snippents[$nm] = $list_snippets[$nm];
+					}else{
+						$s = read_file(rtrim($path,"/")."/".$f);
+						$data = array(
+										'site_id' 			=> $this->EE->config->item('site_id'),
+										'snippet_name' 		=> $nm,
+										'snippet_contents' 	=> $s
+									);
+						$data["snippet_id"] = $this->EE->snippet_model->create_snippet($data);
+						$list_snippets[$nm] = $data;
+					}
+			}
+			// Send all templates to the view
+			$this->vars["snippets"] = $list_snippets;
+		}
 		
 		
 		function _product_entry_id($product_id){
