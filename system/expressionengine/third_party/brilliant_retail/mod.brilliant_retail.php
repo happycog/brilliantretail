@@ -140,11 +140,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 			include_once(APPPATH.'modules/channel/mod.channel.php');
 			
 			$product_id = $this->EE->TMPL->fetch_param('product_id');
-			$form 		= $this->EE->TMPL->fetch_param('form','yes');
 			$products 	= $this->_get_product($product_id);
 			$ajax 		= $this->EE->TMPL->fetch_param('ajax','no');
+			$form 		= $this->EE->TMPL->fetch_param('form','yes');
 			$form_class = $this->EE->TMPL->fetch_param('form_class','');
-
+			$show_js 	= $this->EE->TMPL->fetch_param('show_js','yes');
+			
 			$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
 			if(!$products){
 				preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
@@ -194,6 +195,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$products = $this->EE->extensions->call('br_product_parse_before', $products); 
 					}
 
+					if($form != 'yes'){
+						$products[0]["form_open"] = '<form id="form_'.$products[0]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
+														<input type="hidden" name="'.$products[0]["product_id"].'_product_id" value="'.$products[0]["product_id"].'" />';
+						$products[0]["form_close"] = '</form>';
+						
+						if($show_js == 'yes'){
+							$this->EE->session->cache['br_output_js'] .= '$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});';
+						}
+					}
+					
 					$output = $this->EE->TMPL->parse_variables($tagdata, $products);
 				
 				
@@ -204,6 +215,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$output = str_replace('<option value=""></option>',"",$output);
 				}			
 				
+				// Build the form and add the js to the footer
 				if($form == 'yes'){
 					$hidden = 	'<input type="hidden" name="'.$products[0]["product_id"].'_product_id" value="'.$products[0]["product_id"].'" />';
 					$output = 	'<form id="form_'.$products[0]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
@@ -213,7 +225,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 					$this->EE->session->cache['br_output_js'] .= '$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});';
 				}
-			
+							
 			$this->switch_cnt = 0;
 			$output = preg_replace_callback('/'.LD.'image_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output);
 			
@@ -351,12 +363,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 		public function product_related()
 		{
 			$product_id = $this->EE->TMPL->fetch_param('product_id');
+			$form_class = $this->EE->TMPL->fetch_param('form_class','');
+			
 			$products = $this->EE->product_model->get_products($product_id);
 			$output = '';
 			$related = array();
 			if(count($products[0]["related"]) == 0){
 				return $output;
 			}
+			
+			// Form post url
+				$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
+
 			$i = 0;
 			foreach($products[0]["related"] as $row){
 				if(isset($row["product_id"])){
@@ -367,6 +385,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 							foreach($rel[0] as $key => $val){
 								$tmp['related_'.$key] = $val;
 							}
+						
+						// Add form open / close 
+							$tmp["related_form_open"] = '<form id="form_'.$rel[0]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
+														<input type="hidden" name="'.$rel[0]["product_id"].'_product_id" value="'.$rel[0]["product_id"].'" />';
+							$tmp["related_form_close"] = '</form>';
 						
 						// Add depreciated 
 							$tmp['related_thumb'] = $rel[0]["image_thumb"];
@@ -2614,8 +2637,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 	// Create a register form
 		function register_form()
 		{
-			$id = ($this->EE->TMPL->fetch_param('id')) ? ($this->EE->TMPL->fetch_param('id')) : "register_form" ;
-			$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_register'));
+			$id 		= ($this->EE->TMPL->fetch_param('id')) ? ($this->EE->TMPL->fetch_param('id')) : "register_form" ;
+			$action 	= $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_register'));
+			$form_class = $this->EE->TMPL->fetch_param('form_class','');
+
 			$tagdata = $this->EE->TMPL->tagdata;
 
 			// Should we add a captcha to the form?
@@ -2638,10 +2663,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 			}
 			
-			$form_details = array('action'	   		=> $action,
-								  'id'             	=> $id,
-								  'secure'         	=> TRUE
-								  );  	
+			$form_details = array(
+									'action'	   		=> $action,
+								  	'id'             	=> $id,
+								  	'secure'         	=> TRUE, 
+								  	'class' 			=> $form_class
+								  );  
+
 			$output = $this->EE->functions->form_declaration($form_details);
 			$output .= $tagdata;
 			$output .= form_close();

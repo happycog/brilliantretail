@@ -13,7 +13,12 @@
 * Added parameter id to the image template tag 
 * Added parameter form_class to the product tag
 * Added parameter form_class to the catalog tag
+* Added parameter form_class to the product_related tag
+* Added parameter form_class to the register_form tag
 * Added parameter ajax to catalog tag
+* Added form_open and form_close variables to product tag when product form attribute is not set to default "yes". 
+This allows you to place the form_open and form_close tags anywhere you like in the product tag. 
+* Added form_open and form_close variables to product related tag
 * Added automatic active and parent_active classes to the li and a elements on the category_menu tag
 * Fixed an issue with missing form_close decloration on forgot_password tag (Thanks Max Lazar)
 * Fixed an issue when adding BrilliantRetail Product fieldtype to the Product Edit Form
