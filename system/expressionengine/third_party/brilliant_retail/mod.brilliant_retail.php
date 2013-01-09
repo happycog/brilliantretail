@@ -1342,8 +1342,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if($discount > $subtotal){
 						$discount = $subtotal;
 					}
-					$vars[0]['subtotal'] = $this->_config["currency_marker"].$this->_currency_round($subtotal);
-					$vars[0]['discount'] = $this->_config["currency_marker"].$this->_currency_round($discount);
+					$vars[0]['remove_link'] = $action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'promo_check_code')).'&code=remove';
+					$vars[0]['subtotal'] 	= $this->_config["currency_marker"].$this->_currency_round($subtotal);
+					$vars[0]['discount'] 	= $this->_config["currency_marker"].$this->_currency_round($discount);
 					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 					$this->return_data = $output;
 				}
@@ -2900,9 +2901,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 		function customer_profile()
 		{
+
+			$form_class = $this->EE->TMPL->fetch_param('form_class');
+
 			// By default we look for the logged in user 
 			// but we can also passs the member_id param
-				$member_id = ($this->EE->TMPL->fetch_param('member_id')) ? ($this->EE->TMPL->fetch_param('member_id')) : $this->EE->session->userdata["member_id"];
+				$member_id 	= ($this->EE->TMPL->fetch_param('member_id')) ? ($this->EE->TMPL->fetch_param('member_id')) : $this->EE->session->userdata["member_id"];
 				
 				// We don't have a member to get info for 
 					if($member_id == 0){return '';}
@@ -2917,7 +2921,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 					{
 						$action = str_replace("http://","https://",$action);
 					}
-					$vars[0]["form_open"] = form_open($action,array('id'=>'profile_edit'));
+					$vars[0]["form_open"] = form_open($action,array('id'=>'profile_edit',
+																	'form_class' => $form_class
+																	));
 					$vars[0]["form_close"] = '</form>';
 					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 				
@@ -3170,9 +3176,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function promo_check_code($inputCode='')
 		{
 			$this->EE->load->model('promo_model');
+			
 			if($inputCode == ''){
 				$inputCode = $this->EE->input->post('code',TRUE);
 			}
+			
+			// Check if there is a promo code in the url
+				$getCode = $this->EE->input->get('code',TRUE);
+				if($getCode != ''){
+					$inputCode = $getCode;
+				}
+			
 			if($inputCode == 'remove'){
 				$cart = $this->EE->product_model->cart_get();
 				foreach($cart["items"] as $key => $val){
@@ -3428,18 +3442,24 @@ class Brilliant_retail extends Brilliant_retail_core{
 	
 		function forgot_password()
 		{
-			$name 	= ( $this->EE->TMPL->fetch_param('name') ) ? $this->EE->TMPL->fetch_param('name'): 'password_form';
-			$id 	= ( $this->EE->TMPL->fetch_param('form_id') ) ? $this->EE->TMPL->fetch_param('form_id'): 'password_form';
-			$class 	= ( $this->EE->TMPL->fetch_param('class') ) ? $this->EE->TMPL->fetch_param('class'): 'password_form';
-			$return = ( $this->EE->TMPL->fetch_param('return') != '' ) ? $this->EE->TMPL->fetch_param('return') : '';
-			$ACT 	= $this->EE->functions->fetch_action_id('Brilliant_retail', 'retrieve_password');
+			$name 		= $this->EE->TMPL->fetch_param('name','password_form');
+			$return 	= $this->EE->TMPL->fetch_param('return');
+			$form_id 	= $this->EE->TMPL->fetch_param('form_id','password_form');
+			$form_class = $this->EE->TMPL->fetch_param('form_class','password_form');
+			// We didn't have a standard for form class/id mechanisms. Need backward compatibility for old 'class' parameter
+				$class 	= $this->EE->TMPL->fetch_param('form_class');
+				if($class != ''){
+					$form_class = $class;
+				}
 			
+			// Get the action_id for the post
+				$act 		= $this->EE->functions->fetch_action_id('Brilliant_retail', 'retrieve_password');
 			
 			$form_details = array(
-									'action'	=> $this->_secure_url("?ACT=".$ACT),
+									'action'	=> $this->_secure_url("?ACT=".$act),
 								  	'name'		=> $name,
-								  	'id'		=> $id, 
-								  	'class'		=> $class 
+								  	'id'		=> $form_id, 
+								  	'class'		=> $form_class 
 								  );  	
 	
 			$form = $this->EE->functions->form_declaration($form_details);
@@ -3463,7 +3483,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$this->EE->session->userdata['language'] = $query->row('language');
 				}
 			}
-	    	
 	    	$member->retrieve_password();
 		}
 		

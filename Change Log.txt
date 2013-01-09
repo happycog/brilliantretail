@@ -9,13 +9,15 @@
     * Payment Layout  
 * Added product search / add feature on category edit page to easily add products to a category
 * Added product delete on the category edit page to easily remove products from a category
+* Added parameter ajax to catalog tag
 * Added parameter class to the image template tag 
 * Added parameter id to the image template tag 
 * Added parameter form_class to the product tag
 * Added parameter form_class to the catalog tag
 * Added parameter form_class to the product_related tag
 * Added parameter form_class to the register_form tag
-* Added parameter ajax to catalog tag
+* Added parameter form_class to the customer_profile tag
+* Added parameter form_class to the forgot_password tag
 * Added form_open and form_close variables to product tag when product form attribute is not set to default "yes". 
 This allows you to place the form_open and form_close tags anywhere you like in the product tag. 
 * Added form_open and form_close variables to product related tag
