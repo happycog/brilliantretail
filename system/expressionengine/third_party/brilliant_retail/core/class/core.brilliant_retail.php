@@ -2461,6 +2461,28 @@ class Brilliant_retail_core {
 	
 	// Get Cart Tax & Total 
 		function _get_cart_tax($country,$state,$zip,$address1='',$address2=''){
+			
+			// Put the variables into a data array for the 
+			// hooks
+				$data = array(
+								"cart" 		=> $cart,
+								"country"	=> $country,
+								"state"		=> $state, 
+								"zip"		=> $zip,
+								"address1"	=> $address1,
+								"address2"	=> $address2 
+							);
+			
+			// Add a hook to manipulate the tax rate before (added 1.2.2.5)
+				if($this->EE->extensions->active_hook('br_cart_tax_before') === TRUE){
+					$data = $this->EE->extensions->call('br_cart_tax_before', $data); 
+
+					// If the $data array contains a tax value then lets return it
+						if(isset($data["tax"])){
+							return $this->_currency_round($data["tax"]);
+						}
+				}
+
 			$this->EE->load->model('product_model');
 			$cart = $this->EE->product_model->cart_get();
 			
@@ -2469,14 +2491,6 @@ class Brilliant_retail_core {
 			
 			// Add extension hook to manipulate the tax rate
 			if($this->EE->extensions->active_hook('br_cart_tax_rate') === TRUE){
-				$data = array(
-									"cart" 		=> $cart,
-									"country"	=> $country,
-									"state"		=> $state, 
-									"zip"		=> $zip,
-									"address1"	=> $address1,
-									"address2"	=> $address2 
-								);
 				$rate = $this->EE->extensions->call('br_cart_tax_rate', $data); 
 			}
 

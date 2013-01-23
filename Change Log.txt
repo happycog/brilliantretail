@@ -8,6 +8,7 @@
     * Shipping Layout 
     * Payment Layout  
  	* Payment Forms (optional) - You can modify the per gateway checkout form by creating a snippet named br_payment_form_#### where #### represents the gateway code.
+* Added br_cart_tax_before hook to perform custom tax calculations with an extension
 * Added product search / add feature on category edit page to easily add products to a category
 * Added product delete on the category edit page to easily remove products from a category
 * Added parameter ajax to catalog tag
