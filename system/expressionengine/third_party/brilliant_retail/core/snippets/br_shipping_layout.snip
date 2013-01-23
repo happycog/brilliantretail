@@ -1,0 +1,16 @@
+<p id="{shipping_id}" class="shipping">
+	{if '{shipping_label}' != ''}
+		<label>{shipping_label}</label>
+		<br />
+	{/if}
+
+	{rates}
+		<input type="radio" name="shipping" class="shipping" value="{rate_value}" id="{rate_id}" {rate_checked} />
+		&nbsp; 
+		{if '{rate}' != ''}
+			{rate} - 
+		{/if}
+		{rate_label}
+		<br />
+	{/rates}
+</p>

@@ -1,0 +1,11 @@
+<div id="{payment_id}" class="gateways">
+	<label>
+		<input type="radio" name="gateway" value="{gateway_value}" class="gateway required" id="{gateway_id}" {gateway_checked} />
+       	{gateway_label}
+	</label>
+	{if "{has_form}"}
+		<div class="payment_form" {gateway_display}>
+			{gateway_form}
+		</div>
+	{/if}
+</div>

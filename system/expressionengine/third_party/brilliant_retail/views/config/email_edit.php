@@ -27,7 +27,8 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
                         'id'        => 'email_edit',
                         'class'     => 'b2r_category', 
                         'encrypt'   => 'multipart/form-data'),
-                array(  'email_id' => $email["email_id"]));
+                array(  'title'		=> $email["title"], 
+                		'email_id' 	=> $email["email_id"]));
 ?>
 <div id="b2r_page" class="b2r_category">
     <table id="attribute_tbl" class="product_edit" width="100%" cellpadding="0" cellspacing="0">

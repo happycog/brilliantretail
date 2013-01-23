@@ -733,7 +733,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				foreach($vars[0]["results"] as $row){
 					$vars[0]["results"][$i]["product_count"] = $i+1;
 					$vars[0]["results"][$i]["form_open"] 	= '	<form id="form_'.$row["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
-																<input type="hidden" name="product_id" value="'.$row["product_id"].'" />';
+																<input type="hidden" name="'.$row["product_id"].'_product_id" value="'.$row["product_id"].'" />';
 					$vars[0]["results"][$i]["form_close"] 	= '	</form>';
 					$i++;
 				}
@@ -1637,13 +1637,21 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$this->EE->session->cache['br_output_js'] .= "	var ship_to;
 																		var ship_note;
 																		var cnt = 0;
+																		var payment;
+																		
 																		$(function(){
 																			ship_to = $('#ship_same_address');
 																			
 																			/* Add a timeout to refresh totals so the session stays alive */
 																			setInterval('_update_cart_totals()',600000);
 																			
-																			$('#checkoutform').validate({'ignore' : ':hidden'}); 
+																			$('#checkoutform').validate({
+																											'ignore' : ':hidden',
+																											submitHandler: function(form){
+																										        $('#checkout_button').attr('disabled', 'disabled');
+																										        form.submit();
+																										    }
+																										}); 
 																			
 																			
 																			// Setup the javascript for the state/country selectors
@@ -1777,11 +1785,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 																						},
 																						function(returndata){
 																							var data = $.parseJSON(returndata);
-																							$('#payment_container').html(data[0].payment);
+																							if(payment != data[0].payment){
+																								payment = data[0].payment;
+																								$('#payment_container').html(payment);
+																								_bind_payment_options();
+																							}
 																							$('#tax_container').html(data[0].marker+data[0].tax);
 																							$('#shipping_container').html(data[0].marker+data[0].shipping);
 																							$('#total_container').html(data[0].marker+data[0].total);
-																							_bind_payment_options();
 																							// Only show the button if we have shipping options
 																							if($('#shipping_options_available').val() == 1){
 																								$('#checkout_btn').show();						
@@ -3024,6 +3035,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 			$cnt = count($orders);
 			for($i=0;$i<$cnt;$i++){
+
+				// Set the 'has notes' variable
+					$orders[$i]["has_notes"] = (count($orders[$i]["notes"]) == 0) ? FALSE : TRUE ;
+
 				// Need to adjust the total to include the 
 				// shipping, tax and discount
 					$orders[$i]["total"] = $this->_currency_round($orders[$i]["base"]+$orders[$i]["tax"]+$orders[$i]["shipping"]-$orders[$i]["discount"]);
@@ -3035,6 +3050,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$vars[0] = array(	'currency_marker'	=>$this->_config["currency_marker"],
 								'total_orders'		=> count($orders),
 								'orders'			=>$orders);
+			
 			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 			$this->return_data = $output;
 			return $this->return_data;
@@ -3316,7 +3332,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$this->EE->load->helper('search');
 		
 			// Set the return location 
-				$return = ($this->EE->TMPL->fetch_param('return')) ? ($this->EE->TMPL->fetch_param('return')) : 'catalog/result';
+				$return 	= ($this->EE->TMPL->fetch_param('return')) ? ($this->EE->TMPL->fetch_param('return')) : 'catalog/result';
 			
 			// Get the product search collection
 				$term = ($this->EE->TMPL->fetch_param('term')) ? $this->EE->TMPL->fetch_param('term') : $this->EE->input->post('search', TRUE);
@@ -3369,6 +3385,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 		function results()
 		{
+			// Get the parameters for the form open tag
+				$ajax 		= $this->EE->TMPL->fetch_param('ajax','no');
+				$form_class = $this->EE->TMPL->fetch_param('form_class','');
+
 			$url = $this->EE->uri->uri_to_assoc();
 			$hash = $url["id"];
 			if($str=read_from_cache('search_'.$hash)){
@@ -3403,10 +3423,24 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$result[0] = array(0 => trim($matches[1]));
 					$output = $this->EE->TMPL->parse_variables($matches[1], $vars); 
 				}else{
+					
+					$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
+					if($ajax == 'yes')
+					{
+						$action .= '&ajax=yes';
+					}
+
 					$tmp = array();
+					$i = 0;
 					foreach($vars[0]["results"] as $v){
 						$p = $this->_get_product($v["product_id"]);
-						$tmp[] = $p[0];
+						$tmp[$i] = $p[0];
+						
+						$tmp[$i]["product_count"] = $i+1;
+						$tmp[$i]["form_open"] 	= '<form id="form_'.$tmp[$i]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
+														<input type="hidden" name="'.$tmp[$i]["product_id"].'_product_id" value="'.$tmp[$i]["product_id"].'" />';
+						$tmp[$i]["form_close"] 	= '</form>';
+						$i++;
 					}
 					unset($vars[0]["results"]);
 					$vars[0]["results"] = $tmp;

@@ -558,7 +558,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					$this->_send_email('customer-order-status', $eml);
 				}
-		
+
 			// Add a system note to the order
 				$note = array(
 							'order_note' 	=> lang('br_order_status_updated_to').' '.$this->_config["status"][$data["status_id"]],
@@ -612,7 +612,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				if($notify == TRUE){
 					$eml[0]["email"] 		= $tmp["member"]["email"];
 					$eml[0]["order_id"] 	= $data["order_id"];
-					$eml[0]["order_note"] 	= $data["order_note"];
+					$eml[0]["order_note"] 	= nl2br($data["order_note"]);
 					$eml[0]["fname"] 		= $tmp["member"]["br_fname"];
 					$this->_send_email('customer-order-note', $eml);
 				}
@@ -2222,6 +2222,16 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$list = $this->EE->email_model->get_emails_by_site_id($this->site_id);
 			$email_id = $this->EE->input->get('email_id');
 			$this->vars["email"] = $this->EE->email_model->get_email_by_id($email_id);
+
+			// Do we have a local version?
+				$short_name = $this->EE->config->item("site_short_name");
+				$fl = PATH_THIRD.'_local/brilliant_retail/notifications/'.$short_name.'/'.$this->vars["email"]["title"].'.html';
+				if(file_exists($fl)){
+					// File helper
+					$this->EE->load->helper('file');
+					$this->vars["email"]["content"] = read_file($fl);
+				}
+			
 			$this->vars["content"] = $this->_view('config/email_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -2237,6 +2247,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							'bcc_list' 		=> $_POST['bcc_list'] 
 						);
 			$this->EE->email_model->update_email($email_id,$data);
+			
+			// Do we have a local version?
+				$short_name = $this->EE->config->item("site_short_name");
+				$fl = PATH_THIRD.'_local/brilliant_retail/notifications/'.$short_name.'/'.$_POST["title"].'.html';
+				if(file_exists($fl)){
+					// File helper
+					$this->EE->load->helper('file');
+					write_file($fl, $_POST['content']);
+				}
+			
+			
 			$_SESSION["message"] = lang('br_email_update_success');
 			header('location: '.$this->base_url.'&method=config_email');
 			exit();

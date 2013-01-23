@@ -1201,7 +1201,14 @@ class Brilliant_retail_core {
 					
 					if($proceed === TRUE){
 						if($tmp->osc_enabled == $osc_enabled){
-							$form = $tmp->form();
+							
+							// Check for a snippet if not load the base form method
+								if(isset($this->vars["snippets"]["br_payment_form_".$gateway["code"]])){
+									$form = $this->vars["snippets"]["br_payment_form_".$gateway["code"]];
+								}else{
+									$form = $tmp->form();
+								}
+							
 							if($form !== false){
 								$gateways[$gateway["code"]] = $gateway;
 								$gateways[$gateway["code"]]["form"] = trim($form);
@@ -2626,8 +2633,10 @@ class Brilliant_retail_core {
 				$this->EE->load->model('email_model');
 				$this->EE->load->library('email');
 				$this->EE->load->library('extensions');
-				$this->EE->load->library('template'); 
+				$this->EE->load->library('template');
 				
+				$this->EE->TMPL2 = new EE_Template();
+
 			// Set some default variables
 				$vars[0]["media"] 			= rtrim($this->_config["media_url"],'/');
 				$vars[0]["site_name"] 		= $this->EE->config->item('site_name');
@@ -2636,30 +2645,27 @@ class Brilliant_retail_core {
 				
 			// Get the email 			
 				$email 		= $this->EE->email_model->get_email($temp);
-				$subject 	= $this->EE->template->parse_variables($email["subject"], $vars);
+				$subject 	= $this->EE->TMPL2->parse_variables($email["subject"], $vars);
 				
-					// Do we allow locate notifications?
-						if($this->EE->config->item('br_save_notificaion_files') == TRUE){
-							// Do we have a local version?
-								$short_name = $this->EE->config->item("site_short_name");
-								$fl = PATH_THIRD.'_local/brilliant_retail/notifications/'.$short_name.'/'.$temp.'.html';
-								if(file_exists($fl)){
-									// File helper
-									$this->EE->load->helper('file');
-									$email["content"] = read_file($fl);
-								}
-						}
+				// Do we have a local version?
+					$short_name = $this->EE->config->item("site_short_name");
+					$fl = PATH_THIRD.'_local/brilliant_retail/notifications/'.$short_name.'/'.$temp.'.html';
+					if(file_exists($fl)){
+						// File helper
+						$this->EE->load->helper('file');
+						$email["content"] = read_file($fl);
+					}
 				
-				$output 	= $this->EE->template->parse_variables($email["content"], $vars);
+				$output 	= $this->EE->TMPL2->parse_variables($email["content"], $vars);
 				
 				// Pass output to parse method by reference 
-					$this->EE->template->parse($output);
+					$this->EE->TMPL2->parse($output);
 
 			// Add extension hook to manipulate emails before they are sent out
 				if($this->EE->extensions->active_hook('br_email_send_before') === TRUE){
 					$output = $this->EE->extensions->call('br_email_send_before', $output); 
 				}
-				
+			
 			// Send it
 				$this->EE->email->mailtype = 'html';	
 				$this->EE->email->debug = TRUE;	
@@ -2671,7 +2677,7 @@ class Brilliant_retail_core {
 				}
 				$this->EE->email->subject($subject);
 				$this->EE->email->message($output);
-				if($this->EE->email->Send()){
+				if($this->EE->email->send()){
 					return true;
 				}
 		}
