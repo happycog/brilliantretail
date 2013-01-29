@@ -29,7 +29,9 @@ This allows you to place the form_open and form_close tags anywhere you like in 
 * Added product_count variables to the results tag
 * Added automatic active and parent_active classes to the li and a elements on the category_menu tag
 * Added has_notes variable to the customer_orders tag in the orders tag pair to test for notes.
-* Added nl2br function to note field on order detail notify custom form to maintain line breaks in email notification.   
+* Added nl2br function to note field on order detail notify custom form to maintain line breaks in email notification. 
+* Added a column to exp_br_state table to disabled specific states in the database. (database only at this point)  
+* Fixed an issue with the placeholder sizing when sorting images on the product edit form 
 * Fixed an issue with missing form_close decloration on forgot_password tag (Thanks Max Lazar)
 * Fixed an issue when adding BrilliantRetail Product fieldtype to the Product Edit Form
 * Fixed an issue with cache directory naming by using md5 hash of HTTP_HOST variable 

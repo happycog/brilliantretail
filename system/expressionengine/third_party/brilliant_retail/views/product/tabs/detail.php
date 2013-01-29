@@ -220,7 +220,7 @@
 			}
 		?>
 <div><!-- End Cap !--></div>
-<script type="text/javascript" src="<?=$detail_ckeditor_url?>"></script>
+<?php /*<script type="text/javascript" src="<?=$detail_ckeditor_url?>"></script>*/ ?>
 <script type="text/javascript">
 	$(function(){
 		

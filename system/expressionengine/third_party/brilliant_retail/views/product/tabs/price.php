@@ -214,16 +214,18 @@
 		$('#price_table tr').removeClass('even');
 		$('#price_table tr:even').addClass('even');
 		$('#price_table tbody').sortable({
-							axis:'y', 
-							items: "tr:gt(0)", 
-							cursor:'move', opacity:0.6,
-							helper:function(e, ui) {
-								ui.children().each(function() {
-									$(this).width($(this).width());
-								});		
-								return ui;
-							},
-							update:  _restripe_products
+										axis:'y', 
+										items: "tr:gt(0)", 
+										cursor:'move', 
+										opacity:0.6,
+										handle: '.move_price_row',
+										helper:function(e, ui) {
+											ui.children().each(function() {
+												$(this).width($(this).width());
+											});		
+											return ui;
+										},
+										update:  _restripe_products
 									});
 
 		$('.remove_price_row').unbind().bind('click',function(){

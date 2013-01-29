@@ -1010,12 +1010,13 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_state;";
 	$sql[] = "CREATE TABLE `exp_br_state` (
-				  state_id int(11) NOT NULL AUTO_INCREMENT,
-				  zone_id int(11) NOT NULL,
-				  title varchar(100) NOT NULL,
-				  code varchar(10) NOT NULL,
-				  PRIMARY KEY (state_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+												state_id int(11) NOT NULL AUTO_INCREMENT,
+												zone_id int(11) NOT NULL,
+												title varchar(100) NOT NULL,
+												code varchar(10) NOT NULL,
+												enabled int(11) DEFAULT 1, 
+												PRIMARY KEY (state_id)
+											) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Records of exp_br_state

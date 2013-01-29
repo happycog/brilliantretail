@@ -1668,6 +1668,7 @@ class Product_model extends CI_Model {
 		}
 		
 		if(count($not_cached) > 1){
+			$this->db->where('enabled', 1);
 			$this->db->where_in('zone_id', $not_cached);
 			$this->db->order_by('title');
 			$query = $this->db->get('br_state');

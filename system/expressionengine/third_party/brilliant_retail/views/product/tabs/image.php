@@ -266,14 +266,18 @@ function _set_image_radio(){
 }
 
 function _restripe_images(){
-	$('#imageTable tbody').not('.nodrag').sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
+	$('#imageTable tbody').not('.nodrag').sortable({
+							axis:'y', 
+							cursor:'move', 
+							opacity:0.6, 
+							items: "tr", 
+							handle:'.move_image_row',
 							helper:function(e, ui) {
 								ui.children().each(function() {
 									$(this).width($(this).width());
 								});		
 								return ui;
 							},
-							placeholder: "image-state-highlight",
 							update: function(){
 								_restripe_images() 
 							}
