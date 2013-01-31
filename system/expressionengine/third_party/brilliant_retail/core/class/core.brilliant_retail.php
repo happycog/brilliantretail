@@ -2462,6 +2462,9 @@ class Brilliant_retail_core {
 	// Get Cart Tax & Total 
 		function _get_cart_tax($country,$state,$zip,$address1='',$address2=''){
 			
+			$this->EE->load->model('product_model');
+			$cart = $this->EE->product_model->cart_get();
+			
 			// Put the variables into a data array for the 
 			// hooks
 				$data = array(
@@ -2483,9 +2486,6 @@ class Brilliant_retail_core {
 						}
 				}
 
-			$this->EE->load->model('product_model');
-			$cart = $this->EE->product_model->cart_get();
-			
 			$this->EE->load->model('tax_model');
 			$rate = $this->EE->tax_model->get_tax($country,$state,$zip);
 			

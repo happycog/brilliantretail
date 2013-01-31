@@ -40,6 +40,7 @@ This allows you to place the form_open and form_close tags anywhere you like in 
 * Fixed an issue with the is_secure method in the BR helper function. On some server settings it was not correctly detecting https protocol
 * Fixed an issue with the FedEx shipping method that would not return rates with some international addresses 
 * Fixed an issue with disabled products in search results 
+* Fixed an issue with the ipn_create_order method where only the order_id was passed to the br_order_create_after hook. Now the full order is passed to match integrated gateways. 
 * Moved the search index into the url specific cache directory
 * Removed depreciated sidebar menu, sub_menu selected and help variables from methods in the mcp file. 
 * Updated the checkout _update_cart_totals javascript method to only replace payment form if there is a change in the payment options. 

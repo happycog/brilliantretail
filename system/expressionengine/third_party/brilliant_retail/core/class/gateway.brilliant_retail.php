@@ -219,9 +219,9 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 					}
 
 				// Hook after we create the order before cleanup 
-					$data["order_id"] = $order["order_id"];
+					$order["status_id"] =  $status;
 					if($this->EE->extensions->active_hook('br_order_create_after') === TRUE){
-						$data = $this->EE->extensions->call('br_order_create_after', $data); 
+						$order = $this->EE->extensions->call('br_order_create_after', $order); 
 					}
 
 			}elseif($order["status_id"] == 2){
