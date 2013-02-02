@@ -2698,7 +2698,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// We have to do it ourselves because of a bug in EE 2.2.2 
 				$xid = $this->EE->input->post('XID');
 				$total = $this->EE->db->where('hash', $xid)
-										->where('ip_address', $this->EE->input->ip_address())
+										#->where('ip_address', $this->EE->input->ip_address())
 										->where('date > UNIX_TIMESTAMP()-7200')
 										->from('security_hashes')
 										->count_all_results();
