@@ -1,13 +1,20 @@
-# Version 1.2.3.0
+### Version 1.3.0.0
+*February 12, 2012*
 
-* New Feature - Converted html automatically created by BrilliantRetail into ExpressionEngine snippets:
-    * BR Message 
-    * BR Alert  
-    * Price Html 
-    * Sale Price Html 
-    * Shipping Layout 
-    * Payment Layout  
- 	* Payment Forms (optional) - You can modify the per gateway checkout form by creating a snippet named br_payment_form_#### where #### represents the gateway code.
+* **New Feature** - Converted html automatically created by BrilliantRetail into ExpressionEngine snippets:
+	* BR Message
+	* BR Alert
+	* Price Html
+	* Sale Price Html
+	* Shipping Layout
+	* Payment Layout
+	* Payment Forms (optional) - You can modify the per gateway checkout form by creating a snippet named br_payment_form_#### where #### represents the gateway code.
+* Added new config variables to hide sections on the product edit form by setting the value to TRUE:
+	* br_product_hide_attribute - Hide the custom attributes
+	* br_product_hide_option - Hide the product options
+	* br_product_hide_image - Hide the image uploads
+	* br_product_hide_related - Hide the related products
+	* br_product_hide_feed - Hide the product feed 
 * Added br_cart_tax_before hook to perform custom tax calculations with an extension
 * Added product search / add feature on category edit page to easily add products to a category
 * Added product delete on the category edit page to easily remove products from a category
@@ -41,6 +48,7 @@ This allows you to place the form_open and form_close tags anywhere you like in 
 * Fixed an issue with the FedEx shipping method that would not return rates with some international addresses 
 * Fixed an issue with disabled products in search results 
 * Fixed an issue with the ipn_create_order method where only the order_id was passed to the br_order_create_after hook. Now the full order is passed to match integrated gateways. 
+* Fixed an issue with the get_tax method when selecting rates for an entry with multiple zip codes.
 * Moved the search index into the url specific cache directory
 * Removed depreciated sidebar menu, sub_menu selected and help variables from methods in the mcp file. 
 * Updated the checkout _update_cart_totals javascript method to only replace payment form if there is a change in the payment options. 

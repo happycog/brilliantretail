@@ -41,7 +41,7 @@ class Shipping_usps extends Brilliant_retail_shipping {
 								'LIBRARY:Library');
 	public $inter = array(
 							'FIRST_CLASS_INT_LARGE_ENV:First-Class Mail International Large Envelope',
-							'FIRST_CLASS_MAIL_INT_PACKAGE:First-Class Mail International Package',
+							'FIRST_CLASS_MAIL_INT_PACKAGE:First-Class Package International Service',
 							'PRIORITY_MAIL_INT_FLAT_RATE_ENV:Priority Mail International Window Flat Rate Envelope',
 							'PRIORITY_MAIL_INT_SM_FLAT_RATE_ENV:Priority Mail International Small Flat Rate Envelope',
 							'PRIORITY_MAIL_INT_GC_FLAT_RATE_ENV:Priority Mail International Gift Card Flat Rate Envelope',
@@ -162,10 +162,6 @@ class Shipping_usps extends Brilliant_retail_shipping {
 					}
 				}
 				
-				if(isset($interOpts["First-Class Mail International Package"])){
-					$interOpts["First-Class Mail International Parcel"] = $interOpts["First-Class Mail International Package"];
-				}
-
 				// International options
 				$xml = simplexml_load_string($results);
 				$id = 0;

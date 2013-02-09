@@ -57,6 +57,9 @@ class Tax_model extends CI_Model {
 						$a = explode("|",$rst["zipcode"]);
 						if(in_array(trim($zip),$a)){
 							$rate = $rst["rate"];
+							// We matched the most granular option lets break 
+							// out of the loop. 
+							break;
 						}
 					}else{
 						$rate = $rst["rate"];
