@@ -936,9 +936,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->vars["file_list"] = $this->_file_manager['file_list'];
 
 				$this->EE->cp->add_js_script( array(
-												'ui' => array('datepicker','resizable', 'draggable', 'droppable','tabs','core', 'widget', 'button', 'dialog'),
-												'plugin' => array('scrollable', 'scrollable.navigator','toolbox.expose','overlay','ee_fileuploader','ee_filebrowser','tmpl','ee_url_title','markitup', 'thickbox'),
-												'file'		=> array('json2', 'cp/publish', 'cp/publish_tabs', 'cp/global')
+												'ui'	 => array('datepicker', 'resizable', 'draggable', 'droppable'),
+												'plugin' => array('markitup', 'toolbox.expose', 'overlay', 'tmpl', 'ee_url_title'),
+												'file'	=> array('json2', 'cp/publish', 'cp/publish_tabs')
 											));
 
 			// Set the Breadcrumb
@@ -1482,33 +1482,48 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 
 				// Check for custom fields
-					$data["title"]		= $data["title"];
-					$data["url_title"]	= $data["url"];
-					$data["entry_id"] 	= $entry_id;
-					$data["channel_id"]	= $this->br_channel_id;
-					$data["entry_date"]	= time();
-					$data["status"]		= ($data["enabled"] == 1) ? 'open' : 'closed';
+					$_POST["title"]		= $_POST["title"];
+					$_POST["url_title"]	= $_POST["url"];
+					$_POST["entry_id"] 	= $entry_id;
+					$_POST["channel_id"]	= $this->br_channel_id;
+					$_POST["entry_date"]	= time();
+					$_POST["status"]		= ($_POST["enabled"] == 1) ? 'open' : 'closed';
 
 					// Get the comment setting for the channel
 						$comment_setting = $this->EE->api_channel_structure->get_channel_info($this->br_channel_id);
 						$comment = $comment_setting->result_object();
-						$data["allow_comments"] = $comment[0]->comment_system_enabled;
+						$_POST["allow_comments"] = $comment[0]->comment_system_enabled;
 
+					$ft = $this->EE->api_channel_fields;
+						
 					foreach($id as $key => $val){
 						$this->EE->api_channel_fields->setup_handler($key);
-							if($this->EE->api_channel_fields->apply('validate', array($data["field_id_".$key]))){
+						
+						// We are just validating ourselves. Tried the API method but
+						// couldn't get it to work with all the pass by reference grably 
+						// gook that is in the there. Parameters never came through. 
+							$path = $ft->ft_paths[$ft->field_type];
+							$this->EE->load->add_package_path($path,FALSE);
+				        	$valid = $ft->field_types[$ft->field_type]->validate($_POST);
+						
+						// File fields
+						if(isset($valid["value"])){
+							$_POST["field_id_".$key] = $valid["value"];
+							if($_POST["field_id_".$key."_directory"]){
+								unset($_POST["field_id_".$key."_directory"]);
+							}
 						}
 					}
-					
+
 				// Now we'll run the update entry
 				// We are going to assume that the user has access to the BrilliantRetail 
 				// Channel regardless of their actual settings. The channel is hidden and 
 				// we built it automatically so we should allow admins with access to the 
 				// BR module to access it directly. (This solves the disappearing product problem!)
-					
+					$_POST["entry_id"] = $entry_id;
 					$orig_group_id = $this->EE->session->userdata["group_id"];
 					$this->EE->session->userdata["group_id"] = 1; // Temporarily open give SA access to channels
-					$this->EE->api_channel_entries->update_entry($entry_id, $data);
+					$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
 					
 					// Set back to original access
 						$this->EE->session->userdata["group_id"] = $orig_group_id;		
