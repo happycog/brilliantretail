@@ -123,20 +123,31 @@ class Shipping_usps extends Brilliant_retail_shipping {
 				$reqs .= '</RateV4Request>';
 			}else{
 				$isdomestic = 0;
-				$reqs =	'<IntlRateRequest USERID="'.$config["username"].'" PASSWORD="'.$config["username"].'">'.
-							'<Package ID="0">'.
-								'<Pounds>'.$lbs.'</Pounds>'.
-								'<Ounces>'.$ozs.'</Ounces>'.
-								'<MailType>Package</MailType>'.
-								'<ValueOfContents>'.$data["total"].'</ValueOfContents>'.
-								'<Country>'.$countries[$data["to_country"]]["title"].'</Country>'.
-							'</Package>'.
-						'</IntlRateRequest>';
-				$reqs = 'API=IntlRate&XML=' . urlencode($reqs);
+		  		$reqs =	'<IntlRateV2Request USERID="'.$config["username"].'">'.
+				   			'	<Revision>2</Revision>'.
+      						'	<Package ID="0">'.
+							      	'<Pounds>'.$lbs.'</Pounds>'.
+							    	'<Ounces>'.$ozs.'</Ounces>'.
+									'<Machinable>TRUE</Machinable>'.
+									'<MailType>ALL</MailType>'. # ENUM(All,Package,Envelope)
+							      	'<ValueOfContents>'.$data["total"].'</ValueOfContents>'. 
+							      	'<Country>'.$countries[$data["to_country"]]["title"].'</Country>'.
+								   	'<Container>RECTANGULAR</Container>'.
+								   	'<Size>REGULAR</Size>'.
+									'<Width></Width>'.
+									'<Length></Length>'.
+									'<Height></Height>'.
+									'<Girth></Girth>'.
+									'<CommercialFlag>y</CommercialFlag>'.
+						      '</Package>'.
+      					'</IntlRateV2Request>';
+      		
+      			$reqs = 'API=IntlRateV2&&XML=' . urlencode($reqs);
 			}		
+
 		// Curl
 			$results = $this->_curl($config["url"],$reqs);
-			
+
 			if($isdomestic == 1){ // Domestic 
 				// Domestic Rate(s)
 				preg_match_all('/<Package ID="([0-9]{1,3})">(.+?)<\/Package>/',$results,$packages);

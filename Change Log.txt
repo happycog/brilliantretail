@@ -51,6 +51,7 @@ This allows you to place the form_open and form_close tags anywhere you like in 
 * Fixed an issue with the get_tax method when selecting rates for an entry with multiple zip codes.
 * Fixed an issue with using custom file fields on product edit form
 * Fixed an issue with using Matrix (Pixel&Tonic) fields on product edit form
+* Fixed an issue with USPS shipping (updates to USPS APIs) 
 * Moved the search index into the url specific cache directory
 * Removed depreciated sidebar menu, sub_menu selected and help variables from methods in the mcp file. 
 * Updated the checkout _update_cart_totals javascript method to only replace payment form if there is a change in the payment options. 
