@@ -1253,7 +1253,7 @@ class Brilliant_retail_core {
 		// This will allow us to add stuff directly into the payment option response form
 		// Added 1.0.5.1 - dpd
 			if($this->EE->extensions->active_hook('br_payment_options_after') === TRUE){
-				$output = $this->EE->extensions->call('br_payment_options_after', $output,$osc_enabled=TRUE,$tax=0,$shipping=0,$admin_order=FALSE); 
+				$output = $this->EE->extensions->call('br_payment_options_after', $output);
 			}
 		
 		return $output;
