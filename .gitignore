@@ -13,6 +13,7 @@ media/images/*
 media/import/*
 media/attachments/*
 themes/third_party/brilliant_retail/script/ckeditor/plugins/pgrfilemanager/PGRThumb/cache/* 
+themes/site_themes/brilliant_retail/test.group/*
 themes/site_themes/brilliant_retail/_test.group/*
 _local/*
 /system/expressionengine/third_party/br_license_manager
