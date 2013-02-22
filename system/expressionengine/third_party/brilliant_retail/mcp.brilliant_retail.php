@@ -244,7 +244,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 			// Right Button (Create Order)
 				$this->EE->cp->set_right_nav(array(
-					'br_new_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_new'
+					#'br_new_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_new'
 				));
 			
 			// Get the status options from the config variable
@@ -644,7 +644,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		/************************/
 		/* Create a new order 	*/
 		/************************/
-	
+		/*
 		function order_new()
 		{
 			
@@ -709,6 +709,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				echo json_encode($output);
 				exit();
 		}
+		*/
 		
 	/************************/
 	/* Customer Tab		 	*/

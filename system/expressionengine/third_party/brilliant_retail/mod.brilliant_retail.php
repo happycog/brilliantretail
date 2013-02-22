@@ -2453,6 +2453,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$this->EE->load->model('order_model');
 			$order[0] = $this->EE->order_model->get_order($_SESSION["order_id"]);
 			$order[0]["currency_marker"] = $this->_config["currency_marker"];
+			
+			// Put together the actual total
+				$order[0]["total"] = $this->_currency_round($order[0]["base"]+$order[0]["tax"]+$order[0]["shipping"]-$order[0]["discount"]);
+				
 			$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $order); 
 			unset($_SESSION["order_id"]);
 			return $output;
@@ -2695,17 +2699,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$this->EE->load->helper('security');
 			
 			// Verify the security hash 
-			// We have to do it ourselves because of a bug in EE 2.2.2 
 				$xid = $this->EE->input->post('XID');
-				$total = $this->EE->db->where('hash', $xid)
-										#->where('ip_address', $this->EE->input->ip_address())
-										->where('date > UNIX_TIMESTAMP()-7200')
-										->from('security_hashes')
-										->count_all_results();
-				if ($total == 0){
+				$check = $this->EE->security->secure_forms_check($xid);
+				if(!$check)
+				{
 					$_SESSION["br_alert"] = lang('br_invalid_form_id');
 					$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"].'/login'));
-				}else{
+				}
+				else
+				{
 					$this->EE->security->delete_xid($xid);
 				}
 
@@ -2761,7 +2763,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Do we require captcha?
 				if ($this->EE->config->item('use_membership_captcha') == 'y')
 				{
-					$query = $this->EE->db->query("SELECT COUNT(*) AS count FROM exp_captcha WHERE word='".$this->EE->db->escape_str($data['captcha'])."' AND ip_address = '".$this->EE->input->ip_address()."' AND date > UNIX_TIMESTAMP()-7200");
+					$query = $this->EE->db->query("SELECT COUNT(*) AS count FROM exp_captcha WHERE word='".$this->EE->db->escape_str($data['captcha'])."' 
+													AND ip_address = '".$this->EE->input->ip_address()."' 
+													AND date > UNIX_TIMESTAMP()-7200");
 					if ($query->row('count')  == 0)
 					{
 						$_SESSION["br_alert"] = lang('captcha_incorrect');
