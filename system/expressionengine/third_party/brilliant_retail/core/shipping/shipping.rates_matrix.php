@@ -57,14 +57,22 @@ class Shipping_rates_matrix extends Brilliant_retail_shipping {
 							$is_good = FALSE;
 						}
 					}
+
 				// [2] To Zip / Postal 
 					if($val[2] != ''){
 						$a = explode("|",strtoupper($val[2]));
 						$zip = strtoupper($data["to_zip"]);
-						if(!in_array($zip,$a)){
-							$is_good = FALSE;
+						$zip_match = FALSE;
+						foreach($a as $b)
+						{
+							if($this->match_wildcard($b, $zip)){
+								$zip_match = TRUE;
+								continue;
+							} 
 						}
+						$is_good = $zip_match;
 					}
+
 				// [3] From Price
 					if($val[3] != ''){
 						if($data["total"] < $val[3]){
@@ -131,5 +139,16 @@ class Shipping_rates_matrix extends Brilliant_retail_shipping {
 	
 	function update($current = '',$config_id = ''){
 		return true;
+	}
+	
+	
+	function match_wildcard( $wildcard_pattern, $haystack ) {
+	   $regex = str_replace(
+	     array("\*", "\?"), // wildcard chars
+	     array('.*','.'),   // regexp chars
+	     preg_quote($wildcard_pattern)
+	   );
+	
+	   return preg_match('/^'.$regex.'$/is', $haystack);
 	}
 }

@@ -58,3 +58,4 @@ This allows you to place the form_open and form_close tags anywhere you like in 
 * Removed depreciated sidebar menu, sub_menu selected and help variables from methods in the mcp file. 
 * Updated the checkout _update_cart_totals javascript method to only replace payment form if there is a change in the payment options. 
 * Update validation script on checkout form to disable the button on the submit handler to prevent double clicks. The button must have the class checkout_button to be disabled. 
+* Updated the Rates Matrix shipping method to accept wildcard (*) patterns for zip codes. 
