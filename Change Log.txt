@@ -1,5 +1,7 @@
 ### Version 1.3.0.0
-*February 12, 2012*
+*March 13, 2013*
+
+**IMPORTANT: BrilliantRetail 1.3.0.0 requires ExpressionEngine 2.4+.**
 
 * **New Feature** - Converted html automatically created by BrilliantRetail into ExpressionEngine snippets:
 	* BR Message
