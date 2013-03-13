@@ -68,6 +68,10 @@
 			},
 			"update_notes": [
 	                {
+	                        "version": "1.3.0.0",
+	                        "message": "<a href="http://docs.brilliantretail.com/developers/release-notes/current-version.html">Full Release Notes.</a>"
+	                },
+	                {
 	                        "version": "1.2.0.0",
 	                        "message": "<h1>IMPORTANT UPGRADE NOTES:</h1>
 				                        <p>
