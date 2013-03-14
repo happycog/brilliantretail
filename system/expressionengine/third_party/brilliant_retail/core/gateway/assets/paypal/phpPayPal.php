@@ -23,6 +23,8 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 /*
+	Source: https://github.com/drewjoh/phpPayPal
+	
 	Created by Drew Johnston, 2007, drewjoh.com
 	
 	Please give credit where credit is due. :)
