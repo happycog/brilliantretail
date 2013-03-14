@@ -97,10 +97,15 @@
 				echo '<div align="center" id="report_graph" style="border:1px #ccc solid;padding:10px;width:90%"><img src="'.$detail["graph"].'" width="100%"  /></div>';
 			}
 		?>
-		
+		<?php
+			if(count($detail["results"]) > 0){
+				echo '<p><strong>'.lang('br_total_results').':</strong> '.count($detail["results"]).'</p>';
+			}
+		?>
 		<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
+					<th style="width:10px;">&nbsp;</th>
 					<?php
 						foreach($detail["header"] as $row){
 							echo '<th>'.$row.'</th>';
@@ -110,6 +115,7 @@
 			</thead>
 			<tfoot>
 				<tr>
+					<th>&nbsp;</th>
 					<?php
 						foreach($detail["footer"] as $row){
 							echo '<th>'.$row.'</th>';
@@ -120,16 +126,20 @@
 			<tbody>
 				<?php
 					if(count($detail["results"]) == 0){
+						$colspan = 1+count($detail["header"]);
 						echo '	<tr>
-									<td colspan="'.count($detail["header"]).'">'.lang('br_no_results').'</td>
+									<td colspan="'.$colspan.'">'.lang('br_no_results').'</td>
 								</tr>';
 					}
+					$i = 1;
 					foreach($detail["results"] as $row){
-						echo '<tr>';
+						echo '<tr>
+									<td style="background:#E7E7E7;font-weight:bold;border-right:1px #CCC solid;">'.$i.'</td>';
 						foreach($row as $td){
 							echo '<td>'.$td.'</td>';
 						}
 						echo '</tr>';
+						$i++;
 					}
 				?>
 			</tbody>
