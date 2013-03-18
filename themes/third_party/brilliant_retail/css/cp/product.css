@@ -159,7 +159,7 @@ div#error label.error {
 #product_category_tree ul {
 	display:none;
 }
-#product_category_tree li span{
+#product_category_tree li span {
     list-style-type: none;
 	padding: 0 4px;
 	margin: auto;
@@ -172,6 +172,10 @@ div#error label.error {
 	top: 		0px;
 	left: 		0px;
 	cursor: 	pointer;
+}
+
+#product_category_tree li span.cat_disabled {
+	color: #CCC;
 }
 
 #product_category_tree li span.anchor_collapse {

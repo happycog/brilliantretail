@@ -1210,7 +1210,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$selected = $this->EE->product_model->get_category_list($this->vars['products'][0]["product_id"]);
 
 				// Get them all 
-					$cat = $this->EE->product_model->get_categories();
+					$cat = $this->EE->product_model->get_categories(0);
 			
 				// Create a tree 
 					$categories = lang('br_no_product_categories');
@@ -1274,8 +1274,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 														);
 							// Get Categories
 				
-								$cat = $this->EE->product_model->get_categories();
-						
+								$cat = $this->EE->product_model->get_categories(0);
+								
 							// Create a tree 
 								if(isset($cat[0])){
 									$categories = $this->_product_category_tree($cat[0],$cat,0);
@@ -1669,7 +1669,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 										'ui' => 'datepicker' 
 									));
 			
-			$cat = $this->EE->product_model->get_categories();
+			$cat = $this->EE->product_model->get_categories(0);
 			
 			$this->vars["categories"] = '';
 			if(isset($cat[0])){
@@ -1722,7 +1722,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 			// Get Categories
 		
-				$cat = $this->EE->product_model->get_categories();
+				$cat = $this->EE->product_model->get_categories(0);
 				
 				$cat_list = $this->vars["promo"][0]["category_list"];
 				$selected = array();

@@ -2380,9 +2380,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 									$config[$c["code"]] = $c["value"];
 								}
 							}
+							
+						// We need to fire the process_payment_before hook so we can do any calculations 
+						// before sending the user on to the third party payment processor. 
+						// Added 1.3.1 - DPD
+							if($this->EE->extensions->active_hook('br_process_payment_before') === TRUE){
+								$data = $this->EE->extensions->call('br_process_payment_before', $data); 
+							}
+						
+						// Start the IPN
+						
 							$str = 'Gateway_'.$code;
 							$ipn = new $str();
 							$ipn->start_ipn($data,$config);		
+						
 						exit();
 					}
 		}

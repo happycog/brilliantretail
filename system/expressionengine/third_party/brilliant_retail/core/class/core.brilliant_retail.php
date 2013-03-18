@@ -660,8 +660,10 @@ class Brilliant_retail_core {
 						$this->cats = '<ul id="product_category_tree">';
 						$this->cat_count = 1;
 					}
+					$class = ($val["enabled"] == 0) ? 'cat_disabled' : ''; 
 					$this->cats .= '<li class="'.$state.'">
-										<input id="product_cat_'.$val["category_id"].'" name="category_title[]" value="'.$key.'" type="checkbox"  '.$sel.' /><span>'.$val['title'].'</span>';
+										<input id="product_cat_'.$val["category_id"].'" name="category_title[]" value="'.$key.'" type="checkbox"  '.$sel.' />
+										<span class="'.$class.'">'.$val['title'].'</span>';
 					if(isset($cat[$key])){
 						$level++;
 						$this->cats .= '<ul>';
@@ -1276,7 +1278,7 @@ class Brilliant_retail_core {
 					$str = 'Gateway_'.$gateway["code"];
 					$tmp = new $str($total);
 
-					if($tmp->cart_button == true && $sub_available == 1){
+					if($tmp->cart_button == true){
 						// Pass config data to the button
 							$config = array();
 							if(isset($gateway["config_data"])){
@@ -2460,7 +2462,7 @@ class Brilliant_retail_core {
 	}
 	
 	// Get Cart Tax & Total 
-		function _get_cart_tax($country,$state,$zip,$address1='',$address2=''){
+		function _get_cart_tax($country,$state,$zip,$address1='',$address2='',$city=''){
 			
 			$this->EE->load->model('product_model');
 			$cart = $this->EE->product_model->cart_get();
@@ -2473,7 +2475,8 @@ class Brilliant_retail_core {
 								"state"		=> $state, 
 								"zip"		=> $zip,
 								"address1"	=> $address1,
-								"address2"	=> $address2 
+								"address2"	=> $address2, 
+								"city"		=> $city  
 							);
 			
 			// Add a hook to manipulate the tax rate before (added 1.2.2.5)
