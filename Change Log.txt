@@ -4,4 +4,6 @@
 * Added row count to report detail page
 * Added br_total_results language key to report detail page
 * Added the br_process_payment_before hook to the checkout method before calling the start_ipn method on IPN based gateways
-* Added disabled categories to the option list for product create/edit and promotion create/edit 
+* Added disabled categories to the option list for product create/edit and promotion create/edit
+* Added city to the _get_cart_tax method for calculating tax rates 
+* Added form_class parameter to checkout_form tag

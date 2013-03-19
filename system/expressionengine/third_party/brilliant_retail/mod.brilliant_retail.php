@@ -1581,6 +1581,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
 				}
 			
+			// Add a form class?
+				$form_class = $this->EE->TMPL->fetch_param('form_class');
+				
 			// Are we showing our JS by default?
 				$show_js = ($this->EE->TMPL->fetch_param('show_js')) ? ($this->EE->TMPL->fetch_param('show_js')) : TRUE;	
 			
@@ -1623,7 +1626,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									'shipping_action' 	=> $shipping_action, 
 									'total_action' 		=> $total_action, 
 									'payment_options' 	=> '<div id="payment_container">&nbsp;</div>',
-									'form_open'			=> form_open($action,array('id' => 'checkoutform'),array('SID' => $shippable)) 
+									'form_open'			=> form_open($action,array('id' => 'checkoutform','class' => $form_class),array('SID' => $shippable)) 
 								);
 				
 				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
