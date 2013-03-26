@@ -1483,12 +1483,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 
 				// Check for custom fields
-					$_POST["title"]		= $_POST["title"];
-					$_POST["url_title"]	= $_POST["url"];
-					$_POST["entry_id"] 	= $entry_id;
+					$_POST["title"]			= $data["title"];
+					$_POST["url_title"]		= $data["url"];
+					$_POST["entry_id"] 		= $entry_id;
 					$_POST["channel_id"]	= $this->br_channel_id;
 					$_POST["entry_date"]	= time();
-					$_POST["status"]		= ($_POST["enabled"] == 1) ? 'open' : 'closed';
+					$_POST["status"]		= ($data["enabled"] == 1) ? 'open' : 'closed';
 
 					// Get the comment setting for the channel
 						$comment_setting = $this->EE->api_channel_structure->get_channel_info($this->br_channel_id);
@@ -2110,6 +2110,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$cat = $this->EE->product_model->get_category($this->EE->input->get('cat_id'));
 			
 			$prod = $this->EE->product_model->get_product_by_category($this->EE->input->get('cat_id'),"TRUE");
+			
+			// Create a tree 
+				if(isset($cat[0])){
+					$this->vars["categories"] = $this->_config_category_tree($cat[0],$cat,0);
+				}else{
+					$this->vars["categories"] = array();
+				}
+				
+				$this->vars["categories"] = $this->EE->product_model->get_categories(0);
 			
 			$cnt = 0;
 			$prod_ary = array();

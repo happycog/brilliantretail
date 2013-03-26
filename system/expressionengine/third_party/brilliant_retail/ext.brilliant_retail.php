@@ -31,7 +31,7 @@ class Brilliant_retail_ext {
 	public $docs_url		= 'http://www.brilliantretail.com';
 	public $name			= 'Brilliant Retail';
 	public $settings_exist	= 'n';
-	public $version			= '1.1.7.3';
+	public $version			= BR_VERSION;
 	public $site_id 		= 1;
 	public $base_url 		= '';
 	public $nav_menu 		= array();

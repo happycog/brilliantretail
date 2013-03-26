@@ -4414,7 +4414,7 @@ class Brilliant_retail_upd {
 		$sql[] = "	INSERT INTO exp_extensions  
 						(class,method,hook,settings,priority,version,enabled) 
 					VALUES
-						('Brilliant_retail_ext', 'br_template_post_parse', 'template_post_parse', '', '10', '".BR_VERSION."', 'y')";
+						('Brilliant_retail_ext', 'br_template_post_parse', 'template_post_parse', '', '99', '".BR_VERSION."', 'y')";
 	
 		foreach ($sql as $query)
 		{

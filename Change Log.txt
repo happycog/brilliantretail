@@ -1,4 +1,4 @@
-### Version 1.3.1.0
+### Version 1.3.0.1
 *April ##, 2013*
 
 * Added row count to report detail page
@@ -7,3 +7,7 @@
 * Added disabled categories to the option list for product create/edit and promotion create/edit
 * Added city to the _get_cart_tax method for calculating tax rates 
 * Added form_class parameter to checkout_form tag
+* Fixed an issue with the product_count variable in the BR Products fieldtype when used in combination with the random="yes" parameter 
+* Fixed an issue with create/update product method where data was referencing the $_POST instead of the $data array. 
+* Updated the BR Product fieldtype to use the same version number as the BrilliantRetail module
+* Updated the BR Extension to use the same version number as the BrilliantRetail module

@@ -68,6 +68,31 @@
         	<td>
 	        	<input name="url_title" id="url_title" value="<?=$category["url_title"]?>" type="text" class="{required:true}" /></td>
 	    </tr>	
+	    <?php
+	    /*
+	    <tr>
+	    	<td>
+        		<?=lang('br_parent_category')?> *</td>
+	    	<td>
+	    		<?php
+	    			foreach($categories[0] as $key => $val)
+	    			{
+	    				echo $val["title"];
+	    				if(isset($categories[$key]))
+	    				{
+	    					foreach($categories[$key] as $k => $v)
+	    					{
+	    						echo $val["title"];
+	    				}
+	    				echo $key.' - '.$val.'<br />';
+	    			}
+	    			echo '<pre>';
+	    			var_dump($categories);
+	    			echo '</pre>';
+	    		?></td>
+	    </tr>
+		*/
+		?>
 		<tr>
 	    	<td>
 	    		<?=lang('br_enabled')?></td>

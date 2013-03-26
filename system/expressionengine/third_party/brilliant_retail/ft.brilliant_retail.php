@@ -30,7 +30,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 
 	var $info = array(
 		'name'		=> 'BrilliantRetail Products',
-		'version'	=> '1.0.1.2'
+		'version'	=>	BR_VERSION
 	);
 	
 	function Brilliant_retail_ft()
@@ -222,7 +222,6 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 												array( "id" => "form_".$products[0]["product_id"]), 
 												array( $products[0]["product_id"]."_product_id" => $products[0]["product_id"])
 												);
-							$items[$i]['product_count'] = ($i+1);
 							$items[$i]['form_open']  = $f_open;
 							$items[$i]['form_close'] = '</form>';
 							$i++;
@@ -246,8 +245,18 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 					}
 				}
 				
+			// Set the product count 
+				$i = 0;
+				$tmp = array();
+				foreach($items as $row){
+					$tmp[$i] = $row;
+					$tmp[$i]['product_count'] = ($i+1);
+					$i++;
+				}
+				$items = $tmp;					
+							
 			// Get the total count
-			$total_count = count($pid);
+			$total_count = count($items);
 		}
 
 		$vars[0] = array(	'total_count' => $total_count,
