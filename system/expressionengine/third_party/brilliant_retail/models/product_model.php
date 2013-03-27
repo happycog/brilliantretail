@@ -765,27 +765,29 @@ class Product_model extends CI_Model {
 					if(!file_exists($file)){
 						mkdir($file,DIR_WRITE_MODE,TRUE);
 					}
+					
 					foreach($_FILES as $key => $f){
 						// Lets only deal with our files uploads. Others might want 
 						// to upload files via Channel Fieldtypes
 							if(strpos($key,'cAttribute_') != FALSE){
 								$a = explode("_",$key);
-								$title = $cAttr[$product_id."_cAttribute_".$a[2]."_title"];
-								unset($cAttr[$product_id."_cAttribute_".$a[2]."_title"]);
+
+								$title = $cAttr[$a[0]."_cAttribute_".$a[2]."_title"];
+								unset($cAttr[$a[0]."_cAttribute_".$a[2]."_title"]);
 								
 								if($f["name"] !== ''){
 									$filename = $f["name"];
 									move_uploaded_file($f["tmp_name"],$file.'/'.$f["name"]);
 								}else{
 									// Get previous file name
-									$prev = unserialize($cAttr[$product_id."_cAttribute_".$a[2]]);
+									$prev = unserialize($cAttr[$a[0]."_cAttribute_".$a[2]]);
 									$filename = $prev["file"];
 								}
 								$arr = array(	
 												'title' => $title,
 												'file' => $filename 
 												);
-								$cAttr[$product_id."_cAttribute_".$a[2]] = $arr;	
+								$cAttr[$a[0]."_cAttribute_".$a[2]] = $arr;	
 							}
 					}
 				}
