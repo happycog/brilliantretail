@@ -1505,30 +1505,32 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						// gook that is in the there. Parameters never came through. 
 							$path = $ft->ft_paths[$ft->field_type];
 							$this->EE->load->add_package_path($path,FALSE);
-				        	$valid = $ft->field_types[$ft->field_type]->validate($_POST);
+				        	#$valid = $ft->field_types[$ft->field_type]->validate($_POST);
 						
 						// File fields
 						if(isset($valid["value"])){
 							$_POST["field_id_".$key] = $valid["value"];
-							if($_POST["field_id_".$key."_directory"]){
+							if(isset($_POST["field_id_".$key."_directory"])){
 								unset($_POST["field_id_".$key."_directory"]);
 							}
 						}
 					}
 
-				// Now we'll run the update entry
-				// We are going to assume that the user has access to the BrilliantRetail 
-				// Channel regardless of their actual settings. The channel is hidden and 
-				// we built it automatically so we should allow admins with access to the 
-				// BR module to access it directly. (This solves the disappearing product problem!)
-					$_POST["entry_id"] = $entry_id;
-					$orig_group_id = $this->EE->session->userdata["group_id"];
-					$this->EE->session->userdata["group_id"] = 1; // Temporarily open give SA access to channels
-					$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
-					
-					// Set back to original access
-						$this->EE->session->userdata["group_id"] = $orig_group_id;		
-			
+				if($data["product_id"] != 0){
+					// Now we'll run the update entry
+					// We are going to assume that the user has access to the BrilliantRetail 
+					// Channel regardless of their actual settings. The channel is hidden and 
+					// we built it automatically so we should allow admins with access to the 
+					// BR module to access it directly. (This solves the disappearing product problem!)
+						$_POST["entry_id"] = $entry_id;
+						$orig_group_id = $this->EE->session->userdata["group_id"];
+						$this->EE->session->userdata["group_id"] = 1; // Temporarily open give SA access to channels
+						$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
+						
+						// Set back to original access
+							$this->EE->session->userdata["group_id"] = $orig_group_id;		
+				}
+							
 			// Feeds			
 				$prod_feed= array();
 				if (isset($data['feed_id'])){

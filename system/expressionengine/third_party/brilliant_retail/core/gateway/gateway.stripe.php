@@ -279,6 +279,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 									$("#checkoutform").on("submit",function(e){
 										if($("input:radio[name=gateway]:checked").val() == "'.md5($config_id).'"){
 											Stripe.setPublishableKey("'.$this->get_publishable_key().'");
+											alert($("#stripe_month_exp").val());
 											Stripe.createToken({
 											    number: $("#stripe_num").val(),
 											    cvc: $("#stripe_cvc").val(),
