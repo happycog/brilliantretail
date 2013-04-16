@@ -275,28 +275,31 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 									$("#checkoutform").append(\'<input type="hidden" id="stripe_loaded" value="1"/>\');
 									
 									var a = $("#checkoutform");
-
+	
 									$("#checkoutform").on("submit",function(e){
-										if($("input:radio[name=gateway]:checked").val() == "'.md5($config_id).'"){
-											Stripe.setPublishableKey("'.$this->get_publishable_key().'");
-											alert($("#stripe_month_exp").val());
-											Stripe.createToken({
-											    number: $("#stripe_num").val(),
-											    cvc: $("#stripe_cvc").val(),
-											    exp_month: $("#stripe_month_exp").val(),
-											    exp_year: $("#stripe_year_exp").val()
-											}, function stripeResponseHandler(status, response) {
-											    if (response.error) {
-											        alert(response.error.message);
-													return false;
-											    } else {
-											    	var token = response["id"];
-											    	$("#checkoutform")
-											    		.append("<input type=\'hidden\' name=\'stripeToken\' value=\'" + token + "\'/>")
-														.get(0).submit();
-												}
-											});	
-											return false;
+										
+										if($("#stripeToken").size() == 0)
+										{
+											if($("input:radio[name=gateway]:checked").val() == "'.md5($config_id).'"){
+												Stripe.setPublishableKey("'.$this->get_publishable_key().'");
+												Stripe.createToken({
+												    number: $("#stripe_num").val(),
+												    cvc: $("#stripe_cvc").val(),
+												    exp_month: $("#stripe_month_exp").val(),
+												    exp_year: $("#stripe_year_exp").val()
+												}, function stripeResponseHandler(status, response) {
+												    if (response.error) {
+												        alert(response.error.message);
+														return false;
+												    } else {
+												    	var token = response["id"];
+												    	$("#checkoutform")
+												    		.append("<input type=\'hidden\' id=\'stripeToken\' name=\'stripeToken\' value=\'" + token + "\'/>");
+														$("#checkoutform").trigger(\'submit\');
+													}
+												});	
+												return false;
+											}
 										}
 									});
 								}
