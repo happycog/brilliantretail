@@ -1651,9 +1651,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 																			$('#checkoutform').validate({
 																											'ignore' : ':hidden',
 																											submitHandler: function(form){
-																										        $('#checkout_button').attr('disabled', 'disabled');
-																										        form.submit();
-																										    }
+																												if(typeof window.after_validate_checkout == 'function') {
+																													after_validate_checkout();
+																												}else{
+																													$('#checkout_button').attr('disabled', 'disabled');
+																											        form.submit();
+																												}
+																											}
 																										}); 
 																			
 																			

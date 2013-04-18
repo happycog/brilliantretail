@@ -202,18 +202,22 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 	
 		$form = '';
 
-		if($member_id != 0){
-			$cars = $this->get_saved_stripe_cards();
-			
-			// Check for member cards
-			$form .= '	<div class="general">
-	                    	<select id="stripeCustomer">
-	                    		<option value="0">(+) New Credit Card</option>
-	                		</select>
-	                	</div>';	
-		}else{
+		/*
+			if($member_id != 0){
+				$cars = $this->get_saved_stripe_cards();
+				
+				// Check for member cards
+				$form .= '	<div class="general">
+		                    	<select id="stripeCustomer">
+		                    		<option value="0">(+) New Credit Card</option>
+		                		</select>
+		                	</div>';	
+			}else{
+		*/
 			$form .= '<input type="hidden" name="stripe_card_on_file" value="0" />';
-		}
+		/*
+			}
+		*/
 		$id = "stripe_id_".time();
 		
 		$form .=  ' <div class="general">
@@ -267,41 +271,45 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 	                </div>
 	                <div class="clearboth"><!-- --></div>
 					<script type="text/javascript">
+						
+						function after_validate_checkout()
+						{
+							if($("input:radio[name=gateway]:checked").val() == "'.md5($config_id).'"){
+								Stripe.setPublishableKey("'.$this->get_publishable_key().'");
+								Stripe.createToken({
+								    number: $("#stripe_num").val(),
+								    cvc: $("#stripe_cvc").val(),
+								    exp_month: $("#stripe_month_exp").val(),
+								    exp_year: $("#stripe_year_exp").val()
+								},stripeResponseHandler);	
+							}else{
+						    	return _stripe_submit_form();
+							}
+						}
+						
+						function stripeResponseHandler(status, response) {
+							if (response.error) {
+						        alert(response.error.message);
+								return false;
+						    } else {
+						    	var token = response["id"];
+						    	$("#stripeToken").val(token);
+						    	return _stripe_submit_form();
+						    }
+						}
+						
+						function _stripe_submit_form()
+						{
+							$("#checkout_button").attr("disabled", "disabled");
+					        $("#checkoutform").get(0).submit();
+						}
+						
 						$(function(){
 							$.getScript("https://js.stripe.com/v1/", function(data, textStatus, jqxhr) {
 								
 								if($("#stripe_loaded").size() == 0){
 
-									$("#checkoutform").append(\'<input type="hidden" id="stripe_loaded" value="1"/>\');
-									
-									var a = $("#checkoutform");
-	
-									$("#checkoutform").on("submit",function(e){
-										
-										if($("#stripeToken").size() == 0)
-										{
-											if($("input:radio[name=gateway]:checked").val() == "'.md5($config_id).'"){
-												Stripe.setPublishableKey("'.$this->get_publishable_key().'");
-												Stripe.createToken({
-												    number: $("#stripe_num").val(),
-												    cvc: $("#stripe_cvc").val(),
-												    exp_month: $("#stripe_month_exp").val(),
-												    exp_year: $("#stripe_year_exp").val()
-												}, function stripeResponseHandler(status, response) {
-												    if (response.error) {
-												        alert(response.error.message);
-														return false;
-												    } else {
-												    	var token = response["id"];
-												    	$("#checkoutform")
-												    		.append("<input type=\'hidden\' id=\'stripeToken\' name=\'stripeToken\' value=\'" + token + "\'/>");
-														$("#checkoutform").trigger(\'submit\');
-													}
-												});	
-												return false;
-											}
-										}
-									});
+									$("#checkoutform").append(\'<input type="hidden" id="stripe_loaded" value="1"/><input type="hidden" id="stripeToken" name="stripeToken" value="" />\');
 								}
 							});
 						});
