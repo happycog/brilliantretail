@@ -2462,7 +2462,7 @@ class Brilliant_retail_core {
 	}
 	
 	// Get Cart Tax & Total 
-		function _get_cart_tax($country,$state,$zip,$address1='',$address2='',$city=''){
+		function _get_cart_tax($country,$state,$zip,$address1='',$address2='',$city='',$shipping=''){
 			
 			$this->EE->load->model('product_model');
 			$cart = $this->EE->product_model->cart_get();
@@ -2476,7 +2476,8 @@ class Brilliant_retail_core {
 								"zip"		=> $zip,
 								"address1"	=> $address1,
 								"address2"	=> $address2, 
-								"city"		=> $city  
+								"city"		=> $city, 
+								"shipping"	=> $shipping   
 							);
 			
 			// Add a hook to manipulate the tax rate before (added 1.2.2.5)

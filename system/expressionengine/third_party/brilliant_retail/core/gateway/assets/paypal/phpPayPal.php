@@ -23,6 +23,10 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 /*
+	IMPORTANT: (dpd) Construct Updated to use BR configuration fields
+	
+	
+	
 	Source: https://github.com/drewjoh/phpPayPal
 	
 	Created by Drew Johnston, 2007, drewjoh.com
@@ -955,25 +959,35 @@ class phpPayPal {
 		
 	
 	// CONSTRUCT
-	function __construct($config, $sandbox = false)
-	{
-		// Determine our API endpoint
-		if ($sandbox)
-			$this->API_ENDPOINT = 'https://api-3t.sandbox.paypal.com/nvp';
-		else
-			$this->API_ENDPOINT = 'https://api-3t.paypal.com/nvp';
-		
-		$this->API_USERNAME		= $config['api_username'];
-		$this->API_PASSWORD		= $config['api_password'];
-		$this->API_SIGNATURE	= $config['api_signature'];
-		
-		$this->USE_PROXY		= $config['use_proxy'];
-		$this->PROXY_HOST		= $config['proxy_host'];
-		$this->PROXY_PORT		= $config['proxy_port'];
-		
-		$this->return_url		= $config['return_url'];
-		$this->cancel_url		= $config['cancel_url'];
-	}	
+	function __construct($config){
+	  // Set the currency code 
+	    $this->currency_code = $config["currency_code"];
+	  
+	  // Set the API vars  
+	    if($config["sandbox"] == "TRUE"){   #TESTING 
+	      $this->API_USERNAME  	= 'sdk-three_api1.sdk.com';
+	      $this->API_PASSWORD   = 'QFZCWN5HZM8VBG7Q';
+	      $this->API_SIGNATURE 	= 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU';
+	      $this->API_ENDPOINT   = 'https://api-3t.sandbox.paypal.com/nvp';
+	      $this->USE_PROXY     	= FALSE;
+	      $this->PROXY_HOST     = '127.0.0.1';
+	      $this->PROXY_PORT     = '808';
+	      $this->PAYPAL_URL     = 'https://www.sandbox.paypal.com/webscr&cmd=_express-checkout&token=';
+	      $this->return_url     = '';
+	      $this->cancel_url     = '';
+	    }else{ #LIVE PRODUCTION
+	      $this->API_USERNAME   = $config["username"];
+	      $this->API_PASSWORD   = $config["password"];
+	      $this->API_SIGNATURE 	= $config["signature"];
+	      $this->API_ENDPOINT   = 'https://api-3t.paypal.com/nvp';
+	      $this->USE_PROXY     	= FALSE;
+	      $this->PROXY_HOST     = '127.0.0.1';
+	      $this->PROXY_PORT     = '808';
+	      $this->PAYPAL_URL     = 'https://www.paypal.com/webscr&cmd=_express-checkout&token=';
+	      $this->return_url     = '';
+	      $this->cancel_url     = '';
+	    }
+	}
 	
 	public function do_capture()
 	{

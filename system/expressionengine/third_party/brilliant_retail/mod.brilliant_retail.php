@@ -991,10 +991,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			$ajax = $this->EE->input->get('ajax','no');
 			
-			// If its an image submit remove the x/y values
+			// Clean up some post from images / buttons
+				if(isset($_POST["ajax"])){ unset($_POST["ajax"]); }
 				if(isset($_POST["x"])){ unset($_POST["x"]); }
 				if(isset($_POST["y"])){ unset($_POST["y"]); }
-			
+				if(isset($_POST["submit"])){ unset($_POST["submit"]); }
+				
 			// We get a post of inputs that are 
 			// prepended with the product_id 
 			// lets fancy magic it into a usable post array
@@ -1027,6 +1029,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$added = array();
 			
 		// Now add them
+
 			foreach($post as $data){
 				
 				if(!isset($data["product_id"])){
@@ -1698,19 +1701,19 @@ class Brilliant_retail extends Brilliant_retail_core{
 																				}
 																			});
 																			
-																			$('#br_billing_zip,#br_shipping_zip,#br_billing_country,#br_shipping_country,#br_billing_state,#br_shipping_state').bind('change',function(){
+																			$('input[name=br_billing_address1],input[name=br_shipping_address1],input[name=br_billing_zip],input[name=br_shipping_zip],input[name=br_billing_country],input[name=br_shipping_country],input[name=br_billing_state],input[name=br_shipping_state]').bind('change',function(){
 																				var ship_to = $('#ship_same_address');
 																				if(ship_to.is(':checked')){
-																					_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());	
+																					_get_shipping_quote('billing');
 																				}else{
-																					_get_shipping_quote($('#br_shipping_zip').val(),$('#br_shipping_country').val(),$('#br_shipping_state').val());	
+																					_get_shipping_quote('shipping');	
 																				}
 																			});
 																			
 																			if($('#br_billing_zip').val() != ''){
-																				_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());
+																				_get_shipping_quote('billing');
 																			}else{
-																				_get_shipping_quote('',$('#br_billing_country').val(),$('#br_billing_state').val());
+																				_get_shipping_quote('shipping');	
 																			}
 																			
 																			$('#get_shipping_rates').bind('click',function(){
@@ -1723,9 +1726,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 																				
 																				}else{
 																					if(ship_to.is(':checked')){
-																						_get_shipping_quote($('#br_billing_zip').val(),$('#br_billing_country').val(),$('#br_billing_state').val());	
+																						_get_shipping_quote('billing');
 																					}else{
-																						_get_shipping_quote($('#br_shipping_zip').val(),$('#br_shipping_country').val(),$('#br_shipping_state').val());	
+																						_get_shipping_quote('shipping');	
 																					}
 																				}
 																				return false;
@@ -1744,12 +1747,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 																			});
 																		}
 																		
-																		function _get_shipping_quote(zip,country,state){
+																		function _get_shipping_quote(address){
 																			var url = '".$shipping_action."';
+																			
 																			var params = {	
-																							'zip': zip,
-																						 	'state': state,
-																						 	'country': country 
+																							'address1': $('input[name=br_'+address+'_address1]').val(),
+																							'address2': $('input[name=br_'+address+'_address2]').val(),
+																							'city':		$('input[name=br_'+address+'_city]').val(),
+																							'state':	$('#br_'+address+'_state').val(),
+																							'zip':		$('input[name=br_'+address+'_city]').val(),
+																							'country':	$('#br_'+address+'_country').val()
 																						 }
 																			var contain = $('#shipping_options div#options');
 																			
@@ -1765,30 +1772,23 @@ class Brilliant_retail extends Brilliant_retail_core{
 																	 	
 																		function _update_cart_totals(){
 																			var url = '".$total_action."';
+																			var address = 'shipping';
+																			
 																			$('#checkout_btn').hide();
 																			$('#tax_container,#shipping_container,#total_container').html(' - ');
 																			if(ship_to.is(':checked')){
-																				var zip 		= $('#br_billing_zip').val();
-																				var country 	= $('#br_billing_country').val();
-																				var state 		= $('#br_billing_state').val();
-																				var address1 	= $('#br_billing_address1').val();
-																				var address2 	= $('#br_billing_address2').val();
-																			}else{
-																				var zip 		= $('#br_shipping_zip').val();
-																				var country 	= $('#br_shipping_country').val();
-																				var state 		= $('#br_shipping_state').val();
-																				var address1 	= $('#br_shipping_address1').val();
-																				var address2	= $('#br_shipping_address2').val();
+																				address = 'billing';
 																			}
 																			
 																			$.post(	url,	
 																						{
-																							'zip':zip,
-																							'country':country,
-																							'state':state,
-																							'address1':address1,
-																							'address2':address2,
-																							'shipping':$('input.shipping:checked').val()
+																							'address1': $('input[name=br_'+address+'_address1]').val(),
+																							'address2': $('input[name=br_'+address+'_address2]').val(),
+																							'city':		$('input[name=br_'+address+'_city]').val(),
+																							'state':	$('#br_'+address+'_state').val(),
+																							'zip':		$('input[name=br_'+address+'_zip]').val(),
+																							'country':	$('#br_'+address+'_country').val(), 
+																							'shipping':	$('input.shipping:checked').val()
 																						},
 																						function(returndata){
 																							var data = $.parseJSON(returndata);
@@ -2076,7 +2076,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 			$data["cart"] 				= $this->EE->product_model->cart_get();
 			$data["cart_coupon_code"] 	= isset($_SESSION["discount"]["code"]) ? $_SESSION["discount"]["code"] : '';
-			$data["cart_tax"] 			= $this->_get_cart_tax($data["br_shipping_country"],$data["br_shipping_state"],$data["br_shipping_zip"]);
+			$data["cart_tax"] 			= $this->_get_cart_tax(	
+																	$data["br_shipping_country"],
+																	$data["br_shipping_state"],
+																	$data["br_shipping_zip"],
+																	$data["br_shipping_address1"],
+																	$data["br_shipping_address2"],
+																	$data["br_shipping_city"],
+																	$data["br_shipping_shipping"]
+																);
 			$data["cart_subtotal"] 		= $this->cart_subtotal();
 			$data["cart_discount"] 		= $this->_get_cart_discount();
 			$data["cart_total"] 		= $this->_get_cart_total();
@@ -2407,13 +2415,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 		function checkout_shipping()
 		{
-			$cart = $this->EE->product_model->cart_get();
-			$weight = 0;
-			$shippable = 0;
+			$cart 		= $this->EE->product_model->cart_get();
+			$weight 	= 0;
+			$shippable 	= 0;
+			$opts		= '';
+			
 			foreach($cart["items"] as $key => $val){
 				$weight += $cart["items"][$key]["weight"]*$cart["items"][$key]["quantity"];
 				$shippable += $cart["items"][$key]["shippable"];
 			}
+			
 			if($shippable == 0){
 				$hash = md5(time().rand(100,1000).time()); 
 				$_SESSION["shipping"][$hash] = array(
@@ -2438,7 +2449,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
 					$this->EE->TMPL->parse($tmp);
 				
-				$opts = $tmp;
+				$opts .= $tmp;
 				$shipping_options_available = 1;
 			
 			}else{
@@ -2450,9 +2461,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 							"weight" 		=> $weight, 
 							"total" 		=> $this->_get_cart_total() 
 						);
-				$opts = $this->_shipping_options($data);
+				$opts .= $this->_shipping_options($data);
 				if($opts == ''){
-					$opts = lang('br_no_shipping_options_available');
+					$opts .= lang('br_no_shipping_options_available');
 					$shipping_options_available = 0;
 				}else{
 					$shipping_options_available = 1;
@@ -2482,19 +2493,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		function checkout_total()
 		{
-			$country = $this->EE->input->post("country",TRUE);
-			$shipping = $this->EE->input->post("shipping",TRUE);
-			$state = $this->EE->input->post("state",TRUE);
-			$zip = $this->EE->input->post("zip",TRUE);
+			$address1 	= $this->EE->input->post("address1",TRUE);
+			$address2 	= $this->EE->input->post("address2",TRUE);
+			$city		= $this->EE->input->post("city",TRUE);
+			$state 		= $this->EE->input->post("state",TRUE);
+			$zip 		= $this->EE->input->post("zip",TRUE);
+			$country 	= $this->EE->input->post("country",TRUE);
+			$shipping 	= $this->EE->input->post("shipping",TRUE);
 			
-			// Calculate Tax
-				$tax 			= $this->_get_cart_tax($country,$state,$zip);
-				$tax_rate		= ($tax > 0) ? $this->_currency_round($tax) : $this->_currency_round(0) ;
 			// Calculate Shipping 			
 				$hash 			= $this->EE->input->post("shipping",TRUE);
 				$rate 			= isset($_SESSION["shipping"][$hash]["rate"]) ? $_SESSION["shipping"][$hash]["rate"] : 0;
 				$shipping 		= ($rate > 0) ? $rate : 0;
 				$shipping_rate 	= $this->_currency_round($shipping);
+			// Calculate Tax
+				$tax 			= $this->_get_cart_tax($country,$state,$zip,$address1,$address2,$city,$shipping_rate);
+				$tax_rate		= ($tax > 0) ? $this->_currency_round($tax) : $this->_currency_round(0) ;
 			// Calculate Total 
 				$sub_total 		= $this->cart_subtotal();
 				$discount 		= $this->_get_cart_discount();
@@ -2505,7 +2519,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 							"tax" 		=> $this->_format_money($tax_rate),
 							"shipping" 	=> $this->_format_money($shipping_rate),
 							"total" 	=> $this->_format_money($total_rate),
-							"payment"	=> $this->_payment_options(true,$tax,$shipping));
+							"payment"	=> $this->_payment_options(true,$tax,$shipping),
+							"address"	=> array(
+													'address1'	=> $address1,
+													'address2'	=> $address2,
+													'city'		=> $city,
+													'state'		=> $state, 
+													'zip'		=> $zip,
+													'country'	=> $country 	
+												)
+						);
+							
+			// Check the 
+				if($this->EE->extensions->active_hook('br_checkout_total_after') === TRUE){
+					$arr = $this->EE->extensions->call('br_checkout_total_after', $arr);
+				}
+
 			echo "[".json_encode($arr)."]";
 			exit();
 		}

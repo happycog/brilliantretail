@@ -8,10 +8,12 @@
 * Added city to the _get_cart_tax method for calculating tax rates 
 * Added form_class parameter to checkout_form tag
 * Fixed a typo in the english language file 'Nofity Customer' updated to 'Notify Customer'
+* Fixed an issue with product form when using an input button. Make sure the input has no "name" attribute. If you require on then use name="submit"
 * Fixed an issue with custom fields saving when new products are created. 
 * Fixed an issue with the product_count variable in the BR Products fieldtype when used in combination with the random="yes" parameter 
 * Fixed an issue with create/update product method where data was referencing the $_POST instead of the $data array. 
 * Fixed an issue when creating new products using the file field in a custom attribute set. 
 * Fixed an issue with the stripe.com credit card token (stripe.js) and validation
+* Fixed an issue with the Paypal Pro initiation
 * Updated the BR Product fieldtype to use the same version number as the BrilliantRetail module
 * Updated the BR Extension to use the same version number as the BrilliantRetail module
