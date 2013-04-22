@@ -1505,7 +1505,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						// gook that is in the there. Parameters never came through. 
 							$path = $ft->ft_paths[$ft->field_type];
 							$this->EE->load->add_package_path($path,FALSE);
-				        	#$valid = $ft->field_types[$ft->field_type]->validate($_POST);
+				        	$valid = $ft->field_types[$ft->field_type]->validate($_POST["field_id_".$key]);
 						
 						// File fields
 						if(isset($valid["value"])){

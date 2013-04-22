@@ -1755,7 +1755,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 																							'address2': $('input[name=br_'+address+'_address2]').val(),
 																							'city':		$('input[name=br_'+address+'_city]').val(),
 																							'state':	$('#br_'+address+'_state').val(),
-																							'zip':		$('input[name=br_'+address+'_city]').val(),
+																							'zip':		$('input[name=br_'+address+'_zip]').val(),
 																							'country':	$('#br_'+address+'_country').val()
 																						 }
 																			var contain = $('#shipping_options div#options');
@@ -2083,7 +2083,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 																	$data["br_shipping_address1"],
 																	$data["br_shipping_address2"],
 																	$data["br_shipping_city"],
-																	$data["br_shipping_shipping"]
+																	$data["cart_shipping"]
 																);
 			$data["cart_subtotal"] 		= $this->cart_subtotal();
 			$data["cart_discount"] 		= $this->_get_cart_discount();
