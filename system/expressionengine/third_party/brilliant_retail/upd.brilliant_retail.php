@@ -4539,6 +4539,7 @@ class Brilliant_retail_upd {
 					$this->reset_cache();
 
 				// Rebuild the config file
+					$this->EE->load->model('core_model');
 					$this->EE->core_model->get_config();
 			}
 		return TRUE;

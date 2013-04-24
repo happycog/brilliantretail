@@ -41,19 +41,9 @@
 				]
 			}
 		},{
-			"name" : "tweetline",
-			"label": "Tweetline",
-			"version": "2.3",
-			"types": ["plugin"],
-			"paths": {
-				"system": [
-					"system/expressionengine/third_party/tweetline"
-				]
-			}
-		},{
 			"name" : "brilliant_retail",
 			"label": "BrilliantRetail",
-			"version": "1.3.0.7",
+			"version": "1.3.0.9",
 			"types": ["module","fieldtype","extension"],
 			"paths": {
 				"system": [

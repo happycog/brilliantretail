@@ -1505,7 +1505,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						// gook that is in the there. Parameters never came through. 
 							$path = $ft->ft_paths[$ft->field_type];
 							$this->EE->load->add_package_path($path,FALSE);
-				        	$valid = $ft->field_types[$ft->field_type]->validate($_POST["field_id_".$key]);
+							
+							if(isset($_POST["field_id_".$key])){
+					        	$valid = $ft->field_types[$ft->field_type]->validate($_POST["field_id_".$key]);
+							}else{
+					        	$valid = $ft->field_types[$ft->field_type]->validate($_POST);
+							}
 						
 						// File fields
 						if(isset($valid["value"])){
@@ -3088,6 +3093,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		private function _init_snippets()
 		{
 			$path = PATH_THIRD.'brilliant_retail/core/snippets';
+			$this->EE->load->helper('file');
 			$files = read_dir_files($path);
 			
 			$this->EE->load->model('snippet_model');
@@ -3105,6 +3111,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					if(isset($list_snippets[$nm])){
 						$snippents[$nm] = $list_snippets[$nm];
 					}else{
+						$this->EE->load->helper('file');
 						$s = read_file(rtrim($path,"/")."/".$f);
 						$data = array(
 										'site_id' 			=> $this->EE->config->item('site_id'),
