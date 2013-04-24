@@ -19,3 +19,4 @@
 * Fixed an issue with the Paypal Pro initiation
 * Updated the BR Product fieldtype to use the same version number as the BrilliantRetail module
 * Updated the BR Extension to use the same version number as the BrilliantRetail module
+* Updated jquery dataTables to version 1.9.4
