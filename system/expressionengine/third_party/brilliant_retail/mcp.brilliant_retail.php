@@ -504,7 +504,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$data["order_id"] = $key;
 					
 					// Update the order status
-						$this-> order_update_status($data,FALSE);
+						$this->order_update_status($data,FALSE);
 				}
 				
 				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);

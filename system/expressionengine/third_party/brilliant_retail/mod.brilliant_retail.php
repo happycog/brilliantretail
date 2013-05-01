@@ -1701,7 +1701,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 																				}
 																			});
 																			
-																			$('input[name=br_billing_address1],input[name=br_shipping_address1],input[name=br_billing_zip],input[name=br_shipping_zip],input[name=br_billing_country],input[name=br_shipping_country],input[name=br_billing_state],input[name=br_shipping_state]').bind('change',function(){
+																			$('input[name=br_billing_address1],input[name=br_shipping_address1],input[name=br_billing_zip],input[name=br_shipping_zip],input[name=br_billing_country],input[name=br_shipping_country],input[name=br_billing_city],input[name=br_shipping_state]').bind('change',function(){
 																				var ship_to = $('#ship_same_address');
 																				if(ship_to.is(':checked')){
 																					_get_shipping_quote('billing');
@@ -1851,7 +1851,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// If we don't have br_fname/lname then try to set them on the billing fname/lname 
 					if($data["br_fname"] == ''){ $data["br_fname"] = $data["br_billing_fname"]; }
 					if($data["br_lname"] == ''){ $data["br_lname"] = $data["br_billing_lname"]; }
-
 				
 				// Minimum required fields
 					$required_fields = array(
@@ -2025,7 +2024,26 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if($data["cart_shipping"] == ''){
 						$data["cart_shipping"] = 0;
 					}
-					
+			
+			// Set the shipping automatically
+				if(isset($data["ship_same_address"])){
+					unset($data["ship_same_address"]);
+					$data["br_shipping_fname"] 		= $data["br_billing_fname"];
+					$data["br_shipping_lname"] 		= $data["br_billing_lname"];
+					$data["br_shipping_company"] 	= $data["br_billing_company"];
+					$data["br_shipping_phone"] 		= $data["br_billing_phone"];
+					$data["br_shipping_address1"] 	= $data["br_billing_address1"];
+					$data["br_shipping_address2"] 	= $data["br_billing_address2"];
+					$data["br_shipping_country"] 	= $data["br_billing_country"];
+					$data["br_shipping_city"] 		= $data["br_billing_city"];
+					$data["br_shipping_zip"] 		= $data["br_billing_zip"];
+					$data["br_shipping_state"] 		= $data["br_billing_state"];
+				}
+			
+			if($this->EE->extensions->active_hook('br_order_validate_after') === TRUE){
+				$data = $this->EE->extensions->call('br_order_validate_after', $data); 
+			}
+
 			// End Shipping stuff 
 
 			if($member_id == ''){
@@ -2059,21 +2077,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 							}
 				}
 			}
-			// Set the shipping automatically
-				if(isset($data["ship_same_address"])){
-					unset($data["ship_same_address"]);
-					$data["br_shipping_fname"] 		= $data["br_billing_fname"];
-					$data["br_shipping_lname"] 		= $data["br_billing_lname"];
-					$data["br_shipping_company"] 	= $data["br_billing_company"];
-					$data["br_shipping_phone"] 		= $data["br_billing_phone"];
-					$data["br_shipping_address1"] 	= $data["br_billing_address1"];
-					$data["br_shipping_address2"] 	= $data["br_billing_address2"];
-					$data["br_shipping_country"] 	= $data["br_billing_country"];
-					$data["br_shipping_city"] 		= $data["br_billing_city"];
-					$data["br_shipping_zip"] 		= $data["br_billing_zip"];
-					$data["br_shipping_state"] 		= $data["br_billing_state"];
-				}
-
+			
 			$data["cart"] 				= $this->EE->product_model->cart_get();
 			$data["cart_coupon_code"] 	= isset($_SESSION["discount"]["code"]) ? $_SESSION["discount"]["code"] : '';
 			$data["cart_tax"] 			= $this->_get_cart_tax(	
@@ -2306,16 +2310,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 											
 				// Add a note to the order
-					if(trim($data["instructions"]) != ''){
-						$arr = array(
-							'order_id' => $order_id,
-							'order_note' => $data["instructions"],
-							'created' => time(),
-							'member_id' => $member_id  
-						);
-						$this->EE->order_model->create_order_note($arr);
-					}
-				
+					if(isset($data["instructions"])){
+						if(trim($data["instructions"]) != ''){
+							$arr = array(
+								'order_id' => $order_id,
+								'order_note' => $data["instructions"],
+								'created' => time(),
+								'member_id' => $member_id  
+							);
+							$this->EE->order_model->create_order_note($arr);
+						}
+					}				
 				
 				// Finish up successful direct payments
 				
@@ -2835,7 +2840,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$new['language']	= ($this->EE->config->item('deft_lang')) ? $this->EE->config->item('deft_lang') : 'english';
 				$new['time_format'] = ($this->EE->config->item('time_format')) ? $this->EE->config->item('time_format') : 'us';
 				$new['timezone']	= ($this->EE->config->item('default_site_timezone') && $this->EE->config->item('default_site_timezone') != '') ? $this->EE->config->item('default_site_timezone') : $this->EE->config->item('server_timezone');
-				$new['daylight_savings'] = ($this->EE->config->item('default_site_dst') && $this->EE->config->item('default_site_dst') != '') ? $this->EE->config->item('default_site_dst') : $this->EE->config->item('daylight_savings');		
 				
 				// Format for email 
 					$data["fname"] = $data["br_fname"];
@@ -3037,7 +3041,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			$member = '';
 			$custom = '';
-			$member_fields = array("username","screen_name","email","url","location","occupation","interests","bday_d","bday_m","bday_y","aol_im","yahoo_im","msn_im","icq","bio","signature","avatar_filename","avatar_width","avatar_height","photo_filename","photo_width","photo_height","sig_img_filename","sig_img_width","sig_img_height","private_messages","accept_messages","last_view_bulletins","last_bulletin_date","ip_address","join_date","last_visit","last_activity","total_entries","total_comments","total_forum_topics","total_forum_posts","last_entry_date","last_comment_date","last_forum_post_date","last_email_date","in_authorlist","accept_admin_email","accept_user_email","notify_by_default","notify_of_pm","display_avatars","display_signatures","parse_smileys","smart_notifications","language","timezone","daylight_savings","localization_is_site_default","time_format","profile_theme","forum_theme");
+			$member_fields = array("username","screen_name","email","url","location","occupation","interests","bday_d","bday_m","bday_y","aol_im","yahoo_im","msn_im","icq","bio","signature","avatar_filename","avatar_width","avatar_height","photo_filename","photo_width","photo_height","sig_img_filename","sig_img_width","sig_img_height","private_messages","accept_messages","last_view_bulletins","last_bulletin_date","ip_address","join_date","last_visit","last_activity","total_entries","total_comments","total_forum_topics","total_forum_posts","last_entry_date","last_comment_date","last_forum_post_date","last_email_date","in_authorlist","accept_admin_email","accept_user_email","notify_by_default","notify_of_pm","display_avatars","display_signatures","parse_smileys","smart_notifications","language","timezone","localization_is_site_default","time_format","profile_theme","forum_theme");
 			// Get the custom fields and reverse them 
 				$tmp = $this->EE->customer_model->_get_custom_fields();			
 				foreach($tmp as $key => $val){

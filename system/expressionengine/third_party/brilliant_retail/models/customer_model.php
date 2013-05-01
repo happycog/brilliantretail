@@ -155,7 +155,6 @@ class Customer_model extends CI_Model {
 		$new['language']	= ($this->config->item('deft_lang')) ? $this->config->item('deft_lang') : 'english';
 		$new['time_format'] = ($this->config->item('time_format')) ? $this->config->item('time_format') : 'us';
 		$new['timezone']	= ($this->config->item('default_site_timezone') && $this->config->item('default_site_timezone') != '') ? $this->config->item('default_site_timezone') : $this->config->item('server_timezone');
-		$new['daylight_savings'] = ($this->config->item('default_site_dst') && $this->config->item('default_site_dst') != '') ? $this->config->item('default_site_dst') : $this->config->item('daylight_savings');		
 		
 		// Create the member 
 			$str = $this->db->insert_string('exp_members', $new);
@@ -213,7 +212,7 @@ class Customer_model extends CI_Model {
 					->from('members');
 			$query = $this->db->get();
 			
-			$allowed = array("member_id","group_id","username","screen_name","email","url","location","occupation","interests","bday_d","bday_m","bday_y","aol_im","yahoo_im","msn_im","icq","bio","signature","avatar_filename","avatar_width","avatar_height","photo_filename","photo_width","photo_height","sig_img_filename","sig_img_width","sig_img_height","private_messages","accept_messages","last_view_bulletins","last_bulletin_date","ip_address","join_date","last_visit","last_activity","total_entries","total_comments","total_forum_topics","total_forum_posts","last_entry_date","last_comment_date","last_forum_post_date","last_email_date","in_authorlist","accept_admin_email","accept_user_email","notify_by_default","notify_of_pm","display_avatars","display_signatures","parse_smileys","smart_notifications","language","timezone","daylight_savings","localization_is_site_default","time_format","profile_theme","forum_theme");
+			$allowed = array("member_id","group_id","username","screen_name","email","url","location","occupation","interests","bday_d","bday_m","bday_y","aol_im","yahoo_im","msn_im","icq","bio","signature","avatar_filename","avatar_width","avatar_height","photo_filename","photo_width","photo_height","sig_img_filename","sig_img_width","sig_img_height","private_messages","accept_messages","last_view_bulletins","last_bulletin_date","ip_address","join_date","last_visit","last_activity","total_entries","total_comments","total_forum_topics","total_forum_posts","last_entry_date","last_comment_date","last_forum_post_date","last_email_date","in_authorlist","accept_admin_email","accept_user_email","notify_by_default","notify_of_pm","display_avatars","display_signatures","parse_smileys","smart_notifications","language","timezone","localization_is_site_default","time_format","profile_theme","forum_theme");
 
 			foreach ($query->result_array() as $key => $val){
 				foreach($val as $k => $v){
