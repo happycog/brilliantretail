@@ -395,7 +395,8 @@ $lang = array(
 	'br_line_items'			=> 'Line Items in Order',
 	'br_order_lines'		=> 'Lines in Order',
 	'br_back_to_customers' 	=> 'Back to List',
-
+	'br_phone'				=> 'Phone',
+	
 // Configuration
 	
 	'br_module_install_success'	=> 'The selected  module has been installed.', 

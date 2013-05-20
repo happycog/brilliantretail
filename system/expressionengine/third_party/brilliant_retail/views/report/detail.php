@@ -43,7 +43,7 @@
 					<table id="report-detail">
 						<tr>
 							<td width="75">
-								<strong><?=lang('title')?></strong></td>
+								<strong><?=lang('br_title')?></strong></td>
 							<td>
 								<?=$title?></td>
 						</tr>
@@ -102,13 +102,14 @@
 				echo '<p><strong>'.lang('br_total_results').':</strong> '.count($detail["results"]).'</p>';
 			}
 		?>
+		<div style="width:100%;overflow-x:auto">
 		<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
 					<th style="width:10px;">&nbsp;</th>
 					<?php
 						foreach($detail["header"] as $row){
-							echo '<th>'.$row.'</th>';
+							echo '<th style="white-space:nowrap;">'.$row.'</th>';
 						}
 					?>
 				</tr>
@@ -144,7 +145,7 @@
 				?>
 			</tbody>
 		</table>
-		            	
+		</div>
 	</form>                     
         
 <?=$br_footer?>

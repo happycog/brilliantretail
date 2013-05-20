@@ -526,10 +526,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Is the notify flag set?
 				$notify = FALSE;
 				if(isset($data["notify"])){
-					$notify = TRUE;
-					unset($data["notify"]);
+					if(strtolower($data["notify"]) !== 'false' ){
+						$notify = TRUE;
+						unset($data["notify"]);
+					}
 				}
-
+				
 			// Update the order status		
 				
 				// Hook before we update the order
