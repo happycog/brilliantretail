@@ -40,6 +40,9 @@ class Product_model extends CI_Model {
 			if($product_id != ''){
 				// Try and return it from session cache
 					if (isset($this->session->cache['get_products'][$product_id])){
+						
+						$this->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from session data '.round(memory_get_usage()/1024/1024, 2).'MB');
+
 						return $this->session->cache['get_products'][$product_id];
 					}
 
@@ -53,6 +56,9 @@ class Product_model extends CI_Model {
 							// only return enabled cached products
 								if($arr[0]["enabled"] == 1){
 									$this->session->cache['get_products'][$product_id] = $arr;
+									
+									$this->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from cache file '.round(memory_get_usage()/1024/1024, 2).'MB');
+
 									return $arr;
 								}
 						}
@@ -178,7 +184,9 @@ class Product_model extends CI_Model {
 				if($product_id != ''){
 					$this->session->cache['get_products'][$product_id] = $products;
 				}
-			
+
+			$this->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from database '.round(memory_get_usage()/1024/1024, 2).'MB');
+
 			return $products;
 		}
 	
@@ -417,15 +425,10 @@ class Product_model extends CI_Model {
 			return $products;
 		}
 		foreach ($query->result_array() as $row){
-			$p = $this->get_products($row["product_id"],$disabled);
-			if(isset($p[0])){
-				foreach($p[0] as $key => $val){
-					$products[$i]['row_count'] = ($i + 1); 
-					$products[$i][$key] = $val;
-					$products[$i]['sort_order'] = $row['sort_order']; 
-				}	
-				$i++;
-			}
+			$products[$i]['row_count'] = ($i + 1); 
+			$products[$i]['product_id'] = $row["product_id"];
+			$products[$i]['sort_order'] = $row['sort_order']; 
+			$i++;
 		}
 		return $products;
 	}

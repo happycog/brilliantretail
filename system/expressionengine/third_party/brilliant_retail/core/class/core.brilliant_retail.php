@@ -549,14 +549,16 @@ class Brilliant_retail_core {
 						}elseif($opt["type"] == 'dropdown'){
 							$options = array();
 							$j = 0;
-							foreach($opt["opts"] as $o){
-								$val = '';
-								if($o["price"] != 0){
-									$dir = ($o["price"] > 0) ? '+' : '-';
-									$val = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($o["price"])).')';
-								}	
-								$options[] = $j.':'.$o["title"].$val;
-								$j++;
+							if(isset($opt["opts"])){
+								foreach($opt["opts"] as $o){
+									$val = '';
+									if($o["price"] != 0){
+										$dir = ($o["price"] > 0) ? '+' : '-';
+										$val = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($o["price"])).')';
+									}	
+									$options[] = $j.':'.$o["title"].$val;
+									$j++;
+								}
 							}
 							$list = join("|",$options);
 							$option = $this->_producttype_dropdown($products[0]["product_id"],'option_'.$i,$opt["title"],$opt["title"],$opt["required"],'',$list);
@@ -1699,7 +1701,7 @@ class Brilliant_retail_core {
 					}
 					$vars[0]['link_sort_relevance'] = $this->_set_link($hash).'/sort/relevance/dir/'.$dir_link;
 				}
-				
+
 			// If sort by price 
 				if($vars[0]['sort_selected'] == 'price'){
 					foreach($vars[0]["results"] as $r){

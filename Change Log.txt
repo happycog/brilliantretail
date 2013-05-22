@@ -1,22 +1,5 @@
-### Version 1.3.1.0
+### Version 1.3.2.0
 *April 26, 2013*
 
-* IMPORTANT: Removed Tweetline add-on from the package. The add-on does not support the new Twitter 1.1 API
-* Added row count to report detail page
-* Added br_total_results language key to report detail page
-* Added the br_process_payment_before hook to the checkout method before calling the start_ipn method on IPN based gateways
-* Added disabled categories to the option list for product create/edit and promotion create/edit
-* Added city to the _get_cart_tax method for calculating tax rates 
-* Added form_class parameter to checkout_form tag
-* Fixed a number of minor issues related to ExpressionEngine 2.6 update. 
-* Fixed a typo in the english language file 'Nofity Customer' updated to 'Notify Customer'
-* Fixed an issue with product form when using an input button. Make sure the input has no "name" attribute. If you require on then use name="submit"
-* Fixed an issue with custom fields saving when new products are created. 
-* Fixed an issue with the product_count variable in the BR Products fieldtype when used in combination with the random="yes" parameter 
-* Fixed an issue with create/update product method where data was referencing the $_POST instead of the $data array. 
-* Fixed an issue when creating new products using the file field in a custom attribute set. 
-* Fixed an issue with the stripe.com credit card token (stripe.js) and validation
-* Fixed an issue with the Paypal Pro initiation
-* Updated the BR Product fieldtype to use the same version number as the BrilliantRetail module
-* Updated the BR Extension to use the same version number as the BrilliantRetail module
-* Updated jquery dataTables to version 1.9.4
+* Fixed an issue related to customer signups in ExpressionEngine 2.6+
+* Updated catalog tag with better logging and performance tweaks

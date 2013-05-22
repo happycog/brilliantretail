@@ -648,10 +648,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		public function catalog()
 		{ 
+			
 			$key 	= $this->EE->TMPL->fetch_param('url_title');
 			$ajax 	= $this->EE->TMPL->fetch_param('ajax','no');
 			$form_class = $this->EE->TMPL->fetch_param('form_class','');
 
+			$memory_start = round(memory_get_usage()/1024/1024, 2);
+			$this->EE->TMPL->log_item('BrilliantRetail Memory Pre Catalog: '.$memory_start.'MB');
+			
 			if($key == ''){
 				$this->EE->TMPL->log_item('BrilliantRetail: No url_title provided. segment_2 assigned');
 				$key = $this->EE->uri->segment(2);
@@ -662,14 +666,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$this->EE->functions->redirect($this->EE->functions->create_url($this->EE->config->item('site_404')));
 			}
 			
+			$this->EE->TMPL->log_item('BrilliantRetail Memory After get_category_by_key: '.round(memory_get_usage()/1024/1024, 2).'MB');
+
 			// Lets do some price checking magic! 
 				$i = 0;
+				$products = array();
 				foreach($category[0]["products"] as $p){
-					if(!$price = $this->_check_product_price($p)){
-						unset($category[0]["products"][$i]);
+					$prod = $this->_get_product($p["product_id"]);
+					if($price = $this->_check_product_price($prod[0])){
+						$products[] = $prod[0];
 					}
 				}
-			
+				$category[0]["products"] = $products;
+				
+			$this->EE->TMPL->log_item('BrilliantRetail Memory After _check_product_price: '.round(memory_get_usage()/1024/1024, 2).'MB');
 			
 			// Get our category image
 				$img = (trim($category[0]['image']) != '') ? $this->_config["media_url"].'images/'.$category[0]['image'] : '';
@@ -696,7 +706,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if(count($category[0]["products"]) != 0){
 					$vars = $this->_filter_results($vars,$key,true);
 				}
-
+			
+			$this->EE->TMPL->log_item('BrilliantRetail Memory After _filter_results: '.round(memory_get_usage()/1024/1024, 2).'MB');
+			
 			// If there are no product
 				if(count($vars[0]['results']) == 0 || !isset($vars[0]["results"])){
 					$no_result = '';
@@ -716,11 +728,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Doubled up the array offset. Lets fix that 
 				$results = array();
 				foreach($vars[0]['results'] as $rst){
-					$tmp = $this->_get_product($rst["product_id"]);
-					$results[] = $tmp[0];
+					$results[] 	= $rst;
 				}
 				$vars[0]['results'] = $results;
 				
+				$this->EE->TMPL->log_item('BrilliantRetail Memory After offset fix: '.round(memory_get_usage()/1024/1024, 2).'MB');
+			
 			// Add form_open / form_close tags
 				$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
 
@@ -742,8 +755,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 			
 			// Set our switch
+				$this->EE->TMPL->log_item('BrilliantRetail Memory before switch callback: '.round(memory_get_usage()/1024/1024, 2).'MB');
+
 				$this->switch_cnt = 0;
 				$output = preg_replace_callback('/'.LD.'product_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output);
+				
+				$memory_end = round(memory_get_usage()/1024/1024, 2);
+				$memory_total = $memory_end - $memory_start;
+				$this->EE->TMPL->log_item('BrilliantRetail Memory Post Catalog: '.$memory_end.'MB - Total: '.$memory_total.'MB');
+				
 				return $output;
 		}
 
