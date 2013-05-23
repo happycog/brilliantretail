@@ -2134,8 +2134,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			foreach($prod as $product)
 			{
+				$p = $this->EE->product_model->get_products($product['product_id'],1);
 				$prod_ary[$cnt]['id']=$product['product_id'];
-				$prod_ary[$cnt]['title']=$product['title'];
+				$prod_ary[$cnt]['title']=$p[0]['title'];
 				$prod_ary[$cnt]['sort_order']=$product['sort_order'];
 				$cnt++;
 			}
