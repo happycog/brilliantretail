@@ -1003,7 +1003,7 @@ class Brilliant_retail_core {
 			
 			Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
 			Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-			    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
+			    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive ()
 			);
 
 			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
@@ -1056,7 +1056,7 @@ class Brilliant_retail_core {
 				
 				Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
 				Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-				    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
+				    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive ()
 				);
 
 				$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
@@ -1092,7 +1092,7 @@ class Brilliant_retail_core {
 				$a = explode(" ",$queryStr);
 				if(strlen($a[count($a)-1] >= 3))
 				{
-					$queryStr += "*";
+					$queryStr = $queryStr."*";
 				}
 			}
 			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
@@ -1100,7 +1100,7 @@ class Brilliant_retail_core {
 			
 			Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
 			Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-			    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive ()
+			    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive ()
 			);
 	
 			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
@@ -1422,6 +1422,7 @@ class Brilliant_retail_core {
 		}
 	
 	function _layered_navigation($product,$hash,$category_id = 0){
+		
 		$this->EE->load->model('product_model');
 		$url = $this->EE->uri->uri_to_assoc();
 		$layered = array();
@@ -1533,7 +1534,7 @@ class Brilliant_retail_core {
 			foreach($product as $p){
 				if(isset($p["attribute"])){
 					foreach($p["attribute"] as $val){
-						if($val["filterable"] == 1){
+						if(isset($val["filterable"]) && $val["filterable"] == 1){
 							if($val["fieldtype"] == 'dropdown'){
 								$value = $val["value"];
 								if($value != ''){
@@ -1547,12 +1548,14 @@ class Brilliant_retail_core {
 
 					if(isset($p["configurable"])){
 						foreach($p["configurable"] as $c){
-							$s = unserialize($c["attributes"]);
-							foreach($s as $key=> $val){
-								$filterable = $this->_check_attribute_filterable($key);
-								if($filterable === TRUE){
-									$attr[$key][$val] = $val;
-									$count[$key][$val][] = true;
+							if(isset($c["attributes"])){
+								$s = unserialize($c["attributes"]);
+								foreach($s as $key=> $val){
+									$filterable = $this->_check_attribute_filterable($key);
+									if($filterable === TRUE){
+										$attr[$key][$val] = $val;
+										$count[$key][$val][] = true;
+									}
 								}
 							}
 						}
@@ -2092,6 +2095,7 @@ class Brilliant_retail_core {
 						);
 
 			// Deal with our price matrix 
+				
 				foreach($p["price_matrix"] as $price){
 				 	if(	$price["group_id"] == 0 || 
 				 		$price["group_id"] == $group_id){

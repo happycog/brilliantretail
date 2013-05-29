@@ -782,10 +782,19 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				$layered = $this->EE->product_model->get_category_by_key($key);
 	
+				foreach($layered[0]["products"] as $p){
+					$prod = $this->_get_product($p["product_id"]);
+					if($price = $this->_check_product_price($prod[0])){
+						$products[] = $prod[0];
+					}
+				}
+				
+				$layered[0]["products"] = $products;
+				
 				$vars[0] = array('results' => $layered[0]["products"]);
-	
+				
 				$vars = $this->_filter_results($vars,$key,false);
-			
+				
 				$layered = $this->_layered_navigation($vars[0]["results"],$key,$layered[0]["category_id"]);
 				$output = '';
 				if(count($layered) >= 1){
