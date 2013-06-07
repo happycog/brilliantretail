@@ -782,6 +782,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				$layered = $this->EE->product_model->get_category_by_key($key);
 	
+				$products = array();
+				
 				foreach($layered[0]["products"] as $p){
 					$prod = $this->_get_product($p["product_id"]);
 					if($price = $this->_check_product_price($prod[0])){
@@ -3586,22 +3588,29 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 		function retrieve_password()
 		{
-	    	if ( ! class_exists('Member')){
-	    		require PATH_MOD.'member/mod.member.php';
-	    	}
-	    	$member = new Member();
-	    	foreach(get_object_vars($this) as $key => $value){
-				$member->{$key} = $value;
+	    	if (version_compare(APP_VER, '2.6.0', '>='))
+			{
+				return '';
 			}
-	        if ( isset($_POST['email'])){
-				$query = $this->EE->db->query("SELECT language FROM exp_members WHERE email ='".$this->EE->db->escape_str($_POST['email'])."'");
-				
-				if ($query->num_rows() > 0)
-				{
-					$this->EE->session->userdata['language'] = $query->row('language');
+			else
+			{
+		    	if ( ! class_exists('Member')){
+		    		require PATH_MOD.'member/mod.member.php';
+		    	}
+		    	$member = new Member();
+		    	foreach(get_object_vars($this) as $key => $value){
+					$member->{$key} = $value;
 				}
+		        if ( isset($_POST['email'])){
+					$query = $this->EE->db->query("SELECT language FROM exp_members WHERE email ='".$this->EE->db->escape_str($_POST['email'])."'");
+					
+					if ($query->num_rows() > 0)
+					{
+						$this->EE->session->userdata['language'] = $query->row('language');
+					}
+				}
+		    	$member->retrieve_password();
 			}
-	    	$member->retrieve_password();
 		}
 		
 		/**

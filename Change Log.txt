@@ -2,4 +2,5 @@
 *April 26, 2013*
 
 * Fixed an issue related to customer signups in ExpressionEngine 2.6+
+* Updated the Zend Lucene Analysis Analyzer setting to better handle number based skus
 * Updated catalog tag with better logging and performance tweaks

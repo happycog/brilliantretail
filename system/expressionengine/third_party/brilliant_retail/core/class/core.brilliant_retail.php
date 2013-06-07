@@ -2081,6 +2081,9 @@ class Brilliant_retail_core {
 	 */
 		function _check_product_price($p)
 		{
+			// Catch to make sure we were passed a valid product
+				if($p == null){ return FALSE; }
+			
 			$group_id = $this->EE->session->userdata["group_id"];
 			$amt = array(
 							'product_id'		=> $p["product_id"],
