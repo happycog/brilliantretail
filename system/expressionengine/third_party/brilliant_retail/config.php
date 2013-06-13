@@ -2,7 +2,7 @@
 
 if ( ! defined('BR_VERSION'))
 {
-	define('BR_VERSION','1.3.1.3');
+	define('BR_VERSION','1.3.1.4');
 }
 
 $config['name']			=	'BrilliantRetail';

@@ -1088,13 +1088,19 @@ class Brilliant_retail_core {
 			// Need at least 3 characters in the last word for wildcard searches 
 			if(strlen($queryStr) >= 3){
 				// Dashes don't play nicely with our wildcard search
+				$original = $queryStr;
 				$queryStr = str_replace("-"," ",$queryStr);
 				$a = explode(" ",$queryStr);
-				if(strlen($a[count($a)-1] >= 3))
+				if(strlen($a[count($a)-1]) >= 3)
 				{
 					$queryStr = $queryStr."*";
 				}
+				else
+				{
+					$queryStr = $original;
+				}
 			}
+
 			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 			

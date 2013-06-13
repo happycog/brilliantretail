@@ -1,6 +1,8 @@
 ### Version 1.3.2.0
 *April 26, 2013*
 
+* Added MySQL index to order_id on exp_br_order_address table
+* Added MySQL index to order_id on exp_br_order_payment table
 * Fixed an issue related to customer signups in ExpressionEngine 2.6+
 * Updated the Zend Lucene Analysis Analyzer setting to better handle number based skus
 * Updated catalog tag with better logging and performance tweaks

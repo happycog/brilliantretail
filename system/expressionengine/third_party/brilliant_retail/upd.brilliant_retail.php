@@ -441,7 +441,8 @@ class Brilliant_retail_upd {
 			  shipping_company varchar(100) NOT NULL,
 			  billing_phone varchar(100) NOT NULL,
 			  shipping_phone varchar(100) NOT NULL,
-			  PRIMARY KEY (order_address_id)
+			  PRIMARY KEY (order_address_id), 
+			  KEY order_address_order_id (order_id)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
@@ -532,7 +533,8 @@ class Brilliant_retail_upd {
   details text,
   approval varchar(100) default NULL,
   created int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (order_payment_id)
+  PRIMARY KEY  (order_payment_id),
+  KEY order_payment_order_id (order_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 
