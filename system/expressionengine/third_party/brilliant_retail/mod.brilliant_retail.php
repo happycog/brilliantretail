@@ -3563,9 +3563,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function forgot_password()
 		{
 			$name 		= $this->EE->TMPL->fetch_param('name','password_form');
-			$return 	= $this->EE->TMPL->fetch_param('return');
+			$return 	= $this->EE->TMPL->fetch_param('return','customer/password_reset');
 			$form_id 	= $this->EE->TMPL->fetch_param('form_id','password_form');
 			$form_class = $this->EE->TMPL->fetch_param('form_class','password_form');
+			$length		= $this->EE->TMPL->fetch_param('length',3600);
+			$secure		= $this->EE->TMPL->fetch_param('secure','y');
+			
 			// We didn't have a standard for form class/id mechanisms. Need backward compatibility for old 'class' parameter
 				$class 	= $this->EE->TMPL->fetch_param('form_class');
 				if($class != ''){
@@ -3576,10 +3579,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$act 		= $this->EE->functions->fetch_action_id('Brilliant_retail', 'retrieve_password');
 			
 			$form_details = array(
-									'action'	=> $this->_secure_url("?ACT=".$act),
-								  	'name'		=> $name,
-								  	'id'		=> $form_id, 
-								  	'class'		=> $form_class 
+									'action'		=> $this->_secure_url("?ACT=".$act),
+								  	'name'			=> $name,
+								  	'id'			=> $form_id, 
+								  	'class'			=> $form_class,
+								  	'hidden_fields'	=> array(
+								  								'return' 	=> $return, 
+								  								'length'	=> (int) $length, 
+								  								'secure'	=> $secure
+								  							) 
 								  );  	
 	
 			$form = $this->EE->functions->form_declaration($form_details);
@@ -3590,7 +3598,68 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 	    	if (version_compare(APP_VER, '2.6.0', '>='))
 			{
-				return '';
+				// Load email validation library
+					$this->EE->load->library('email_validation');
+					$this->EE->load->library('Auth');
+	
+				// Get the inputs
+					$email 	= $this->EE->input->post('email',TRUE);
+					$email 	= trim($email);
+					$secure = $this->EE->input->post('secure','y');
+					$length = $this->EE->input->post('length',3600);
+					$return = $this->EE->input->post('return','customer/password');
+					
+				// Validate that we have a valid email
+					if($email == ''){
+						$_SESSION["br_alert"] = lang('br_password_reset_email_required');
+					}else if(!$this->EE->email_validation->check_email_address($email)){
+						$_SESSION["br_alert"] = lang('br_password_reset_email_invalid');
+					}else{
+						// Make sure the email exists in the system
+							$member = $this->EE->db->get_where('members', array('email' => $email));
+							if($member->num_rows() != 1){
+								$_SESSION["br_alert"] = lang('br_password_reset_email_not_found');
+							}else{
+								
+								$m = $member->result_array();
+								
+								// Clean out any previous tokens
+									$this->EE->db->delete('br_password_reset',array('member_id' => $m[0]["member_id"]));
+								
+								// Create the token 
+									$customer = $this->EE->customer_model->get_customer_profile($m[0]["member_id"]);
+									
+									$token = md5(time().$m[0]["member_id"].rand(1,10000000));
+									
+									$data = array(
+														'member_id' => $m[0]["member_id"],
+														'token'		=> $token, 
+														'created'	=> time(),
+														'ip'		=> md5($_SERVER["REMOTE_ADDR"]),
+														'secure'	=> $secure, 
+														'length'	=> $length
+													);
+									
+									$this->EE->db->insert('br_password_reset',$data);
+
+								// Send the email
+									$eml[0] = array(
+														"link"		=> $this->EE->functions->create_url($return.'/'.$token),
+														"email"		=> $email, 
+														"fname" 	=> $customer["br_fname"],
+														"lname" 	=> $customer["br_lname"]
+													); 
+
+									$this->_send_email('customer-password-reset', $eml);
+
+									
+								// Set the system message
+									$_SESSION["br_message"] = lang('br_password_reset_email_sent');
+							}
+					}
+				
+				// Send them on back				
+					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 			}
 			else
 			{
@@ -3613,6 +3682,123 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}
 		}
 		
+		/** 
+		* 
+		*/
+		
+		function forgot_password_reset()
+		{
+			$name 		= $this->EE->TMPL->fetch_param('name','password_form');
+			$return 	= $this->EE->TMPL->fetch_param('return','customer/login');
+			$form_id 	= $this->EE->TMPL->fetch_param('form_id','password_form');
+			$form_class = $this->EE->TMPL->fetch_param('form_class','password_form');
+			$token		= $this->EE->TMPL->fetch_param('token',$this->EE->uri->segment(3));
+			
+			// Make sure we have a valid token 
+				$reset 		= $this->EE->db->get_where('br_password_reset', array('token' => $token));
+			
+			// If no results then lets bail out. 
+				if($reset->num_rows() != 1){
+					$_SESSION["br_alert"] = lang('br_password_invalid_token');
+					$this->EE->functions->redirect($this->EE->functions->create_url($return));
+				}
+			
+			// We have a valid token lets do some time / security checks 
+				$r = $reset->result_array();
+				if((time() - $r[0]["created"]) >= $r[0]["length"])
+				{
+					$_SESSION["br_alert"] = lang('br_password_invalid_token');
+					$this->EE->functions->redirect($this->EE->functions->create_url($return));
+				}
+				
+				if($r[0]["secure"] == 'y')
+				{
+					if(md5($_SERVER["REMOTE_ADDR"]) != $r[0]["ip"]){
+						$_SESSION["br_alert"] = lang('br_password_invalid_token');
+						$this->EE->functions->redirect($this->EE->functions->create_url($return));
+					}
+				}
+			
+			
+			// Get the url to actually reset the password
+				$act = $this->EE->functions->fetch_action_id('Brilliant_retail', 'reset_password');
+			
+				$form_details = array(
+										'action'		=> $this->_secure_url("?ACT=".$act),
+									  	'name'			=> $name,
+									  	'id'			=> $form_id, 
+									  	'class'			=> $form_class,
+									  	'hidden_fields'	=> array(
+									  								'return' 	=> $return, 
+									  								'token'		=> $token 
+									  							) 
+									  );  	
+	
+			$form = $this->EE->functions->form_declaration($form_details);
+			return $form.$this->EE->TMPL->tagdata.form_close();
+		}
+		
+		function reset_password()
+		{
+			$password = $this->EE->input->post('password',TRUE);
+			$password_confirm = $this->EE->input->post('password_confirm',TRUE);
+			$return 	= $this->EE->input->post('return',TRUE);
+			$token	= $this->EE->input->post('token',TRUE);
+			
+			if(trim($password) == '' || trim($password_confirm) == '')
+			{
+				$_SESSION["br_alert"] = lang('br_password_fields_required');
+				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+			}
+			
+			if(trim($password) !== trim($password_confirm))
+			{
+				$_SESSION["br_alert"] = lang('br_password_dont_match');
+				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+			}
+			
+			if(strlen(trim($password)) < $this->EE->config->item('pw_min_len'))
+			{
+				$_SESSION["br_alert"] = str_replace("%x",$this->EE->config->item('pw_min_len'),lang('br_password_min_length'));
+				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+			}
+			
+			// Load the authorization library
+				$this->EE->load->library('Auth');
+				
+				// Make sure we have a valid token 
+					$reset 		= $this->EE->db->get_where('br_password_reset', array('token' => $token));
+				
+				// If no results then lets bail out. 
+					if($reset->num_rows() != 1){
+						$_SESSION["br_alert"] = lang('br_password_invalid_token');
+						$this->EE->functions->redirect($this->EE->functions->create_url($return));
+					}
+				
+				// We have a valid token lets do some time / security checks 
+					$r = $reset->result_array();
+					if((time() - $r[0]["created"]) >= $r[0]["length"])
+					{
+						$_SESSION["br_alert"] = lang('br_password_invalid_token');
+						$this->EE->functions->redirect($this->EE->functions->create_url($return));
+					}
+					
+					if($r[0]["secure"] == 'y')
+					{
+						if(md5($_SERVER["REMOTE_ADDR"]) != $r[0]["ip"]){
+							$_SESSION["br_alert"] = lang('br_password_invalid_token');
+							$this->EE->functions->redirect($this->EE->functions->create_url($return));
+						}
+					}
+				
+				// We can update the passwords! 
+					$this->EE->auth->update_password($r[0]["member_id"],$password);
+				
+				// Redirect to the return url
+					$_SESSION["br_message"] = lang('br_password_update_success');
+					$this->EE->functions->redirect($this->EE->functions->create_url($return));
+		}
+
 		/**
 		 * Product Feed
 		 *

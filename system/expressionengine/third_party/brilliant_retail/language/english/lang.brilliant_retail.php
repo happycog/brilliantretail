@@ -609,9 +609,13 @@ $lang = array(
 			"br_sign_up_thankyou" => "Thank you for registering. You can now log in below.", 
 			"br_please_login_or_create_an_account_to_checkout" => "Please login below or register a new account to continue",
 			"br_profile_updated_successfully" => "Thank you your profile has been updated.",
-			"br_password_fields_required" => "All password fields are required.", 
-			"br_password_update_success" => "Your password has been updated.",
+			"br_password_fields_required" 	=> "All password fields are required.", 
+			"br_password_dont_match" 		=> "The password and confirm password fields do not match.",
+			"br_password_min_length"		=> "The password you submitted must be at least %x characters long.",
+			"br_password_update_success" 	=> "Your password has been updated.",
 			"br_password_current_invalid"	=> "Incorrect current password.",
+			"br_password_reset_email_sent"	=> "A reset password link has been sent the your email address.", 
+			"br_password_invalid_token"		=> "The password reset token is invalid.",
 							
 			// Customer Downloads 
 				'br_download_available' 	=> "Available", 

@@ -83,6 +83,8 @@ class Brilliant_retail_upd {
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'retrieve_password')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'wishlist_process')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'customer_download_note')";
+			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'reset_password')";
+			
 			
 		## ----------------------------
 		##  Records of exp_member_fields
@@ -555,6 +557,21 @@ class Brilliant_retail_upd {
 					PRIMARY KEY (order_ship_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
+## ----------------------------
+##  Table structure for exp_br_password_reset
+## ----------------------------
+	$sql[] = "DROP TABLE IF EXISTS `exp_br_password_reset";
+	$sql[] = "	CREATE TABLE `exp_br_password_reset` (
+					`id` int(11) NOT NULL AUTO_INCREMENT,
+					`member_id` int(11) NOT NULL,
+					`token` varchar(255) DEFAULT NULL,
+					`created` int(11) DEFAULT NULL,
+					`ip` varchar(255) DEFAULT NULL,
+					`secure` varchar(255) DEFAULT NULL,
+					`length` int(11) DEFAULT NULL,
+					PRIMARY KEY (`id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				
 ## ----------------------------
 ##  Table structure for exp_br_product
 ## ----------------------------
