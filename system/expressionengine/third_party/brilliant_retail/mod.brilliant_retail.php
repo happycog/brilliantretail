@@ -3793,7 +3793,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				// We can update the passwords! 
 					$this->EE->auth->update_password($r[0]["member_id"],$password);
-				
+					
+				// Delete the token
+					$this->EE->db->delete('br_password_reset',array('member_id' => $r[0]["member_id"]));
+
 				// Redirect to the return url
 					$_SESSION["br_message"] = lang('br_password_update_success');
 					$this->EE->functions->redirect($this->EE->functions->create_url($return));

@@ -22,3 +22,4 @@ reasons and have created tags for handling the reset directly in BrilliantRetail
 * Fixed an issue related to customer signups in ExpressionEngine 2.6+
 * Updated the Zend Lucene Analysis Analyzer setting to better handle number based skus
 * Updated catalog tag with better logging and performance tweaks
+* Updated the forgot_password in the demo template with form_id parameter
