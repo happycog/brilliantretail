@@ -506,6 +506,7 @@ $lang = array(
 		'br_customer-password-reminder' => 'Password Reminder',
 		'br_customer-order-note'		=> 'Order Note Email',
 		'br_product-low-stock-notice' 	=> 'Product Low Stock Notice',
+		'br_customer-password-reset'	=> 'Password Reset',
 		
 	// Gateway Methods
 		'br_gateway_methods' 	=> 'Payment Gateways',
@@ -616,6 +617,9 @@ $lang = array(
 			"br_password_current_invalid"	=> "Incorrect current password.",
 			"br_password_reset_email_sent"	=> "A reset password link has been sent the your email address.", 
 			"br_password_invalid_token"		=> "The password reset token is invalid.",
+			"br_password_reset_email_invalid"	=> "Please enter a valid email address", 
+			"br_password_reset_email_required"	=> "Email address is required.",
+			"br_password_reset_email_not_found"	=> "The email address you entered is not in our system.", 
 							
 			// Customer Downloads 
 				'br_download_available' 	=> "Available", 
