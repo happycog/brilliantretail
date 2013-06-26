@@ -1,8 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-ini_set('display_errors','on');
-error_reporting(E_ALL);
-
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -319,7 +316,7 @@ error_reporting(E_ALL);
 		
 		public function setTransparentBg()
 		{
-			$this->setTransparency("#000");
+			$this->setTransparency("#FFF");
 		}
 		
 		

@@ -1538,24 +1538,30 @@ class Brilliant_retail_core {
 
 		// Attributes 
 			foreach($product as $p){
-				if(isset($p["attribute"])){
-					foreach($p["attribute"] as $val){
-						if(isset($val["filterable"]) && $val["filterable"] == 1){
-							if($val["fieldtype"] == 'dropdown'){
-								$value = $val["value"];
-								if($value != ''){
-									$attr_id = $val["attribute_id"];
-									$attr[$attr_id][$value] = $value;
-									$count[$attr_id][$value][] = true;
-								}
+				
+				$prod = $this->EE->product_model->get_attributes('',$p["product_id"]);
+				foreach($prod as $val){
+					if(isset($val["filterable"]) && $val["filterable"] == 1){
+						if($val["fieldtype"] == 'dropdown'){
+							$value = $val["value"];
+							if($value != ''){
+								$attr_id = $val["attribute_id"];
+								$attr[$attr_id][$value] = $value;
+								$count[$attr_id][$value][] = true;
 							}
 						}
 					}
-
-					if(isset($p["configurable"])){
-						foreach($p["configurable"] as $c){
-							if(isset($c["attributes"])){
-								$s = unserialize($c["attributes"]);
+				}
+				unset($prod);
+				
+				if($p["type_id"] == 3){
+					// Get the configurable products for the item
+						$id = $this->EE->product_model->get_product_configurable($p["product_id"]);
+						if(isset($id[0]["configurable_id"]))
+						{
+							foreach($id as $i){
+								$prod 	= $this->EE->product_model->get_config_product($i["configurable_id"]);
+								$s = unserialize($prod[0]["attributes"]);
 								foreach($s as $key=> $val){
 									$filterable = $this->_check_attribute_filterable($key);
 									if($filterable === TRUE){
@@ -1565,7 +1571,6 @@ class Brilliant_retail_core {
 								}
 							}
 						}
-					}
 				}
 			}
 			
@@ -2194,34 +2199,43 @@ class Brilliant_retail_core {
 	*/
 		function _check_attr($p)
 		{
-			$this->EE->load->model('product_model');
 			$attr = array();
-			foreach($p["attribute"] as $val){
-				if($val["fieldtype"] == 'dropdown'){
-					$value = $val["value"];
-					if($value != ''){
-						$hash = md5($val["attribute_id"].'_'.$value);
-						$attr[$hash] = array(
-										"hash" => $hash,
-										"title" => $val["title"],
-										"label" => $value
-										);
-						
+			
+			$prod = $this->EE->product_model->get_attributes('',$p["product_id"]);
+			foreach($prod as $val){
+				if(isset($val["filterable"]) && $val["filterable"] == 1){
+					if($val["fieldtype"] == 'dropdown'){
+						$value = $val["value"];
+						if($value != ''){
+							$hash = md5($val["attribute_id"].'_'.$value);
+							$attr[$hash] = array(
+											"hash" => $hash,
+											"title" => $val["title"],
+											"label" => $value
+											);							
+						}
 					}
 				}
 			}
-			
-			if(isset($p["configurable"])){
-				foreach($p["configurable"] as $c){
-					$s = unserialize($c["attributes"]);
-					foreach($s as $key=> $val){
-						$b = $this->EE->product_model->get_attribute_by_id($key);
-						$hash = md5($key.'_'.$val);
-						$attr[$hash] = array(
-											"hash" => $hash,
-											"title" => $b["title"],
-											"label" => $val 
-											);
+			unset($prod);
+		
+			if($p["type_id"] == 3){
+				// Get the configurable products for the item
+				$id 	= $this->EE->product_model->get_product_configurable($p["product_id"]);
+				if(isset($id[0]["configurable_id"]))
+				{
+					foreach($id as $i){
+						$prod 	= $this->EE->product_model->get_config_product($i["configurable_id"]);
+						$s = unserialize($prod[0]["attributes"]);
+						foreach($s as $key=> $val){
+							$b = $this->EE->product_model->get_attribute_by_id($key);
+							$hash = md5($key.'_'.$val);
+							$attr[$hash] = array(
+												"hash" => $hash,
+												"title" => $b["title"],
+												"label" => $val 
+												);
+						}
 					}
 				}
 			}

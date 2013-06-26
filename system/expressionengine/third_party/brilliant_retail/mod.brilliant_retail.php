@@ -794,7 +794,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$layered[0]["products"] = $products;
 				
 				$vars[0] = array('results' => $layered[0]["products"]);
-				
+
 				$vars = $this->_filter_results($vars,$key,false);
 				
 				$layered = $this->_layered_navigation($vars[0]["results"],$key,$layered[0]["category_id"]);
@@ -2030,7 +2030,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}
 				// Check if shipping is even necessary
 					$sid = $_POST["SID"];
-					$shippable = $_SESSION[$sid];
+					$shippable = isset($_SESSION[$sid]) ? $_SESSION[$sid] : 0;
 					if($shippable == 0 && !isset($data["shipping"])){
 						$data["shipping"] = 'free';
 						$_SESSION["shipping"]['free'] = array(
