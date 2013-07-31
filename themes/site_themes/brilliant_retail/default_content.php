@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2012						*/
+/* 	@copyright	Copyright (c) 2010-2013						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /* 	@since		Version 1.0.0 Beta							*/
@@ -73,7 +73,6 @@ VALUES
 						('4', '1', '2', 'blog_content', 'Content', '', 'textarea', '', '0', '0', '0', 'channel', '2', 'title', 'desc', '0', '6', '128', 'n', 'ltr', 'n', 'n', 'xhtml', 'n', '3', 'any', 'YTo2OntzOjE4OiJmaWVsZF9zaG93X3NtaWxleXMiO3M6MToibiI7czoxOToiZmllbGRfc2hvd19nbG9zc2FyeSI7czoxOiJuIjtzOjIxOiJmaWVsZF9zaG93X3NwZWxsY2hlY2siO3M6MToibiI7czoyNjoiZmllbGRfc2hvd19mb3JtYXR0aW5nX2J0bnMiO3M6MToibiI7czoyNDoiZmllbGRfc2hvd19maWxlX3NlbGVjdG9yIjtzOjE6Im4iO3M6MjA6ImZpZWxkX3Nob3dfd3JpdGVtb2RlIjtzOjE6Im4iO30='), 
 						('5', '1', '2', 'blog_products', 'Products', '', 'brilliant_retail', '', '0', '0', '0', 'channel', '2', 'title', 'desc', '0', '6', '128', 'n', 'ltr', 'n', 'n', 'xhtml', 'n', '4', 'any', 'YTo2OntzOjE4OiJmaWVsZF9zaG93X3NtaWxleXMiO3M6MToibiI7czoxOToiZmllbGRfc2hvd19nbG9zc2FyeSI7czoxOiJuIjtzOjIxOiJmaWVsZF9zaG93X3NwZWxsY2hlY2siO3M6MToibiI7czoyNjoiZmllbGRfc2hvd19mb3JtYXR0aW5nX2J0bnMiO3M6MToibiI7czoyNDoiZmllbGRfc2hvd19maWxlX3NlbGVjdG9yIjtzOjE6Im4iO3M6MjA6ImZpZWxkX3Nob3dfd3JpdGVtb2RlIjtzOjE6Im4iO30='), 
 						('6', '1', '1', 'general-content', 'General Content', '', 'textarea', '', '0', '0', '0', 'channel', '2', 'title', 'desc', '0', '6', '128', 'n', 'ltr', 'n', 'n', 'xhtml', 'n', '1', 'any', 'YTo2OntzOjE4OiJmaWVsZF9zaG93X3NtaWxleXMiO3M6MToibiI7czoxOToiZmllbGRfc2hvd19nbG9zc2FyeSI7czoxOiJuIjtzOjIxOiJmaWVsZF9zaG93X3NwZWxsY2hlY2siO3M6MToieSI7czoyNjoiZmllbGRfc2hvd19mb3JtYXR0aW5nX2J0bnMiO3M6MToieSI7czoyNDoiZmllbGRfc2hvd19maWxlX3NlbGVjdG9yIjtzOjE6InkiO3M6MjA6ImZpZWxkX3Nob3dfd3JpdGVtb2RlIjtzOjE6InkiO30=')";
-	*/
 	
 ## exp_field_groups
 
@@ -115,7 +114,7 @@ VALUES
 
 ## exp_channel_titles
 
-	/*
+
 	$sql[] = "INSERT INTO exp_channel_titles VALUES 
 				('1', '1', '1', '1', '0', '0', '127.0.0.1', 'About', 'about', 'open', 'y', '0', '0', '0', '0', 'y', 'n', '1288630825', 'n', '2010', '11', '01', '0', '0', '20101114152226', '0', '0'), 
 				('2', '1', '1', '1', '0', '0', '127.0.0.1', 'Site Map', 'site_map', 'open', 'y', '0', '0', '0', '0', 'y', 'n', '1288609217', 'n', '2010', '11', '01', '0', '0', '20101112224118', '0', '0'), 
@@ -133,7 +132,6 @@ VALUES
 				('15', '1', '2', '1', '0', '0', '127.0.0.1', 'Companies Reinventing the Retail Business', 'companies_reinventing_the_retail_business', 'open', 'y', '0', '0', '0', '0', 'y', 'n', '1288602047', 'n', '2010', '11', '10', '0', '0', '20101101164848', '1289768786', '2'), 
 				('16', '1', '2', '1', '0', '0', '127.0.0.1', 'Post with Products', 'post_with_products', 'open', 'y', '0', '0', '0', '0', 'y', 'n', '1289630905', 'n', '2010', '11', '12', '0', '0', '20101115170526', '0', '3'), 
 				('17', '1', '3', '1', '0', '0', '127.0.0.1', 'Home Page', 'home_page', 'open', 'y', '0', '0', '0', '0', 'y', 'n', '1289774045', 'n', '2010', '11', '14', '0', '0', '20101114150606', '0', '0')";
-	*/
 	
 ## exp_channels
 
@@ -173,6 +171,7 @@ VALUES
 	$sql[] = "INSERT INTO exp_categories VALUES ('6', '1', '1', '0', 'Product', 'product', '', '', '2'), 
 	('5', '1', '1', '0', 'Company', 'company', '', '', '1'), 
 	('7', '1', '1', '0', 'Archive', 'archive', '', '', '3');";
+	*/
 
 ## exp_upload_prefs
 	

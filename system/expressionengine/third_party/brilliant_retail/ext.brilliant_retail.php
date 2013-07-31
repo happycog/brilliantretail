@@ -323,9 +323,10 @@ class Brilliant_retail_ext {
 									 	'config_category',
 									 	'config_gateway',
 										'config_email',
+										'config_feeds', 
+										'config_integration',
 										'config_permission', 
-									 	'config_feeds', 
-										'config_shipping',
+									 	'config_shipping',
 									 	'config_site', 
 									 	'config_tax'
 									 );

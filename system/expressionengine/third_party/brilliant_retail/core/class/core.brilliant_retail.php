@@ -159,6 +159,8 @@ class Brilliant_retail_core {
 		// Load Gateway / Shipping Files
 			$this->_load_files('gateway');
 			$this->_load_files('shipping');
+			$this->_load_files('integration');
+			
 			
 		// Build search index if it is not 
 		// present
@@ -308,11 +310,11 @@ class Brilliant_retail_core {
 		// List Core Files
 			$dir = PATH_THIRD.'brilliant_retail/core/'.$type;
 			$files = read_dir_files($dir);
-			
+		
 		// List Local Files
 			$local_dir = PATH_THIRD.'_local/brilliant_retail/'.$type;
 			$local = read_dir_files($local_dir);
-
+		
 		// Merge
 			foreach($files as $f){
 				if(substr($f,0,strlen($type)+1) == $type.'.'){

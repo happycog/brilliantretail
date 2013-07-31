@@ -195,11 +195,21 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$products = $this->EE->extensions->call('br_product_parse_before', $products); 
 					}
 
+					$form_details = array(
+						'action'     		=> $action,
+	                  	'name'           	=> 'form_cart_add',
+	                  	'id'             	=> "form_".$products[0]["product_id"],
+	                  	'class'          	=> $form_class,
+	                  	'hidden_fields'  	=> array($products[0]["product_id"].'_product_id' => $products[0]["product_id"]), 
+	                  	'secure'         	=> TRUE
+	                  );
+
+					$form_open 	= $this->EE->functions->form_declaration($form_details);
+
 					if($form != 'yes'){
-						$products[0]["form_open"] = '<form id="form_'.$products[0]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
-														<input type="hidden" name="'.$products[0]["product_id"].'_product_id" value="'.$products[0]["product_id"].'" />';
-						$products[0]["form_close"] = '</form>';
 						
+						$products[0]["form_open"] 	= $form_open;
+						$products[0]["form_close"]	= form_close();
 						if($show_js == 'yes'){
 							$this->EE->session->cache['br_output_js'] .= '$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});';
 						}
@@ -210,21 +220,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				// We should add a configuration variable to remove the 
 				// the blank default first option. 
-				$br_hide_blank_option = ($this->EE->config->item('br_hide_blank_option')) ? $this->EE->config->item('br_hide_blank_option') : '';
-				if($br_hide_blank_option === TRUE){
-					$output = str_replace('<option value=""></option>',"",$output);
-				}			
-				
+					$br_hide_blank_option = ($this->EE->config->item('br_hide_blank_option')) ? $this->EE->config->item('br_hide_blank_option') : '';
+					if($br_hide_blank_option === TRUE){
+						$output = str_replace('<option value=""></option>',"",$output);
+					}			
+					
 				// Build the form and add the js to the footer
-				if($form == 'yes'){
-					$hidden = 	'<input type="hidden" name="'.$products[0]["product_id"].'_product_id" value="'.$products[0]["product_id"].'" />';
-					$output = 	'<form id="form_'.$products[0]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
-									'.$hidden.' 
-									'.$output.'
-								</form>';
-
-					$this->EE->session->cache['br_output_js'] .= '$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});';
-				}
+					if($form == 'yes'){
+						$output 	= $form_open.$output.form_close();
+						$this->EE->session->cache['br_output_js'] .= '$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});';
+					}
 							
 			$this->switch_cnt = 0;
 			$output = preg_replace_callback('/'.LD.'image_switch\s*=\s*([\'\"])([^\1]+)\1'.RD.'/sU', array(&$this, '_parse_switch'), $output);
@@ -387,9 +392,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 							}
 						
 						// Add form open / close 
-							$tmp["related_form_open"] = '<form id="form_'.$rel[0]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
-														<input type="hidden" name="'.$rel[0]["product_id"].'_product_id" value="'.$rel[0]["product_id"].'" />';
-							$tmp["related_form_close"] = '</form>';
+							
+							$form_details = array(
+									'action'	   		=> $action,
+								  	'id'             	=> 'form_'.$rel[0]["product_id"],
+								  	'class' 			=> $form_class,
+								  	'hidden_fields'  	=> array($rel[0]["product_id"].'_product_id' => $rel[0]["product_id"]), 
+				                  	'secure'         	=> TRUE
+								  );  
+
+							$tmp["related_form_open"] 	= $this->EE->functions->form_declaration($form_details);
+							$tmp["related_form_close"] 	= '</form>';
 						
 						// Add depreciated 
 							$tmp['related_thumb'] = $rel[0]["image_thumb"];
@@ -745,8 +758,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$i = 0;
 				foreach($vars[0]["results"] as $row){
 					$vars[0]["results"][$i]["product_count"] = $i+1;
-					$vars[0]["results"][$i]["form_open"] 	= '	<form id="form_'.$row["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
-																<input type="hidden" name="'.$row["product_id"].'_product_id" value="'.$row["product_id"].'" />';
+					$form_details = array(
+						'action'     		=> $action,
+	                  	'name'           	=> 'form_'.$row["product_id"],
+	                  	'id'             	=> 'form_'.$row["product_id"],
+	                  	'class'          	=> $form_class,
+	                  	'hidden_fields'  	=> array($row["product_id"].'_product_id' => $row["product_id"]), 
+	                  	'secure'         	=> TRUE
+	                  );
+					$vars[0]["results"][$i]["form_open"] 	= $this->EE->functions->form_declaration($form_details);
 					$vars[0]["results"][$i]["form_close"] 	= '	</form>';
 					$i++;
 				}
@@ -934,6 +954,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Wrap items in form?
 				$show_form = ($this->EE->TMPL->fetch_param('form') == '') ? 'yes' : $this->EE->TMPL->fetch_param('form') ;
 	
+			$id = '';
+			$form_class = '';
+			
 			$update = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_update');
 			$remove = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_remove');
 			$output = '';
@@ -982,7 +1005,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 							);	
 			$output = '';
 			if(strtolower($show_form) == "yes"){ 
-				$output = form_open($update);
+
+				$form_details = array(
+						'action'	   		=> $update,
+					  	'id'             	=> $id,
+					  	'secure'         	=> TRUE, 
+					  	'class' 			=> $form_class
+					  );  
+	
+				$output = $this->EE->functions->form_declaration($form_details);
+
+				
 				// Check to see if the page is secure and use the right 
 				// http(s) protocol
 				if(is_secure())
@@ -1022,36 +1055,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			$ajax = $this->EE->input->get('ajax','no');
 			
-			// Clean up some post from images / buttons
-				if(isset($_POST["ajax"])){ unset($_POST["ajax"]); }
-				if(isset($_POST["x"])){ unset($_POST["x"]); }
-				if(isset($_POST["y"])){ unset($_POST["y"]); }
-				if(isset($_POST["submit"])){ unset($_POST["submit"]); }
-				
 			// We get a post of inputs that are 
 			// prepended with the product_id 
 			// lets fancy magic it into a usable post array
-				if(isset($_POST["product_id"])){
-					$post[0]["product_id"] 	= $_POST["product_id"];
-					$post[0]["quantity"] 	= isset($_POST["quantity"]) ? $_POST["quantity"] : 1;
-				}else{
-					foreach($_POST as $key => $val){
-						if($key != 'product_id'){
-							if(strpos($key,"_") === false){
-								if($key != 'quantity'){
-									// If its a single post with no appended product_id 
-									$post[0]["product_id"] 	= $_POST["product_id"];
-									$post[0]["quantity"] 	= $_POST["quantity"];
-								}
-							}else{
-								// If its a multiple post 
-								$a = explode('_',$key);
-								$b = ltrim($key,$a[0].'_');
-								if(is_numeric($a[0])){
-									$post[$a[0]]['product_id'] = $a[0];
-									$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
-								}
-							} 
+				foreach($_POST as $key => $val){
+					if(strpos($key,"_") === false){
+						continue;
+					}else{
+						$a = explode('_',$key);
+						$b = ltrim($key,$a[0].'_');
+						if(is_numeric($a[0])){
+							$post[$a[0]]['product_id'] = $a[0];
+							$post[$a[0]][$b] = $this->EE->input->post($key,TRUE);
 						}
 					}
 				}
@@ -1060,12 +1075,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$added = array();
 			
 		// Now add them
-
 			foreach($post as $data){
 				
 				if(!isset($data["product_id"])){
-					$_SESSION["br_alert"] = lang('br_product_configuration_required');
-					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+					continue;
 				}
 				
 				// Clean the quantity value 
@@ -1656,11 +1669,25 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				$output = '';
 				
+				$form_details = array(
+						'action'     		=> $action,
+	                  	'name'           	=> 'form_checkoutform',
+	                  	'id'             	=> "checkoutform",
+	                  	'class'          	=> $form_class,
+	                  	'hidden_fields'  	=> array('SID' => $shippable), 
+	                  	'secure'         	=> TRUE
+	                  );
+
+				$form_open 	= $this->EE->functions->form_declaration($form_details);
+
+				
+				
+				
 				$vars[0] = array (
 									'shipping_action' 	=> $shipping_action, 
 									'total_action' 		=> $total_action, 
 									'payment_options' 	=> '<div id="payment_container">&nbsp;</div>',
-									'form_open'			=> form_open($action,array('id' => 'checkoutform','class' => $form_class),array('SID' => $shippable)) 
+									'form_open'			=> $form_open 
 								);
 				
 				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
@@ -2779,7 +2806,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function customer_register()
 		{
 			// Load security helper for password hash
-				$this->EE->load->helper('security');
+				#$this->EE->load->helper('security');
 			
 			// Verify the security hash 
 				$xid = $this->EE->input->post('XID');
@@ -2929,18 +2956,26 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function customer_pw_form()
 		{
 			// Form ID 
-			$id = ($this->EE->TMPL->fetch_param('id')) ? ($this->EE->TMPL->fetch_param('id')) : 'password_edit';
+			$id = $this->EE->TMPL->fetch_param('id','password_edit');
 			$action = $this->EE->functions->fetch_site_index(0,0);
 			if(is_secure())
 			{
 				$action = str_replace("http://","https://",$action);
 			}
 			$tagdata = $this->EE->TMPL->tagdata;
-			$hidden = array(
-							"ACT" 		=> $this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_pw_update'),
-							"username" 	=> $this->EE->session->userdata['username'] 
-							);
-			$output = form_open($action,array("id"=>$id),$hidden);
+			
+			$form_details = array(
+						'action'     		=> $action,
+	                  	'name'           	=> $id,
+	                  	'id'             	=> $id,
+	                  	'hidden_fields'  	=> array(
+													"ACT" 		=> $this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_pw_update'),
+													"username" 	=> $this->EE->session->userdata['username'] 
+													), 
+	                  	'secure'         	=> TRUE
+	                  );
+			
+			$output = $this->EE->functions->form_declaration($form_details);
 			$output .= $tagdata;
 			$output .= form_close();
 			return $output;
@@ -2950,7 +2985,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function customer_pw_update()
 		{
 			// Load security helper for password hash
-				$this->EE->load->helper('security');
+				#$this->EE->load->helper('security');
 
 			// Validate that we got everything
 				if(	(!isset($_POST["password"]) || trim($_POST["password"]) == '') ||
@@ -3412,6 +3447,25 @@ class Brilliant_retail extends Brilliant_retail_core{
 			return $output;
 		}
 
+		function search_form()
+		{
+			$action 	= $this->EE->TMPL->fetch_param('action','search');
+			$name 		= $this->EE->TMPL->fetch_param('form_name','search_form');
+			$form_id 	= $this->EE->TMPL->fetch_param('form_id','search_form');
+			$form_class = $this->EE->TMPL->fetch_param('form_class','search_form');
+
+			$form_details = array(
+							'action'		=> $action, 
+							'name'			=> $name,
+						  	'id'			=> $form_id, 
+						  	'class'			=> $form_class
+						  );  	
+		
+			$form = $this->EE->functions->form_declaration($form_details);
+			return $form.$this->EE->TMPL->tagdata.form_close();
+		
+		}
+		
 		function search()
 		{
 			// Load native EE helper to sanitize search term
@@ -3523,8 +3577,19 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$tmp[$i] = $p[0];
 						
 						$tmp[$i]["product_count"] = $i+1;
-						$tmp[$i]["form_open"] 	= '<form id="form_'.$tmp[$i]["product_id"].'" class="'.$form_class.'" action="'.$action.'" method="post">
-														<input type="hidden" name="'.$tmp[$i]["product_id"].'_product_id" value="'.$tmp[$i]["product_id"].'" />';
+						
+						// Setup the form open tag
+						$form_details = array(
+												'action'		=> $action,
+												'name'			=> 'form_'.$tmp[$i]["product_id"],
+												'id'			=> 'form_'.$tmp[$i]["product_id"], 
+												'class'			=> $form_class,
+												'hidden_fields'	=> array(
+																			$tmp[$i]["product_id"]."_product_id" 	=> $tmp[$i]["product_id"]
+																		) 
+											);  	
+
+						$tmp[$i]["form_open"] 	= $this->EE->functions->form_declaration($form_details);
 						$tmp[$i]["form_close"] 	= '</form>';
 						$i++;
 					}

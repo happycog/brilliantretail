@@ -145,6 +145,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 					// Product Types
 						$this->vars['product_type'] = $this->_config['product_type'];	
+
+					// BR Styles
+						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css?v='.str_replace('.','',BR_VERSION)).'" />');
 					
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
@@ -157,7 +160,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
 						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
-						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css?v='.str_replace('.','',BR_VERSION)).'" />');
 							
 					// Set our admin theme 	
 						$this->vars['theme'] = $this->_theme();	
@@ -2318,6 +2320,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 		
+		function config_integration()
+		{
+			// Insert overview of intergrations
+		}
+		
 		function config_feeds()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_config_feeds');
@@ -3807,10 +3814,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		// Field formatting
 		if (count($get_format) > 0)
 		{
-			$this->db->select('field_id, field_fmt');
-			$this->db->where_in('field_id', $get_format);
-			$this->db->order_by('field_fmt');
-			$query = $this->db->get('field_formatting');
+			$this->EE->db->select('field_id, field_fmt');
+			$this->EE->db->where_in('field_id', $get_format);
+			$this->EE->db->order_by('field_fmt');
+			$query = $this->EE->db->get('field_formatting');
 
 			if ($query->num_rows() > 0)
 			{

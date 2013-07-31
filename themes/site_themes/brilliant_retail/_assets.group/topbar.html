@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2012						*/
+/* 	@copyright	Copyright (c) 2010-2013						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -42,11 +42,12 @@
 					<span class="logout"><a href="{exp:brilliant_retail:path src='customer/login'}">Signup</a></span>
  				{/if}
  				</p>
-                <form id="main_search" action="{exp:brilliant_retail:path src='catalog/search'}" method="post" enctype="multipart/form-data">
-                    <input class="search_txt" name="search" type="text" value="search products" />
+                
+                {exp:brilliant_retail:search_form action="catalog/search" form_id="main_search"}
+                   	<input class="search_txt" name="search" type="text" value="search products" />
                     <input class="search_btn" name="" type="image" src="{theme}/images/0.gif" alt="Search" />
                     <div class="clearboth"><!-- --></div>
-                </form>
+                {/exp:brilliant_retail:search_form}
                 <div class="clearboth"><!-- --></div>
             </td>
         </tr>

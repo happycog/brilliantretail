@@ -267,12 +267,12 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$sql[] = "INSERT INTO exp_br_category VALUES ('57', '1', '92', 'Electronics', 'electronics', 'cat_banner_02.jpg', 'Electronics', 'High quality modern electronics for home and business.', '1', 'electronics, home, business', '2010-08-21 13:03:11', '1',NULL,NULL), 
 				('58', '1', '92', 'Beauty', 'beauty', 'cat_banner_03.jpg', 'Beauty Products', 'Healthy beauty products for everyday use', '1', 'health, beauty', '2010-08-21 13:03:39', '4',NULL,NULL),
-				('63', '1', '92', 'Clothing  »', 'clothing', 'cat_banner_012.jpg', 'Clothing & Apparel', 'Casual and fashionable clothing for men, women and children', '1', 'clothing, men, women, children', '2010-09-10 16:17:43', '5',NULL,NULL),
+				('63', '1', '92', 'Clothing', 'clothing', 'cat_banner_012.jpg', 'Clothing & Apparel', 'Casual and fashionable clothing for men, women and children', '1', 'clothing, men, women, children', '2010-09-10 16:17:43', '5',NULL,NULL),
 				('64', '1', '63', 'Men', 'clothing-men', 'cat_banner_011.jpg', 'Clothing for Men', 'clothing for men', '1', 'clothing, men', '2010-09-10 16:21:07', '3',NULL,NULL),
 				('79', '1', '0', 'Services', 'services', 'cat_banner_05.jpg', 'My Service Title', 'My Description', '1', 'My Keywords', '2010-10-28 08:06:59', '0',NULL,NULL), 
 				('69', '1', '63', 'Women', 'clothing-women', '', 'Clothing for women', 'Clothing for women', '1', 'clothing, women', '2010-10-21 14:28:13', '4',NULL,NULL),
 				('75', '1', '0', 'Downloads', 'downloads', 'cat_banner_04.jpg', '', '', '1', '', '2010-10-28 07:56:32', '2',NULL,NULL),
-				('76', '1', '75', 'Clothing  Guides »', 'guides-clothing', '', '', '', '1', '', '2010-10-28 07:57:18', '7',NULL,NULL),
+				('76', '1', '75', 'Clothing  Guides', 'guides-clothing', '', '', '', '1', '', '2010-10-28 07:57:18', '7',NULL,NULL),
 				('78', '1', '76', 'Fall Fashion', 'fall-fashion', '', '', '', '1', '', '2010-10-28 07:59:51', '-1288277991',NULL,NULL),
 				('92', '1', '0', 'Products', 'products', '', '', '', '1', '', '2010-10-29 15:29:22', '-1288391362',NULL,NULL);";
 

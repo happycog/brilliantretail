@@ -28,39 +28,61 @@ class Shipping_usps extends Brilliant_retail_shipping {
 	public $label  	= 'United States Postal Service';
 	public $descr 	= 'USPS Shipping';
 	public $enabled = true;
-	public $version = '1.0';
+	public $version = '1.1';
 
 
-	public $domestic = array(	'EXPRESS:Express',
-								'PRIORITY:Priority',
-								'PARCEL:Parcel',
+	public $domestic = array(	
 								'FIRST CLASS:First Class',
-								'EXPRESS SH:Express SH',
-								'BPM:BPM',
-								'MEDIA:Media',
-								'LIBRARY:Library');
+								#'FIRST CLASS COMMERCIAL:First Class Commercial',
+								#'FIRST CLASS HFP COMMERCIAL:First Class Hold For Pickup Commercial',
+								'PRIORITY:Priority',
+								#'PRIORITY COMMERCIAL:Priority Commercial',
+								#'PRIORITY CPP:Priority Commercial Plus Price',
+								#'PRIORITY HFP COMMERCIAL:Priority Hold For Pickup Commercial',
+								#'PRIORITY HFP CPP:Priority Hold For Pickup Commercial Plus Price',
+								'EXPRESS:Express',
+								#'EXPRESS COMMERCIAL:Express Commercial',
+								#'EXPRESS CPP:Express Commercial Plus Price',
+								# 'EXPRESS SH:Express SH',
+								# 'EXPRESS SH COMMERCIAL: Express SH Commercial',
+								#'EXPRESS HFP:Express Hold For Pickup',
+								#'EXPRESS HFP COMMERCIAL:Express Hold For Pickup Commercial',
+								#'EXPRESS HFP CPP:Express Hold For Pickup Commercial Plus Price',
+								'STANDARD POST:Standard Post',
+								'MEDIA:Media'
+								#,'LIBRARY:Library',
+								#'ALL:All',
+								#'ONLINE:Online',
+								#'PLUS:Plus'
+							);
+							
 	public $inter = array(
-							'FIRST_CLASS_INT_LARGE_ENV:First-Class Mail International Large Envelope',
-							'FIRST_CLASS_MAIL_INT_PACKAGE:First-Class Package International Service',
-							'PRIORITY_MAIL_INT_FLAT_RATE_ENV:Priority Mail International Window Flat Rate Envelope',
-							'PRIORITY_MAIL_INT_SM_FLAT_RATE_ENV:Priority Mail International Small Flat Rate Envelope',
-							'PRIORITY_MAIL_INT_GC_FLAT_RATE_ENV:Priority Mail International Gift Card Flat Rate Envelope',
-							'PRIORITY_MAIL_INT_PAD_FLAT_RATE_ENV:Priority Mail International Padded Flat Rate Envelope',
-							'PRIORITY_MAIL_INT_LEGAL_FLAT_RATE_ENV:Priority Mail International Legal Flat Rate Envelope',
-							'PRIORITY_MAIL_INT_FLAT_RATE_ENV:Priority Mail International Flat Rate Envelope',
-							'PRIORITY_MAIL_INT_LARGE_VIDEO_FLAT_RATE_BOX:Priority Mail International Large Video Flat Rate Box',
-							'PRIORITY_MAIL_INT_DVD_FLAT_RATE_BOX:Priority Mail International DVD Flat Rate Box',
-							'PRIORITY_MAIL_INT_SM_FLAT_RATE_BOX:Priority Mail International Small Flat Rate Box',
-							'PRIORITY_MAIL_INT_MD_FLAT_RATE_BOX:Priority Mail International Medium Flat Rate Box',
-							'PRIORITY_MAIL_INT_LG_FLAT_RATE_BOX:Priority Mail International Large Flat Rate Box',
-							'PRIORITY_MAIL_INT_PRIORITY_MAIL:Priority Mail International',
-							'EXP_MAIL_INT_LEGAL_FLAT_RATE_ENV:Express Mail International Legal Flat Rate Envelope',
-							'EXP_MAIL_INT_FLAT_RATE_ENV:Express Mail International Flat Rate Envelope',
-							'EXP_MAIL_INT:Express Mail International',
-							'USPS_GXG_ENV:USPS GXG Envelopes',
-							'GLOBAL_EXP_GRNTD_ND_NR:Global Express Guaranteed Non-Document Non-Rectangular',
-							'GLOBAL_EXP_GRNTD_ND_R:Global Express Guaranteed Non-Document Rectangular',
-							'GLOBAL_EXP_GRNTD:Global Express Guaranteed (GXG)'
+							'GXG:Global Express Guaranteed (GXG)',
+							'GXG_D:Global Express Guaranteed Document',
+							'GXG_NDR:Global Express Guaranteed Non-Document Rectangular',
+							'GXG_NDNR:Global Express Guaranteed Non-Document Non-Rectangular',
+							'FCM_IL:First-Class Mail International Letter',
+							'FCM_ILE:First-Class Mail International Large Envelope',
+							'FCM_IP:First-Class Mail International Postcard',
+							'FCPIS:First-Class Package International Service',
+							'PMI:Priority Mail International',
+							'PMI_DFRPB:Priority Mail International DVD Flat Rate priced box',
+							'PMI_FRE:Priority Mail International Flat Rate Envelope',
+							'PMI_GCFRE:Priority Mail International Gift Card Flat Rate Envelope',
+							'PMI_LFR:Priority Mail International Large Flat Rate Box',
+							'PMI_LFRE:Priority Mail International Legal Flat Rate Envelope',
+							'PMI_LVFRPB:Priority Mail International Large Video Flat Rate priced box',
+							'PMI_PFRE:Priority Mail International Padded Flat Rate Envelope',
+							'PMI_MFR:Priority Mail International Medium Flat Rate Box',
+							'PMI_SFRE:Priority Mail International Small Flat Rate Envelope',
+							'PMI_SFRB:Priority Mail International Small Flat Rate Box',
+							'PMI_WFRE:Priority Mail International Window Flat Rate Envelope',
+							'PMEI:Priority Mail Express International',
+							'PMEI_FRB:Priority Mail Express International Flat Rate Boxes',
+							'PMEI_FRE:Priority Mail Express International Flat Rate Envelope',
+							'PMEI_LFRE:Priority Mail Express International Legal Flat Rate Envelope',
+							'PMEI_PFRE:Priority Mail Express International Padded Flat Rate Envelope',
+							'USPS_GXG:USPS GXG Envelopes'
 						);
 						
 	function quote($data,$config){
@@ -70,15 +92,6 @@ class Shipping_usps extends Brilliant_retail_shipping {
 
 		$this->rates = array();
 		
-		$title['EXPRESS'] = 'Express';
-		$title['PRIORITY'] = 'Priority';
-		$title['PARCEL'] = 'Parcel';
-		$title['FIRST CLASS'] = 'First Class';
-		$title['EXPRESS SH'] = 'Express SH';
-		$title['BPM'] = 'BPM';
-		$title['MEDIA'] = 'Media';
-		$title['LIBRARY'] = 'Library';
-
 		$domestic = unserialize($config["domestic"]);
 		$inter = unserialize($config["inter"]);
 
@@ -106,11 +119,16 @@ class Shipping_usps extends Brilliant_retail_shipping {
 				$reqs = 'API=RateV4&XML=<RateV4Request USERID="'.$config["username"].'">';
 				foreach($domestic as $x => $c){
 					
+					$s = explode(":",$c);
+					
 					// Update to First Class Code. 
-						if($c == 'FIRST CLASS'){ $c = 'First-Class Mail'; }
+						if(strpos($s[0],'FIRST CLASS') !== -1){ 
+							$firstclasstype = '<FirstClassMailType>PARCEL</FirstClassMailType>'; 
+						}
 					
 					$reqs .= '	<Package ID="'.$x.'">
-									<Service>'.$c.'</Service>
+									<Service>'.$s[0].'</Service>
+									'.$firstclasstype.'
 									<ZipOrigination>'.$config["from_zip"].'</ZipOrigination>
 									<ZipDestination>'.$data["to_zip"].'</ZipDestination>
 									<Pounds>'.$lbs.'</Pounds>
@@ -147,17 +165,35 @@ class Shipping_usps extends Brilliant_retail_shipping {
 
 		// Curl
 			$results = $this->_curl($config["url"],$reqs);
-
+			
 			if($isdomestic == 1){ // Domestic 
 				// Domestic Rate(s)
 				preg_match_all('/<Package ID="([0-9]{1,3})">(.+?)<\/Package>/',$results,$packages);
 				foreach($packages[1] as $x => $package) {
-					preg_match('/<Rate>(.+?)<\/Rate>/',$packages[2][$x],$rate);
+					
+					// Get the Rate
+						preg_match('/<Rate>(.+?)<\/Rate>/',$packages[2][$x],$rate);
+								
 					if(isset($rate[1])){
-						$this->rates[$domestic[$package]] = array(
-																'code' 	=> $domestic[$package],
+						
+						// We shouldn't show 0.00 options
+							if($rate[1] <= 0){ continue; }
+						
+						// Get the Titles
+							preg_match('/<MailService>(.+?)<\/MailService>/',$packages[2][$x],$service);
+	
+							$descr = strip_tags($service[1]);
+							$descr = str_replace('**', '', $descr);
+							$descr = str_replace('&amp;lt;sup&amp;gt;&amp;#8482;&amp;lt;/sup&amp;gt;', '', $descr);
+							$descr = str_replace('&amp;lt;sup&amp;gt;&amp;#174;&amp;lt;/sup&amp;gt;', '', $descr);
+							$descr = str_replace('&lt;sup&gt;&amp;reg;&lt;/sup&gt;', '', $descr);
+							$descr = str_replace('&lt;sup&gt;&amp;trade;&lt;/sup&gt;', '', $descr);
+							 
+
+						$this->rates[$descr] = array(
+																'code' 	=> $descr,
 																'rate' 	=> $rate[1],
-																'label' => $title[$domestic[$package]]
+																'label' => $descr 
 															);
 					}
 				}
@@ -175,14 +211,19 @@ class Shipping_usps extends Brilliant_retail_shipping {
 				
 				// International options
 				$xml = simplexml_load_string($results);
+				
 				$id = 0;
 				if(isset($xml->Package->Service)){
 					foreach($xml->Package->Service as $s){
 							$service = (array)$s;
 							$descr = strip_tags($service["SvcDescription"]);
 							$descr = str_replace('**', '', $descr);
+							
+							$descr = str_replace('&lt;sup&gt;&#8482;&lt;/sup&gt;', '', $descr);
+							$descr = str_replace('&lt;sup&gt;&#174;&lt;/sup&gt;', '', $descr);
 							$descr = str_replace('&lt;sup&gt;&amp;reg;&lt;/sup&gt;', '', $descr);
 							$descr = str_replace('&lt;sup&gt;&amp;trade;&lt;/sup&gt;', '', $descr);
+						
 						if(isset($interOpts[$descr])){
 							$this->rates[$id] = array(
 																				'code' 	=> $service["SvcDescription"],
@@ -195,6 +236,7 @@ class Shipping_usps extends Brilliant_retail_shipping {
 					} 
 				}
 			}
+			
 		if(count($this->rates) > 1){
 			usort($this->rates,array($this,'_rate_sort'));
 		}

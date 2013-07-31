@@ -81,7 +81,7 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
                         ?>
                         </ul>
                     </div>
-                    <textarea id="content" name="content" class="ckeditor" style="height: 450px"><?=$email["content"]?></textarea></td>
+                    <textarea id="content" name="content" class="ckeditor" style="height: 450px"><?=form_prep($email["content"])?></textarea></td>
             </tr>
         </tbody>
     </table>
