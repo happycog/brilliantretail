@@ -121,11 +121,11 @@ div#error label.error {
 /* Images & Downloads */
 
 #download_browse_button, 
-#img_browse_button {
+#img_browse_button,
+#s3_import_button {
 	float:			left;
 	cursor: 		pointer;
 	background:		url(../../images/btn-browse.png) top left no-repeat;
-	width:			130px;
 	height:			24px;
 	font-size: 		12px;
 	font-weight: 	bold;
@@ -133,6 +133,16 @@ div#error label.error {
 	padding-top: 	6px;
 	color: 			#666;
 }
+#download_browse_button, 
+#s3_import_button {
+	width:			80px;
+}
+
+#img_browse_button {
+	width:			130px;
+}
+
+
 
 #download_add_button, 
 #img_upload_button {

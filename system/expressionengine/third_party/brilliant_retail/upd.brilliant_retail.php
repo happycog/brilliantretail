@@ -4083,7 +4083,13 @@ class Brilliant_retail_upd {
 					thankyou_url varchar(100) NOT NULL DEFAULT 'checkout/thankyou', 
 					customer_url varchar(100) NOT NULL DEFAULT 'customer', 
 					product_url varchar(100) NOT NULL DEFAULT 'product',
-					low_stock int(11) NOT NULL, 
+					low_stock int(11) NOT NULL,
+					display_out_of_stock int(11) NOT NULL DEFAULT '0',
+					downloads_use_local int(11) NOT NULL DEFAULT '0',
+					downloads_use_s3 int(11) NOT NULL DEFAULT '0',
+					downloads_local varchar(100), 
+					downlaods_s3_access_key varchar(100), 
+					downlaods_s3_secret_key varchar(100), 
 					PRIMARY KEY (store_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 				

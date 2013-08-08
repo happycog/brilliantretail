@@ -578,14 +578,17 @@ class Product_model extends CI_Model {
 							rename($old,$new);
 					}
 					
+					$source = ($data["download_import"] == 2) ? 'S3' : 'local';
+					
 					$download = array(
-											'product_id' => $product_id, 
-											'title' => $data["download_title"],
-											'filenm' => $data["download_filenm"],
-											'filenm_orig' => $data["download_filenm_orig"],
-											'download_limit' => $data["download_limit"],
-											'download_length' => $data["download_length"],
-											'download_version' => $data["download_version"]
+											'product_id' 		=> $product_id, 
+											'title' 			=> $data["download_title"],
+											'filenm' 			=> $data["download_filenm"],
+											'filenm_orig' 		=> $data["download_filenm_orig"],
+											'download_source'	=> $source,
+											'download_limit' 	=> $data["download_limit"],
+											'download_length' 	=> $data["download_length"],
+											'download_version' 	=> $data["download_version"]
 										);
 					unset($data["require_download"]);
 					unset($data["download_import"]);

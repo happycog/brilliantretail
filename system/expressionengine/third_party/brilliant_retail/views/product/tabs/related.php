@@ -35,7 +35,7 @@
 		<fieldset class="holder">
 
 				<div class="br_product_search">
-					<input id="related_search" autocomplete="off" type="text" />
+					<input id="related_search" autocomplete="off" placeholder="Search Products" type="text" />
 				</div>
 				<table id="related_results" class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 					<thead>
@@ -171,7 +171,11 @@
 									},
 									update: stripe_table
 								});
-			
+		
+		if($('#related_results tbody tr').size() == 0){
+			$('#related_results tfoot').show();
+		}
+		
 		$('.remove_related').unbind('click').bind('click',function(){
 			var relatedSelected = $('#related_selected');
 			relatedSelected.find('tr').removeClass('even').removeClass('odd');

@@ -303,6 +303,7 @@ class Brilliant_retail_ext {
 		
 		if(isset($this->group_access["brilliant_retail"]["product"])){
 			$this->nav_menu["br_product"]['br_all_product']		= $this->base_url.AMP.'method=product';
+			$this->nav_menu["br_product"][] = "----";
 			$this->nav_menu["br_product"]['br_new_product']		= $this->base_url.AMP.'method=product_new';
 		}
 		

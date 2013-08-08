@@ -3280,12 +3280,23 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$downloads = $this->EE->extensions->call('br_customer_download_file_before', $downloads); 
 					}
 				
-				// Load up the download helper and get the file
-					$this->EE->load->helper('my_download');
-					$path = $this->_config["media_dir"].'download/'.$downloads[0]["filenm"];
-					$name = $downloads[0]["filenm_orig"];
-					force_download($name, $path);
-					exit;
+				// Is it local or S#?
+					if($downloads[0]["download_source"] == 'S3')
+					{
+						$a = explode(' / ',$downloads[0]["filenm"]);
+						$this->EE->load->library('aws');
+						$this->EE->aws->AWSAccessKeyId 	= $this->_config["store"][$this->site_id]["downlaods_s3_access_key"];
+						$this->EE->aws->AWSSecretKey	= $this->_config["store"][$this->site_id]["downlaods_s3_secret_key"];
+						$dl_link = $this->EE->aws->createUrl($a[0],$a[1],$length=10);
+						header('location:'.$dl_link);
+					}else{
+						// Load up the download helper and get the file
+							$this->EE->load->helper('my_download');
+							$path = $this->_config["media_dir"].'download/'.$downloads[0]["filenm"];
+							$name = $downloads[0]["filenm_orig"];
+							force_download($name, $path);
+					}
+					exit;	
 		}
 
 		function customer_download_note(){

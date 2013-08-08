@@ -2320,11 +2320,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 		
-		function config_integration()
-		{
-			// Insert overview of intergrations
-		}
-		
 		function config_feeds()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_config_feeds');
@@ -2882,8 +2877,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 									'ui' => 'accordion' 
 									));
 
-			$this->vars["show_subs"] = FALSE; #TRUE;
-			
 			$this->vars["hidden"] = array(
 											'site_id' => $this->site_id 
 										);
@@ -2930,6 +2923,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$data["license"] = '';
 				$this->EE->session->set_flashdata('message_failure',lang('br_invalid_license'));
 			}
+			
 			$this->EE->store_model->update_store($data);
 			
 			// Clear the cache file before we redirect
@@ -3158,20 +3152,45 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$this->vars['product_search'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 			
+			// File upload options for new or download products only
 			
-			// Its downloadable or new! Lets try to get some uploaded files 
-			// if they are available we need to get a list of possible 
-
-				$fl = read_dir_files($this->_config["media_dir"].'import');
-				
-				$this->vars["has_import"] 	= FALSE;
-				$this->vars["imports"]		= array();
-				
-				if(count($fl) > 0){
-					$this->vars["has_import"] = TRUE;
-					$this->vars["imports"] = $fl;
+				if($type == '' || $type == 4){
+					// Its downloadable or new! Lets try to get some uploaded files 
+					// if they are available we need to get a list of possible 
+						$this->vars["has_import"] 	= FALSE;
+						$this->vars["imports"]		= array();
+						
+						if($this->_config["store"][$this->site_id]["downloads_use_local"]){
+							$fl = read_dir_files($this->_config["media_dir"].'import');
+					
+							if(count($fl) > 0){
+								$this->vars["has_import"] = TRUE;
+								foreach($fl as $f){
+									if(!is_dir($this->_config["media_dir"].'import/'.$f)){
+										$this->vars["imports"][] = $f;
+									}
+								}
+							}
+						}
+						
+					// Do we allow S3 browsing of files?
+						$this->vars["has_s3"] = FALSE;
+						if($this->_config["store"][$this->site_id]["downloads_use_s3"]){
+							$this->vars["has_s3"] = TRUE;
+						
+							// Get the buckets 
+								$this->EE->load->library('aws');
+								$this->EE->aws->AWSAccessKeyId 	= $this->_config["store"][$this->site_id]["downlaods_s3_access_key"];
+								$this->EE->aws->AWSSecretKey	= $this->_config["store"][$this->site_id]["downlaods_s3_secret_key"];
+								$this->vars["s3_buckets"] = $this->EE->aws->listBuckets();
+								$this->vars["s3_get_files"] = 	$this->EE->functions->fetch_site_index()
+																.QUERY_MARKER
+																.'ACT='.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 's3_get_files');
+						}
 				}
 			
+			// New products 					
+
 			if($type != ''){
 					$file = array(
 									2 => 'bundle',
@@ -3541,7 +3560,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				// Create a field group for the site
 					$data = array(	
 									"site_id" 		=> $store["site_id"],
-									"group_name" 	=> "[BrilliantRetail]"
+									"group_name" 	=> "BrilliantRetail Products"
 								);
 					$this->EE->db->insert("field_groups",$data);
 					$field_group = $this->EE->db->insert_id();
@@ -3550,7 +3569,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$channel = array(
 										"site_id"		=> $store["site_id"],
 										"field_group"	=> $field_group, 
-										"channel_title" => "[BrilliantRetail]",
+										"channel_title" => "BrilliantRetail Products",
 										"channel_name"	=> "brilliantretail_".$store["site_id"] 
 									);
 					
@@ -3640,6 +3659,19 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 	}
 
+	public function s3_get_files()
+	{	
+		$bucket = $this->EE->input->get('bucket');
+		
+		// Get the buckets 
+		$this->EE->load->library('aws');
+		$this->EE->aws->AWSAccessKeyId 	= $this->_config["store"][$this->site_id]["downlaods_s3_access_key"];
+		$this->EE->aws->AWSSecretKey	= $this->_config["store"][$this->site_id]["downlaods_s3_secret_key"];
+		$list = $this->EE->aws->listFiles($bucket);
+		echo json_encode($list);
+		exit;
+	}
+	
 	/************************************************/
 	/* The section below includes helper functions	*/
 	/* required by the Channel Fieldtypes. 			*/ 

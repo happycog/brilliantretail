@@ -109,14 +109,23 @@ class Brilliant_retail_core {
 			$this->_config = $this->EE->core_model->get_config();
 			
 			// Check for local configuration of path / url settings
-				$local_config_opts = array('br_media_url','br_secure_url','br_media_dir','br_license');
+				$local_config_opts = array(	'br_media_url','br_secure_url','br_media_dir','br_license',
+											'br_display_out_of_stock','br_downloads_use_local','br_downloads_use_s3',
+											'br_downlaods_s3_access_key','br_downlaods_s3_secret_key','br_downlaods_s3_length');
 				foreach($local_config_opts as $opts){
 					$c = $this->EE->config->item($opts);
-					if($c != ''){
+					if($c != '' && $c !== FALSE){
 						$this->_config["store"][$this->site_id][ltrim($opts,'br_')] = $c;
 					}
 				}
-			
+				foreach($this->_config["store"][$this->site_id] as $key => $val)
+				{
+					$ignore = array('store_id','site_id','channel_id');
+					if(!in_array($key,$ignore)){
+						$this->_config["store"][$this->site_id][$key] = $this->_set_config_value($val);
+					}
+				}
+				
 			$this->br_channel_id = $this->_config["store"][$this->site_id]["channel_id"];
 
 			$this->_config["currency"] 			= $this->_config["store"][$this->site_id]["currency"];
@@ -2753,6 +2762,53 @@ class Brilliant_retail_core {
 		private function _product_type_sort($a,$b){
 			return ($a > $b) ? +1 : -1;
 		}
+		
+
+	/** 
+	* Standardize the configuration variable output
+	*/ 
+		function _set_config_value($value){
+			if($value == ''){
+				return '';
+			}
+			
+			if(is_bool($value)){
+				// Set to TRUE 
+					if($value === TRUE){
+						$value='y';
+					}
+				// Set to FALSE 
+					if($value === FALSE){
+						$value='n';
+					}
+			}
+
+			// Lets get to one case so we can test it. 
+				$tmp = strtolower($value);
+				
+			// Check other options
+				switch($tmp)
+				{
+					// No Values
+						case '0'	: 
+						case 'n'	:
+						case 'off'	:
+							return 0;
+
+					// Yes values 
+						case '1'	: 
+						case 'y'	:
+						case 'on'	:
+							return 1;
+
+					// Other settings
+						break;
+						default		:
+							return $value;
+						break;
+				}	
+		}
+	
 
 	/*************************/
 	/* SNIPPET FORMAT HELPER */
