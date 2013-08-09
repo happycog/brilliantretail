@@ -3174,7 +3174,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						}
 						
 					// Do we allow S3 browsing of files?
-						$this->vars["has_s3"] = FALSE;
+						$this->vars["has_s3"] 		= FALSE;
+						$this->vars["s3_buckets"] 	= array();
+						$this->vars["s3_get_files"] = '';
+						
 						if($this->_config["store"][$this->site_id]["downloads_use_s3"]){
 							$this->vars["has_s3"] = TRUE;
 						

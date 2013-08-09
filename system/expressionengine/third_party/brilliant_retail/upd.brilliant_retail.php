@@ -65,6 +65,7 @@ class Brilliant_retail_upd {
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail_mcp', 'product_configurable_create_options')"; 
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail_mcp', 'product_img_update')"; 
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail_mcp', 'download_upload')"; 
+			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail_mcp', 's3_get_files')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'cart_add')"; 
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'cart_remove')"; 
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'cart_clear')"; 
@@ -84,7 +85,6 @@ class Brilliant_retail_upd {
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'wishlist_process')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'customer_download_note')";
 			$sql[] = "INSERT INTO exp_actions (class, method) VALUES ('Brilliant_retail', 'reset_password')";
-			
 			
 		## ----------------------------
 		##  Records of exp_member_fields
@@ -459,6 +459,7 @@ class Brilliant_retail_upd {
 					order_id int(11) NOT NULL,
 					cnt int(11) NOT NULL DEFAULT '0',
 					created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+					download_source varchar(100) DEFAULT 'local', 
 					download_limit int(11) NOT NULL DEFAULT '0',
 					download_length int(11) NOT NULL,
 					download_version varchar(50) DEFAULT NULL,
@@ -807,6 +808,7 @@ class Brilliant_retail_upd {
 					filenm_orig varchar(255) NOT NULL,
 					filenm varchar(100) NOT NULL,
 					created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+					download_source varchar(100) DEFAULT 'local', 
 					download_limit int(10) NOT NULL,
 					download_length int(10) NOT NULL,
 					download_version varchar(50) DEFAULT NULL,
@@ -4090,6 +4092,7 @@ class Brilliant_retail_upd {
 					downloads_local varchar(100), 
 					downlaods_s3_access_key varchar(100), 
 					downlaods_s3_secret_key varchar(100), 
+					downlaods_s3_length int(11) NOT NULL DEFAULT '10', 
 					PRIMARY KEY (store_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 				
