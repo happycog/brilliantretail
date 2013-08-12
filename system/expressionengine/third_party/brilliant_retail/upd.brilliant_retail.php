@@ -4101,7 +4101,7 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$path = rtrim(realpath(APPPATH.'/../../'),'/').DIRECTORY_SEPARATOR.'media';
 	$sql[] = "INSERT INTO exp_br_store VALUES 
-				('1', '1','0','logo.png', '', '(888) 555-5555', '12207 Wilshire Blvd', 'Suite 201', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', 'http://".$_SERVER["HTTP_HOST"]."/media/','".$path."','','','',0,0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','checkout/thankyou','customer','product','25')";
+				('1', '1','0','logo.png', '', '(888) 555-5555', '12207 Wilshire Blvd', 'Suite 201', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', 'http://".$_SERVER["HTTP_HOST"]."/media/','".$path."','','','',0,0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','checkout/thankyou','customer','product','25',0,0,0,'','','',0)";
 				
 ## ----------------------------
 ##  Table structure for exp_br_tax

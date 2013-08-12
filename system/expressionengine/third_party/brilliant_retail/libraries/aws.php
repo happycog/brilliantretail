@@ -1,7 +1,12 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+// Work around for PHP versions less than 5.3.3 -dpd
+if(version_compare(phpversion(), '5.3.3', '<')){
+define('JSON_ERROR_UTF8',1);
+}
+
 //composer auto load
-include_once 'aws/autoload.php';
+include_once 'aws/autoloader.php';
 
 use Aws\S3\S3Client;
 use Aws\S3\Iterator;
