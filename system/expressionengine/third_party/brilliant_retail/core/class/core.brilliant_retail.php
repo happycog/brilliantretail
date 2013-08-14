@@ -1009,6 +1009,7 @@ class Brilliant_retail_core {
 		
 		function _index_products($product_id=''){
 			$this->EE->load->model('br_search_model');
+			
 			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
 			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 			
@@ -2258,6 +2259,7 @@ class Brilliant_retail_core {
 		function _set_link($hash)
 		{
 			$url = $this->EE->uri->uri_to_assoc();
+			
 			for($i=1;$i<10;$i++){
 				$seg = $this->EE->uri->segment($i);
 				if($seg != $hash){
