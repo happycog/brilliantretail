@@ -5,10 +5,12 @@
 
 * Added a new search_form tag to generate the opening and closing tags for the search form. THe form requires an XID in EE 2.7+. 
 * Added nav_br_config_integration language key
+* Added row_count to the cart items tag 
 
 * Added display_out_of_stock, downloads_use_local, downloads_use_s3, downloads_local, downlaods_s3_access_key, downlaods_s3_secret_key, downlaods_s3_length columns to br_store table
 * Added language keys for store settings: br_display_out_of_stock, br_downloads_use_local, br_downloads_use_s3, br_downloads_local, br_downlaods_s3_access_key, br_downlaods_s3_secret_key, br_local_files, br_s3_files, br_bucket_loading, br_file_loader, br_downlaods_s3_length
 
+* Fixed an issue with large catalog pagination
 * Fixed an issue on the notification edit window. The output to the textarea is now parsed with the form_prep method prior to output. 
 * Updated the cart_add method to better handly multiple product posts
 * Updated the checkout_form tag to use the form_decloration with XID for enhanced security

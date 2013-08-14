@@ -970,25 +970,33 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$entry_id = $p[0]["entry_id"];
 					
 					// Lets split up the options
-						$option = array();
+						$option = $opt_single = array();
 						if($v["options"] != "")
 						{
 							$tmp = ltrim(rtrim($v["options"],"<br />"),"<h4>");
 							$p = explode("<h4>",$tmp);
 							
+							$j=0;;
 							foreach($p as $q)
 							{
 								$opt = explode("</h4>",$q);
-								$option[] = array(	
+								$opt_single['option:'.$j] = $option[] = array(	
 													'label' => $opt[0],
 													'value' => isset($opt[1]) ? $opt[1] : '' 
 												);
+								$j++;
 							}	
 						}
 					// Build up the item array 
 						$hash = md5($key);
 						$items[$i] = $v;
 						$items[$i]['option'] 		= $option;
+						
+						foreach($opt_single as $key => $val){
+							$items[$i][$key] = $val;
+						}
+						
+						$items[$i]['row_count'] 	= $i+1;
 						$items[$i]['hash'] 			= $hash;
 						$items[$i]['product_id'] 	= $v["product_id"];
 						$items[$i]['entry_id'] 		= $entry_id;

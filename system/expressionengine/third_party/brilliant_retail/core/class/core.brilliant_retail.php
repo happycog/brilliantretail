@@ -1096,6 +1096,15 @@ class Brilliant_retail_core {
 
 		
 		function _search_index($queryStr){
+			
+			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
+			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
+			
+			Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+			Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+			    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive ()
+			);
+			
 			// Need at least 3 characters in the last word for wildcard searches 
 			if(strlen($queryStr) >= 3){
 				// Dashes don't play nicely with our wildcard search
@@ -1111,15 +1120,6 @@ class Brilliant_retail_core {
 					$queryStr = $original;
 				}
 			}
-
-			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
-			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
-			
-			Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
-			Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-			    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive ()
-			);
-	
 			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
 				
 			$index = Zend_Search_Lucene::open($path);
@@ -1965,17 +1965,19 @@ class Brilliant_retail_core {
 					$lim_lower = ($curr_page - 1) * $this->_config["result_per_page"];
 					$lim_upper = ($curr_page) * $this->_config["result_per_page"];
 					
-					$vars[0]["results"] = array_values($vars[0]["results"]);
-
-					for($i=0;$i<$lim_lower;$i++){
-						unset($vars[0]["results"][$i]);
-					}
-
-					$vars[0]["results"] = array_values($vars[0]["results"]);
-					
-					for($i=$lim_upper;$i<$lim_total;$i++){
-						unset($vars[0]["results"][$i]);
-					}
+					// Set the keys 
+						$vars[0]["results"] = array_values($vars[0]["results"]);
+						
+						for($i=0;$i<$lim_lower;$i++){
+							unset($vars[0]["results"][$i]);
+						}
+	
+						for($i=$lim_upper;$i<$lim_total;$i++){
+							unset($vars[0]["results"][$i]);
+						}
+	
+					// Set the keys 
+						$vars[0]["results"] = array_values($vars[0]["results"]);
 
 					if($total_pages > 1){
 						for($i=0;$i<$total_pages;$i++){
