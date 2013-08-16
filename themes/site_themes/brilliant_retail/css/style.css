@@ -2653,6 +2653,11 @@ text-align: right;
 	display: block;
 	margin: 0 auto; }
 
+#catalog #subject #grid ul li div.hiddenFields {
+	height:auto;
+	overflow:none;
+}
+
 #catalog #subject #grid ul li div {
 	height:215px;
 	overflow:hidden;

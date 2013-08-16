@@ -1438,21 +1438,23 @@ class Brilliant_retail_core {
 			
 			return $arr;
 		}
+		
 	
 	function _layered_navigation($product,$hash,$category_id = 0){
 		
-		$this->EE->load->model('product_model');
-		$url = $this->EE->uri->uri_to_assoc();
-		$layered = array();
+		// Parse the url for filters
+			$url = $this->_parse_url();
 		
-		$children = array();
+		// Setup holder variables
+			$layered = array();
+			$children = array();
 
 		$child_cats = $this->EE->product_model->get_category_child($category_id);
 		foreach($child_cats as $key => $val){
 			$children[$key] = $val;
 			$children[$key]["cnt"] = 0;
 		}
-
+		
 		foreach($product as $p){
 			if($amt = $this->_check_product_price($p)){
 				$prices[] = $amt["price"];
@@ -1463,7 +1465,7 @@ class Brilliant_retail_core {
 				}
 			}
 		}
-
+		
 		// Setup any disabled sort by options
 
 		$disable = $this->EE->TMPL->fetch_param('disable');
@@ -1481,70 +1483,71 @@ class Brilliant_retail_core {
 							}
 						}
 					}
-					
+				
 				// Set the category filters 
-					if(!isset($_SESSION[$hash]["category"])){
-						$i = 0;
-						$tmp = array();
-						foreach($cat_list as $cat){
-							if(isset($cat[0]["parent_id"])){
-								#if($cat[0]["parent_id"] == 0){
-									$tmp[$cat[0]["title"]] = array(
-																"result_layered_title" => $cat[0]["title"],
-																"result_layered_count" => "(".$cat_count[$cat[0]["category_id"]].")",
-																"result_layered_link" => $this->_set_link($hash)."/category/".$cat[0]["category_id"] 
+					$i = 0;
+					$tmp = array();
+					foreach($cat_list as $cat){
+						if(isset($cat[0]["parent_id"])){
+							
+							// Check for selection
+							if(isset($url["filters"]["cat"])){
+								$layered_selected = (in_array($cat[0]["category_id"],$url["filters"]["cat"])) ?	TRUE : FALSE;
+							}else{
+								$layered_selected = FALSE;
+							}
+
+							$tmp[$cat[0]["title"]] = array(
+																"result_layered_title" 		=> $cat[0]["title"],
+																"result_layered_selected"	=> $layered_selected,
+																"result_layered_count" 		=> "(".$cat_count[$cat[0]["category_id"]].")",
+																"result_layered_link"	 	=> $this->_set_link(array("cat" => $cat[0]["category_id"])) 
 															);
-									$i++;
-								#}
-							}
+							$i++;
 						}
-						if(count($tmp) >= 1){
-							ksort($tmp);
-							$i = 0;
-							foreach($tmp as $t){
-								$items[$i] = $t;
-								$i++;
-							}
-							$layered[] = array(
-												'result_layered_label' 	=> lang('br_filter_category'),
-												"result_layered_item" 	=> $items
-											);	
+					}
+					if(count($tmp) >= 1){
+						ksort($tmp);
+						$i = 0;
+						foreach($tmp as $t){
+							$items[$i] = $t;
+							$i++;
 						}
+						$layered[] = array(
+											'result_layered_label' 	=> lang('br_filter_category'),
+											"result_layered_item" 	=> $items
+										);	
 					}
 			}
 
 		// Include the prices unless disabled
 			if(!in_array('price',$disable)){
 				// Set the price ranges
-					if(!isset($_SESSION[$hash]["range"])){
-						if(isset($prices)){
+					if(isset($prices)){
 							$price = $this->_price_range($prices,$hash);
-							#if(count($price["bucket"]) > 1){
-								$i = 0;
-								$items = array();
-								foreach($price["bucket"] as $key => $val){
-									$lower = $this->_config["currency_marker"].floor($this->_currency_round($price["range"]*$key)).' '.lang('br_filter_to');
-									if(($price["range"]*$key) == 0){
-										$lower = lang('br_filter_under');
-									}
-																						
-									$items[$i] = array(
-															"result_layered_title" => 	$lower.
-																						' '.
-																						$this->_config["currency_marker"].
-																						floor($this->_currency_round(($price["range"]*($key+1)))),
-															"result_layered_count" => "(".$val.")",
-															"result_layered_link" => $this->_set_link($hash)."/range/".$key 
-														);
-									$i++;
+							$i = 0;
+							$items = array();
+							foreach($price["bucket"] as $key => $val){
+								$lower = $this->_config["currency_marker"].floor($this->_currency_round($price["range"]*$key)).' '.lang('br_filter_to');
+								if(($price["range"]*$key) == 0){
+									$lower = lang('br_filter_under');
 								}
-					
-								$layered[] = array(
-													'result_layered_label' 	=> lang('br_filter_price'),
-													"result_layered_item" 	=> $items
-												);	
-							#}
-						}
+																					
+								$items[$i] = array(
+														"result_layered_title" => 	$lower.
+																					' '.
+																					$this->_config["currency_marker"].
+																					floor($this->_currency_round(($price["range"]*($key+1)))),
+														"result_layered_count" => "(".$val.")",
+														"result_layered_link" => $this->_set_link(array("range"=> $key)) 
+													);
+								$i++;
+							}
+				
+							$layered[] = array(
+												'result_layered_label' 	=> lang('br_filter_price'),
+												"result_layered_item" 	=> $items
+											);	
 					}
 			}
 
@@ -1604,11 +1607,13 @@ class Brilliant_retail_core {
 							$remItems[$key] = $key;
 						}
 						$items[$key]["label"] = $a["title"];
-						$items[$key][$i] = array(
-											"result_layered_title" => $v,
-											"result_layered_count" => '', #'('.count($count[$key][$v]).')',
-											"result_layered_link" => $this->_set_link($hash)."/code/".md5($a["attribute_id"]."_".$v)."/title/".urlencode($v)
-										);
+						$items[$key][$i] = array(	"result_layered_title" => $v,
+													"result_layered_count" => '', #'('.count($count[$key][$v]).')',
+													"result_layered_link" => $this->_set_link(
+																								array(
+																										$this->_set_link_key($a["title"]) => $this->_set_link_key($v)
+																									)
+																							));
 						$i++;
 					}
 				}
@@ -1641,75 +1646,55 @@ class Brilliant_retail_core {
 
 	function _filter_results($vars,$hash,$paginate = true){
 		
-		$url = $this->EE->uri->uri_to_assoc();
-		$filters = array(); # Container for filters
+		$url = $this->_parse_url();
 		
-		// If the url past the hash is empty then we'll reset
-		// the filters
-		
-		$uri = $_SERVER["REQUEST_URI"];
-		$check = explode($hash,$uri);
-
-		if(isset($check[1]) && trim($check[1],"/") == ''){
-			unset($_SESSION[$hash]);
-		}
-		
-		// Set the defaulst for this hash
-			if(!isset($_SESSION[$hash])){
-				// Allow for parametersin the catalog tag
-					$mode 	= ($this->EE->TMPL->fetch_param('mode')) ? $this->EE->TMPL->fetch_param('mode') : 'grid';
-					$sort 	= ($this->EE->TMPL->fetch_param('sort')) ? $this->EE->TMPL->fetch_param('sort')	: 'relevance';
-					$dir 	= ($this->EE->TMPL->fetch_param('dir'))  ? $this->EE->TMPL->fetch_param('dir')	: 'desc';
-					$_SESSION[$hash] = array(
-														'mode' 	=> $mode,
-														'sort'	=> $sort,
-														'dir' 	=> $dir
-													);
-			}
-		
-		if(isset($url["remove"])){
-			if($url["remove"] == 'code'){
-				unset($_SESSION[$hash]["code"][$url["title"]]);
-			}else{
-				unset($_SESSION[$hash][$url["remove"]]);
-			}
-		}
-		
-		// Set the mode 
-			if(isset($url["mode"])){
-				$mode = array('grid','list');
-				if(in_array($url["mode"],$mode)){
-					$_SESSION[$hash]["mode"] = $url["mode"];
+		# Sort Parameters - We automatically set the mode,sort and dir 
+		# unless they are already set in the url. 
+			$codes = array(	
+							'mode' 	=> 'grid', 
+							'sort' 	=> 'relevance',
+							'dir'	=> 'desc'
+							);
+			
+			foreach($codes as $key => $val)
+			{
+				if(isset($url["filters"][$key])){
+					$$key = $url["filters"][$key][0];
+				}else{
+					$$key = ($this->EE->TMPL->fetch_param($key)) ? $this->EE->TMPL->fetch_param($key) : $val;
 				}
 			}
-			$vars[0]['mode'] = $_SESSION[$hash]["mode"];
-			$vars[0]['link_grid'] = $this->_set_link($hash).'/mode/grid';
-			$vars[0]['link_list'] = $this->_set_link($hash).'/mode/list';
 
+		// Set the mode / sort / dir (direction)  
+			$mode_opts = array('grid','list');
+			if(!in_array($mode,$mode_opts)){
+				$mode = 'grid';
+			}
+			
 		// Set the Sort 
-			if(isset($url["sort"])){
-				$sort_opts = array('relevance','price','name');
-				if(in_array($url["sort"],$sort_opts)){
-					$_SESSION[$hash]["sort"] = $url["sort"];
-					$curr_page = 1; //Changed the sort so send page to page 1
-				}
+			$sort_opts = array('relevance','price','name');
+			if(!in_array($sort,$sort_opts)){
+				$sort = 'relevance';
 			}
 
-			if(isset($url["dir"])){
-				$dir = array('asc','desc');
-				if(in_array($url["dir"],$dir)){
-					$_SESSION[$hash]["dir"] = $url["dir"];
-					$curr_page = 1; //Changed the sort so send page to page 1
-				}
+		// Set the direction
+			$dir_opts = array('asc','desc');
+			if(!in_array($dir,$dir_opts)){
+				$dir = 'asc';
 			}
-			$vars[0]['sort_selected'] = $_SESSION[$hash]["sort"];
-			$vars[0]['link_sort_relevance'] = $this->_set_link($hash).'/sort/relevance';
-			$vars[0]['link_sort_price'] = $this->_set_link($hash).'/sort/price';
-			$vars[0]['link_sort_name'] = $this->_set_link($hash).'/sort/name';
+
+			$vars[0]['mode'] 				= $mode; 
+			$vars[0]['link_grid'] 			= $this->_set_link(array('mode' => 'grid'),0);
+			$vars[0]['link_list'] 			= $this->_set_link(array('mode' => 'list'),0);
+			$vars[0]['sort_selected'] 		= $sort;
+			$vars[0]['sort_selected_dir'] 	= ''; # asc | desc
+			$vars[0]['link_sort_relevance'] = $this->_set_link(array('sort' => 'relevance'),0);
+			$vars[0]['link_sort_price'] 	= $this->_set_link(array('sort' => 'price'),0);
+			$vars[0]['link_sort_name'] 		= $this->_set_link(array('sort' => 'name'),0);
 			
 			// If sort by relevance 
 				if($vars[0]['sort_selected'] == 'relevance'){
-					if($_SESSION[$hash]["dir"] == 'asc'){
+					if($dir == 'asc'){
 						// Reverse out the indexes
 						$i = count($vars[0]["results"])-1;
 						foreach($vars[0]["results"] as $r){
@@ -1725,7 +1710,7 @@ class Brilliant_retail_core {
 						// stored desc... Do nothin.
 						$dir_link = 'asc';
 					}
-					$vars[0]['link_sort_relevance'] = $this->_set_link($hash).'/sort/relevance/dir/'.$dir_link;
+					$vars[0]['link_sort_relevance'] = $this->_set_link(array("sort" => "relevance","dir" => $dir_link),0);
 				}
 
 			// If sort by price 
@@ -1734,7 +1719,7 @@ class Brilliant_retail_core {
 						$amt = $this->_check_product_price($r);
 						$tmp[$amt["price"]][$r["product_id"]] = $r;
 					}
-					if($_SESSION[$hash]["dir"] == 'asc'){
+					if($dir == 'asc'){
 						$dir_link = 'desc';
 						ksort($tmp);
 					}else{
@@ -1754,7 +1739,10 @@ class Brilliant_retail_core {
 					// Reset the price link since we are price 
 					// seleceted. We want to have the user toggle the 
 					// direction by clicking the price again
-						$vars[0]['link_sort_price'] = $this->_set_link($hash).'/sort/price/dir/'.$dir_link;
+						$vars[0]['link_sort_price'] = $this->_set_link(array(
+																				"sort"	=> "price",
+																				"dir"	=> $dir_link
+																			),0);
 				}
 			
 			// If sort by name 
@@ -1762,7 +1750,7 @@ class Brilliant_retail_core {
 					foreach($vars[0]["results"] as $r){
 						$tmp[$r["title"]][$r["product_id"]] = $r;
 					}
-					if($_SESSION[$hash]["dir"] == 'asc'){
+					if($dir == 'asc'){
 						$dir_link = 'desc';
 						ksort($tmp);
 					}else{
@@ -1782,9 +1770,11 @@ class Brilliant_retail_core {
 					// Reset the price link since we are price 
 					// seleceted. We want to have the user toggle the 
 					// direction by clicking the price again
-						$vars[0]['link_sort_name'] = $this->_set_link($hash).'/sort/name/dir/'.$dir_link;
+						$vars[0]['link_sort_name'] = $this->_set_link(array("sort"=>"name","dir"=>$dir_link),0);
 				
 				}
+				
+				$vars[0]['sort_selected_dir'] = $dir_link;
 	
 		// Filter if there was no price for the member group
 			foreach($vars[0]["results"] as $key => $val){
@@ -1810,114 +1800,131 @@ class Brilliant_retail_core {
 			
 			
 		// Filter down categories
-	
-			$this->EE->load->model('product_model');
-				
-			if(isset($url["category"])){
-				$sel = $url["category"] * 1;
-				if($sel != 0){
-					$_SESSION[$hash]["category"] = $sel;
-				}
-			}
-			
-			if(isset($_SESSION[$hash]["category"])){
-				$i = 0;
-				$tmp = array();
-				foreach($vars[0]["results"] as $r){
-					$filter = 0;
-					foreach($r["categories"] as $cat){
-						if($cat == $_SESSION[$hash]["category"]){
-							$filter = 1;
+			if(isset($url["filters"]["cat"])){
+				foreach($url["filters"]["cat"] as $cat){
+					$i = 0;
+					$tmp = array();
+					foreach($vars[0]["results"] as $r){
+						$filter = 0;
+						foreach($r["categories"] as $c){
+							if(in_array($c,$url["filters"]["cat"]))
+							{
+								$filter = 1;
+							}
+						}
+						if($filter == 1){
+							$tmp[$i] = $r;
+							$i++;
 						}
 					}
-					if($filter == 1){
-						$tmp[$i] = $r;
-						$i++;
-					}
+					unset($vars[0]["results"]);
+					$vars[0]["results"] = $tmp;
+					
+					$c = $this->EE->product_model->get_category($cat);
+					$filters[] = array(
+											'filter_set_section' 	=> 'Category',
+											'filter_set_label' 		=> $c[0]["title"],
+											'filter_set_remove' 	=> $this->_set_link(array("remove" => "cat:".$cat))
+										);
 				}
-				unset($vars[0]["results"]);
-				$vars[0]["results"] = $tmp;
-								
-				$cat = $this->EE->product_model->get_category($_SESSION[$hash]["category"]);
-				$filters[] = array(
-															'filter_set_section' => 'Category',
-															'filter_set_label' => $cat[0]["title"],
-															'filter_set_remove' => $this->_set_link($hash).'/remove/category'
-														);
 			}
 
 
 		// Filter price range 
-			if(isset($url["range"])){
-				$sel = $url["range"] * 1;
-				$_SESSION[$hash]["range"] = $sel;
-			}
-			if(isset($_SESSION[$hash]["range"])){
+			if(isset($url["filters"]["range"])){
 				foreach($vars[0]["results"] as $p){
 					if($amt = $this->_check_product_price($p)){
 						$prices[] = $amt["price"];
 					}
 				}				
-				
 				$price = $this->_price_range($prices,$hash);
-
-				$lower = $_SESSION[$hash]["range"] * $price["range"];
-				$upper = ($_SESSION[$hash]["range"] * $price["range"]) + $price["range"];
+				
 				$i=0;
 				$tmp = array();
 				
-				foreach($vars[0]["results"] as $r){
-					if($amt = $this->_check_product_price($r)){
-						if($amt["price"] >= $lower && $amt["price"] < $upper){
-							$tmp[$i] = $r;
-							$i++;
+				foreach($url["filters"]["range"] as $range)
+				{
+					$lower = $range * $price["range"];
+					$upper = ($range * $price["range"]) + $price["range"];
+					
+					foreach($vars[0]["results"] as $r){
+						if($amt = $this->_check_product_price($r)){
+							if($amt["price"] >= $lower && $amt["price"] < $upper){
+								$tmp[$i] = $r;
+								$i++;
+							}
 						}
 					}
+
+					if($lower == 0){
+						$lower = lang('br_filter_under');
+					}else{
+						$lower = $this->_config["currency_marker"].$lower.' '.lang('br_filter_to');
+					}
+					
+					$filters[] = array(	
+										'filter_set_section' 	=> 'Price',
+										'filter_set_label' 		=> 	$lower.
+																	' '.
+																	$this->_config["currency_marker"].
+																	$this->_currency_round($upper),
+										'filter_set_remove' 	=> $this->_set_link(array("remove"=>"range:".$range))
+									);
 				}
-				
+
 				unset($vars[0]["results"]);
 				$vars[0]["results"] = $tmp;
-				
-				if($lower == 0){
-					$lower = lang('br_filter_under');
-				}else{
-					$lower = $this->_config["currency_marker"].$lower.' '.lang('br_filter_to');
-				}
-				
-				$filters[] = array(
-															'filter_set_section' 	=> 'Price',
-															'filter_set_label' 		=> 	$lower.
-																						' '.
-																						$this->_config["currency_marker"].
-																						$this->_currency_round($upper),
-															'filter_set_remove' 	=> $this->_set_link($hash).'/remove/range'
-														);
 			}
 
 		// Filter down attributes 
-			
-			// We allow for passing attributes via the catalog tag
-			
-			if(isset($url["code"])){
-				$_SESSION[$hash]["code"][$url["title"]] = $url["code"];
-			}	
-
-			if(isset($_SESSION[$hash]["code"])){
-				foreach($_SESSION[$hash]["code"] as $code){
-					foreach($vars[0]["results"] as $key => $val){
-						$attr = $this->_check_attr($val);
-						if(!isset($attr[$code])){
+			// Get all possible attributes
+				$product_attrs = array();
+				foreach($vars[0]["results"] as $key => $val){
+					$product_attrs[$val["product_id"]] = $this->_check_attr($val);
+				}
+			// Build an array of 
+				$attr_keys = array();
+				foreach($product_attrs as $p)
+				{
+					foreach($p as $key => $val){
+						$attr_keys[$this->_set_link_key($val["title"])][$this->_set_link_key($val["label"])] = array(
+																														'title' => $val["title"],
+																														'label'	=> $val["label"]
+																													);
+					}
+				}	
+			// Are there filters to consider
+				$attr = array();
+				foreach($attr_keys as $key => $val){
+					if(isset($url["filters"][$key])){
+						// Set an array to check products against after we setup the filters
+							$attr[$key][$url["filters"][$key][0]] = 1;
+						
+						// Setup the filters
+							foreach($url["filters"][$key] as $k){
+								$filters[] = array(
+														'filter_set_section' 	=> $val[$k]['title'],
+														'filter_set_label' 		=> $val[$k]['label'],
+														'filter_set_remove' 	=> $this->_set_link(array(	"remove"	=> $this->_set_link_key($val[$k]['title']).':'.$this->_set_link_key($val[$k]['label'])))
+													);
+							}
+					}
+				}
+				if(count($attr) > 0){
+					foreach($vars[0]["results"] as $key => $v){
+						$keep = FALSE;
+						$a = $product_attrs[$v["product_id"]];
+						foreach($a as $b){
+							if(isset($attr[$this->_set_link_key($b["title"])][$this->_set_link_key($b["label"])])){
+								$keep = TRUE;
+								break;
+							}
+						}
+						if($keep == FALSE){
 							unset($vars[0]["results"][$key]);
-						}else{
-							$filters[$code] = array(
-													'filter_set_section' 	=> $attr[$code]["title"],
-													'filter_set_label' 		=> $attr[$code]["label"],
-													'filter_set_remove' 	=> $this->_set_link($hash).'/remove/code/hash/'.$code.'/title/'.urlencode($attr[$code]["label"])
-												);
 						}
 					}	
 				}
-			}	
 				
 		// Add Filters
 			$i = 0;
@@ -1943,24 +1950,23 @@ class Brilliant_retail_core {
 		
 		if($paginate == true){
 			// Filter down pagination
-				$vars[0]['link_show_all'] = $this->_set_link($hash).'/page/all';
-				if(isset($url["page"])){
-					if($url["page"] == 'all'){
-						$_SESSION[$hash]["page"] = 'all';
+				$vars[0]['link_show_all'] = $this->_set_link(array("page"=>"all"),0);
+				
+				if(isset($url["filters"]["page"])){
+					if($url["filters"]["page"][0] != 'all'){
+						$curr_page = (1*$url["filters"]["page"][0] == 0) ? 1 : $url["filters"]["page"][0];
 					}else{
-						$_SESSION[$hash]["page"] = (1*$url["page"] == 0) ? 1 : $url["page"];
+						$curr_page = 'all';
 					}
 				}else{
-					$_SESSION[$hash]["page"] = 1;
+					$curr_page = 1;
 				}
-				
-				// 
-					$curr_page = $_SESSION[$hash]["page"];
-					$lim_total = $vars[0]["total_results"];
-					$total_pages = ceil($lim_total / $this->_config["result_per_page"]);
-					$back[0] = array(); // container for the back button
-					$next[0] = array(); // container for the next button
-					$pages[0] = array(); 
+
+				$lim_total = $vars[0]["total_results"];
+				$total_pages = ceil($lim_total / $this->_config["result_per_page"]);
+				$back[0] = array(); // container for the back button
+				$next[0] = array(); // container for the next button
+				$pages[0] = array(); 
 					
 				if($curr_page != 'all'){
 					$lim_lower = ($curr_page - 1) * $this->_config["result_per_page"];
@@ -1984,20 +1990,20 @@ class Brilliant_retail_core {
 						for($i=0;$i<$total_pages;$i++){
 							$link_active = (($i+1) == $curr_page) ? 'yes' : 'no' ;
 							$pages[$i] = array(
-												'link_page' => $this->_set_link($hash).'/page/'.($i+1),
-												'link_active' => $link_active,  
-												'page_number' => ($i+1));
+												'link_page' 	=> $this->_set_link(array("page"=>$i+1),0),
+												'link_active' 	=> $link_active,  
+												'page_number' 	=> ($i+1));
 						}
 						if(count($pages > $this->_config["result_paginate"])){
 							$pad = floor(($this->_config["result_paginate"]-1)/2);
 							$high_limit = count($pages)-1;
 							
 							if($curr_page < $total_pages){
-								$next[0] = array('link_next' => $this->_set_link($hash).'/page/'.($curr_page+1));
+								$next[0] = array('link_next' => $this->_set_link(array("page" => ($curr_page+1)),0));
 							}
 							
 							if($curr_page > 1){
-								$back[0] = array('link_back' => $this->_set_link($hash).'/page/'.($curr_page-1));
+								$back[0] = array('link_back' => $this->_set_link(array("page" => ($curr_page-1)),0));
 							}
 							
 							if($curr_page > 3){
@@ -2038,9 +2044,9 @@ class Brilliant_retail_core {
 					
 					$vars[0]['result_paginate'][0] = array(	
 															'show_paginate' => $show_paginate,
-															'back'=> $back, 
-															'next'=> $next, 
-															'pages' => $pages
+															'back'			=> $back, 
+															'next'			=> $next, 
+															'pages' 		=> $pages
 															);
 					// Set the page range 
 						if($lim_upper > $lim_total){
@@ -2052,15 +2058,15 @@ class Brilliant_retail_core {
 					$pages = array();
 					for($i=0;$i<$total_pages;$i++){
 						$pages[$i] = array(
-											'link_page' => $this->_set_link($hash).'/page/'.($i+1),
+											'link_page' => $this->_set_link(array("page" => ($i+1)),0),
 											'link_active' => 'no',  
 											'page_number' => ($i+1));
 					}
 					$vars[0]['result_paginate'][0] = array(	
 															'show_paginate' => 'no',
-															'back'=> $back, 
-															'next'=> $next, 
-															'pages' => $pages
+															'back'			=> $back, 
+															'next'			=> $next, 
+															'pages' 		=> $pages
 															);
 					$vars[0]['result_range'] = count($vars[0]["results"]);
 				}
@@ -2222,10 +2228,11 @@ class Brilliant_retail_core {
 						$value = $val["value"];
 						if($value != ''){
 							$hash = md5($val["attribute_id"].'_'.$value);
-							$attr[$hash] = array(
-											"hash" => $hash,
-											"title" => $val["title"],
-											"label" => $value
+							$attr[] = array(
+												"id"	=> $val["attribute_id"],
+												"hash" => $hash,
+												"title" => $val["title"],
+												"label" => $value
 											);							
 						}
 					}
@@ -2244,7 +2251,8 @@ class Brilliant_retail_core {
 						foreach($s as $key=> $val){
 							$b = $this->EE->product_model->get_attribute_by_id($key);
 							$hash = md5($key.'_'.$val);
-							$attr[$hash] = array(
+							$attr[] = array(
+												"id"	=> $b["attribute_id"],
 												"hash" => $hash,
 												"title" => $b["title"],
 												"label" => $val 
@@ -2256,20 +2264,105 @@ class Brilliant_retail_core {
 			return $attr;
 		}
 	
-		function _set_link($hash)
+		function _parse_url()
 		{
 			$url = $this->EE->uri->uri_to_assoc();
-			
-			for($i=1;$i<10;$i++){
-				$seg = $this->EE->uri->segment($i);
-				if($seg != $hash){
-					$part[] = $seg;
+			$arr = array();
+			foreach($url as $key => $val){
+				if($key == 'filters'){
+					$tmp = array();
+					parse_str($val, $output);
+					foreach($output as $k => $v)
+					{
+						$tmp[$k] = explode(",",$v);
+					}
+					$arr['filters'] = $tmp;
 				}else{
-					$i=10;
+					$arr[$key] =  explode(",",$val);	
 				}
 			}
-			$part[] = $hash;
-			return join($part,"/");
+			return $arr;
+		}
+		
+		function _set_link($filter=array(),$multiples=1)
+		{
+			$redirect = FALSE;
+			
+			// Get the current filter set 
+				$arr = $this->_parse_url();
+			
+			// Look for any additional segments before the filters
+				for($i=1;$i<10;$i++)
+				{
+					$seg = $this->EE->uri->segment($i);
+					if($seg != 'filters'){
+						$part[] = $seg;
+					}else{
+						break;
+					}
+				}
+			
+			// Check for things to remove
+				if(isset($arr['filters']['remove'])){
+					$b = explode(":",$arr['filters']['remove'][0]);
+					if(isset($arr['filters'][$b[0]])){
+						foreach($arr['filters'][$b[0]] as $key => $val)
+						{
+							if($val==$b[1])
+							{
+								unset($arr['filters'][$b[0]][$key]);
+								$redirect = TRUE;
+							}
+						}
+						if(count($arr['filters'][$b[0]]) == 0)
+						{
+							unset($arr['filters'][$b[0]]);
+						}
+					}
+					unset($arr['filters']['remove']);
+				}else{
+					// Do we have any new filters to add
+						foreach($filter as $key => $val)
+						{
+							// Some filters should be only 1 (i.e. sort direction, etc) 
+							if($multiples == 0){
+								if(isset($arr['filters'][$key])){
+									$arr['filters'][$key] = array();
+								}
+							}
+							if(!in_array($val,$arr['filters'][$key])){
+								$arr['filters'][$key][] = $val;
+							}
+						}
+				}	
+			
+			// Build our filter string
+				foreach($arr['filters'] as $key => $val)
+				{
+					$f[] = $key.'='.join($val,",");
+				}
+			
+				$path = join($part,"/");
+				
+				if(count($f) > 0){
+					$path .= '/filters/'.join($f,"&");
+				}
+			
+			// If redirect (remove) 
+				if($redirect==TRUE)
+				{
+					$this->EE->functions->redirect($this->EE->functions->create_url($path));	
+				}
+				
+			// Return the link
+				return $path;
+		}
+		
+		function _set_link_key($str)
+		{
+			$arr = array("&"," ",",");
+			$str = str_replace($arr,"-",$str);
+			return urlencode(strtolower($str));
 		}
 	
 	function _build_config_opts($p)

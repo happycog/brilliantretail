@@ -60,7 +60,7 @@
             	<h4>{result_layered_label}:</h4>
             	<ul class="shopby">
             		{result_layered_item}
-            			<li><a href="{exp:brilliant_retail:path src='{result_layered_link}'}">{result_layered_title} {result_layered_count}</a></li>
+            			<li {if result_layered_selected}class="selected"{/if}><a href="{exp:brilliant_retail:path src='{result_layered_link}'}">{result_layered_title} {result_layered_count}</a></li>
             		{/result_layered_item}
             	</ul>
             {/exp:brilliant_retail:catalog_layered}

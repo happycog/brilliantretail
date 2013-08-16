@@ -815,7 +815,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				$vars[0] = array('results' => $layered[0]["products"]);
 
-				$vars = $this->_filter_results($vars,$key,false);
+				if($this->EE->config->item('br_catalog_multiple_filters') != 'y'){
+					$vars = $this->_filter_results($vars,$key,false);
+				}
 				
 				$layered = $this->_layered_navigation($vars[0]["results"],$key,$layered[0]["category_id"]);
 				$output = '';
