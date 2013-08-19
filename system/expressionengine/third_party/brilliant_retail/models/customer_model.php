@@ -143,7 +143,7 @@ class Customer_model extends CI_Model {
 		}
 		$new['group_id'] 		= $group_id;
 		$new['username']		= $data["email"];
-		$new['password']		= do_hash($password);
+		$new['password']		= sha1($password);
 		$new['ip_address']  	= $this->input->ip_address();
 		$new['unique_id']		= $this->functions->random('encrypt');
 		$new['join_date']		= $this->localize->now;

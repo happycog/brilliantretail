@@ -1647,6 +1647,7 @@ class Brilliant_retail_core {
 	function _filter_results($vars,$hash,$paginate = true){
 		
 		$url = $this->_parse_url();
+		$filters = array();
 		
 		# Sort Parameters - We automatically set the mode,sort and dir 
 		# unless they are already set in the url. 
@@ -1824,12 +1825,62 @@ class Brilliant_retail_core {
 					$filters[] = array(
 											'filter_set_section' 	=> 'Category',
 											'filter_set_label' 		=> $c[0]["title"],
-											'filter_set_remove' 	=> $this->_set_link(array("remove" => "cat:".$cat))
+											'filter_set_remove' 	=> $this->_set_link(array("remove" => "cat|".$cat))
 										);
 				}
 			}
 
 
+		// Filter down attributes 
+			// Get all possible attributes
+				$product_attrs = array();
+				foreach($vars[0]["results"] as $key => $val){
+					$product_attrs[$val["product_id"]] = $this->_check_attr($val);
+				}
+			// Build an array of 
+				$attr_keys = array();
+				foreach($product_attrs as $p)
+				{
+					foreach($p as $key => $val){
+						$attr_keys[$this->_set_link_key($val["title"])][$this->_set_link_key($val["label"])] = array(
+																														'title' => $val["title"],
+																														'label'	=> $val["label"]
+																													);
+					}
+				}	
+			// Are there filters to consider
+				$attr = array();
+				foreach($attr_keys as $key => $val){
+					if(isset($url["filters"][$key])){
+						// Set an array to check products against after we setup the filters
+							$attr[$key][$url["filters"][$key][0]] = 1;
+						
+						// Setup the filters
+							foreach($url["filters"][$key] as $k){
+								$filters[] = array(
+														'filter_set_section' 	=> $val[$k]['title'],
+														'filter_set_label' 		=> $val[$k]['label'],
+														'filter_set_remove' 	=> $this->_set_link(array(	"remove"	=> $this->_set_link_key($val[$k]['title']).'|'.$this->_set_link_key($val[$k]['label'])))
+													);
+							}
+					}
+				}
+				if(count($attr) > 0){
+					foreach($vars[0]["results"] as $key => $v){
+						$keep = FALSE;
+						$a = $product_attrs[$v["product_id"]];
+						foreach($a as $b){
+							if(isset($attr[$this->_set_link_key($b["title"])][$this->_set_link_key($b["label"])])){
+								$keep = TRUE;
+								break;
+							}
+						}
+						if($keep == FALSE){
+							unset($vars[0]["results"][$key]);
+						}
+					}	
+				}
+		
 		// Filter price range 
 			if(isset($url["filters"]["range"])){
 				foreach($vars[0]["results"] as $p){
@@ -1868,64 +1919,14 @@ class Brilliant_retail_core {
 																	' '.
 																	$this->_config["currency_marker"].
 																	$this->_currency_round($upper),
-										'filter_set_remove' 	=> $this->_set_link(array("remove"=>"range:".$range))
+										'filter_set_remove' 	=> $this->_set_link(array("remove"=>"range|".$range))
 									);
 				}
 
 				unset($vars[0]["results"]);
 				$vars[0]["results"] = $tmp;
 			}
-
-		// Filter down attributes 
-			// Get all possible attributes
-				$product_attrs = array();
-				foreach($vars[0]["results"] as $key => $val){
-					$product_attrs[$val["product_id"]] = $this->_check_attr($val);
-				}
-			// Build an array of 
-				$attr_keys = array();
-				foreach($product_attrs as $p)
-				{
-					foreach($p as $key => $val){
-						$attr_keys[$this->_set_link_key($val["title"])][$this->_set_link_key($val["label"])] = array(
-																														'title' => $val["title"],
-																														'label'	=> $val["label"]
-																													);
-					}
-				}	
-			// Are there filters to consider
-				$attr = array();
-				foreach($attr_keys as $key => $val){
-					if(isset($url["filters"][$key])){
-						// Set an array to check products against after we setup the filters
-							$attr[$key][$url["filters"][$key][0]] = 1;
-						
-						// Setup the filters
-							foreach($url["filters"][$key] as $k){
-								$filters[] = array(
-														'filter_set_section' 	=> $val[$k]['title'],
-														'filter_set_label' 		=> $val[$k]['label'],
-														'filter_set_remove' 	=> $this->_set_link(array(	"remove"	=> $this->_set_link_key($val[$k]['title']).':'.$this->_set_link_key($val[$k]['label'])))
-													);
-							}
-					}
-				}
-				if(count($attr) > 0){
-					foreach($vars[0]["results"] as $key => $v){
-						$keep = FALSE;
-						$a = $product_attrs[$v["product_id"]];
-						foreach($a as $b){
-							if(isset($attr[$this->_set_link_key($b["title"])][$this->_set_link_key($b["label"])])){
-								$keep = TRUE;
-								break;
-							}
-						}
-						if($keep == FALSE){
-							unset($vars[0]["results"][$key]);
-						}
-					}	
-				}
-				
+					
 		// Add Filters
 			$i = 0;
 			$tmp = array();
@@ -2304,7 +2305,7 @@ class Brilliant_retail_core {
 			
 			// Check for things to remove
 				if(isset($arr['filters']['remove'])){
-					$b = explode(":",$arr['filters']['remove'][0]);
+					$b = explode("|",$arr['filters']['remove'][0]);
 					if(isset($arr['filters'][$b[0]])){
 						foreach($arr['filters'][$b[0]] as $key => $val)
 						{
@@ -2330,6 +2331,9 @@ class Brilliant_retail_core {
 									$arr['filters'][$key] = array();
 								}
 							}
+							if(!isset($arr['filters'][$key])){
+								$arr['filters'][$key]=array();
+							}
 							if(!in_array($val,$arr['filters'][$key])){
 								$arr['filters'][$key][] = $val;
 							}
@@ -2337,6 +2341,7 @@ class Brilliant_retail_core {
 				}	
 			
 			// Build our filter string
+				$f = array();
 				foreach($arr['filters'] as $key => $val)
 				{
 					$f[] = $key.'='.join($val,",");

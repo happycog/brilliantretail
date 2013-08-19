@@ -2897,7 +2897,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 				$new['group_id'] 		= $this->_config["store"][$this->site_id]["register_group"];
 				$new['username']		= $data['email'];
-				$new['password']		= do_hash($data['password']);
+				$new['password']		= sha1($data['password']);
 				$new['ip_address']  	= $this->EE->input->ip_address();
 				$new['unique_id']		= $this->EE->functions->random('encrypt');
 				$new['join_date']		= $this->EE->localize->now;
@@ -3007,8 +3007,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 				if(version_compare(APP_VER, '2.2', '<')){
 					# Validate password pre EE v.2.2
-						$current_password = do_hash(stripslashes($this->EE->input->post('password',TRUE)));
-						$data['password'] = do_hash(stripslashes($this->EE->input->post('new_password',TRUE)));
+						$current_password = sha1(stripslashes($this->EE->input->post('password',TRUE)));
+						$data['password'] = sha1(stripslashes($this->EE->input->post('new_password',TRUE)));
 			
 						$sql = $this->EE->db->update_string('exp_members',$data,"member_id = '".$this->EE->session->userdata('member_id')."' and password = '".$current_password."'");
 						$this->EE->db->query($sql);

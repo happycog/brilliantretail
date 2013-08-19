@@ -14,6 +14,7 @@
 * Fixed an issue with large catalog pagination
 * Fixed an issue on the notification edit window. The output to the textarea is now parsed with the form_prep method prior to output. 
 
+* Updated do_hash method with php's core sha1 hashing algorithm 
 * Updated layered navigation so all filters are passed through the url for better linking and caching 
 * Updated the cart_add method to better handly multiple product posts
 * Updated the checkout_form tag to use the form_decloration with XID for enhanced security
@@ -25,19 +26,11 @@
 * Updated the catalog > form_open tag to use the form_decloration with XID for enhanced security
 * Updated the customer_pw_form tag to use the form_decloration with XID for enhanced security
 * Updated the default channel from [BrilliantRetail] to BrilliantRetail Products
-
-
-
 * Updated the checkout_form tag to use the form_decloration with XID for enhanced security
-
-
 
 * Updated USPS to version 1.1 with new international shipping descriptions. The gateway should be reinstalled to update the new settings. 
 * Updated copyright throughout to Copyright (c) 2010-2013
 * Removed » from default category installation names
-
-
-
 
 ##### 
 
