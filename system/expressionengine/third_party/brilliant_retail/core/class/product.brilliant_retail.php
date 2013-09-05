@@ -31,6 +31,8 @@ class Product {
 	
 	public $products = array();
 
+	public $url_title;
+	
 	#public function __construct()
 	#{
 	#}
@@ -77,4 +79,8 @@ class Product {
 		
 		return $products;
 	}	
+	
+	public function product_collection()
+	{
+	}
 }

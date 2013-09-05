@@ -1441,7 +1441,7 @@ class Brilliant_retail_core {
 		
 	
 	function _layered_navigation($product,$hash,$category_id = 0){
-		
+
 		// Parse the url for filters
 			$url = $this->_parse_url();
 		
@@ -1456,12 +1456,10 @@ class Brilliant_retail_core {
 		}
 		
 		foreach($product as $p){
-			if($amt = $this->_check_product_price($p)){
-				$prices[] = $amt["price"];
-				foreach($p["categories"] as $cat){
-					if(isset($children[$cat])){
-						$children[$cat]["cnt"]++;
-					}
+			$prices[] = $p["price"];
+			foreach($p["categories"] as $cat){
+				if(isset($children[$cat])){
+					$children[$cat]["cnt"]++;
 				}
 			}
 		}
@@ -1470,6 +1468,7 @@ class Brilliant_retail_core {
 
 		$disable = $this->EE->TMPL->fetch_param('disable');
 		$disable = explode("|",$disable);
+
 
 		// Include the categories unless disabled
 			if(!in_array('category',$disable)){
@@ -1487,12 +1486,15 @@ class Brilliant_retail_core {
 				// Set the category filters 
 					$i = 0;
 					$tmp = array();
+					$result_layered_selected = FALSE;
+					
 					foreach($cat_list as $cat){
 						if(isset($cat[0]["parent_id"])){
 							
 							// Check for selection
 							if(isset($url["filters"]["cat"])){
 								$layered_selected = (in_array($cat[0]["category_id"],$url["filters"]["cat"])) ?	TRUE : FALSE;
+								$result_layered_selected = TRUE;
 							}else{
 								$layered_selected = FALSE;
 							}
@@ -1513,15 +1515,22 @@ class Brilliant_retail_core {
 							$items[$i] = $t;
 							$i++;
 						}
+						
 						$layered[] = array(
-											'result_layered_label' 	=> lang('br_filter_category'),
+											"result_layered_label" 	=> lang('br_filter_category'),
+											"result_layered_selected"	=> $result_layered_selected,
 											"result_layered_item" 	=> $items
 										);	
 					}
 			}
 
+
+
 		// Include the prices unless disabled
 			if(!in_array('price',$disable)){
+				
+				$result_layered_selected = FALSE;
+				
 				// Set the price ranges
 					if(isset($prices)){
 							$price = $this->_price_range($prices,$hash);
@@ -1532,42 +1541,55 @@ class Brilliant_retail_core {
 								if(($price["range"]*$key) == 0){
 									$lower = lang('br_filter_under');
 								}
-																					
+
+								// Check for selection
+								if(isset($url["filters"]["range"])){
+									$layered_selected = (in_array($key,$url["filters"]["range"])) ?	TRUE : FALSE;
+									$result_layered_selected = TRUE;
+								}else{
+									$layered_selected = FALSE;
+								}
+								
 								$items[$i] = array(
-														"result_layered_title" => 	$lower.
-																					' '.
-																					$this->_config["currency_marker"].
-																					floor($this->_currency_round(($price["range"]*($key+1)))),
-														"result_layered_count" => "(".$val.")",
-														"result_layered_link" => $this->_set_link(array("range"=> $key)) 
+														"result_layered_title" 		=> 	$lower.
+																						' '.
+																						$this->_config["currency_marker"].
+																						floor($this->_currency_round(($price["range"]*($key+1)))),
+														"result_layered_selected"	=> 	$layered_selected,
+														"result_layered_count" 		=> 	"(".$val.")",
+														"result_layered_link" 		=> 	$this->_set_link(array("range"=> $key)) 
 													);
 								$i++;
 							}
 				
 							$layered[] = array(
-												'result_layered_label' 	=> lang('br_filter_price'),
+												"result_layered_label" 	=> lang('br_filter_price'),
+												"result_layered_selected"	=> $result_layered_selected,
 												"result_layered_item" 	=> $items
 											);	
 					}
 			}
-
+			
 		// Attributes 
 			foreach($product as $p){
 				
 				$prod = $this->EE->product_model->get_attributes('',$p["product_id"]);
+
 				foreach($prod as $val){
 					if(isset($val["filterable"]) && $val["filterable"] == 1){
 						if($val["fieldtype"] == 'dropdown'){
 							$value = $val["value"];
 							if($value != ''){
 								$attr_id = $val["attribute_id"];
-								$attr[$attr_id][$value] = $value;
-								$count[$attr_id][$value][] = true;
+								$attr[$attr_id][$value] 	= $value;
+								$count[$attr_id][$value][] 	= true;
 							}
 						}
 					}
 				}
+				
 				unset($prod);
+				
 				
 				if($p["type_id"] == 3){
 					// Get the configurable products for the item
@@ -1576,12 +1598,11 @@ class Brilliant_retail_core {
 						{
 							foreach($id as $i){
 								$prod 	= $this->EE->product_model->get_config_product($i["configurable_id"]);
-								$s = unserialize($prod[0]["attributes"]);
-								foreach($s as $key=> $val){
-									$filterable = $this->_check_attribute_filterable($key);
+								foreach($prod as $key=> $val){
+									$filterable = $this->_check_attribute_filterable($val["attribute_id"]);
 									if($filterable === TRUE){
-										$attr[$key][$val] = $val;
-										$count[$key][$val][] = true;
+										$attr[$val["attribute_id"]][$val["option_id"]] = $val["option_id"];
+										$count[$val["attribute_id"]][$val["option_id"]][$prod[0]["product_id"]][] = true;
 									}
 								}
 							}
@@ -1590,6 +1611,7 @@ class Brilliant_retail_core {
 			}
 			
 			if(isset($attr)){
+				
 				// sort things 
 				$tmp = array();
 				foreach($attr as $key => $val){
@@ -1599,45 +1621,79 @@ class Brilliant_retail_core {
 				$attr = $tmp;
 
 				$items = array();
+				
 				foreach($attr as $key => $val){
 					$a = $this->EE->product_model->get_attribute_by_id($key);
 					$i = 0;
+					
+					$items[$key]["label"] 			= $a["title"];
+					$items[$key]["selected"]	= FALSE;
+						
 					foreach($val as $v){
-						if(isset($_SESSION[$hash]["code"][urlencode($v)])){
-							$remItems[$key] = $key;
+						if($v == 0){
+							continue;
 						}
-						$items[$key]["label"] = $a["title"];
-						$items[$key][$i] = array(	"result_layered_title" => $v,
-													"result_layered_count" => '', #'('.count($count[$key][$v]).')',
-													"result_layered_link" => $this->_set_link(
-																								array(
-																										$this->_set_link_key($a["title"]) => $this->_set_link_key($v)
-																									)
-																							));
+
+						$selected = FALSE;
+						
+						if(isset($url["filters"][$key])){
+							$items[$key]["selected"]	= TRUE;
+							
+							foreach($url["filters"][$key] as $k){
+								if($v == $k)
+								{
+									$selected = TRUE;
+								}
+							}
+						}
+
+						$items[$key][$i]		= array("result_layered_title"		=> $this->_option_to_label($v),
+														"result_layered_count" 		=> '('.count($count[$key][$v]).')',
+														"result_layered_selected" 	=> $selected,
+														"result_layered_link" 		=> $this->_set_link(
+																									array(
+																											$this->_set_link_key($a["attribute_id"]) => $this->_set_link_key($v)
+																										)
+																								));
 						$i++;
 					}
 				}
 
-				// Here is where we weed out the selections
-					if(isset($remItems)){
-						foreach($remItems as $rem){
-							unset($items[$rem]);
-						}
-					}
-
 				if(isset($items)){
 					foreach($items as $item){
-						$label = $item["label"];
+						$label 		= $item["label"];
+						$selected 	= $item["selected"];
 						unset($item["label"]);
+						unset($item["selected"]);
 						$layered[] = array(
-												'result_layered_label' => $label,
-												'result_layered_item' => $item
+												'result_layered_label' 		=> $label,
+												"result_layered_selected" 	=> $selected,
+												'result_layered_item' 		=> $this->_layered_sort($item)
 											);
 					}
 				}
 			}
-		return $layered;
+			
+			$tmp = array();
+			foreach($layered as $key => $val)
+			{
+				if(!$val["result_layered_selected"]){
+					$tmp[$key] = $val;
+				}
+			}
+			$layered = array_values($tmp);
+			return $layered;
 	}
+
+		function _layered_sort($item){
+			$tmp = array();
+			foreach($item as $val){
+				$tmp[$val["result_layered_title"]] = $val;
+			}
+			ksort($tmp);
+			return array_values($tmp);
+		}
+	
 	
 	/* 
 		Filter search results down by page / sort / price / attribute
@@ -1717,8 +1773,7 @@ class Brilliant_retail_core {
 			// If sort by price 
 				if($vars[0]['sort_selected'] == 'price'){
 					foreach($vars[0]["results"] as $r){
-						$amt = $this->_check_product_price($r);
-						$tmp[$amt["price"]][$r["product_id"]] = $r;
+						$tmp[$r["price"]][$r["product_id"]] = $r;
 					}
 					if($dir == 'asc'){
 						$dir_link = 'desc';
@@ -1779,8 +1834,7 @@ class Brilliant_retail_core {
 	
 		// Filter if there was no price for the member group
 			foreach($vars[0]["results"] as $key => $val){
-				$amt = $this->_check_product_price($val);
-				if($amt === FALSE){
+				if($val["price"] === ''){
 					unset($vars[0]["results"][$key]);	
 				}
 			}		
@@ -1798,7 +1852,6 @@ class Brilliant_retail_core {
 					}
 				}
 			}
-			
 			
 		// Filter down categories
 			if(isset($url["filters"]["cat"])){
@@ -1830,26 +1883,28 @@ class Brilliant_retail_core {
 				}
 			}
 
-
 		// Filter down attributes 
 			// Get all possible attributes
 				$product_attrs = array();
 				foreach($vars[0]["results"] as $key => $val){
 					$product_attrs[$val["product_id"]] = $this->_check_attr($val);
 				}
+				
 			// Build an array of 
 				$attr_keys = array();
 				foreach($product_attrs as $p)
 				{
 					foreach($p as $key => $val){
-						$attr_keys[$this->_set_link_key($val["title"])][$this->_set_link_key($val["label"])] = array(
+						$attr_keys[$val["id"]][$this->_set_link_key($val["label"]["option_id"])] = array(
 																														'title' => $val["title"],
 																														'label'	=> $val["label"]
 																													);
 					}
-				}	
+				}
+				
 			// Are there filters to consider
 				$attr = array();
+				
 				foreach($attr_keys as $key => $val){
 					if(isset($url["filters"][$key])){
 						// Set an array to check products against after we setup the filters
@@ -1859,30 +1914,31 @@ class Brilliant_retail_core {
 							foreach($url["filters"][$key] as $k){
 								$filters[] = array(
 														'filter_set_section' 	=> $val[$k]['title'],
-														'filter_set_label' 		=> $val[$k]['label'],
-														'filter_set_remove' 	=> $this->_set_link(array(	"remove"	=> $this->_set_link_key($val[$k]['title']).'|'.$this->_set_link_key($val[$k]['label'])))
+														'filter_set_label' 		=> $this->_option_to_label($val[$k]['label']['option_id']),
+														'filter_set_remove' 	=> $this->_set_link(array(	"remove"	=> $key.'|'.$k))
 													);
 							}
 					}
-				}
-				if(count($attr) > 0){
-					foreach($vars[0]["results"] as $key => $v){
-						$keep = FALSE;
-						$a = $product_attrs[$v["product_id"]];
-						foreach($a as $b){
-							if(isset($attr[$this->_set_link_key($b["title"])][$this->_set_link_key($b["label"])])){
-								$keep = TRUE;
-								break;
+					if(count($attr) > 0){
+						foreach($vars[0]["results"] as $key => $v){
+							$keep = FALSE;
+							$a = $product_attrs[$v["product_id"]];
+							foreach($a as $b){
+								if(isset($attr[$b["id"]][$b["label"]["option_id"]])){
+									$keep = TRUE;
+									break;
+								}
+							}
+							if($keep == FALSE){
+								unset($vars[0]["results"][$key]);
 							}
 						}
-						if($keep == FALSE){
-							unset($vars[0]["results"][$key]);
-						}
-					}	
+					}
 				}
 		
 		// Filter price range 
 			if(isset($url["filters"]["range"])){
+				
 				foreach($vars[0]["results"] as $p){
 					if($amt = $this->_check_product_price($p)){
 						$prices[] = $amt["price"];
@@ -2086,22 +2142,6 @@ class Brilliant_retail_core {
 				unset($vars[0]["results"]);
 				$vars[0]["results"] = $tmp;
 		}
-		
-		foreach($vars[0]["results"] as $key => $val){
-			// Check the price setup 
-				if($amt = $this->_check_product_price($val)){
-					$vars[0]["results"][$key]["price_html"] = $this->_snippet_format_price_html($amt["price_html"]);
-				}
-			// Set default images
-			 	if($vars[0]["results"][$key]["image_large"] == ''){
-			 		$vars[0]["results"][$key]["image_large"] = 'products/noimage.jpg';
-			 		$vars[0]["results"][$key]["image_large_title"] = '';
-			 	}
-			 	if($vars[0]["results"][$key]["image_thumb"] == ''){
-			 		$vars[0]["results"][$key]["image_thumb"] = 'products/noimage.jpg';
-			 		$vars[0]["results"][$key]["image_thumb_title"] = '';
-			 	}
-		}
 		return $vars;
 	}
 	
@@ -2116,100 +2156,109 @@ class Brilliant_retail_core {
 			// Catch to make sure we were passed a valid product
 				if($p == null){ return FALSE; }
 			
-			$group_id = $this->EE->session->userdata["group_id"];
-			$amt = array(
-							'product_id'		=> $p["product_id"],
-							'on_sale' 			=> FALSE, 
-							'base' 				=> '',
-							'price' 			=> '',
-							'price_html'		=> '',
-							'price_start'		=> NULL,
-							'price_end'			=> NULL,
-							'sale_price_start'	=> NULL,
-							'sale_price_end'	=> NULL 
-						);
+			// Only lookup once
+				if(!isset($this->EE->session->cache["br_check_product_price"][$p["product_id"]])){
+					
+					#$this->EE->TMPL->log_item('BrilliantRetail: _check_product_price ['.$p["product_id"].']');
 
-			// Deal with our price matrix 
-				
-				foreach($p["price_matrix"] as $price){
-				 	if(	$price["group_id"] == 0 || 
-				 		$price["group_id"] == $group_id){
-
+					$group_id = $this->EE->session->userdata["group_id"];
+					$amt = array(
+									'product_id'		=> $p["product_id"],
+									'on_sale' 			=> FALSE, 
+									'base' 				=> '',
+									'price' 			=> '',
+									'price_html'		=> '',
+									'price_start'		=> NULL,
+									'price_end'			=> NULL,
+									'sale_price_start'	=> NULL,
+									'sale_price_end'	=> NULL 
+								);
+		
+					// Deal with our price matrix 
+						
+						foreach($p["price_matrix"] as $price){
+						 	if(	$price["group_id"] == 0 || 
+						 		$price["group_id"] == $group_id){
+		
+								$valid 	= 1;
+								
+								// Check Start time
+									if($price["start_dt"] != "0000-00-00 00:00:00" && $price["start_dt"] != "")
+									{
+										$start 	= date("U",strtotime($price["start_dt"]));
+										if(time() < $start){
+											$valid = 0;
+										}
+									}
+								// Check End Time 
+									if($price["end_dt"] != "0000-00-00 00:00:00" && $price["end_dt"] != "")
+									{
+										$end 	= date("U",strtotime($price["end_dt"]));
+										if($end != 0 && time() > $end){
+											$valid = 0;
+										}
+									}
+								
+								if($valid == 1){
+									$amt['base'] 		= $price["price"];
+									$amt['price'] 		= $price["price"];
+									$amt['price_html']	= $this->_snippet_format_price_html($this->_format_money($price["price"]));
+						 			$amt['price_start'] = ($price["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["start_dt"]);
+						 			$amt['price_end'] 	= ($price["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["end_dt"]);
+						 		}
+						 	}
+						 }	
+					
+					// 
+					foreach($p["sale_matrix"] as $sale){
+						
 						$valid 	= 1;
 						
 						// Check Start time
-							if($price["start_dt"] != "0000-00-00 00:00:00" && $price["start_dt"] != "")
+							if($sale["start_dt"] != "0000-00-00 00:00:00" && $sale["start_dt"] != "")
 							{
-								$start 	= date("U",strtotime($price["start_dt"]));
+								$start 	= date("U",strtotime($sale["start_dt"]));
 								if(time() < $start){
 									$valid = 0;
 								}
 							}
 						// Check End Time 
-							if($price["end_dt"] != "0000-00-00 00:00:00" && $price["end_dt"] != "")
+							if($sale["end_dt"] != "0000-00-00 00:00:00" && $sale["end_dt"] != "")
 							{
-								$end 	= date("U",strtotime($price["end_dt"]));
+								$end 	= date("U",strtotime($sale["end_dt"]));
 								if($end != 0 && time() > $end){
 									$valid = 0;
 								}
 							}
 						
-						if($valid == 1){
-							$amt['base'] 		= $price["price"];
-							$amt['price'] 		= $price["price"];
-							$amt['price_html']	= $this->_snippet_format_price_html($this->_format_money($price["price"]));
-				 			$amt['price_start'] = ($price["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["start_dt"]);
-				 			$amt['price_end'] 	= ($price["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($price["end_dt"]);
-				 		}
-				 	}
-				 }	
-			
-			// 
-			foreach($p["sale_matrix"] as $sale){
-				
-				$valid 	= 1;
-				
-				// Check Start time
-					if($sale["start_dt"] != "0000-00-00 00:00:00" && $sale["start_dt"] != "")
-					{
-						$start 	= date("U",strtotime($sale["start_dt"]));
-						if(time() < $start){
-							$valid = 0;
-						}
+						// Setup a sale price if valid		 
+						 	if(($valid == 1) && ($sale["group_id"] == 0 || $sale["group_id"] == $group_id) && ($amt["price"] > $sale["price"]))
+						 	{
+								// Container for the original price
+						 			$original 					= $amt['price'];
+						 		// 
+							 		$amt['on_sale'] 			= TRUE; 
+									$amt['base'] 				= $amt["price"];
+									$amt['price'] 				= $sale["price"]; 
+									$amt['price_html'] 			= $this->_snippet_format_sale_price_html($this->_format_money($original),$this->_format_money($sale["price"]));
+									$amt['sale_price'] 			= $sale["price"];
+									$amt['sale_price_start'] 	= ($sale["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["start_dt"]);
+						 			$amt['sale_price_end'] 		= ($sale["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["end_dt"]);
+							}
 					}
-				// Check End Time 
-					if($sale["end_dt"] != "0000-00-00 00:00:00" && $sale["end_dt"] != "")
-					{
-						$end 	= date("U",strtotime($sale["end_dt"]));
-						if($end != 0 && time() > $end){
-							$valid = 0;
-						}
+
+				// Insert Check Product Hook 
+					if($this->EE->extensions->active_hook('br_check_product_price_end') === TRUE){
+						$amt = $this->EE->extensions->call('br_check_product_price_end', $amt); 
 					}
-				
-				// Setup a sale price if valid		 
-				 	if(($valid == 1) && ($sale["group_id"] == 0 || $sale["group_id"] == $group_id) && ($amt["price"] > $sale["price"]))
-				 	{
-						// Container for the original price
-				 			$original 					= $amt['price'];
-				 		// 
-					 		$amt['on_sale'] 			= TRUE; 
-							$amt['base'] 				= $amt["price"];
-							$amt['price'] 				= $sale["price"]; 
-							$amt['price_html'] 			= $this->_snippet_format_sale_price_html($this->_format_money($original),$this->_format_money($sale["price"]));
-							$amt['sale_price'] 			= $sale["price"];
-							$amt['sale_price_start'] 	= ($sale["start_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["start_dt"]);
-				 			$amt['sale_price_end'] 		= ($sale["end_dt"] == "0000-00-00 00:00:00") ? null : strtotime($sale["end_dt"]);
-					}
+				$this->EE->session->cache["br_check_product_price"][$p["product_id"]] = $amt;
+			}else{
+				$amt = $this->EE->session->cache["br_check_product_price"][$p["product_id"]];
 			}
-			
-			// Insert Check Product 
-			if($this->EE->extensions->active_hook('br_check_product_price_end') === TRUE){
-				$amt = $this->EE->extensions->call('br_check_product_price_end', $amt); 
-			}
-			
-			if(!isset($amt["price"])){
-				return false;
-			}
+
+			#if(!isset($amt["price"])){
+			#	return false;
+			#}
 
 			return $amt;		
 		}
@@ -2223,6 +2272,7 @@ class Brilliant_retail_core {
 			$attr = array();
 			
 			$prod = $this->EE->product_model->get_attributes('',$p["product_id"]);
+			
 			foreach($prod as $val){
 				if(isset($val["filterable"]) && $val["filterable"] == 1){
 					if($val["fieldtype"] == 'dropdown'){
@@ -2231,9 +2281,9 @@ class Brilliant_retail_core {
 							$hash = md5($val["attribute_id"].'_'.$value);
 							$attr[] = array(
 												"id"	=> $val["attribute_id"],
-												"hash" => $hash,
+												"hash" 	=> $hash,
 												"title" => $val["title"],
-												"label" => $value
+												"label" => array("option_id" => $value) 
 											);							
 						}
 					}
@@ -2247,14 +2297,13 @@ class Brilliant_retail_core {
 				if(isset($id[0]["configurable_id"]))
 				{
 					foreach($id as $i){
+					
 						$prod 	= $this->EE->product_model->get_config_product($i["configurable_id"]);
-						$s = unserialize($prod[0]["attributes"]);
-						foreach($s as $key=> $val){
-							$b = $this->EE->product_model->get_attribute_by_id($key);
-							$hash = md5($key.'_'.$val);
+						
+						foreach($prod as $key => $val){
+							$b = $this->EE->product_model->get_attribute_by_id($val["attribute_id"]);
 							$attr[] = array(
 												"id"	=> $b["attribute_id"],
-												"hash" => $hash,
 												"title" => $b["title"],
 												"label" => $val 
 												);
@@ -2911,6 +2960,22 @@ class Brilliant_retail_core {
 				}	
 		}
 	
+	/*
+	*	 Set an attribute option_id to a label
+	*/
+	
+	public function _option_to_label($v)
+	{
+		if(!isset($this->EE->session->cache["br_option_to_label"][$v])){
+			$this->EE->session->cache["br_option_to_label"][$v] = '';
+			$this->EE->db->from('br_attribute_option');
+			$rst = $this->EE->db->get();
+			foreach($rst->result_array() as $row){
+				$this->EE->session->cache["br_option_to_label"][$row["attr_option_id"]] = $row["label"];
+			}
+		}
+		return $this->EE->session->cache["br_option_to_label"][$v]; 
+	}
 
 	/*************************/
 	/* SNIPPET FORMAT HELPER */

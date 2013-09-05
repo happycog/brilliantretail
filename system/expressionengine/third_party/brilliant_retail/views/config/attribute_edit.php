@@ -68,25 +68,38 @@
 	        	<td>
 	        		<?=lang('br_field_type')?></td>
 	        	<td>
-	        		<select id="fieldtype" id="fl_type" name="fieldtype">
-	        			<?php 
-	        				$opts = array('text','textarea','dropdown','multiselect','file');
-	        			
-	        				foreach($opts as $o){
-	        					$sel = ($attributes["fieldtype"] == $o) ? 'selected' : '' ;
-	        					echo '<option value="'.$o.'" '.$sel.'>'.lang('br_'.$o).'</option>';
-	        				}
-	        			?>
-	        		</select>
-					<div id="dropdown_options" class="type_opts">
+	        		<div id="options" class="type_opts">
 		        		<br />
-		        		<textarea name="dropdown_options" id="dropdown"><?=$attributes["options"]?></textarea>
+		        		<table width="100%" cellpadding="0" cellspacing="0" id="option_rows" class="product_edit">
+		        			<thead>
+			        			<tr>
+			        				<th colspan="3">
+			        					<?=lang('br_label')?></th>
+			        			</tr>
+							</thead>
+		        			<tbody>
+		        		<?php
+		        			$i = 1;
+		        			foreach($attributes["options"] as $opt){
+		        				echo '	<tr>
+		        							<td>
+		        								<input type="hidden" name="option[id]['.$i.']" value="'.$opt["attr_option_id"].'" />
+		        								<input type="hidden" class="opt_sort" name="option[sort]['.$i.']" value="'.$i.'" />
+		        								<input type="hidden" id="remove_'.$i.'" name="option[remove]['.$i.']" value="0" />
+		        								<input type="text" name="option[label]['.$i.']" value="'.$opt["label"].'" />
+		        							</td>
+		        							<td class="move_config_row" width="5%">
+		        								<img src="'.$theme.'images/move.png" /></td>
+		        							<td width="5%">
+		        								<a href="#" data-remove="'.$i.'" class="config_item_remove"><img src="'.$theme.'images/delete.png" /></a></td>
+		        						</tr>';
+		        				$i++;
+		        			}
+		        		?>
+		        			</tbody>
+		        		</table>
+		        		<p><a href="#" class="add_row">[+]</a></p>
 		        		<p><?=lang('br_dropdown_instruction')?></p>
-	        		</div>
-	        		<div id="multiselect_options" class="type_opts">
-		        		<br />
-		        		<textarea name="multiselect_options" id="multiselect"><?=$attributes["options"]?></textarea>
-		        		<p><?=lang('br_multiselect_instruction')?></p>
 	        		</div>
 	        		<div id="default" class="type_opts">
 		        		<br />
@@ -122,13 +135,70 @@
 			?>
 	    	<div class="b2r_clearboth"><!-- --></div>
 	    </div>
-</form>                     
+</form>   
 <script type="text/javascript">
+	
+	var new_cnt = 0;
+
+	function _set_remove(e){
+		e.preventDefault();
+		var a = $(this);
+		var b = a.data('remove');
+		$('#remove_'+b).val(1);
+		a.closest('tr').hide();
+	}
+		
 	$(function(){
+
+		$('#option_rows tbody').sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_config_row',
+			helper:function(e, ui) {
+				ui.children().each(function() {
+					$(this).width($(this).width());
+				});		
+				return ui;
+			},
+			update: function( event, ui ) {
+				var i = 1;
+				$('.opt_sort').each(function(){
+					$(this).val(i);
+					i++;
+				});
+			}
+		});
+		
+		$('.add_row').click(function(event){
+			event.preventDefault();
+			var row = 	'<tr>'+
+						'	<td>'+
+						'		<input type="hidden" name="option[id][new_'+new_cnt+']" value="new" />'+
+						'		<input type="hidden" class="opt_sort" name="option[sort][new_'+new_cnt+']" value="new" />'+
+						'		<input type="hidden" id="remove_new_'+new_cnt+'" name="option[remove][new_'+new_cnt+']" value="0" />'+
+						'		<input type="text" name="option[label][new_'+new_cnt+']" value="" />'+
+						'	</td>'+
+						'	<td class="move_config_row" width="5%">'+
+						'		<img src="<?=$theme?>images/move.png" /></td>'+
+						'	<td width="5%">'+
+						'		<a href="#" data-remove="new_'+new_cnt+'" class="config_item_remove"><img src="<?=$theme?>images/delete.png" /></a></td>'+
+						'</tr>';
+			new_cnt++;
+			$(row).appendTo($('#option_rows tbody'));
+			$('#option_rows tbody tr:last input:visible').focus();	
+			$('.config_item_remove').unbind().click(_set_remove);
+
+			// Reset the sort
+				var i = 1;
+				$('.opt_sort').each(function(){
+					$(this).val(i);
+					i++;
+				});
+		});
+		
+		$('.config_item_remove').click(_set_remove);
 		
 		$('.product_edit tbody tr:even').addClass('even');
 		
-		$('#delete_button').bind('click',function(){
+		$('#delete_button').bind('click',function(e){
+			e.preventDefault();
 			if(confirm('<?=lang('br_confirm_delete_attribute')?>')){
 				window.location = '<?=$base_url?>&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attribute_delete&attribute_id=<?=$attributes["attribute_id"]?>';
 			}
@@ -144,11 +214,10 @@
 		<?php
 			if($attributes["fieldtype"] == 'text'){
 				echo "$('#default').show();";
-			}elseif($attributes["fieldtype"] == 'dropdown'){
-				echo "$('#filterable').show();";
-				echo "$('#dropdown_options').show();";
-			}elseif($attributes["fieldtype"] == 'multiselect'){
-				echo "$('#multiselect_options').show();";
+			}elseif($attributes["fieldtype"] == 'dropdown' || 
+					$attributes["fieldtype"] == 'multiselect')
+			{
+				echo "$('#filterable,#options').show();";
 			}
 			
 		?>
@@ -157,12 +226,10 @@
 		$('#fieldtype').bind('change',function(){
 			var a = $(this);
 			$('.type_opts').hide();
-			if(a.val() == 'dropdown'){
+			if(a.val() == 'dropdown' || a.val() == 'multiselect'){
 				$('#filterable').show();
-				$('#dropdown_options').show();
-			}else if(a.val() == 'multiselect'){
-				$('#multiselect_options').show();
-			}else if(a.val() == 'text'){
+				$('#options').show();
+			}else{
 				$('#default').show();
 			}
 			

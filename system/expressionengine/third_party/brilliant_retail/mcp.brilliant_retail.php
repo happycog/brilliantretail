@@ -364,7 +364,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
-				if($print == TRUE){
+				if($print === TRUE){
 					$this->vars["site_name"] = $this->EE->config->item('site_name');
 					$this->vars["company"] = $this->_config["store"][$this->site_id];
 					$this->vars["print_css"] = $this->_theme('css/print.css');
@@ -372,6 +372,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					@header("HTTP/1.1 200 OK");
 					echo $view;
 					exit();
+				}elseif($print == 'pack'){
+					$this->vars["site_name"] = $this->EE->config->item('site_name');
+					$this->vars["company"] = $this->_config["store"][$this->site_id];
+					$this->vars["print_css"] = $this->_theme('css/print.css');
+					$view = $this->_view('order/pack', $this->vars);	
+					$this->EE->load->library('br_pdf');
+					$this->EE->br_pdf->print_html(array($view,$view,$view));
+					exit;
 				}else{
 					return $this->_view('order/detail', $this->vars);	
 				}
@@ -1479,9 +1487,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							}
 						
 						if($this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$entry)){
-							$qry = $this->EE->db->query("SELECT entry_id FROM ".$prefix."channel_titles ORDER BY entry_id DESC LIMIT 1");
-							$result = $qry->result_array();
-							$entry_id = $result[0]["entry_id"];
+							$qry 		= $this->EE->db->query("SELECT entry_id FROM ".$prefix."channel_titles ORDER BY entry_id DESC LIMIT 1");
+							$result 	= $qry->result_array();
+							$entry_id 	= $result[0]["entry_id"];
 						}
 						
 					}
@@ -1970,14 +1978,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					unset($_POST["submit"]);
 				}
 			
-			if($_POST["fieldtype"] == 'dropdown'){
-				$_POST["options"] = $_POST["dropdown_options"];
-			}elseif($_POST["fieldtype"] == 'multiselect'){
-				$_POST["options"] = $_POST["multiselect_options"];
-			}
-			unset($_POST["dropdown_options"]);
-			unset($_POST["multiselect_options"]);
-
 			$attribute_id = $this->EE->product_model->update_attribute($_POST);
 			remove_from_cache('config');
 			$_SESSION["message"] = lang('br_attribute_update_success');
@@ -3468,10 +3468,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						
 			$headings = '';
 			foreach($fields as $f){
-				$attr = $this->EE->product_model->get_attribute_by_id($f);
-				$headings .= '<th>'.$attr["title"].'</th>';
-				$opt = $this->_configurable_dropdown($attr["attribute_id"],$attr["title"],'',0,'',$attr["options"]);
-				$str .= '<tr><td>'.$attr["title"].'</td><td>'.$opt.'</td></tr>';
+				$attr 		= $this->EE->product_model->get_attribute_by_id($f);
+				$headings 	.= '<th>'.$attr["title"].'</th>';
+				$opt 		= $this->_configurable_dropdown($attr["attribute_id"],$attr["title"],'',0,'',$attr["options"]);
+				$str 		.= '<tr><td>'.$attr["title"].'</td><td>'.$opt.'</td></tr>';
 			}		
 						
 			$str .=	'	<tr>

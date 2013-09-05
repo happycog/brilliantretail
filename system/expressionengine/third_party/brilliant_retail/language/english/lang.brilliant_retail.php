@@ -436,6 +436,7 @@ $lang = array(
 		'br_filterable' => 'Filterable',
 		'br_confirm_delete_attribute' => 'Are you sure you want to delete the selected attribute? Warning: This can not be undone!',
 		'br_attribute_delete_success' => 'Attribute Successfully Deleted!', 
+		'br_attribute_cant_remove'	=> 'The attribute "%s" can not be removed because it is in use on a configurable product', 
 	
 	// Attribute Sets
 		'br_new_attribute' 					=> 'New Attribute',	

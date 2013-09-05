@@ -434,18 +434,24 @@ class Product_model extends CI_Model {
 	}
 	
 	function get_config_product($id){
-		$product = array();
-		$this->db->where('configurable_id',$id)
-				->from('br_product_configurable');
-		$query = $this->db->get();
-		$products = array();
-		$i = 0;
-		if($query->num_rows() == 0){
-			return $products;
+		if(isset($this->session->cache['br_get_config_product'][$id])){
+			return $this->session->cache['br_get_config_product'][$id];
 		}
-		foreach ($query->result_array() as $key => $val){
-			$products[$key] = $val;
-		}
+			$product = array();
+			$this->db->where('configurable_id',$id)
+					->from('br_product_configurable_attribute');
+			$query = $this->db->get();
+			$products = array();
+			$i = 0;
+			if($query->num_rows() == 0){
+				return $products;
+			}
+			
+			foreach ($query->result_array() as $key => $val){
+				$products[$key] = $val;
+			}
+		// Set it to cache
+			$this->session->cache['br_get_config_product'][$id] = $products;
 		return $products;
 	}
 	
@@ -1038,24 +1044,43 @@ class Product_model extends CI_Model {
 	*/
 	function get_product_price($product_id,$type=1)
 	{
+		$price = array();
+			
 		$this->db->from('br_product_price');
-		$this->db->where('product_id',$product_id);
+		// Lets allow for passing multiples in an array
+		if(is_array($product_id)){
+			$this->db->where_in('product_id',$product_id);
+		}else{
+			$this->db->where('product_id',$product_id);
+		}
 		$this->db->where('type_id',$type);
 		$this->db->order_by('sort_order');
 		$query = $this->db->get();
-		$price = array();
-		foreach ($query->result_array() as $row){
-			// Lets make the array keys unique on the 
-			// group id and further on quantity
-				$price[] = array(
-									'group_id' 	=> $row["group_id"],
-									'price' 	=> $row["price"],
-									'qty' 		=> $row["qty"],
-									'start_dt' 	=> $row["start_dt"],
-									'end_dt' 	=> $row["end_dt"],
-									);
+			
+			foreach ($query->result_array() as $row){
+				// Lets make the array keys unique on the 
+				// group id and further on quantity
+					$price[$row["product_id"]][] = array(
+															'group_id' 	=> $row["group_id"],
+															'price' 	=> $row["price"],
+															'qty' 		=> $row["qty"],
+															'start_dt' 	=> $row["start_dt"],
+															'end_dt' 	=> $row["end_dt"],
+														);
+			}
+		if(is_array($product_id)){
+			foreach($product_id as $p){
+				if(!isset($price[$p])){
+					$price[$p] = array();
+				}
+			}
+			return $price;
+		}else{
+			if(!isset($price[$product_id])){
+				return $price;
+			}
+			return $price[$product_id];
 		}
-		return $price;
 	}
 	
 	function get_product_categories($product_id)
@@ -1141,7 +1166,6 @@ class Product_model extends CI_Model {
 	}
 
 	function get_product_configurable($product_id){
-		$this->db->select('*');
 		$this->db->where('product_id',$product_id);
 		$this->db->from('br_product_configurable');	
 		$this->db->order_by('configurable_id','asc');
@@ -1149,7 +1173,19 @@ class Product_model extends CI_Model {
 		$products = array();
 		$i = 0;
 		foreach ($query->result_array() as $row){
+			
 			$products[$i] = $row;
+			
+			// Get the variants for the configurable product
+				if(!isset($this->session->cache['br_get_product_configurable'][$row["configurable_id"]])){
+					$this->db->from('br_product_configurable_attribute');
+					$this->db->where('configurable_id',$row["configurable_id"]);
+					$this->db->order_by('sort');
+					$opt = $this->db->get();
+					$this->session->cache['br_get_product_configurable'][$row["configurable_id"]] = $opt->result_array();
+				}
+				$products[$i]['attribute'] = $this->session->cache['br_get_product_configurable'][$row["configurable_id"]];
+
 			$i++;
 		}
 		return $products;
@@ -1189,22 +1225,31 @@ class Product_model extends CI_Model {
 	function get_attributes($set_id = '',$product_id = ''){
 
 			// Editing or new?
-				$isProduct = false;	
-			
+				$isProduct 		= false;	
+				$attributes 	= array();
+				$all_attributes = array();
+				$pAttrs			= array();
+					
 			// If a product_id is supplied then 
 			// lets see if there are values
-			
+						
 				if($product_id != ''){
 					$isProduct = true;
-					$this->db->select('*');
-					$this->db->from('br_product_attributes');
-					$this->db->where('product_id',$product_id);
-					$q = $this->db->get();
-					foreach($q->result_array() as $row){
-						$pAttrs[$row["attribute_id"]] = $row["descr"];
+					if(isset($this->session->cache['get_attributes_product_id'])){
+						$all_attributes = $this->session->cache['get_attributes_product_id'];
+					}else{
+						$this->db->select('*');
+						$this->db->from('br_product_attributes');
+						$this->db->join('br_product_attributes_option','br_product_attributes.pa_id=br_product_attributes_option.pa_id');
+						$q = $this->db->get();
+						foreach($q->result_array() as $row){
+							$all_attributes[$row["product_id"]][$row["attribute_id"]] = $row["options"];
+						}
+						$this->session->cache['get_attributes_product_id'] = $all_attributes;
 					}
+					$pAttrs = $all_attributes[$product_id];
 				}
-			
+
 			// Select the attributes for the type 
 			// to create a shell
 				
@@ -1229,7 +1274,7 @@ class Product_model extends CI_Model {
 					$query = $this->db->get();
 					$result = $query->result_array();
 				}
-				$attributes = array();
+
 				$i = 0;
 				foreach ($result as $row){
 					foreach($row as $key => $val){
@@ -1250,22 +1295,29 @@ class Product_model extends CI_Model {
 	
 	function get_attribute_by_id($attribute_id){
 		if(isset($this->session->cache['get_attribute_by_id'][$attribute_id])){
-			$attributes = $this->session->cache['get_attribute_by_id'][$attribute_id];			
+			$attributes[$attribute_id] = $this->session->cache['get_attribute_by_id'][$attribute_id];			
 		}else{
-			$this->db->select('*');
-			$this->db->from('br_attribute');
-			$this->db->where('attribute_id',$attribute_id);
+			$this->db->select('*')
+					->from('br_attribute a')
+					->join(	'br_attribute_option ao', 
+							'a.attribute_id = ao.attribute_id')
+					->where('a.attribute_id',$attribute_id)
+					->order_by('ao.sort');
+			
 			$query = $this->db->get();
 			$attributes = array();
 			foreach ($query->result_array() as $row){
-				foreach($row as $key => $val){
-					$attributes[$key] = $val;
-				}
+				$attributes[$attribute_id] = $row;
+				$opts[] = array(
+									"attr_option_id" 	=> $row["attr_option_id"],
+									"label"				=> $row["label"],
+									"sort"				=> $row["sort"]
+								);
+				$attributes[$attribute_id]["options"] = $opts;
 			}
-			$this->session->cache['get_attribute_by_id'][$attribute_id] = $attributes;
+			$this->session->cache['get_attribute_by_id'][$attribute_id] = $attributes[$attribute_id];
 		}
-				
-			return $attributes;
+		return $attributes[$attribute_id];
 	}
 
 	// Get the attributes that could be used in the configurable 
@@ -1311,17 +1363,61 @@ class Product_model extends CI_Model {
 		foreach($_POST as $key => $val){
 			$data[$key] = $val;
 		}
-		$attribute_id = $data["attribute_id"];
-		unset($data["attribute_id"]);
-		$data["site_id"] = $this->config->item('site_id');
-		$data["code"] = $this->_clean_code($data["code"]);
-		if($attribute_id == 0){
-			$this->db->insert("br_attribute",$data);
-			$attribute_id = $this->db->insert_id();
-		}else{
-			$this->db->where("attribute_id",$attribute_id);
-			$this->db->update("br_attribute",$data);
-		}
+		
+		// Remove the attribute_id from the post
+			$attribute_id = $data["attribute_id"];
+			unset($data["attribute_id"]);
+
+		// Set some defaults
+			$data["site_id"] = $this->config->item('site_id');
+			$data["code"] = $this->_clean_code($data["code"]);
+
+		// Remove the options from the $data array so we can 
+		// update or create the parent attribute
+		
+			$options = $data["option"];
+			unset($data["option"]);
+			
+		// Insert / Update attrubute
+			if($attribute_id == 0){
+				$this->db->insert("br_attribute",$data);
+				$attribute_id = $this->db->insert_id();
+			}else{
+				$this->db->where("attribute_id",$attribute_id);
+				$this->db->update("br_attribute",$data);
+			}
+		
+		// Add / Remove Options
+			$i = 1;
+			foreach($options["id"] as $key => $val){
+				if($options["remove"][$key] == 1){
+					// Check for existence and remove it if its not used
+						$this->db->like('option_id', $options["id"][$key]);
+						$this->db->from('br_product_configurable_attribute');
+						if($this->db->count_all_results() > 0){
+							$_SESSION["alert"] = str_replace("%s",$options["label"][$key],lang('br_attribute_cant_remove'));		
+						}else{
+							$this->db->where('attr_option_id',$options["id"][$key]);
+							$this->db->delete('br_attribute_option');
+						}
+				}elseif(strpos($key,'new_') !== FALSE){
+					$d = array(
+									'attribute_id' 	=> $attribute_id,
+									'label'			=> $options["label"][$key],
+									'sort'			=> $options["sort"][$key]
+								);
+					$this->db->insert('br_attribute_option',$d);
+				}else{
+					// Update it
+						$d = array(
+									'attribute_id' 	=> $attribute_id,
+									'label'			=> $options["label"][$key],
+									'sort'			=> $options["sort"][$key]
+									);
+						$this->db->where('attr_option_id',$options["id"][$key])->update('br_attribute_option',$d);
+				}
+			}
+			
 		return $attribute_id;
 	}
 	
@@ -1510,6 +1606,94 @@ class Product_model extends CI_Model {
 		}
 		return $cat;
 	}
+	
+	
+	function get_category_collection($id)
+	{
+		if(!isset($this->session->cache['br_get_category_collection'][$id])){
+			$products = array();
+			// Get the category products
+					$sql = "SELECT 
+								product_id 
+							FROM 
+								exp_br_product_category 
+							WHERE 
+								category_id IN (".$id.") 
+							ORDER BY 
+								sort_order";
+					$qry = $this->db->query($sql);
+					$rst = $qry->result_array();
+					$c = array();
+					foreach($rst as $r)
+					{
+						$c[] = $r["product_id"];	
+					}
+				
+				if(count($c) == 0){
+					return $products;
+				}
+				// Get the products	
+					$sql = "SELECT 
+								product_id, 
+								type_id, 
+								quantity
+							FROM 
+								exp_br_product 
+							WHERE 
+								enabled= 1
+							AND 
+								product_id IN (".join(",",$c).")";
+
+					$qry = $this->db->query($sql);
+					$rst = $qry->result_array();
+				
+			#$this->EE->TMPL->log_item('BrilliantRetail Memory After get_category_by_key: '.round(memory_get_usage()/1024/1024, 2).'MB');
+		
+			// Get the 
+				$this->db->from('br_product_category');		
+				$this->db->where_in('product_id',$c);
+				$query = $this->db->get();
+				$cat = array();
+				$i = 0;
+				foreach ($query->result_array() as $row){
+					$cat[$row["product_id"]][] =  $row["category_id"];
+					$i++;
+				}
+				
+			// Start our product info array
+				foreach($rst as $p){
+					$products[$p["product_id"]] = array(
+															"product_id" 	=> $p["product_id"],
+															"type_id"		=> $p["type_id"], 
+															"quantity"		=> $p["quantity"],
+															"categories"	=> $cat[$p["product_id"]]
+														);
+					$p_ids[] = $p["product_id"];
+				}
+			
+			// Get the prices
+				$price 		= $this->get_product_price($p_ids,1);
+				foreach($price as $key => $val){
+					$products[$key]["price_matrix"] = $val;	
+				}
+					
+				#$this->EE->TMPL->log_item('BrilliantRetail Memory After get_product_price [price]: '.round(memory_get_usage()/1024/1024, 2).'MB');
+		
+				// Get the sale prices
+					$sale_price = $this->get_product_price($p_ids,2);
+					foreach($sale_price as $key => $val){
+						$products[$key]["sale_matrix"] = $val;	
+					}	
+	
+				#$this->EE->TMPL->log_item('BrilliantRetail Memory After get_product_price [sale_price]: '.round(memory_get_usage()/1024/1024, 2).'MB');
+				$this->session->cache['br_get_category_collection'][$id] = $products;
+		}else{
+			$products = $this->session->cache['br_get_category_collection'][$id];
+		}
+		
+		return $products;
+	}
+	
 	
 	function update_category($category_id,$data)
 	{

@@ -218,10 +218,17 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 						}
 						if($products != false){
 							$items[$i] = $products[0];
-							$f_open = form_open($action,
-												array( "id" => "form_".$products[0]["product_id"]), 
-												array( $products[0]["product_id"]."_product_id" => $products[0]["product_id"])
-												);
+
+							$form_details = array(
+								'action'     		=> $action,
+			                  	'name'           	=> "form_".$products[0]["product_id"],
+			                  	'id'             	=> "form_".$products[0]["product_id"],
+			                  	#'class'          	=> $form_class,
+			                  	'hidden_fields'  	=> array($products[0]["product_id"]."_product_id" => $products[0]["product_id"]), 
+			                  	'secure'         	=> TRUE
+			                  );
+							$f_open = $this->EE->functions->form_declaration($form_details);
+
 							$items[$i]['form_open']  = $f_open;
 							$items[$i]['form_close'] = '</form>';
 							$i++;
