@@ -68,6 +68,16 @@
 	        	<td>
 	        		<?=lang('br_field_type')?></td>
 	        	<td>
+	        		<select id="fieldtype" id="fl_type" name="fieldtype">
+	        			<?php 
+	        				$opts = array('text','textarea','dropdown','multiselect','file');
+
+	        				foreach($opts as $o){
+	        					$sel = ($attributes["fieldtype"] == $o) ? 'selected' : '' ;
+	        					echo '<option value="'.$o.'" '.$sel.'>'.lang('br_'.$o).'</option>';
+	        				}
+	        			?>
+	        		</select><br />
 	        		<div id="options" class="type_opts">
 		        		<br />
 		        		<table width="100%" cellpadding="0" cellspacing="0" id="option_rows" class="product_edit">

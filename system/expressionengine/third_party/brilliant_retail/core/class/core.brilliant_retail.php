@@ -621,7 +621,7 @@ class Brilliant_retail_core {
 				// Get the attributes
 					$this->EE->load->model('product_model');
 					$attrs = $this->EE->product_model->get_attributes($set_id,$product_id);
- 				
+ 					
  				// Cycle through and build the input 
 				// based on the helpper funtions for 
 				// each available attr type. 
@@ -808,27 +808,39 @@ class Brilliant_retail_core {
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
 			$options = '<option value=""></option>';
-			if(strpos($opts,"|") !== false){
-				$a = explode("|",$opts);
-			}else{
-				$a = explode("\n",$opts);
-			}
-			
-			foreach($a as $opt){
-				if(strpos($opt,':') !== false){
-					$b = explode(":",$opt);
-					$sel = ($b[0] == $val) ? 'selected' : '' ;
-					$options .= '<option value="'.$b[0].'" '.$sel.'>'.$b[1].'</option>';
+
+			if(!is_array($opts)){
+				// The old way 
+				if(strpos($opts,"|") !== false){
+					$a = explode("|",$opts);
 				}else{
-					$sel = ($opt == $val) ? 'selected' : '' ;
-					$options .= '<option '.$sel.'>'.$opt.'</option>';
+					$a = explode("\n",$opts);
+				}
+				foreach($a as $opt){
+					if(strpos($opt,':') !== false){
+						$b = explode(":",$opt);
+						$sel = ($b[0] == $val) ? 'selected' : '' ;
+						$options .= '<option value="'.$b[0].'" '.$sel.'>'.$b[1].'</option>';
+					}else{
+						$sel = ($opt == $val) ? 'selected' : '' ;
+						$options .= '<option '.$sel.'>'.$opt.'</option>';
+					}
+				}
+			}else{
+				// The new way
+				foreach($opts as $opt){
+					$sel = (in_array($opt["attr_option_id"],$val)) ? 'selected' : '' ;
+					$options .= '<option value="'.$opt["attr_option_id"].'" '.$sel.'>'.$opt["label"].'</option>';
 				}
 			}
+
+
 			$sel = 	'<select name="'.$product_id.'_cAttribute_'.$attribute_id.'" id="cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'
 						.$options.
 					'</select>';
 			return $sel;
 		}
+		
 		function _producttype_table($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			// Create the table
 				$str = "<a href='#' id='add_row_".$attribute_id."'>".lang('br_add_row')."</a><br />
@@ -926,24 +938,33 @@ class Brilliant_retail_core {
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
 			$options = '';
-			if(strpos($opts,"|") !== false){
-				$a = explode("|",$opts);
-			}else{
-				$a = explode("\n",$opts);
-			}
 			
-			$val = (array)unserialize($val);
-
-			foreach($a as $opt){
-				if(strpos($opt,':') !== false){
-					$b = explode(":",$opt);
-					$sel = (in_array($b[0],$val)) ? 'selected' : '' ;
-					$options .= '<option value="'.$b[0].'" '.$sel.'>'.$b[1].'</option>';
+			
+			if(!is_array($opts)){
+				// The old way 
+				if(strpos($opts,"|") !== false){
+					$a = explode("|",$opts);
 				}else{
-					$sel = (in_array($opt,$val)) ? 'selected' : '' ;
-					$options .= '<option '.$sel.'>'.$opt.'</option>';
+					$a = explode("\n",$opts);
+				}
+				foreach($a as $opt){
+					if(strpos($opt,':') !== false){
+						$b = explode(":",$opt);
+						$sel = (in_array($b[0],$val)) ? 'selected' : '' ;
+						$options .= '<option value="'.$b[0].'" '.$sel.'>'.$b[1].'</option>';
+					}else{
+						$sel = (in_array($opt,$val)) ? 'selected' : '' ;
+						$options .= '<option '.$sel.'>'.$opt.'</option>';
+					}
+				}
+			}else{
+				// The new way
+				foreach($opts as $opt){
+					$sel = (in_array($opt["attr_option_id"],$val)) ? 'selected' : '' ;
+					$options .= '<option value="'.$opt["attr_option_id"].'" '.$sel.'>'.$opt["label"].'</option>';
 				}
 			}
+
 			$sel = 	'<select size="8" multiple="multiple" style="min-width:200px;" name="'.$product_id.'_cAttribute_'.$attribute_id.'[]" id="cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'
 						.$options.
 					'</select>';
@@ -1579,6 +1600,11 @@ class Brilliant_retail_core {
 					if(isset($val["filterable"]) && $val["filterable"] == 1){
 						if($val["fieldtype"] == 'dropdown'){
 							$value = $val["value"];
+							if(is_array($value)){
+								$tmp = $value[0];
+								unset($value);
+								$value = $tmp;
+							}
 							if($value != ''){
 								$attr_id = $val["attribute_id"];
 								$attr[$attr_id][$value] 	= $value;
@@ -1677,7 +1703,7 @@ class Brilliant_retail_core {
 			$tmp = array();
 			foreach($layered as $key => $val)
 			{
-				if(!$val["result_layered_selected"]){
+				if(!$val["result_layered_selected"] && count($val["result_layered_item"]) > 0){
 					$tmp[$key] = $val;
 				}
 			}
@@ -1903,9 +1929,11 @@ class Brilliant_retail_core {
 				}
 				
 			// Are there filters to consider
-				$attr = array();
 				
 				foreach($attr_keys as $key => $val){
+				
+					$attr = array();
+				
 					if(isset($url["filters"][$key])){
 						// Set an array to check products against after we setup the filters
 							$attr[$key][$url["filters"][$key][0]] = 1;
@@ -1920,6 +1948,7 @@ class Brilliant_retail_core {
 							}
 					}
 					if(count($attr) > 0){
+
 						foreach($vars[0]["results"] as $key => $v){
 							$keep = FALSE;
 							$a = $product_attrs[$v["product_id"]];
@@ -1933,6 +1962,7 @@ class Brilliant_retail_core {
 								unset($vars[0]["results"][$key]);
 							}
 						}
+						$vars[0]["results"] = array_values($vars[0]["results"]);
 					}
 				}
 		
@@ -2277,6 +2307,12 @@ class Brilliant_retail_core {
 				if(isset($val["filterable"]) && $val["filterable"] == 1){
 					if($val["fieldtype"] == 'dropdown'){
 						$value = $val["value"];
+						if(is_array($value)){
+							$tmp = $value[0];
+							unset($value);
+							$value = $tmp;
+						}
+						
 						if($value != ''){
 							$hash = md5($val["attribute_id"].'_'.$value);
 							$attr[] = array(
@@ -2586,8 +2622,11 @@ class Brilliant_retail_core {
 									'file'	=> $this->_config["media_url"].'file/'.$values["file"]
 									);
 					}elseif($p["fieldtype"] == 'multiselect'){
-						$values = unserialize($p["value"]);
-						$list = join(", ",$values);
+						$tmp=array();
+						foreach($p["value"] as $vals){
+							$tmp[] = $this->_option_to_label($vals);
+						}
+						$list = join(", ",$tmp);
 						$tmp  = array(
 									'label' => $p["label"],
 									'value' => $list,
@@ -2596,7 +2635,7 @@ class Brilliant_retail_core {
 					}else{
 						$tmp = array(
 									'label' => $p["label"],
-									'value' => $p["value"],
+									'value' => $this->_option_to_label($p["value"][0]),
 									'file' 	=> '' 
 									);
 					}

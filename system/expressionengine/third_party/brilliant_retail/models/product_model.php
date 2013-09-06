@@ -111,7 +111,7 @@ class Product_model extends CI_Model {
 					$j=0;
 					foreach($attributes as $attr){
 						$products[$i]["attributes"] .= ' 	<p class="label">'.$attr["title"].'</p>
-															<p>'.$attr["value"].'<p>';
+															<p>'.$attr["value"][0].'<p>';
 						$products[$i]["attribute"][$j] = $attr;
 						$products[$i]["attribute"][$j]["label"] = $attr["title"];
 						$j++;
@@ -771,6 +771,7 @@ class Product_model extends CI_Model {
 			// Update Custom Attributes
 				
 				$this->db->delete('br_product_attributes', array('product_id' => $product_id)); 
+				$this->db->delete('br_product_attributes_option', array('product_id' => $product_id)); 
 
 				if(isset($_FILES)){
 					$file = rtrim($media_dir,'/').'/file';
@@ -806,15 +807,38 @@ class Product_model extends CI_Model {
 
 				foreach($cAttr as $key => $val){
 					$a = explode('_',$key);
-					if(is_array($val)){
-						$val = serialize($val);
-					}
-					$data = array(	
-										'descr' => $val, 
-										'attribute_id' => $a[2], 
-										'product_id' => $product_id
-									);
-					$this->db->insert('br_product_attributes',$data);
+					// New Way
+						$opts = $val;
+					// Old Way
+						if(is_array($val)){
+							$val = serialize($val);
+						}
+						$data = array(	
+											'descr' => $val, 
+											'attribute_id' => $a[2], 
+											'product_id' => $product_id
+										);
+						$this->db->insert('br_product_attributes',$data);
+						$pa_id = $this->db->insert_id();
+					
+					//
+						if(!is_array($opts)){
+							$opts = array($opts);
+						}
+						$i=0;
+						foreach($opts as $p)
+						{
+							$d = array(
+											'pa_id'			=> $pa_id,
+											'product_id'	=> $product_id,
+											'attribute_id'	=> $a[2],
+											'options'		=> $p,
+											'sort'			=> $i
+										);
+
+							$this->db->insert('br_product_attributes_option',$d);
+							$i++;
+						}	
 				}
 				
 			// Update Product Options 
@@ -1243,11 +1267,13 @@ class Product_model extends CI_Model {
 						$this->db->join('br_product_attributes_option','br_product_attributes.pa_id=br_product_attributes_option.pa_id');
 						$q = $this->db->get();
 						foreach($q->result_array() as $row){
-							$all_attributes[$row["product_id"]][$row["attribute_id"]] = $row["options"];
+							$all_attributes[$row["product_id"]][$row["attribute_id"]][] = $row["options"];
 						}
 						$this->session->cache['get_attributes_product_id'] = $all_attributes;
 					}
-					$pAttrs = $all_attributes[$product_id];
+					if(isset($all_attributes[$product_id])){
+						$pAttrs = $all_attributes[$product_id];
+					}
 				}
 
 			// Select the attributes for the type 
@@ -1290,7 +1316,15 @@ class Product_model extends CI_Model {
 						}
 					$i++;
 				}
-			return $attributes;
+				
+				$tmp = array();
+				foreach($attributes as $key => $val)
+				{
+					$a = $this->get_attribute_by_id($val["attribute_id"]);
+					$tmp[$key] = $val;
+					$tmp[$key]["options"] = $a["options"];
+				}
+			return $tmp;
 	}
 	
 	function get_attribute_by_id($attribute_id){
@@ -1300,7 +1334,8 @@ class Product_model extends CI_Model {
 			$this->db->select('*')
 					->from('br_attribute a')
 					->join(	'br_attribute_option ao', 
-							'a.attribute_id = ao.attribute_id')
+							'a.attribute_id = ao.attribute_id',
+							'left outer')
 					->where('a.attribute_id',$attribute_id)
 					->order_by('ao.sort');
 			
@@ -1375,8 +1410,10 @@ class Product_model extends CI_Model {
 		// Remove the options from the $data array so we can 
 		// update or create the parent attribute
 		
-			$options = $data["option"];
-			unset($data["option"]);
+			if(isset($data["option"])){
+				$options = $data["option"];
+				unset($data["option"]);
+			}
 			
 		// Insert / Update attrubute
 			if($attribute_id == 0){
@@ -1388,36 +1425,38 @@ class Product_model extends CI_Model {
 			}
 		
 		// Add / Remove Options
-			$i = 1;
-			foreach($options["id"] as $key => $val){
-				if($options["remove"][$key] == 1){
-					// Check for existence and remove it if its not used
-						$this->db->like('option_id', $options["id"][$key]);
-						$this->db->from('br_product_configurable_attribute');
-						if($this->db->count_all_results() > 0){
-							$_SESSION["alert"] = str_replace("%s",$options["label"][$key],lang('br_attribute_cant_remove'));		
-						}else{
-							$this->db->where('attr_option_id',$options["id"][$key]);
-							$this->db->delete('br_attribute_option');
-						}
-				}elseif(strpos($key,'new_') !== FALSE){
-					$d = array(
-									'attribute_id' 	=> $attribute_id,
-									'label'			=> $options["label"][$key],
-									'sort'			=> $options["sort"][$key]
-								);
-					$this->db->insert('br_attribute_option',$d);
-				}else{
-					// Update it
+			if(isset($options)){
+				$i = 1;
+				foreach($options["id"] as $key => $val){
+					if($options["remove"][$key] == 1){
+						// Check for existence and remove it if its not used
+							$this->db->like('option_id', $options["id"][$key]);
+							$this->db->from('br_product_configurable_attribute');
+							if($this->db->count_all_results() > 0){
+								$_SESSION["alert"] = str_replace("%s",$options["label"][$key],lang('br_attribute_cant_remove'));		
+							}else{
+								$this->db->where('attr_option_id',$options["id"][$key]);
+								$this->db->delete('br_attribute_option');
+							}
+					}elseif(strpos($key,'new_') !== FALSE){
 						$d = array(
-									'attribute_id' 	=> $attribute_id,
-									'label'			=> $options["label"][$key],
-									'sort'			=> $options["sort"][$key]
+										'attribute_id' 	=> $attribute_id,
+										'label'			=> $options["label"][$key],
+										'sort'			=> $options["sort"][$key]
 									);
-						$this->db->where('attr_option_id',$options["id"][$key])->update('br_attribute_option',$d);
+						$this->db->insert('br_attribute_option',$d);
+					}else{
+						// Update it
+							$d = array(
+										'attribute_id' 	=> $attribute_id,
+										'label'			=> $options["label"][$key],
+										'sort'			=> $options["sort"][$key]
+										);
+							$this->db->where('attr_option_id',$options["id"][$key])->update('br_attribute_option',$d);
+					}
 				}
 			}
-			
+
 		return $attribute_id;
 	}
 	

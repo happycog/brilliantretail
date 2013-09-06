@@ -2012,7 +2012,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$attribute_id = $this->EE->input->get('attribute_id');
 			$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_by_id($attribute_id);
-
+			$this->vars["attributes"]["attribute_id"] = $attribute_id;
 			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
 			$_SESSION["message"] = lang('br_attribute_update_success');
 			return $this->_view('config/index', $this->vars);			
