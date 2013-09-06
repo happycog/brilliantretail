@@ -829,6 +829,7 @@ class Brilliant_retail_core {
 			}else{
 				// The new way
 				foreach($opts as $opt){
+					if(!is_array($val)) { $val = array(); }
 					$sel = (in_array($opt["attr_option_id"],$val)) ? 'selected' : '' ;
 					$options .= '<option value="'.$opt["attr_option_id"].'" '.$sel.'>'.$opt["label"].'</option>';
 				}
@@ -960,6 +961,7 @@ class Brilliant_retail_core {
 			}else{
 				// The new way
 				foreach($opts as $opt){
+					if(!is_array($val)) { $val = array(); }
 					$sel = (in_array($opt["attr_option_id"],$val)) ? 'selected' : '' ;
 					$options .= '<option value="'.$opt["attr_option_id"].'" '.$sel.'>'.$opt["label"].'</option>';
 				}
