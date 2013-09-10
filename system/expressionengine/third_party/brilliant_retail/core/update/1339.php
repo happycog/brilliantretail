@@ -31,6 +31,7 @@
 		{
 			$option[$row["attribute_id"]][$row["label"]] = $row["attr_option_id"];	
 		}
+		
 	$start 		= 0;
 	$processed 	= 0;
 	$count = $this->EE->db->count_all('exp_br_product_configurable');
@@ -50,36 +51,36 @@
 				$data 	= array();
 				$a 		= unserialize($rst["attributes"]);
 				unset($rst["attributes"]);
-				
 				$row_count = 0;
-				foreach($a as $key => $val){
-				
-					if(trim($val) == ''){
-						continue;
-					}
-				
-					// Get the option_id from our array above
-						if(isset($option[$key][trim($val)])){
-							$opt = $option[$key][trim($val)];
-						}else{
-							$new = array(
-											"attribute_id"	=> $key,
-											"label"			=> trim($val),
-											"sort"			=> 0,
-											"created"		=> date("Y-n-d h:i:s")
-										);
-							$this->EE->db->insert("exp_br_attribute_option",$new);
-							$opt = $option[$row["attribute_id"]][$row["label"]] = $this->EE->db->insert_id();
+				if($a){
+					foreach($a as $key => $val){
+					
+						if(trim($val) == ''){
+							continue;
 						}
-				
-					$data[$row_count]["configurable_id"] 	= $rst["configurable_id"];
-					$data[$row_count]["product_id"] 	= $rst["product_id"];
-					$data[$row_count]["attribute_id"] 	= $key;
-					$data[$row_count]["option_id"] 		= $opt;
-					$data[$row_count]["sort"] 			= $row_count;
-					$row_count++;
-				} 
-				$this->EE->db->insert_batch("exp_br_product_configurable_attribute",$data);
+					
+						// Get the option_id from our array above
+							if(isset($option[$key][trim($val)])){
+								$opt = $option[$key][trim($val)];
+							}else{
+								$new = array(
+												"attribute_id"	=> $key,
+												"label"			=> trim($val),
+												"sort"			=> 0,
+												"created"		=> date("Y-n-d h:i:s")
+											);
+								$this->EE->db->insert("exp_br_attribute_option",$new);
+								$opt = $option[$row["attribute_id"]][$row["label"]] = $this->EE->db->insert_id();
+							}
+					
+						$data[$row_count]["configurable_id"] 	= $rst["configurable_id"];
+						$data[$row_count]["product_id"] 		= $rst["product_id"];
+						$data[$row_count]["attribute_id"] 		= $key;
+						$data[$row_count]["option_id"] 			= $opt;
+						$data[$row_count]["sort"] 				= $row_count;
+						$row_count++;
+					} 
+					$this->EE->db->insert_batch("exp_br_product_configurable_attribute",$data);
+				}
 			}
 	}
-	

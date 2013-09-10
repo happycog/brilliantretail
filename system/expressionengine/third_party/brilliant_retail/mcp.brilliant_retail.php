@@ -1103,13 +1103,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					
 					if(isset($products[0]["configurable"])){
 						foreach($products[0]["configurable"] as $c){
-							$tmp = unserialize($c["attributes"]);
-							foreach($tmp as $key => $val){
-								$fields[$key] = $key;	
+							foreach($c["attribute"] as $val){
+								$fields[$val["attribute_id"]] = $val["attribute_id"];
 								// build the configurable attributes into the row
-									$values .= '<td><input type="hidden" name="config_attr_'.$key.'[]" value="'.$val.'" />'.$val.'</td>';
+									$values .= '<td>
+													<input type="hidden" name="config_attr_'.$val["attribute_id"].'[]" value="'.$val["option_id"].'" />'.$this->_option_to_label($val["option_id"]).'
+												</td>';
 							}
-							
+
 							// Basic inputs
 							
 							$values .= '	<td>

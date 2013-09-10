@@ -22,7 +22,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-	$sql[] = "	CREATE TABLE exp_br_product_attributes_option (
+	$qry = $this->EE->db->query("CREATE TABLE exp_br_product_attributes_option (
 					id int(11) NOT NULL AUTO_INCREMENT,
 					pa_id int(11) DEFAULT NULL,
 					product_id int(11) DEFAULT NULL,
@@ -32,4 +32,4 @@
 					PRIMARY KEY (id),
 					KEY br_product_id (product_id),
 					KEY br_attribute_id (attribute_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;");

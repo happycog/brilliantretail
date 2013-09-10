@@ -99,6 +99,7 @@
 		}
 	?>
 </div>
+
 <script type="text/javascript">
 	function _bind_config_button(){
 		// Activate Sortable
@@ -120,7 +121,7 @@
 			var attr = config_attr.split(',');
 			var tmp = '<tr>';
 			for(i=0;i<attr.length;i++){
-				tmp += '<td><input type="hidden" name="config_attr_'+attr[i]+'[]" value="'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'" />'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'</td>';
+				tmp += '<td><input type="hidden" name="config_attr_'+attr[i]+'[]" value="'+$('select[name=configurable_'+attr[i]+'] option:selected').val()+'" />'+$('select[name=configurable_'+attr[i]+'] option:selected').text()+'</td>';
 			}
 			tmp += 	'<td><input type="text" name="config_sku[]" /></td>'+
 					'<td><input type="text" name="config_qty[]" value="0" /></td><td>'+

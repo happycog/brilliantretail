@@ -417,7 +417,7 @@ class Brilliant_retail_core {
 			if($product_id == ''){
 				// Get product by param or dynamically 
 				$product_id = $this->EE->TMPL->fetch_param('product_id');
-				$url_title = $this->EE->TMPL->fetch_param('url_title');
+				$url_title 	= $this->EE->TMPL->fetch_param('url_title');
 				if($product_id != ''){
 					$products = $this->EE->product_model->get_products($product_id);			
 				}else{
@@ -1004,21 +1004,10 @@ class Brilliant_retail_core {
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			
 			$options = '';
-			if(strpos($opts,"|") !== false){
-				$a = explode("|",$opts);
-			}else{
-				$a = explode("\n",$opts);
-			}
 			
-			foreach($a as $opt){
-				if(strpos($opt,':') !== false){
-					$b = explode(":",$opt);
-					$sel = ($b[0] == $val) ? 'selected' : '' ;
-					$options .= '<option value="'.$b[0].'" '.$sel.'>'.$b[1].'</option>';
-				}else{
-					$sel = ($opt == $val) ? 'selected' : '' ;
-					$options .= '<option '.$sel.'>'.$opt.'</option>';
-				}
+			foreach($opts as $opt){
+				$sel = ($opt["attr_option_id"] == $val) ? 'selected' : '' ;
+				$options .= '<option '.$sel.' value="'.$opt["attr_option_id"].'">'.$opt["label"].'</option>';
 			} 
 			$sel = 	'<select name="configurable_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'
 						.$options.
@@ -2462,30 +2451,34 @@ class Brilliant_retail_core {
 		$row 	= '';
 		$opt 	= '';
 		$js 	= '';
-		$opt_count = 0; // track for the first iteration. 
+		$opt_count 		= 0; // track for the first iteration. 
+		$option_label 	= array();
+		$config			= array();
+		$config_label 	= array();
 		
 		foreach($p["configurable"] as $c){
-			$a = unserialize($c["attributes"]);
 			$row = array();
-				foreach($a as $key => $val)
+			
+			foreach($c["attribute"] as $val)
+			{
+				if($opt_count == 0)
 				{
-					if($opt_count == 0)
+					$a = $this->EE->product_model->get_attribute_by_id($val["attribute_id"]);
+					$config_label[] = $a["title"];
+				}				
+				if(count($row) == 0)
+				{
+					if($c["qty"] > 0)
 					{
-						$a = $this->EE->product_model->get_attribute_by_id($key);
-						$config_label[] = $a["title"];
-					}				
-					if(count($row) == 0)
-					{
-						if($c["qty"] > 0)
-						{
-							$first[$val] = array(
-													"config_id" => $c["configurable_id"],
-													"adjust"	=> $c["adjust"] 
-												);
-						}
+						$first[$val["option_id"]] = array(
+																"config_id" => $c["configurable_id"],
+																"adjust"	=> $c["adjust"] 
+															);
 					}
-					$row[] = $val;
 				}
+				$row[] = $val["option_id"];
+				$option_label[$val["option_id"]] = $this->_option_to_label($val["option_id"]);
+			}
 			
 			$opt[] = array(	
 								'id' 		=> $c["configurable_id"],
@@ -2500,6 +2493,7 @@ class Brilliant_retail_core {
 						'form_id' 			=> $p["product_id"],
 						'label' 			=> $config_label,
 						'rows'				=> $opt
+						,'option_label'		=> $option_label
 					);
 
 		$js_output = json_encode($js);
@@ -2512,7 +2506,7 @@ class Brilliant_retail_core {
 					foreach($first as $key => $val)
 					{
 						$value = (count($js["label"]) == 1) ? $val["config_id"] : $key;
-						$text = $key; 
+						$text = $this->_option_to_label($key); 
 						if($val["adjust"] > 0){
 							$text .= " (+ ".$this->_format_money($val["adjust"]).")";
 						}
@@ -2566,12 +2560,12 @@ class Brilliant_retail_core {
 																												}
 																												if(opts.rows[i].qty > 0)
 																												{
-																													options += '<option value=\"'+opts.rows[i].id+'\">'+opts.rows[i].options[next]+adj+'</option>';
+																													options += '<option value=\"'+opts.rows[i].id+'\">'+opts.option_label[opts.rows[i].options[next]]+adj+'</option>';
 																												}
 																											}else{
 																												if(opts.rows[i].qty > 0)
 																												{
-																													options += '<option value=\"'+opts.rows[i].options[next]+'\">'+opts.rows[i].options[next]+'</option>';
+																													options += '<option value=\"'+opts.rows[i].options[next]+'\">'+opts.option_label[opts.rows[i].options[next]]+'</option>';
 																												}
 																											}
 																										}

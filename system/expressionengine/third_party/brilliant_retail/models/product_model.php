@@ -110,8 +110,11 @@ class Product_model extends CI_Model {
 					$products[$i]["attributes"] = '<div id="product_attributes">';
 					$j=0;
 					foreach($attributes as $attr){
+						
+						$val = isset($attr["value"][0]) ? $attr["value"][0] : $attr["value"];
+						
 						$products[$i]["attributes"] .= ' 	<p class="label">'.$attr["title"].'</p>
-															<p>'.$attr["value"][0].'<p>';
+															<p>'.$val.'<p>';
 						$products[$i]["attribute"][$j] = $attr;
 						$products[$i]["attribute"][$j]["label"] = $attr["title"];
 						$j++;
@@ -438,8 +441,9 @@ class Product_model extends CI_Model {
 			return $this->session->cache['br_get_config_product'][$id];
 		}
 			$product = array();
-			$this->db->where('configurable_id',$id)
-					->from('br_product_configurable_attribute');
+			$this->db->where('br_product_configurable_attribute.configurable_id',$id)
+					->from('br_product_configurable_attribute') 
+					->join('br_product_configurable','br_product_configurable.configurable_id=br_product_configurable_attribute.configurable_id');
 			$query = $this->db->get();
 			$products = array();
 			$i = 0;
@@ -554,7 +558,7 @@ class Product_model extends CI_Model {
 								$config[$b] = $data["config_attr_".$b][$i];
 								unset($data["config_attr_".$b][$i]);
 							}
-							$configurable[$i]["attributes"] = serialize($config);
+							$configurable[$i]["attribute"] = $config;
 						}
 						
 					// Remove fields
@@ -900,10 +904,30 @@ class Product_model extends CI_Model {
 			// If its a configurable product 
 				if(isset($configurable)){
 					$this->db->delete('br_product_configurable', array('product_id' => $product_id)); 
+					$this->db->delete('br_product_configurable_attribute', array('product_id' => $product_id)); 
 					foreach($configurable as $c){
 						$config = $c;
 						$config["product_id"] = $product_id;
-						$this->db->insert('br_product_configurable',$config);
+						// Get the attributes
+							$attr = $config["attribute"];
+							unset($config["attribute"]);
+						// Put in each configurable option row
+							$this->db->insert('br_product_configurable',$config);
+							$configurable_id = $this->db->insert_id();
+						// Put in the options
+						$i = 0;
+						foreach($attr as $key => $val)
+						{
+							$arr = array(
+											'configurable_id'	=> $configurable_id,
+											'product_id'		=> $product_id,
+											'attribute_id'		=> $key,
+											'option_id'			=> $val,
+											'sort'				=> $i
+										);
+							$this->db->insert('br_product_configurable_attribute',$arr);
+							$i++;
+						}
 					}
 				}
 			
@@ -1199,6 +1223,7 @@ class Product_model extends CI_Model {
 		foreach ($query->result_array() as $row){
 			
 			$products[$i] = $row;
+			
 			
 			// Get the variants for the configurable product
 				if(!isset($this->session->cache['br_get_product_configurable'][$row["configurable_id"]])){

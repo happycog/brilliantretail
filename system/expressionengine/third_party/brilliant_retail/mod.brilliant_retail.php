@@ -1157,10 +1157,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 							$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($tmp["adjust"])).')<br />';
 						}
 						$prod = $this->EE->product_model->get_config_product($configurable_id);
-						$attributes = unserialize($prod[0]["attributes"]);
 						$tmp = array();
-						foreach($attributes as $a){
-							$tmp[] = urldecode($a);
+						foreach($prod as $a){
+							$tmp[] = $this->_option_to_label($a["option_id"]);
 						}
 						$list = join(" / ",$tmp);
 						$options = $list.$adjust;
