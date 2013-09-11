@@ -1497,7 +1497,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 								$remove_link = $edit_action.AMP.'action=remove'.AMP.'product_id='.$prod["product_id"];
 
 							$product[] = array(	
-												'form_open' 	=> '<form action="'.$cart_action.'" method="POST">',
+												'form_open' 	=> $this->EE->functions->form_declaration(array('action' => $cart_action)),
 												'form_close' 	=> '</form>',
 												'url_title'		=> $p[0]['url'],
 												'product_id' 	=> $p[0]['product_id'],
@@ -3476,11 +3476,21 @@ class Brilliant_retail extends Brilliant_retail_core{
 	
 		function promo_form()
 		{
-			$form = ($this->EE->TMPL->fetch_param('form')) ? $this->EE->TMPL->fetch_param('form') : 'yes';
-			$output = "";
+			$form 		= ($this->EE->TMPL->fetch_param('form')) ? $this->EE->TMPL->fetch_param('form') : 'yes';
+			$name 		= ($this->EE->TMPL->fetch_param('form_name')) ? $this->EE->TMPL->fetch_param('form_name') : 'promo_form';
+			$form_id 	= ($this->EE->TMPL->fetch_param('form_id')) ? $this->EE->TMPL->fetch_param('form_id') : 'promo_form';
+			$form_class = ($this->EE->TMPL->fetch_param('form_class')) ? $this->EE->TMPL->fetch_param('form_class') : 'promo_form';
+			$output 	= "";
+
 			if($form == 'yes'){
 				$action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'promo_check_code'));
-				$output = form_open($action);
+				$form_details = array(
+								'action'		=> $action, 
+								'name'			=> $name,
+							  	'id'			=> $form_id, 
+							  	'class'			=> $form_class
+							  );  	
+				$output = $this->EE->functions->form_declaration($form_details);
 			}
 			$code = isset($_SESSION["discount"]["code"]) ? $_SESSION["discount"]["code"] : '';
 			$vars[0] = array('coupon_code' => $code);

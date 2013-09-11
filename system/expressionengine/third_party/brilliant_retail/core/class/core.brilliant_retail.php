@@ -800,7 +800,7 @@ class Brilliant_retail_core {
 		function _producttype_textarea($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
-			return '<textarea name="'.$product_id.'_cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'.$val.'</textarea>';
+			return '<textarea name="'.$product_id.'_cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'.$val[0].'</textarea>';
 		}
 		
 		function _producttype_dropdown($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
@@ -1589,17 +1589,21 @@ class Brilliant_retail_core {
 
 				foreach($prod as $val){
 					if(isset($val["filterable"]) && $val["filterable"] == 1){
-						if($val["fieldtype"] == 'dropdown'){
-							$value = $val["value"];
-							if(is_array($value)){
-								$tmp = $value[0];
-								unset($value);
-								$value = $tmp;
+						if($val["fieldtype"] == 'dropdown' || $val["fieldtype"] == 'multiselect'){
+
+							if(!is_array($val["value"])){
+								$tmp = $val["value"];
+								unset($val["value"]);
+								$val["value"][0] = $tmp;
 							}
-							if($value != ''){
-								$attr_id = $val["attribute_id"];
-								$attr[$attr_id][$value] 	= $value;
-								$count[$attr_id][$value][] 	= true;
+
+							foreach($val["value"] as $value)
+							{
+								if($value != ''){
+									$attr_id = $val["attribute_id"];
+									$attr[$attr_id][$value] 	= $value;
+									$count[$attr_id][$value][] 	= true;
+								}
 							}
 						}
 					}
