@@ -173,9 +173,9 @@ class Brilliant_retail_core {
 			
 		// Build search index if it is not 
 		// present
-		if(!file_Exists(APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/search')){
-			$this->_index_products();
-		}
+		#if(!file_Exists(APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/search')){
+		#	$this->_index_products();
+		#}
 
 		// Make a global reference to the currency_marker variable that we 
 		// can use in all of our view files
@@ -940,6 +940,11 @@ class Brilliant_retail_core {
 			
 			$options = '';
 			
+			// Check to make sure the value is not serialized
+				$data = @unserialize($val);
+				if($data !== false) {
+				    $val = $data;
+				}
 			
 			if(!is_array($opts)){
 				// The old way 
@@ -948,6 +953,7 @@ class Brilliant_retail_core {
 				}else{
 					$a = explode("\n",$opts);
 				}
+				
 				foreach($a as $opt){
 					if(strpos($opt,':') !== false){
 						$b = explode(":",$opt);
@@ -1109,37 +1115,14 @@ class Brilliant_retail_core {
 
 		
 		function _search_index($queryStr){
-			
-			ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.PATH_SEPARATOR);
-			include_once(PATH_THIRD.'brilliant_retail'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
-			
-			Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
-			Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-			    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive ()
-			);
-			
-			// Need at least 3 characters in the last word for wildcard searches 
-			if(strlen($queryStr) >= 3){
-				// Dashes don't play nicely with our wildcard search
-				$original = $queryStr;
-				$queryStr = str_replace("-"," ",$queryStr);
-				$a = explode(" ",$queryStr);
-				if(strlen($a[count($a)-1]) >= 3)
-				{
-					$queryStr = $queryStr."*";
-				}
-				else
-				{
-					$queryStr = $original;
-				}
-			}
-			$path = APPPATH.'cache'.DIRECTORY_SEPARATOR.'brilliant_retail'.DIRECTORY_SEPARATOR.md5($_SERVER["HTTP_HOST"]).DIRECTORY_SEPARATOR.'search';
-				
-			$index = Zend_Search_Lucene::open($path);
-			$query = Zend_Search_Lucene_Search_QueryParser::parse($queryStr, 'utf-8');
-		
-			$hits = $index->find($query);
-			return $hits;
+			$qry = $this->EE->db->query("SELECT 
+											product_id, 
+											title, 
+											MATCH (title, meta_keyword, detail, sku) AGAINST ('".$queryStr."') as score 
+											FROM exp_br_product 
+											WHERE 
+											MATCH (title, meta_keyword, detail, sku) AGAINST ('".$queryStr."')");
+			return $qry->result_array();
 		}
 
 
@@ -2295,52 +2278,58 @@ class Brilliant_retail_core {
 		function _check_attr($p)
 		{
 			$attr = array();
-			
-			$prod = $this->EE->product_model->get_attributes('',$p["product_id"]);
-			
-			foreach($prod as $val){
-				if(isset($val["filterable"]) && $val["filterable"] == 1){
-					if($val["fieldtype"] == 'dropdown'){
-						$value = $val["value"];
-						if(is_array($value)){
-							$tmp = $value[0];
-							unset($value);
-							$value = $tmp;
-						}
-						
-						if($value != ''){
-							$hash = md5($val["attribute_id"].'_'.$value);
-							$attr[] = array(
-												"id"	=> $val["attribute_id"],
-												"hash" 	=> $hash,
-												"title" => $val["title"],
-												"label" => array("option_id" => $value) 
-											);							
-						}
-					}
-				}
-			}
-			unset($prod);
-		
-			if($p["type_id"] == 3){
-				// Get the configurable products for the item
-				$id 	= $this->EE->product_model->get_product_configurable($p["product_id"]);
-				if(isset($id[0]["configurable_id"]))
-				{
-					foreach($id as $i){
-					
-						$prod 	= $this->EE->product_model->get_config_product($i["configurable_id"]);
-						
-						foreach($prod as $key => $val){
-							$b = $this->EE->product_model->get_attribute_by_id($val["attribute_id"]);
-							$attr[] = array(
-												"id"	=> $b["attribute_id"],
-												"title" => $b["title"],
-												"label" => $val 
-												);
+			if(isset($this->EE->session->cache["br_check_attr"][$p["product_id"]])){
+				$attr = $this->EE->session->cache["br_check_attr"][$p["product_id"]];
+			}else{
+				$prod = $this->EE->product_model->get_attributes('',$p["product_id"]);
+				foreach($prod as $val){
+					if(isset($val["filterable"]) && $val["filterable"] == 1){
+						if($val["fieldtype"] == 'dropdown'){
+							$value = $val["value"];
+							if(is_array($value)){
+								$tmp = $value[0];
+								unset($value);
+								$value = $tmp;
+							}
+							
+							if($value != ''){
+								$hash = md5($val["attribute_id"].'_'.$value);
+								$attr[] = array(
+													"id"	=> $val["attribute_id"],
+													"hash" 	=> $hash,
+													"title" => $val["title"],
+													"label" => array("option_id" => $value) 
+												);							
+							}
 						}
 					}
 				}
+				unset($prod);
+			
+				/*
+				if($p["type_id"] == 3){
+					// Get the configurable products for the item
+					$id 	= $this->EE->product_model->get_product_configurable($p["product_id"]);
+					if(isset($id[0]["configurable_id"]))
+					{
+						foreach($id as $i){
+						
+							$prod 	= $this->EE->product_model->get_config_product($i["configurable_id"]);
+							
+							foreach($prod as $key => $val){
+								$b = $this->EE->product_model->get_attribute_by_id($val["attribute_id"]);
+								$attr[] = array(
+													"id"	=> $b["attribute_id"],
+													"title" => $b["title"],
+													"label" => $val 
+													);
+							}
+						}
+					}
+				}
+				*/
+				
+				$this->EE->session->cache["br_check_attr"][$p["product_id"]] = $attr;
 			}
 			return $attr;
 		}

@@ -312,8 +312,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
-				$print = $this->EE->input->get("print",TRUE);
-				
+				$print = $this->EE->input->get("print",'true');
+
 			// Order Information
 				$this->vars["status"] = $this->_config["status"];			
 				$this->vars['order'] = $this->EE->order_model->get_order($order_id,TRUE);
@@ -364,7 +364,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
-				if($print === TRUE){
+				if($print === 'true'){
 					$this->vars["site_name"] = $this->EE->config->item('site_name');
 					$this->vars["company"] = $this->_config["store"][$this->site_id];
 					$this->vars["print_css"] = $this->_theme('css/print.css');
@@ -1993,14 +1993,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_attribute_create()
 		{
 			$this->vars["attributes"] = array(
-												'attribute_id' => 0,
-												'title' => '',
-												'code' => '',
-												'fieldtype' => 'text',
-												'required' => 0,
-												'filterable' => 1,
-												'default_text' => '',
-												'options' => ''
+												'attribute_id' 	=> 0,
+												'title' 		=> '',
+												'code' 			=> '',
+												'fieldtype' 	=> 'text',
+												'required' 		=> 0,
+												'filterable' 	=> 1,
+												'default_text' 	=> '',
+												'options' 		=> array()
 												);
 
 			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);

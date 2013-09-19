@@ -440,13 +440,12 @@ class Product_model extends CI_Model {
 		if(isset($this->session->cache['br_get_config_product'][$id])){
 			return $this->session->cache['br_get_config_product'][$id];
 		}
-			$product = array();
+			$products = array();
+			$i = 0;
 			$this->db->where('br_product_configurable_attribute.configurable_id',$id)
 					->from('br_product_configurable_attribute') 
 					->join('br_product_configurable','br_product_configurable.configurable_id=br_product_configurable_attribute.configurable_id');
 			$query = $this->db->get();
-			$products = array();
-			$i = 0;
 			if($query->num_rows() == 0){
 				return $products;
 			}
@@ -1103,6 +1102,9 @@ class Product_model extends CI_Model {
 		}
 		$this->db->where('type_id',$type);
 		$this->db->order_by('sort_order');
+		
+		#$this->EE->TMPL->log_item('BrilliantRetail get price statement: '.$this->db->_compile_select());
+		
 		$query = $this->db->get();
 			
 			foreach ($query->result_array() as $row){
@@ -1223,7 +1225,6 @@ class Product_model extends CI_Model {
 		foreach ($query->result_array() as $row){
 			
 			$products[$i] = $row;
-			
 			
 			// Get the variants for the configurable product
 				if(!isset($this->session->cache['br_get_product_configurable'][$row["configurable_id"]])){
@@ -1674,8 +1675,9 @@ class Product_model extends CI_Model {
 	
 	function get_category_collection($id)
 	{
+		$products = array();
+
 		if(!isset($this->session->cache['br_get_category_collection'][$id])){
-			$products = array();
 			// Get the category products
 					$sql = "SELECT 
 								product_id 
@@ -1684,38 +1686,47 @@ class Product_model extends CI_Model {
 							WHERE 
 								category_id IN (".$id.") 
 							ORDER BY 
-								sort_order";
+								sort_order, product_id DESC";
 					$qry = $this->db->query($sql);
 					$rst = $qry->result_array();
 					$c = array();
 					foreach($rst as $r)
 					{
-						$c[] = $r["product_id"];	
+						$c[$r["product_id"]] = $r["product_id"];	
 					}
 				
 				if(count($c) == 0){
 					return $products;
 				}
+				
 				// Get the products	
 					$sql = "SELECT 
-								product_id, 
-								type_id, 
-								quantity
-							FROM 
-								exp_br_product 
-							WHERE 
-								enabled= 1
-							AND 
-								product_id IN (".join(",",$c).")";
-
+										p.product_id, 
+										p.type_id, 
+										p.quantity 
+								FROM 
+									exp_br_product p, 
+									exp_br_product_category c 
+								WHERE 
+									p.product_id = c.product_id 
+								AND 
+									p.enabled = 1 
+								AND 
+									c.product_id IN (".join(",",$c).") 
+								ORDER BY 
+									sort_order, product_id DESC";
+		
 					$qry = $this->db->query($sql);
 					$rst = $qry->result_array();
 				
 			#$this->EE->TMPL->log_item('BrilliantRetail Memory After get_category_by_key: '.round(memory_get_usage()/1024/1024, 2).'MB');
-		
+
 			// Get the 
 				$this->db->from('br_product_category');		
 				$this->db->where_in('product_id',$c);
+
+				#$this->EE->TMPL->log_item('BrilliantRetail get br_product_category SQL: '.$this->db->_compile_select());
+				
 				$query = $this->db->get();
 				$cat = array();
 				$i = 0;
@@ -1732,7 +1743,7 @@ class Product_model extends CI_Model {
 															"quantity"		=> $p["quantity"],
 															"categories"	=> $cat[$p["product_id"]]
 														);
-					$p_ids[] = $p["product_id"];
+					$p_ids[$p["product_id"]] = $p["product_id"];
 				}
 			
 			// Get the prices
@@ -1754,7 +1765,7 @@ class Product_model extends CI_Model {
 		}else{
 			$products = $this->session->cache['br_get_category_collection'][$id];
 		}
-		
+
 		return $products;
 	}
 	

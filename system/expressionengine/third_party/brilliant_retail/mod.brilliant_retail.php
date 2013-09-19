@@ -146,14 +146,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$form_class = $this->EE->TMPL->fetch_param('form_class','');
 			$show_js 	= $this->EE->TMPL->fetch_param('show_js','yes');
 			
-			$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
 			if(!$products){
-				preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
-				if(isset($matches[1])){
-					return trim($matches[1]);
-				}else{
-					return '';
-				}
+				return $this->EE->TMPL->no_results();
 			}
 			
 			// Lets have some fun with custom tags
@@ -176,8 +170,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				
 			// Parse Tags	
-				$tagdata = preg_replace($pattern,"",$tagdata);
-				
 				if($products[0]["configurable_js"] != ''){
 					// IF THERE IS A CALL TO {configurable_js}
 					// lets push the js from the product array into 
@@ -666,19 +658,25 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$ajax 		= $this->EE->TMPL->fetch_param('ajax','no');
 			$form_class = $this->EE->TMPL->fetch_param('form_class','');
 
-			#$memory_start = round(memory_get_usage()/1024/1024, 2);
-			#$this->EE->TMPL->log_item('BrilliantRetail Memory Pre Catalog: '.$memory_start.'MB');
+			$memory_start = round(memory_get_usage()/1024/1024, 2);
+			$this->EE->TMPL->log_item('BrilliantRetail Memory Pre Catalog: '.$memory_start.'MB');
 			
 			if($key == ''){
 				$this->EE->TMPL->log_item('BrilliantRetail: No url_title provided. segment_2 assigned');
 				$key = $this->EE->uri->segment(2);
 			}
 
+			$products = array();
+
 			$qry = $this->EE->db->query("SELECT * from exp_br_category WHERE url_title = '".$key."'");
 			$category = $qry->result_array();
-
+			
+			if($qry->num_rows() != 1){
+				return $this->EE->TMPL->no_results();
+			}
+			
 			$products = $this->EE->product_model->get_category_collection($category[0]['category_id']);
-
+			
 			// Lets do some price checking magic! 
 				$tmp = array();
 				foreach($products as $p){
@@ -692,7 +690,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				#$this->EE->TMPL->log_item('BrilliantRetail Memory After _check_product_price: '.round(memory_get_usage()/1024/1024, 2).'MB');
 			
 			// Get our category image
-				$img = (trim($category[0]['image']) != '') ? $this->_config["media_url"].'images/'.$category[0]['image'] : '';
+				$img = (isset($category[0]['image']) && trim($category[0]['image']) != '') ? $this->_config["media_url"].'images/'.$category[0]['image'] : '';
 			
 			// Build our variable data
 				$vars[0] = array(
@@ -719,7 +717,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($total_results != 0){
 					$vars = $this->_filter_results($vars,$key,true);
 				}
-				
+			
 				$tmp = array();
 				foreach($vars[0]["results"] as $row)
 				{
@@ -745,18 +743,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			// If there are no product
 				if(count($vars[0]['results']) == 0 || !isset($vars[0]["results"])){
-					$no_result = '';
-					$key = 'no_results';
-					preg_match("^".LD.$key.RD."(.*?)".LD."/".$key.RD."^s",$this->EE->TMPL->tagdata, $matches);
-					if(isset($matches[1])){
-						$no_result = trim($matches[1]);
-					}
-					$vars[0]['no_results'][0] 				= array(0 => $no_result);
-					$vars[0]["result_filter_set"][0]		= array();
-					$vars[0]['result_paginate'][0] 			= array();
-					$vars[0]['result_paginate_bottom'][0] 	= array();
-					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
-					return $output;
+					return $this->EE->TMPL->no_results();
 				}
 			
 			// Doubled up the array offset. Lets fix that 
@@ -1471,13 +1458,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$wishlist = $this->EE->wishlist_model->wishlist_get($member_id);
 
 				if(count($wishlist) == 0){
-					$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
-					preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
-					if(isset($matches[1])){
-						return trim($matches[1]);
-					}else{
-						return '';
-					}
+					return $this->EE->TMPL->no_results();
 				}else{
 					
 					// Update link
@@ -1608,13 +1589,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$wishlist = $this->EE->wishlist_model->wishlist_get($member_id,TRUE);
 				
 					if(count($wishlist) == 0){
-						$pattern = "^".LD."no_results".RD."(.*?)".LD."/"."no_results".RD."^s";
-						preg_match($pattern,$this->EE->TMPL->tagdata, $matches);
-						if(isset($matches[1])){
-							return trim($matches[1]);
-						}else{
-							return '';
-						}
+						return $this->EE->TMPL->no_results();
 					}
 					
 					foreach($wishlist as $prod){
@@ -3501,24 +3476,26 @@ class Brilliant_retail extends Brilliant_retail_core{
 			return $output;
 		}
 
-		function search_form()
-		{
-			$action 	= $this->EE->TMPL->fetch_param('action','search');
-			$name 		= $this->EE->TMPL->fetch_param('form_name','search_form');
-			$form_id 	= $this->EE->TMPL->fetch_param('form_id','search_form');
-			$form_class = $this->EE->TMPL->fetch_param('form_class','search_form');
-
-			$form_details = array(
-							'action'		=> $action, 
-							'name'			=> $name,
-						  	'id'			=> $form_id, 
-						  	'class'			=> $form_class
-						  );  	
-		
-			$form = $this->EE->functions->form_declaration($form_details);
-			return $form.$this->EE->TMPL->tagdata.form_close();
-		
-		}
+		/*
+		* Generate an XID secure search form
+		*/
+			function search_form()
+			{
+				$action 	= $this->EE->TMPL->fetch_param('action','catalog/search');
+				$name 		= $this->EE->TMPL->fetch_param('form_name','search_form');
+				$form_id 	= $this->EE->TMPL->fetch_param('form_id','search_form');
+				$form_class = $this->EE->TMPL->fetch_param('form_class','search_form');
+	
+				$form_details = array(
+								'action'		=> $this->EE->functions->create_url($action), 
+								'name'			=> $name,
+							  	'id'			=> $form_id, 
+							  	'class'			=> $form_class
+							  );  	
+			
+				$form = $this->EE->functions->form_declaration($form_details);
+				return $form.$this->EE->TMPL->tagdata.form_close();
+			}
 		
 		function search()
 		{
@@ -3538,18 +3515,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$i=0;
 				$product = array();
 				foreach($hits as $hit){
-					$tmp =  $this->EE->product_model->get_products($hit->product_id);
+					$tmp =  $this->EE->product_model->get_products($hit["product_id"]);
 					// Check to make sure that a product is returned 
 						if(isset($tmp[0])){
 							if($tmp[0]["site_id"] == $this->site_id){
 								$product[$i] = $tmp[0];
-								$product[$i]["score"] = round(100*$hit->score,2);
-								$product[$i]["row_count"] = ($i +1);
+								$product[$i]["score"] = round(100*$hit["score"],2);
+								$product[$i]["row_count"] = ($i+1);
 								$i++;
 							}
 						}
 				}
-				
+
 				// Count the products but set 
 				// a reasonable search result 
 				// limit
@@ -3563,11 +3540,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$count = $this->_config["result_limit"];
 				}
 				$vars[0] = array(
-								'search_hash' => $hash, 
-								'search_term' => $term,
-								'total_results' => count($product),
-								'results' => $product,
-								'no_results' => array(),
+								'search_hash' 		=> $hash, 
+								'search_term' 		=> $term,
+								'total_results' 	=> count($product),
+								'results' 			=> $product,
+								'no_results' 		=> array(),
 								'result_filter_set' => ''
 								);
 		
@@ -3612,10 +3589,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 			// Do the output
 				if($no_result == true){
-					$key = 'no_results';
-					preg_match("^".LD.$key.RD."(.*?)".LD."/".$key.RD."^s",$this->EE->TMPL->tagdata, $matches);
-					$result[0] = array(0 => trim($matches[1]));
-					$output = $this->EE->TMPL->parse_variables($matches[1], $vars); 
+					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->no_results(), $vars); 
 				}else{
 					
 					$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');

@@ -214,6 +214,12 @@ class Brilliant_retail_ext {
 	 */
 	public function br_template_post_parse($tmp,$sub)
 	{	
+		
+		if ($this->EE->extensions->last_call !== FALSE)
+		{
+			$tmp = $this->EE->extensions->last_call;
+		}
+		
 		if(strpos($tmp,'</body>') !== false){
 			$script = isset($this->EE->session->cache['br_output_js']) ? $this->EE->session->cache['br_output_js'] : '';
 			if($script != ''){

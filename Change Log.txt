@@ -3,9 +3,9 @@
 
 ## NEED TO ADD NOTES ABOUT RELOADING USPS AND FIXING THE SEARCH FORM
 
+* Added a new search_form tag to generate the opening and closing tags for the search form. THe form requires an XID in EE 2.7+. 
 * Added filterable to multiselect attributes 
 * Added br_catalog_multiple_filters config variable to allow for multiple selection on layered navigation
-* Added a new search_form tag to generate the opening and closing tags for the search form. THe form requires an XID in EE 2.7+. 
 * Added nav_br_config_integration language key
 * Added row_count to the cart items tag 
 * Added sort_selected_dir to the catalog tag. Options asc or desc. 
@@ -15,6 +15,15 @@
 
 * Fixed an issue with large catalog pagination
 * Fixed an issue on the notification edit window. The output to the textarea is now parsed with the form_prep method prior to output. 
+
+
+* Update catalog, results, product tags to use native {if no_results}{/if} instead of {no_results}{/no_results} tag pair. 
+
+customer.group/wishlist.html:                           {no_results}
+customer.group/wishlist_manage.html:                            {no_results}
+wishlist.group/index.html:              {no_results}
+
+
 
 * Updated do_hash method with php's core sha1 hashing algorithm 
 * Updated layered navigation so all filters are passed through the url for better linking and caching 

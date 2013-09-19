@@ -55,13 +55,13 @@
 	    <b>{filter_set_section}:</b> {filter_set_label}&nbsp;<a href="{exp:brilliant_retail:path src='{filter_set_remove}'}" class="remove_filter">X</a>
     {/result_filter_set}</p>
     
-    {no_results}
+    {if no_results}
 		<div id="no_results">
 			<h3>
 				Your search for <span class="term">"{search_term}"</span> returned no results.
 			</h3>
 		</div>
-	{/no_results}
+	{/if}
 	
 <!-- Catalog -->
 

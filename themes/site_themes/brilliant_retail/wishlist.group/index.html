@@ -48,11 +48,11 @@
 
     {exp:brilliant_retail:wishlist_public hash="{segment_2}"}
 
-		{no_results}			
+		{if no_results}			
 			<h4 id="wishlist_heading">Wishlist</h4>
 			<div id="wishlist_noresult">There are no items in your wishlist</div>
-		{/no_results}
-		
+		{/if}
+
 		<div id="wishlist_left">
 			<div id="wishlist_customer">
 				<img src="{theme}/images/profile-pic.jpg" alt="" />

@@ -60,11 +60,11 @@
 			
             {exp:brilliant_retail:wishlist}
 				
-				{no_results}			
+				{if no_results}			
 					<h4 id="wishlist_heading">Wishlist</h4>
 					<div id="wishlist_noresult">There are no items in your wishlist</div>
-				{/no_results}
-
+				{/if}
+				
 				<div id="wishlist_share">
 		    		<a href="{path='wishlist/{share_hash}'}" target="_blank">Share your wishlist</a> | <a href="{path='customer/wishlist_manage'}">Manage your wishlist</a>
 		    	</div>
