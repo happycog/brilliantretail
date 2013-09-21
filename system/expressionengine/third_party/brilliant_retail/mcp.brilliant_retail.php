@@ -407,7 +407,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			// Get the countries
 				$this->vars["countries"] = $this->EE->product_model->get_countries();
-				$this->vars["map"] 	= $this->EE->javascript->generate_json($this->EE->product_model->get_states($this->vars["countries"]));
+				$this->vars["map"] 	= json_encode($this->EE->product_model->get_states($this->vars["countries"]));
 					
 			// Create the order total
 				$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
@@ -3780,9 +3780,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		$this->EE->cp->add_js_script(array("
 			<script type=\"text/javascript\" charset=\"utf-8\">
 			// <![CDATA[
-			mySettings = ".$this->EE->javascript->generate_json($markItUp, TRUE).";
-			myNobuttonSettings = ".$this->EE->javascript->generate_json($markItUp_nobtns, TRUE).";
-			myWritemodeSettings = ".$this->EE->javascript->generate_json($markItUp_writemode, TRUE).";
+			mySettings = ".json_encode($markItUp).";
+			myNobuttonSettings = ".json_encode($markItUp_nobtns).";
+			myWritemodeSettings = ".json_encode($markItUp_writemode).";
 			// ]]>
 			</script>
 

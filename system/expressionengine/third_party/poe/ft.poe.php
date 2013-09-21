@@ -44,7 +44,7 @@ class Poe_ft extends EE_Fieldtype {
 
 	function Poe_ft()
 	{
-		parent::EE_Fieldtype();
+		EE_Fieldtype::__construct();
 	}
 
 	// --------------------------------------------------------------------

@@ -686,7 +686,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 
 				$category[0]["products"] = $tmp;
-
+				
 				#$this->EE->TMPL->log_item('BrilliantRetail Memory After _check_product_price: '.round(memory_get_usage()/1024/1024, 2).'MB');
 			
 			// Get our category image
@@ -713,7 +713,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Filter the results
 				
 				$total_results = count($category[0]["products"]);
-				
+	
 				if($total_results != 0){
 					$vars = $this->_filter_results($vars,$key,true);
 				}
@@ -1703,7 +1703,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($show_js === TRUE){
 					$this->EE->load->library('javascript');
 					$countries = $this->EE->product_model->get_countries();
-					$map = $this->EE->javascript->generate_json($this->EE->product_model->get_states($countries));
+					$map = json_encode($this->EE->product_model->get_states($countries));
 					
 					// Add the JavaScript to the output cache
 						$this->EE->session->cache['br_output_js'] .= "	var ship_to;
@@ -2714,9 +2714,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			if (strpos($this->EE->TMPL->template, '{exp:brilliant_retail:states') !== FALSE){
 				return '{exp:brilliant_retail:country_state_map}';
 			}
-			
-			$this->EE->load->library('javascript');
-			return $this->EE->javascript->generate_json($this->EE->product_model->_get_cache('js_state_map'), TRUE);
+			return json_encode($this->EE->product_model->_get_cache('js_state_map'));
 		}
 		
 		function gateway_3dauth($postData)
@@ -3073,7 +3071,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if($show_js === TRUE){
 						$this->EE->load->library('javascript');
 						$countries = $this->EE->product_model->get_countries();
-						$map = $this->EE->javascript->generate_json($this->EE->product_model->get_states($countries));
+						$map = json_encode($this->EE->product_model->get_states($countries));
 						$this->EE->session->cache['br_output_js'] .= "	$(function(){
 																			$('#profile_edit').validate();
 																			
@@ -3963,7 +3961,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if(strtolower($current) == 'true'){
 					if(isset($_SERVER["HTTPS"])){
 						$base = $this->_secure_url(trim_slashes($src));
-						$out = $this->EE->functions->remove_double_slashes($base);			
+						$out = reduce_double_slashes($base);			
 						return $out;
 					}else{
 						return $this->EE->functions->create_url($src);
@@ -3974,7 +3972,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if(	strpos($src,$this->_config["store"][$this->site_id]["checkout_url"]) !== false || 
 					strpos($src,$this->_config["store"][$this->site_id]["customer_url"]) !== false){
 					$base = $this->_secure_url(trim_slashes($src));
-					$out = $this->EE->functions->remove_double_slashes($base);			
+					$out = reduce_double_slashes($base);			
 					return $out;
 				}elseif (strtolower($src) == 'logout'){
 					$qs = ($this->EE->config->item('force_query_string') == 'y') ? '' : '?';		

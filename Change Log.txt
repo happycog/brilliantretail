@@ -24,7 +24,8 @@ customer.group/wishlist_manage.html:                            {no_results}
 wishlist.group/index.html:              {no_results}
 
 
-
+* Updated parent::EE_Fieldtype() to EE_Fieldtype::__construct() per developer log warnings (depreciated since 2.6)
+* Updated function class remove_double_slashes method to string helper reduce_double_slashes method per developer log warnings (depreciated since 2.6)
 * Updated do_hash method with php's core sha1 hashing algorithm 
 * Updated layered navigation so all filters are passed through the url for better linking and caching 
 * Updated the cart_add method to better handly multiple product posts

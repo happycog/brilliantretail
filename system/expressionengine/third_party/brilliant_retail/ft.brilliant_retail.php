@@ -35,7 +35,7 @@ class Brilliant_retail_ft extends EE_Fieldtype {
 	
 	function Brilliant_retail_ft()
 	{
-		parent::EE_Fieldtype();
+		EE_Fieldtype::__construct();
 	}
 	
 	// --------------------------------------------------------------------
