@@ -1354,10 +1354,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	
 		function product_add_atributes()
 		{
-			$set_id = $this->EE->input->post('set_id');
-			$product_id = $this->EE->input->post('product_id');
+			$set_id = $this->EE->input->get('set_id');
+			$product_id = $this->EE->input->get('product_id');
 
-			$attr = $this->_product_attrs($set_id,$product_id);			$i = 0;
+			$attr = $this->_product_attrs($set_id,$product_id);			
+			$i = 0;
 
 			foreach($attr as $a){
 				$req = ($a["required"] == 1) ? ' *' : '';
@@ -1543,7 +1544,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$_POST["entry_id"] = $entry_id;
 						$orig_group_id = $this->EE->session->userdata["group_id"];
 						$this->EE->session->userdata["group_id"] = 1; // Temporarily open give SA access to channels
-						$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
+
+						$this->EE->api_channel_entries->update_entry($entry_id, $_POST, FALSE);
 						
 						// Set back to original access
 							$this->EE->session->userdata["group_id"] = $orig_group_id;		
@@ -1632,7 +1634,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		{
 			// Get the products 
 			$fields = array();
-			foreach($_POST["fields"] as $f){
+			foreach($_GET["fields"] as $f){
 				$fields[] = $f;
 			}
 			$form = $this->_build_configurable_form($fields);
@@ -2135,13 +2137,23 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$cnt = 0;
 			$prod_ary = array();
 			
-			foreach($prod as $product)
+			foreach($prod as $p)
 			{
-				$p = $this->EE->product_model->get_products($product['product_id'],1);
-				$prod_ary[$cnt]['id']=$product['product_id'];
-				$prod_ary[$cnt]['title']=$p[0]['title'];
-				$prod_ary[$cnt]['sort_order']=$product['sort_order'];
+				$products[$p["product_id"]] 	= $p["product_id"];
+				$sort_order[$p["product_id"]] 	= $p['sort_order'];
 				$cnt++;
+			}
+			if($cnt > 0){
+				$sql = "SELECT product_id,title FROM exp_br_product WHERE product_id in (".join(",",$products).")";
+				$qry = $this->EE->db->query($sql);
+				$i=0;
+				foreach($qry->result_array() as $rst)
+				{
+					$prod_ary[$i]['id']			= $rst['product_id'];
+					$prod_ary[$i]['title']		= $rst['title'];
+					$prod_ary[$i]['sort_order']	= $sort_order[$rst['product_id']];
+					$i++;
+				}
 			}
 			
 			if($cat[0]["image"] != ''){

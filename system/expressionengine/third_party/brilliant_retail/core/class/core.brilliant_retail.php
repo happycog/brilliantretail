@@ -800,6 +800,11 @@ class Brilliant_retail_core {
 		function _producttype_textarea($product_id,$attribute_id,$title,$label,$required,$val,$opts = ''){
 			$class = ($required == 1) ? 'required' : '' ;
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
+			
+			if(!is_array($val))
+			{
+				$val[0] = $val;
+			}
 			return '<textarea name="'.$product_id.'_cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'.$val[0].'</textarea>';
 		}
 		

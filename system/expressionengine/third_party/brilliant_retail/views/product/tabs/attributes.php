@@ -133,7 +133,7 @@
 		});
  
 		$('#optionSelect a').bind('click',function(){
-			$.post('<?=$add_attributes?>',{
+			$.get('<?=$add_attributes?>',{
 											set_id:$('#attributeOptions').val(), 
 											product_id:<?=$hidden["product_id"]?>
 											},function(resp){

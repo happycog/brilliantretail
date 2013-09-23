@@ -161,7 +161,7 @@
 <table id="product_sort_tbl"  class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 	<thead>
 		<tr>
-			<td colspan="3">
+			<td colspan="4">
 				<img src="<?=$theme?>images/close.png" id="close_search" />
 				<input type="text" id="br_search" placeholder="<?=lang('br_category_edit_product_search')?>" />
 				<br />
@@ -175,23 +175,32 @@
 		<tr class="odd">
 			<th>
 				<?=lang('br_category_products')?></th>
+			<th width="5%"> 
+				<?=lang('br_sort')?></th>
 			<th width="5%" colspan="2"> 
 				<?=lang('br_actions')?></th>
 		</tr>
 	</thead>
 	<tbody id="selection">
-	<?php foreach($products as $items) { ?>
+	<?php 
+		$i = 1;
+		foreach($products as $items) 
+		{ 
+	?>
 		<tr class="odd">
         	<td style="vertical-align:middle;">
         		<?= $items['title'] ?>
         	</td>
+        	<td>
+        		<input name="items[<?= $items['id']?>]" value="<?=$i++?>" type="text" /></td>
         	<td class="move_image_row">
-	        	<img src="<?=$theme?>images/move.png">
-	        	<input name="items[<?= $items['id']?>]" value="<?= $items['sort_order'] ?>" type="hidden" /></td>
+	        	<img src="<?=$theme?>images/move.png"></td>
 	    	<td>
 	    		<a href="#" class="delete_product"><img src="<?=$theme?>images/delete.png"></a></td>
 	    </tr>
-	<?php } ?>
+	<?php 
+		} 
+	?>
 	</tbody>
 </table>
 <div id="bottom_buttons">

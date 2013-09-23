@@ -68,7 +68,7 @@
 					});
 					$('#create_config').bind('click',function(){
 						if($('#config_opts').val() != null){
-							$.post(	'<?=$config_opts_link?>',
+							$.get(	'<?=$config_opts_link?>',
 									{'fields':$('#config_opts').val()},
 									function(data){
 										$('#config_opts_container').remove();

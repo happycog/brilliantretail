@@ -155,8 +155,6 @@ class Brilliant_retail_upd {
 ## ----------------------------
 ##  Table structure for exp_br_attribute
 ## ----------------------------
-
-
 	$sql[] = "DROP TABLE IF EXISTS exp_br_attribute;";
 	$sql[] = "CREATE TABLE exp_br_attribute (
 				  attribute_id int(11) NOT NULL AUTO_INCREMENT,
@@ -182,6 +180,44 @@ class Brilliant_retail_upd {
 					('27', '1', 'File', 'fle', '0', 'file', '1', '', ''), 
 					('21', '1', 'Size', 'size', '0', 'dropdown', '1', '', 'X-Small\nSmall\nMedium\nLarge\nX-Large\nXX-Large');";
 
+## -----------------------------------
+##  Records of exp_br_attribute_option
+## -----------------------------------
+	$sql[] = "DROP TABLE IF EXISTS exp_br_attribute_option;";
+	$sql[] = "CREATE TABLE exp_br_attribute_option (
+				attr_option_id int(11) NOT NULL AUTO_INCREMENT,
+				attribute_id int(11) DEFAULT NULL,
+				label varchar(100) DEFAULT NULL,
+				sort int(11) DEFAULT NULL,
+				created datetime DEFAULT NULL,
+				PRIMARY KEY (attr_option_id),
+				KEY br_attribute_id (attribute_id)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+
+
+	$sql[] = "INSERT INTO `exp_br_attribute_option` (`attr_option_id`, `attribute_id`, `label`, `sort`, `created`) VALUES
+				(1, 19, 'Black', 0, '2013-09-23 10:21:42'),
+				(2, 19, 'Blue', 1, '2013-09-23 10:21:42'),
+				(3, 19, 'Brown', 2, '2013-09-23 10:21:42'),
+				(4, 19, 'Gray', 3, '2013-09-23 10:21:42'),
+				(5, 19, 'Green', 4, '2013-09-23 10:21:42'),
+				(6, 19, 'Orange', 5, '2013-09-23 10:21:42'),
+				(7, 19, 'Red', 6, '2013-09-23 10:21:42'),
+				(8, 19, 'White', 7, '2013-09-23 10:21:42'),
+				(9, 19, 'Yellow', 8, '2013-09-23 10:21:42'),
+				(10, 21, 'X-Small', 0, '2013-09-23 10:21:42'),
+				(11, 21, 'Small', 1, '2013-09-23 10:21:42'),
+				(12, 21, 'Medium', 2, '2013-09-23 10:21:42'),
+				(13, 21, 'Large', 3, '2013-09-23 10:21:42'),
+				(14, 21, 'X-Large', 4, '2013-09-23 10:21:42'),
+				(15, 21, 'XX-Large', 5, '2013-09-23 10:21:42'),
+				(16, 19, 'Bittersweet', 0, '2013-09-23 10:21:42'),
+				(17, 19, 'Apricot', 0, '2013-09-23 10:21:42'),
+				(18, 19, 'Apricot', 0, '2013-09-23 10:21:42'),
+				(19, 21, 'xx-small', 0, '2013-09-23 10:21:42'),
+				(20, 19, 'Apricot', 0, '2013-09-23 10:21:42'),
+				(21, 21, 'xxx-small', 0, '2013-09-23 10:21:42');";
+				
 ## ----------------------------
 ##  Table structure for exp_br_attribute_set
 ## ----------------------------
@@ -602,7 +638,8 @@ class Brilliant_retail_upd {
 			  attribute_set_id int(11) DEFAULT NULL,
 			  cost decimal(10,2) NOT NULL DEFAULT '0.00',
 			  featured int(11) DEFAULT 0, 
-			  PRIMARY KEY (product_id)
+			  PRIMARY KEY (product_id),
+			  FULLTEXT KEY fulltext_product (title,meta_keyword,detail,sku)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
@@ -660,6 +697,23 @@ class Brilliant_retail_upd {
 				('939', '2536', '22', '', 'Specs:<br />\n<ul>\n<li>Model: WHB55003 </li>\n<li>Construction: Leather</li>\n<li>Lining: Stripped tan and black</li>\n<li>Hardware: Platinum</li>\n<li>Handles: Flat </li>\n<li>Access: Zipper</li>\n<li>Dimensions: 13\"Height x 15\"Width x 5\"Depth x 18\"Drop</li>\n</ul>\n');";
 
 ## ----------------------------
+##  Records exp_br_product_attributes_option
+## ----------------------------
+	$sql[] = "DROP TABLE IF EXISTS exp_br_product_attributes_option;";
+	$sql[] = "CREATE TABLE exp_br_product_attributes_option (
+					id int(11) NOT NULL AUTO_INCREMENT,
+					pa_id int(11) DEFAULT NULL,
+					product_id int(11) DEFAULT NULL,
+					attribute_id int(11) DEFAULT NULL,
+					options text DEFAULT NULL,
+					sort int(11) DEFAULT NULL,
+					PRIMARY KEY (id),
+					KEY br_product_id (product_id),
+					KEY br_attribute_id (attribute_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+
+
+## ----------------------------
 ##  Table structure for exp_br_product_bundle
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_product_bundle;";
@@ -681,13 +735,15 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_product_category;";
 	$sql[] = "CREATE TABLE exp_br_product_category (
-  pc_id int(11) NOT NULL AUTO_INCREMENT,
-  site_id int(11) DEFAULT '1'  NOT NULL, 
-  category_id int(11) NOT NULL,
-  product_id int(11) NOT NULL,
-  sort_order int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (pc_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+				  pc_id int(11) NOT NULL AUTO_INCREMENT,
+				  site_id int(11) DEFAULT '1'  NOT NULL, 
+				  category_id int(11) NOT NULL,
+				  product_id int(11) NOT NULL,
+				  sort_order int(11) NOT NULL DEFAULT 0,
+				  PRIMARY KEY (pc_id),
+				  KEY br_category_id (category_id), 
+				  KEY br_product_id (product_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Records of exp_br_product_category
@@ -784,6 +840,35 @@ class Brilliant_retail_upd {
 				('405', '10107537', '199', 'fixed', '0.00', 'a:2:{i:19;s:5:\"White\";i:21;s:5:\"Small\";}', '2509', '2010-11-05 17:34:31'), 
 				('406', '10109952', '200', 'fixed', '0.00', 'a:2:{i:19;s:5:\"White\";i:21;s:6:\"Medium\";}', '2509', '2010-11-05 17:34:31'), 
 				('407', '10103429', '200', 'fixed', '0.00', 'a:2:{i:19;s:5:\"White\";i:21;s:5:\"Large\";}', '2509', '2010-11-05 17:34:31');";
+
+
+## ----------------------------
+##  Table structure for exp_br_product_configurable
+## ----------------------------
+	$sql[] = "DROP TABLE IF EXISTS exp_br_product_configurable_attribute;";
+	$sql[] = "CREATE TABLE exp_br_product_configurable_attribute (
+				config_attr_id int(11) NOT NULL AUTO_INCREMENT,
+				configurable_id int(11) DEFAULT NULL,
+				product_id int(11) DEFAULT NULL,
+				attribute_id int(11) DEFAULT NULL,
+				option_id int(11) DEFAULT NULL,
+				sort int(11) DEFAULT NULL,
+				PRIMARY KEY (config_attr_id),
+				KEY br_product_id (product_id),
+				KEY br_attribute_id (attribute_id),
+				KEY br_option_id (option_id) 
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+
+	$sql[] = "INSERT INTO `exp_br_product_configurable_attribute` (`config_attr_id`, `configurable_id`, `product_id`, `attribute_id`, `option_id`, `sort`) 
+				VALUES
+					(1, 192, 2499, 19, 16, 0),(2, 193, 2505, 19, 17, 0),(3, 194, 2506, 19, 18, 0),(4, 194, 2506, 21, 19, 1),(5, 195, 2506, 19, 20, 0),(6, 195, 2506, 21, 21, 1),
+					(7, 196, 2507, 19, 8, 0),(8, 196, 2507, 21, 12, 1),(9, 197, 2508, 19, 8, 0),(10, 197, 2508, 21, 13, 1),(11, 198, 2508, 19, 8, 0),(12, 198, 2508, 21, 11, 1),
+					(13, 199, 2508, 19, 8, 0),(14, 199, 2508, 21, 12, 1),(15, 391, 2511, 19, 4, 0),(16, 391, 2511, 21, 11, 1),(17, 392, 2511, 19, 4, 0),(18, 392, 2511, 21, 12, 1),
+					(19, 393, 2511, 19, 4, 0),(20, 393, 2511, 21, 13, 1),(21, 394, 2509, 19, 7, 0),(22, 394, 2509, 21, 11, 1),(23, 395, 2509, 19, 7, 0),(24, 395, 2509, 21, 12, 1),
+					(25, 396, 2509, 19, 7, 0),(26, 396, 2509, 21, 13, 1),(27, 397, 2509, 19, 7, 0),(28, 397, 2509, 21, 14, 1),(29, 398, 2509, 19, 7, 0),(30, 398, 2509, 21, 21, 1),
+					(31, 399, 2509, 19, 1, 0),(32, 399, 2509, 21, 10, 1),(33, 400, 2509, 19, 1, 0),(34, 400, 2509, 21, 11, 1),(35, 401, 2509, 19, 1, 0),(36, 401, 2509, 21, 12, 1),
+					(37, 402, 2509, 19, 1, 0),(38, 402, 2509, 21, 13, 1),(39, 403, 2509, 19, 1, 0),(40, 403, 2509, 21, 14, 1),(41, 404, 2509, 19, 1, 0),(42, 404, 2509, 21, 21, 1),
+					(43, 405, 2509, 19, 8, 0),(44, 405, 2509, 21, 11, 1),(45, 406, 2509, 19, 8, 0),(46, 406, 2509, 21, 12, 1),(47, 407, 2509, 19, 8, 0),(48, 407, 2509, 21, 13, 1);";
 
 ## ----------------------------
 ##  Table structure for exp_br_product_donation
@@ -4492,9 +4577,11 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_addon;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_attributes;";
+			$sql[] = "DROP TABLE IF EXISTS exp_br_product_attributes_option;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_bundle;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_category;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_configurable;";
+			$sql[] = "DROP TABLE IF EXISTS exp_br_product_configurable_attribute;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_download;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_donation;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_entry;";
