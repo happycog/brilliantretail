@@ -34,11 +34,56 @@
 			<div id="logo">
 				<img src="<?=rtrim($company["media_url"],'/').'/'.$company["logo"]?>">
 			</div>
-			<h4 id="status_text">
-	        	<?=lang('br_order_date')?> : <?=date("n/d/y",$order["created"])?><br />
-	        	<?=lang('br_order_number')?> : <?=$order["order_id"]?><br />
-	        </h4>
+
 	       	<table id="order_table" width="100%" cellpadding="0" cellspacing="15">
+        		
+        		<tr>
+        			<td colspan="2">
+						<table id="order_customer" cellspacing="0" width="100%" cellpadding="0">
+        					<tr>
+        						<th colspan="2">
+        							<?=lang('br_order_details')?></th>
+        					</tr>
+							<tr>
+								<td valign="top">
+									<table cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<strong><?=lang('br_order_number')?>:</strong></td>
+											<td>
+												<?=$order["order_id"]?></td>
+										</tr>
+										<tr>
+											<td>
+												<strong><?=lang('br_order_date')?>: </strong></td>
+											<td>
+												 <?=date("n/d/y",$order["created"])?></td>
+										</tr>
+									</table>
+								</td>
+								<td valign="top">
+									<table cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<strong><?=lang('br_customer_username')?>: </strong></td>
+											<td>
+												<?php
+													echo $order["member"]["br_fname"].' '.$order["member"]["br_lname"];
+												?></td>
+										</tr>
+										<tr>
+											<td>
+												<strong><?=lang('br_customer_email')?>: </strong></td>
+											<td>
+												<?php
+													echo '<a href="mailto:'.$order["member"]["email"].'">'.$order["member"]["email"].'</a>';
+												?></td>
+										</tr>
+									</table></td>
+							</tr>
+						</table>
+        			</td>
+        		</tr>
         		<tr>
         			<td width="50%">
         				<table width="100%" cellpadding="0" cellspacing="0">
@@ -50,7 +95,12 @@
         						<td>
 									<p>
 										<b><?=$order["address"][0]["shipping_fname"]?> <?=$order["address"][0]["shipping_lname"]?></b><br />
-										<?=$order["address"][0]["shipping_company"]?><br />
+										<?php
+											if($order["address"][0]["shipping_company"] != '')
+											{
+												echo $order["address"][0]["shipping_company"].'<br />';
+											}
+										?>
 										<?=$order["address"][0]["shipping_address1"]?><br />
 										<?php 
 											if(trim($order["address"][0]["shipping_address2"]) != '')
@@ -74,7 +124,12 @@
         						<td>
 									<p>
 										<b><?=$order["address"][0]["billing_fname"]?> <?=$order["address"][0]["billing_lname"]?></b><br />
-										<?=$order["address"][0]["billing_company"]?><br />
+										<?php
+											if($order["address"][0]["billing_company"] != '')
+											{
+												echo $order["address"][0]["billing_company"].'<br />';
+											}
+										?>
 										<?=$order["address"][0]["billing_address1"]?><br />
 										<?php 
 											if(trim($order["address"][0]["billing_address2"]) != '')

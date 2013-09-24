@@ -36,14 +36,23 @@ if(!isset($_SESSION["cart"])){
 				$br = APPPATH.'cache/brilliant_retail';
 				if(!file_exists($br)){
 					mkdir($br);
+					// Add an htaccess file
+					$fp = fopen($br.'/.htaccess', 'w');
+					fwrite($fp, 'deny from all');
+					fclose($fp);
 				}
 			
 			// Check for the namespaced directory (md5 of http_host) 
 			// Added to avoid cache conflicts when people were uploading their
 			// local cache to stating or production. 
-				$path = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]);
+				$path = APPPATH.'cache/brilliant_retail/'.BR_VERSION;
 				if(!file_exists($path)){
 					mkdir($path);
+					// Add an htaccess file
+						$fp = fopen($path.'/.htaccess', 'w');
+						fwrite($fp, 'deny from all');
+						fclose($fp);
+
 				}
 
 			// Save the file
@@ -54,7 +63,7 @@ if(!isset($_SESSION["cart"])){
 		}
 		
 		function read_from_cache($type){
-			$nm = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/'.md5($type);
+			$nm = APPPATH.'cache/brilliant_retail/'.BR_VERSION.'/'.md5($type);
 			if(!file_exists($nm)){
 				return false;
 			}else{
@@ -67,7 +76,7 @@ if(!isset($_SESSION["cart"])){
 		}
 		
 		function remove_from_cache($type){
-			$nm = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/'.md5($type);
+			$nm = APPPATH.'cache/brilliant_retail/'.BR_VERSION.'/'.md5($type);
 			if(file_exists($nm)){
 				unlink($nm);
 			}
@@ -75,7 +84,7 @@ if(!isset($_SESSION["cart"])){
 		
 		function delete_file_cache()
 		{
-			$path = APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/';
+			$path = APPPATH.'cache/brilliant_retail/'.BR_VERSION.'/';
 			$file = read_dir_files($path);
 			foreach($file as $f)
 			{

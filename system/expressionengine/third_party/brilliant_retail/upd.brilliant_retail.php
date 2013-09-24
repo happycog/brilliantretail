@@ -447,6 +447,8 @@ class Brilliant_retail_upd {
 				  cart_id varchar(100) NOT NULL,
 				  merchant_id varchar(100) NOT NULL,
 				  coupon_code varchar(50) NOT NULL,
+				  agent_string varchar(255) default 'unknown',
+				  ip_address varchar(50),
 				  created int(10) unsigned NOT NULL default '0',
 				  PRIMARY KEY  (order_id),
 				  KEY order_member_id (member_id) 

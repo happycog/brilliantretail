@@ -346,7 +346,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['order']['order_total_due']		= $this->_currency_round($this->vars['order']['order_total']-$this->vars['order']['order_total_paid']);
 			
 			// Now that we have an order lets build some buttons
-				$right[lang('print')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true';
+				$right[lang('br_print_invoice')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true';
+				
+				$right[lang('br_print_packing_slip')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=pack';
 				
 				if($this->vars['order']["order_total_due"] > 0){
 					$right[lang('br_add_payment')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment&order_id='.$this->vars['order']["order_id"];

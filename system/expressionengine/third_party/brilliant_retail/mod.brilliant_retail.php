@@ -1701,185 +1701,191 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars); 
 				
 				if($show_js === TRUE){
+					
+					$XID = $this->EE->security->generate_xid();
+					
 					$this->EE->load->library('javascript');
 					$countries = $this->EE->product_model->get_countries();
 					$map = json_encode($this->EE->product_model->get_states($countries));
 					
 					// Add the JavaScript to the output cache
-						$this->EE->session->cache['br_output_js'] .= "	var ship_to;
-																		var ship_note;
-																		var cnt = 0;
-																		var payment;
-																		
-																		$(function(){
-																			ship_to = $('#ship_same_address');
-																			
-																			/* Add a timeout to refresh totals so the session stays alive */
-																			setInterval('_update_cart_totals()',600000);
-																			
-																			$('#checkoutform').validate({
-																											'ignore' : ':hidden',
-																											submitHandler: function(form){
-																												if(typeof window.after_validate_checkout == 'function') {
-																													after_validate_checkout();
-																												}else{
-																													$('#checkout_button').attr('disabled', 'disabled');
-																											        form.submit();
-																												}
-																											}
-																										}); 
-																			
-																			
-																			// Setup the javascript for the state/country selectors
-																				var selects = $('select[data-br_country]'),
-																					country_state_map = ".$map.";
-																				
-																				selects.each(function() {
-																					var select = $(this),
-																						country = $( '#'+select.data('br_country') );
-																					
-																					// when the country changes, populate the states
-																					// trigger the first change right away to update
-																					country.change(function() {
-																						var str = '<option value=\"\">".lang('br_select_a_state')."</option>',
-																							country = this.options[this.selectedIndex].text;
-																						
-																						$.each(country_state_map[country], function(k, v) {
-																							str += '<option value=\"'+k+'\">'+v+'</option>';
-																						});
-																						
-																						select.empty().append(str);
-																						select.val(select.data('br_selected'));
-																						
-																					}).triggerHandler('change');
-																				});
-																			
-																			
-																			_bind_payment_options();
-																			
-																			$('#ship_same_address').bind('click',function(){
-																				var a = $(this);
-																				var b = $('#shipping_address');
-																				if(a.is(':checked')){
-																					b.slideUp();
-																				}else{
-																					b.slideDown();
-																				}
-																			});
-																			
-																			$('input[name=br_billing_address1],input[name=br_shipping_address1],input[name=br_billing_zip],input[name=br_shipping_zip],input[name=br_billing_country],input[name=br_shipping_country],input[name=br_billing_city],input[name=br_shipping_state]').bind('change',function(){
-																				var ship_to = $('#ship_same_address');
-																				if(ship_to.is(':checked')){
-																					_get_shipping_quote('billing');
-																				}else{
-																					_get_shipping_quote('shipping');	
-																				}
-																			});
-																			
-																			if($('#br_billing_zip').val() != ''){
-																				_get_shipping_quote('billing');
-																			}else{
-																				_get_shipping_quote('shipping');	
-																			}
-																			
-																			$('#get_shipping_rates').bind('click',function(){
-																				var ship_to = $('#ship_same_address');
-																				if(	$('#br_billing_zip').val() == '' || 
-																					$('#br_billing_country').val() == '' || 
-																					$('#br_billing_state').val() == ''){
-																					
-																					alert('Please enter your shipping information before calculating rates');
-																				
-																				}else{
-																					if(ship_to.is(':checked')){
-																						_get_shipping_quote('billing');
+						$checkout_js = "	var ship_to;
+											var ship_note;
+											var cnt = 0;
+											var payment;
+											
+											$(function(){
+												ship_to = $('#ship_same_address');
+												
+												/* Add a timeout to refresh totals so the session stays alive */
+												setInterval('_update_cart_totals()',600000);
+												
+												$('#checkoutform').validate({
+																				'ignore' : ':hidden',
+																				submitHandler: function(form){
+																					if(typeof window.after_validate_checkout == 'function') {
+																						after_validate_checkout();
 																					}else{
-																						_get_shipping_quote('shipping');	
+																						$('#checkout_button').attr('disabled', 'disabled');
+																				        form.submit();
 																					}
 																				}
-																				return false;
-																			});
-																			
-																		});
-																	
-																		function _bind_payment_options(){
-																			$('.gateway').unbind().bind('click',function(){
-																				$('.payment_form:visible').hide();
-																				var a = $(this).parent().parent();
-																				var b = $('.payment_form',a);
-																				if(b.html() != ''){
-																					b.show();
-																				} 
-																			});
-																		}
-																		
-																		function _get_shipping_quote(address){
-																			var url = '".$shipping_action."';
-																			
-																			var params = {	
-																							'address1': $('input[name=br_'+address+'_address1]').val(),
-																							'address2': $('input[name=br_'+address+'_address2]').val(),
-																							'city':		$('input[name=br_'+address+'_city]').val(),
-																							'state':	$('#br_'+address+'_state').val(),
-																							'zip':		$('input[name=br_'+address+'_zip]').val(),
-																							'country':	$('#br_'+address+'_country').val()
-																						 }
-																			var contain = $('#shipping_options div#options');
-																			
-																			ship_note = contain.html();
-																			contain.html('&nbsp;Calculating Rates<br /><img src=\"".$this->_config["media_url"]."images/loading.gif\" />');
-																			
-																			$.post(url,params,function(data){
-																	   			$('#shipping_options div#options').html(data);
-																		 		_update_cart_totals();
-																	 			$('input.shipping').bind('change',_update_cart_totals);
-																	 		});
-																	 	}
-																	 	
-																		function _update_cart_totals(){
-																			var url = '".$total_action."';
-																			var address = 'shipping';
-																			
-																			$('#checkout_btn').hide();
-																			$('#tax_container,#shipping_container,#total_container').html(' - ');
-																			if(ship_to.is(':checked')){
-																				address = 'billing';
-																			}
-																			
-																			$.post(	url,	
-																						{
-																							'address1': $('input[name=br_'+address+'_address1]').val(),
-																							'address2': $('input[name=br_'+address+'_address2]').val(),
-																							'city':		$('input[name=br_'+address+'_city]').val(),
-																							'state':	$('#br_'+address+'_state').val(),
-																							'zip':		$('input[name=br_'+address+'_zip]').val(),
-																							'country':	$('#br_'+address+'_country').val(), 
-																							'shipping':	$('input.shipping:checked').val()
-																						},
-																						function(returndata){
-																							var data = $.parseJSON(returndata);
-																							if(payment != data[0].payment){
-																								payment = data[0].payment;
-																								$('#payment_container').html(payment);
-																								_bind_payment_options();
-																							}
-																							$('#tax_container').html(data[0].marker+data[0].tax);
-																							$('#shipping_container').html(data[0].marker+data[0].shipping);
-																							$('#total_container').html(data[0].marker+data[0].total);
-																							// Only show the button if we have shipping options
-																							if($('#shipping_options_available').val() == 1){
-																								$('#checkout_btn').show();						
-																							}
-																							_checkout_callback(data[0]);
-																						});
-																		}
+																			}); 
+												
+												
+												// Setup the javascript for the state/country selectors
+													var selects = $('select[data-br_country]'),
+														country_state_map = ".$map.";
+													
+													selects.each(function() {
+														var select = $(this),
+															country = $( '#'+select.data('br_country') );
+														
+														// when the country changes, populate the states
+														// trigger the first change right away to update
+														country.change(function() {
+															var str = '<option value=\"\">".lang('br_select_a_state')."</option>',
+																country = this.options[this.selectedIndex].text;
+															
+															$.each(country_state_map[country], function(k, v) {
+																str += '<option value=\"'+k+'\">'+v+'</option>';
+															});
+															
+															select.empty().append(str);
+															select.val(select.data('br_selected'));
+															
+														}).triggerHandler('change');
+													});
+												
+												
+												_bind_payment_options();
+												
+												$('#ship_same_address').bind('click',function(){
+													var a = $(this);
+													var b = $('#shipping_address');
+													if(a.is(':checked')){
+														b.slideUp();
+													}else{
+														b.slideDown();
+													}
+												});
+												
+												$('input[name=br_billing_address1],input[name=br_shipping_address1],input[name=br_billing_zip],input[name=br_shipping_zip],input[name=br_billing_country],input[name=br_shipping_country],input[name=br_billing_city],input[name=br_shipping_state]').bind('change',function(){
+													var ship_to = $('#ship_same_address');
+													if(ship_to.is(':checked')){
+														_get_shipping_quote('billing');
+													}else{
+														_get_shipping_quote('shipping');	
+													}
+												});
+												
+												if($('#br_billing_zip').val() != ''){
+													_get_shipping_quote('billing');
+												}else{
+													_get_shipping_quote('shipping');	
+												}
+												
+												$('#get_shipping_rates').bind('click',function(){
+													var ship_to = $('#ship_same_address');
+													if(	$('#br_billing_zip').val() == '' || 
+														$('#br_billing_country').val() == '' || 
+														$('#br_billing_state').val() == ''){
+														
+														alert('Please enter your shipping information before calculating rates');
+													
+													}else{
+														if(ship_to.is(':checked')){
+															_get_shipping_quote('billing');
+														}else{
+															_get_shipping_quote('shipping');	
+														}
+													}
+													return false;
+												});
+												
+											});
+										
+											function _bind_payment_options(){
+												$('.gateway').unbind().bind('click',function(){
+													$('.payment_form:visible').hide();
+													var a = $(this).parent().parent();
+													var b = $('.payment_form',a);
+													if(b.html() != ''){
+														b.show();
+													} 
+												});
+											}
+											
+											function _get_shipping_quote(address){
+												var url = '".$shipping_action."';
+												
+												var params = {	
+																'XID' : '".$XID."',
+																'address1': $('input[name=br_'+address+'_address1]').val(),
+																'address2': $('input[name=br_'+address+'_address2]').val(),
+																'city':		$('input[name=br_'+address+'_city]').val(),
+																'state':	$('#br_'+address+'_state').val(),
+																'zip':		$('input[name=br_'+address+'_zip]').val(),
+																'country':	$('#br_'+address+'_country').val()
+															 }
+												var contain = $('#shipping_options div#options');
+												
+												ship_note = contain.html();
+												contain.html('&nbsp;Calculating Rates<br /><img src=\"".$this->_config["media_url"]."images/loading.gif\" />');
+												
+												$.post(url,params,function(data){
+										   			$('#shipping_options div#options').html(data);
+											 		_update_cart_totals();
+										 			$('input.shipping').bind('change',_update_cart_totals);
+										 		});
+										 	}
+										 	
+											function _update_cart_totals(){
+												var url = '".$total_action."';
+												var address = 'shipping';
+												
+												$('#checkout_btn').hide();
+												$('#tax_container,#shipping_container,#total_container').html(' - ');
+												if(ship_to.is(':checked')){
+													address = 'billing';
+												}
+												
+												$.post(	url,	
+															{
+																'XID' : '".$XID."',
+																'address1': $('input[name=br_'+address+'_address1]').val(),
+																'address2': $('input[name=br_'+address+'_address2]').val(),
+																'city':		$('input[name=br_'+address+'_city]').val(),
+																'state':	$('#br_'+address+'_state').val(),
+																'zip':		$('input[name=br_'+address+'_zip]').val(),
+																'country':	$('#br_'+address+'_country').val(), 
+																'shipping':	$('input.shipping:checked').val()
+															},
+															function(returndata){
+																var data = $.parseJSON(returndata);
+																if(payment != data[0].payment){
+																	payment = data[0].payment;
+																	$('#payment_container').html(payment);
+																	_bind_payment_options();
+																}
+																$('#tax_container').html(data[0].marker+data[0].tax);
+																$('#shipping_container').html(data[0].marker+data[0].shipping);
+																$('#total_container').html(data[0].marker+data[0].total);
+																// Only show the button if we have shipping options
+																if($('#shipping_options_available').val() == 1){
+																	$('#checkout_btn').show();						
+																}
+																_checkout_callback(data[0]);
+															});
+											}
 
-																		// Adding a beta js callback for doing something with the data after the 
-																			function _checkout_callback(data){
-																				if(typeof window.after_update_totals == 'function') {
-																					after_update_totals(data);
-																				}
-																			}";
+											// Adding a beta js callback for doing something with the data after the 
+												function _checkout_callback(data){
+													if(typeof window.after_update_totals == 'function') {
+														after_update_totals(data);
+													}
+												}";
+					$this->EE->session->cache['br_output_js'] .= $checkout_js;
 				}
 				
 				// Clear any form errors from session if they exist
@@ -1893,6 +1899,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 				$this->EE->load->model('customer_model');
 				$this->EE->load->model('order_model');	
+				$this->EE->load->library('user_agent');
 
 			// For order email 
 				$has_donation 		= FALSE;
@@ -2207,7 +2214,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 					"cart_id"	 	=> $data["cart"]["cart_id"], 
 					"merchant_id" 	=> $data["transaction_id"],  
 					"coupon_code" 	=> $data["cart_coupon_code"], 
-					"created" 		=> time()
+					"created" 		=> time(),
+					"agent_string"	=> $this->EE->agent->agent_string(),
+					"ip_address"	=> $_SERVER["REMOTE_ADDR"]
 				); 
 			
 				// Hook before we create the order
@@ -2486,6 +2495,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 		function checkout_shipping()
 		{
+			$this->EE->security->restore_xid();
 			$cart 		= $this->EE->product_model->cart_get();
 			$weight 	= 0;
 			$shippable 	= 0;
@@ -2564,6 +2574,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		function checkout_total()
 		{
+			$this->EE->security->restore_xid();
 			$address1 	= $this->EE->input->post("address1",TRUE);
 			$address2 	= $this->EE->input->post("address2",TRUE);
 			$city		= $this->EE->input->post("city",TRUE);
@@ -3069,7 +3080,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$show_js = ($this->EE->TMPL->fetch_param('show_js')) ? ($this->EE->TMPL->fetch_param('show_js')) : TRUE;	
 
 					if($show_js === TRUE){
-						$this->EE->load->library('javascript');
 						$countries = $this->EE->product_model->get_countries();
 						$map = json_encode($this->EE->product_model->get_states($countries));
 						$this->EE->session->cache['br_output_js'] .= "	$(function(){

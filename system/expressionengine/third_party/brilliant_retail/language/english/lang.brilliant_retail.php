@@ -164,6 +164,7 @@ $lang = array(
 	'br_order_remove_note_success' 	=> 'Order note successfully removed', 
 	'br_order_payment_added' => 'Payment Added', 
 	'br_order_payment_note_message' => 'A payment of %x added by %y',
+	'br_print_invoice'			=> "Print Invoice",
 	"method" 					=> "Method",
 	"card_type" 				=> "Card Type",
 	"exp_year"					=> "Expires",

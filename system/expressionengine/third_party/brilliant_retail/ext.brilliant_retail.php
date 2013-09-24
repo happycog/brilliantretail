@@ -203,7 +203,7 @@ class Brilliant_retail_ext {
 	{
 		$arr = $this->_get_channels();
 		$filter['channel_id !='] = $arr;
-		#return $filter;
+		return $filter;
 	}
 	
 	/**
@@ -223,6 +223,14 @@ class Brilliant_retail_ext {
 		if(strpos($tmp,'</body>') !== false){
 			$script = isset($this->EE->session->cache['br_output_js']) ? $this->EE->session->cache['br_output_js'] : '';
 			if($script != ''){
+				// Should we compress our output? 
+				// Added 1.3.5 - dpd
+					if($this->EE->config->item('br_compress_js') == 'y')
+					{
+						require_once(PATH_THIRD.'brilliant_retail/libraries/jsminplus.php');
+						$script = JSMinPlus::minify($script);
+					}
+
 				$script = "<script type=\"text/javascript\">\n".$script."\n</script>\n";
 				$this->EE->session->cache['br_output_js'] = '';
 			}
