@@ -203,7 +203,7 @@ class Brilliant_retail_ext {
 	{
 		$arr = $this->_get_channels();
 		$filter['channel_id !='] = $arr;
-		return $filter;
+		#return $filter;
 	}
 	
 	/**

@@ -1545,7 +1545,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$orig_group_id = $this->EE->session->userdata["group_id"];
 						$this->EE->session->userdata["group_id"] = 1; // Temporarily open give SA access to channels
 
-						$this->EE->api_channel_entries->update_entry($entry_id, $_POST, FALSE);
+						$this->EE->api_channel_entries->update_entry($entry_id, $_POST);
 						
 						// Set back to original access
 							$this->EE->session->userdata["group_id"] = $orig_group_id;		
