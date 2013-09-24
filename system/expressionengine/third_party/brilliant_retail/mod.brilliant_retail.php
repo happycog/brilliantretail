@@ -1703,8 +1703,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($show_js === TRUE){
 					
 					$XID = $this->EE->security->generate_xid();
-					
-					$this->EE->load->library('javascript');
 					$countries = $this->EE->product_model->get_countries();
 					$map = json_encode($this->EE->product_model->get_states($countries));
 					
@@ -2495,7 +2493,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 		function checkout_shipping()
 		{
-			$this->EE->security->restore_xid();
+			if(version_compare(APP_VER, '2.7.0', '>=')){
+				$this->EE->security->restore_xid();
+			}
+			
 			$cart 		= $this->EE->product_model->cart_get();
 			$weight 	= 0;
 			$shippable 	= 0;
@@ -2574,7 +2575,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		function checkout_total()
 		{
-			$this->EE->security->restore_xid();
+			if(version_compare(APP_VER, '2.7.0', '>=')){
+				$this->EE->security->restore_xid();
+			}
 			$address1 	= $this->EE->input->post("address1",TRUE);
 			$address2 	= $this->EE->input->post("address2",TRUE);
 			$city		= $this->EE->input->post("city",TRUE);
