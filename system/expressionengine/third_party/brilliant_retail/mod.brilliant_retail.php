@@ -1768,7 +1768,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 													}
 												});
 												
-												$('input[name=br_billing_address1],input[name=br_shipping_address1],input[name=br_billing_zip],input[name=br_shipping_zip],input[name=br_billing_country],input[name=br_shipping_country],input[name=br_billing_city],input[name=br_shipping_state]').bind('change',function(){
+												$('input[name=br_billing_address1],input[name=br_shipping_address1],input[name=br_billing_zip],input[name=br_shipping_zip],select[name=br_billing_country],select[name=br_shipping_country],input[name=br_billing_city],select[name=br_billing_state],select[name=br_shipping_state]').bind('change',function(){
 													var ship_to = $('#ship_same_address');
 													if(ship_to.is(':checked')){
 														_get_shipping_quote('billing');

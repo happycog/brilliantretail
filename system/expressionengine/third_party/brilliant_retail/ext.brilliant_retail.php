@@ -225,7 +225,7 @@ class Brilliant_retail_ext {
 			if($script != ''){
 				// Should we compress our output? 
 				// Added 1.3.5 - dpd
-					if($this->EE->config->item('br_compress_js') == 'y')
+					if($this->EE->config->item('br_compress_js') != 'n')
 					{
 						require_once(PATH_THIRD.'brilliant_retail/libraries/jsminplus.php');
 						$script = JSMinPlus::minify($script);

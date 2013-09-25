@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2012						*/
+/* 	@copyright	Copyright (c) 2010-2013						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -38,12 +38,12 @@ class Gateway_realex extends Brilliant_retail_gateway {
 			$currentTSSCheck = "";
 
 		// Order details for check
-			$currency = $this->_config["currency"];
-			$amount = ($data["order_total"]*100);
+			$currency 	= $this->_config["currency"];
+			$amount 	= ($data["order_total"]*100);
 			$cardnumber = $data["realex_cc_num"];
-			$cardname = $data["realex_cc_name"];
-			$cardtype = $data["realex_cc_type"];
-			$expdate = $data["realex_cc_month"].$data["realex_cc_year"];
+			$cardname 	= $data["realex_cc_name"];
+			$cardtype 	= $data["realex_cc_type"];
+			$expdate 	= $data["realex_cc_month"].$data["realex_cc_year"];
 
 		// These values provided by realex Payments
 			$merchantid = $config['merchant_id'];
