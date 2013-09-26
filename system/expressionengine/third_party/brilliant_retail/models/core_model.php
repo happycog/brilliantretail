@@ -24,8 +24,12 @@
 
 class Core_model extends CI_Model {
 
+	protected $EE;
+	
 	function __construct(){
 		parent::__construct();
+		
+		$this->EE =& get_instance();
 		$this->load->helper('brilliant_retail');
 	}
 
@@ -47,30 +51,30 @@ class Core_model extends CI_Model {
 			}
 			
 		// Get the store config 
-			$this->db->select('	s.*, 
+			$this->EE->db->select('	s.*, 
 								c.code as currency,
 								c.currency_id,
 								c.marker as currency_marker')
 					
 					->from('br_store s')
 					->join('br_currencies c','c.currency_id = s.currency_id');	
-			$query = $this->db->get();
+			$query = $this->EE->db->get();
 			foreach ($query->result_array() as $row){
 				$arr["store"][$row["site_id"]] = $row;
 			}
 
 		// Get the config data for each item
 
-			$this->db->select('*')->from('br_config_data')->order_by('sort');
-			$query = $this->db->get();
+			$this->EE->db->select('*')->from('br_config_data')->order_by('sort');
+			$query = $this->EE->db->get();
 			foreach ($query->result_array() as $row){
 				$data[$row['config_id']][] = $row;
 			}
 			
 		// Get the items
 
-			$this->db->select('*')->from('br_config')->order_by('sort');
-			$query = $this->db->get();
+			$this->EE->db->select('*')->from('br_config')->order_by('sort');
+			$query = $this->EE->db->get();
 			foreach ($query->result_array() as $row){
 				$arr[$row["type"]][$row["site_id"]][$row["code"]] = $row;
 				if(isset($data[$row["config_id"]])){
@@ -94,15 +98,15 @@ class Core_model extends CI_Model {
 			           	'descr' 	=> $descr,
 			           	'enabled' 	=> 1 
 			       	);
-		$this->db->insert('br_config',$data); 
-		return $this->db->insert_id();
+		$this->EE->db->insert('br_config',$data); 
+		return $this->EE->db->insert_id();
 	}
 	
 	function module_update($data){
 		
 		// Need to update the label first
 			if(isset($data["label"])){
-				$this->db->update(	
+				$this->EE->db->update(	
 									'br_config',
 									array(
 											'sort' 		=> round($data["sort"] * 1),
@@ -118,8 +122,8 @@ class Core_model extends CI_Model {
 			
 		// We are going to build an array of all config elements so we can 
 		// handle if the user submits no value for a checkbox for instance. 
-			$this->db->from('br_config_data')->where('config_id',$data["config_id"]); 
-			$qry = $this->db->get();
+			$this->EE->db->from('br_config_data')->where('config_id',$data["config_id"]); 
+			$qry = $this->EE->db->get();
 			foreach($qry->result_array() as $rst)
 			{
 				$list[$rst["config_data_id"]] = TRUE;
@@ -130,14 +134,14 @@ class Core_model extends CI_Model {
 				if(strpos($key,'cAttribute_') !== false){ 
 					// Custom Attributes
 					$config_data_id = str_replace('0_cAttribute_','',$key);
-					$this->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
+					$this->EE->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
 					unset($list[$config_data_id]);
 				}
 				if(strpos($key,'cAttributePW_') !== false){ 
 					// Custom Attributes
 					if($val != '************************'){
 						$config_data_id = str_replace('0_cAttributePW_','',$key);
-						$this->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
+						$this->EE->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
 						unset($list[$config_data_id]);
 					}
 				}
@@ -147,30 +151,30 @@ class Core_model extends CI_Model {
 			if(isset($list)){
 				foreach($list as $key => $val)
 				{
-					$this->db->update('br_config_data',array('value' => ''), "config_data_id = ".$key);
+					$this->EE->db->update('br_config_data',array('value' => ''), "config_data_id = ".$key);
 				}	
 			}
 	}
 	
 	function module_update_version($version,$config_id){
-		$this->db->update('br_config',array('version'=>$version),"config_id = ".$config_id);
+		$this->EE->db->update('br_config',array('version'=>$version),"config_id = ".$config_id);
 	}
 	
 	function module_remove($config_id){
 		// Remove the primary entry
-			$this->db->delete('br_config', array('config_id' => $config_id)); 
+			$this->EE->db->delete('br_config', array('config_id' => $config_id)); 
 	
 		// Remove any custom configuration 
 		// data that the module has
-			$this->db->delete('br_config_data', array('config_id' => $config_id)); 
+			$this->EE->db->delete('br_config_data', array('config_id' => $config_id)); 
 	}
 	
 	function get_aid($class,$method){
-		$this->db->select('action_id')
+		$this->EE->db->select('action_id')
 				->from('actions')
 				->where('class',$class)
 				->where('method',$method);
-		$query = $this->db->get();
+		$query = $this->EE->db->get();
 		if($query->num_rows() > 0){
 		   $row = $query->row(); 
 		   return $row->action_id;
@@ -180,30 +184,30 @@ class Core_model extends CI_Model {
 	
 	function get_sites(){
 		$sites = array();
-		if(isset($this->session->cache["get_sites"])){
-			$sites = $this->session->cache["get_sites"];
+		if(isset($this->EE->session->cache["get_sites"])){
+			$sites = $this->EE->session->cache["get_sites"];
 		}else{
-			$this->db->from('sites');
-			$query = $this->db->get();
+			$this->EE->db->from('sites');
+			$query = $this->EE->db->get();
 			foreach($query->result_array() as $row){
 			   $sites[$row["site_id"]] = $row;
 			}
-			$this->session->cache["get_sites"] = $sites;
+			$this->EE->session->cache["get_sites"] = $sites;
 		}
 		return $sites;
 	}
 
 	function get_stores(){
 		$stores = array();
-		if(isset($this->session->cache["get_stores"])){
-			$stores = $this->session->cache["get_stores"];
+		if(isset($this->EE->session->cache["get_stores"])){
+			$stores = $this->EE->session->cache["get_stores"];
 		}else{
-			$this->db->from('br_store');
-			$query = $this->db->get();
+			$this->EE->db->from('br_store');
+			$query = $this->EE->db->get();
 			foreach($query->result_array() as $row){
 			   $stores[$row["site_id"]] = $row;
 			}
-			$this->session->cache["get_stores"] = $stores;
+			$this->EE->session->cache["get_stores"] = $stores;
 		}
 		return $stores;
 	}
@@ -214,7 +218,7 @@ class Core_model extends CI_Model {
 						(site_id,channel_id,logo,license,phone,address1,address2,city,state,country,zipcode,fax,currency_id,result_limit,result_per_page,result_paginate,register_group,guest_checkout,media_url,media_dir,meta_title,meta_keywords,meta_descr,subscription_enabled,first_notice,second_notice,third_notice,cancel_subscription,secure_url,cart_url,checkout_url,customer_url,product_url,low_stock)
 							VALUES 
 						(".$site_id.",'0','logo.png', '', '(888) 555-5555', '1234 First Steet Ln.', '', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', '/media/','/media/','','','',0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','customer','product','25')";
-			$this->db->query($sql);
+			$this->EE->db->query($sql);
 		// Create the store system config record
 			
 			$data = array(
@@ -224,8 +228,8 @@ class Core_model extends CI_Model {
 							'site_id' 	=> $site_id,  
 							'enabled' 	=> 1 
 						);
-			$this->db->insert('br_config',$data);
-			$config_id = $this->db->insert_id();
+			$this->EE->db->insert('br_config',$data);
+			$config_id = $this->EE->db->insert_id();
 
 		// Create the store system config data records 
 			$status = array(
@@ -242,9 +246,19 @@ class Core_model extends CI_Model {
 								'label' 	=> $val, 
 								'value' 	=> $key 
 							);
-				$this->db->insert('br_config_data',$data);
+				$this->EE->db->insert('br_config_data',$data);
 			}
 		
 		return true;
 	}
+
+	function exempt_csfr()
+	{
+		$sql = "UPDATE ".$this->EE->db->dbprefix."actions SET csrf_exempt = 1 WHERE class = 'Brilliant_retail' AND method IN ('gateway_ipn','process_ipn')";
+		$this->EE->db->query($sql);
+		return true;
+	}
+
 }	
+
+

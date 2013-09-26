@@ -97,7 +97,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		// Let's check to make sure each product has a 
 		// paird channel entry
 			$this->_check_product_entry_pair();
-				
+		
+		// Match sure our IPN / Callbacks are csfr exempt
+			if(version_compare(APP_VER, '2.7.0', '>=')){		
+				$this->EE->core_model->exempt_csfr();
+			}
 		// Now we load up stuff. Only do it once! 
 		// Thats what the session->cache check is for
 			if(!isset($this->EE->session->cache['mcp_brilliantretail_construct'])){
