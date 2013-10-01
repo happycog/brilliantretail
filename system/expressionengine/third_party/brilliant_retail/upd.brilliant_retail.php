@@ -593,6 +593,7 @@ class Brilliant_retail_upd {
 					label varchar(100) NOT NULL,
 					method varchar(50) NOT NULL,
 					tracknum varchar(255) NOT NULL,
+					ship_date int(10) unsigned NOT NULL default '0',
 					PRIMARY KEY (order_ship_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 

@@ -1777,7 +1777,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 													}
 												});
 												
-												if($('#br_billing_zip').val() != ''){
+												if(ship_to.is(':checked')){
 													_get_shipping_quote('billing');
 												}else{
 													_get_shipping_quote('shipping');	

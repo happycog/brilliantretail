@@ -758,7 +758,9 @@ class Brilliant_retail_core {
 			$input_title = ($required == 1) ? $label.' '.lang('br_is_required') : $label ;
 			if(!is_array($val))
 			{
-				$val[0] = $val;
+				$tmp = $val;
+				unset($val);
+				$val[0] = $tmp;
 			}
 			return '<input name="'.$product_id.'_cAttribute_'.$attribute_id.'" value="'.$val[0].'" title="'.$input_title.'" type="text" class="'.$class.'" />';
 		}
@@ -807,7 +809,9 @@ class Brilliant_retail_core {
 			
 			if(!is_array($val))
 			{
-				$val[0] = $val;
+				$tmp = $val;
+				unset($val);
+				$val[0] = $tmp;
 			}
 			return '<textarea name="'.$product_id.'_cAttribute_'.$attribute_id.'" title="'.$input_title.'" class="'.$class.'">'.$val[0].'</textarea>';
 		}
