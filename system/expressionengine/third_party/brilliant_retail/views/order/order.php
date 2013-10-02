@@ -79,12 +79,12 @@ $content = $this->table->generate();
 				?>
 			</optgroup>
 			<optgroup label="Download">
-				<option value="download_pack">Packing Slips</option>
 				<option value="download_print">Invoices</option>
+				<option value="download_pack">Packing Slips</option>
 			</optgroup>
 		</select>&nbsp;<input type="submit" class="submit" value="<?=lang('Go')?>" />
 		<br />
-		<div style="margin:5px 0">
+		<div style="margin:5px 0" id="notify_option">
 			<input type="checkbox" name="notify" style="float:left;" />&nbsp;<?=lang('br_status_notify')?>
 		</div>
 	</div>
@@ -135,6 +135,15 @@ $content = $this->table->generate();
 				$('input[type=checkbox]').attr('checked','checked');
 			}else{
 				$('input[type=checkbox]').attr('checked','');
+			}
+		});
+		
+		$('#status_id').bind('change',function(){
+			var intRegex = /^\d+$/;
+			if(intRegex.test($(this).val())){
+				$('#notify_option').show();
+			}else{
+				$('#notify_option').hide();
 			}
 		});
 	});

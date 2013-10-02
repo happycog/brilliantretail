@@ -66,6 +66,6 @@ class br_pdf
 
 		
 		//Close and output PDF document
-		$pdf->Output($title, 'FD');
+		$pdf->Output($title,'FD');
 	}
 }
