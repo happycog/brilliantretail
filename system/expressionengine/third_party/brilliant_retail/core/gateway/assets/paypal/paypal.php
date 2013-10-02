@@ -240,18 +240,44 @@ class Paypal extends PaymentGateway
         $this->gatewayUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
     }
 
-    /**
-	 * Validate the IPN notification
-	 *
-	 * @param none
-	 * @return boolean
-	 */
+    /*
+	* 	Validate the IPN notification
+	*/
 	public function validateIpn()
 	{
 		// parse the paypal URL
-		// and set it into the response
-			$this->ipnResponse = $this->fsockopen_process($this->gatewayUrl);
-			return true;
+		$urlParsed = parse_url($this->gatewayUrl);
+
+		$string = "cmd=_notify-validate";
+		
+		foreach ($_POST as $key => $value)
+		{
+			// Put the key / value in our ipnData array. 
+				$this->ipnData[$key] = $value;
+			$clean = (get_magic_quotes_gpc()) ? stripslashes(str_replace("\n", "\r\n", $value)) : str_replace("\n", "\r\n", $value);
+			$string .= "&".$key."=".urlencode($clean);
+		}
+		
+		$ch = curl_init('https://'.$urlParsed['host'].'/cgi-bin/webscr');
+		curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $string);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+		
+		$this->ipnResponse = curl_exec($ch);
+
+		if (eregi("VERIFIED", $this->ipnResponse))
+		{
+		 	return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	function fsockopen_process($url){ 

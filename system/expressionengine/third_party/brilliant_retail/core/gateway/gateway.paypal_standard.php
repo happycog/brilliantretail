@@ -158,10 +158,12 @@ class Gateway_paypal_standard extends Brilliant_retail_gateway {
 			    	// just pass the merchant_id. For paypal standard it is in the custom field. 
 			 	   		$this->ipn_create_order($myPaypal->ipnData['custom'],$new_status);
 			    }
+				@header("HTTP/1.0 200 OK");
+				@header("HTTP/1.1 200 OK");
+				exit('Success');
+			}else{
+				exit('Error');
 			}
-			@header("HTTP/1.0 200 OK");
-			@header("HTTP/1.1 200 OK");
-			exit('Success');
 		}
 	
 	// Create a inputs for the checkout form
