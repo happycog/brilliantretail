@@ -79,7 +79,8 @@ $content = $this->table->generate();
 				?>
 			</optgroup>
 			<optgroup label="Download">
-				<option value="download">Packing Slips</option>
+				<option value="download_pack">Packing Slips</option>
+				<option value="download_print">Invoices</option>
 			</optgroup>
 		</select>&nbsp;<input type="submit" class="submit" value="<?=lang('Go')?>" />
 		<br />

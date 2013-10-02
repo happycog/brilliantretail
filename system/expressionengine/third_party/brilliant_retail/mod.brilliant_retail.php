@@ -362,10 +362,16 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$product_id = $this->EE->TMPL->fetch_param('product_id');
 			$form_class = $this->EE->TMPL->fetch_param('form_class','');
 			
-			$products = $this->EE->product_model->get_products($product_id);
 			$output = '';
 			$related = array();
-			if(count($products[0]["related"]) == 0){
+			
+			if(!$products = $this->EE->product_model->get_products($product_id))
+			{
+				return $output;
+			}
+			
+			if(count($products[0]["related"]) == 0)
+			{
 				return $output;
 			}
 			

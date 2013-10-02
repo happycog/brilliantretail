@@ -509,24 +509,45 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function order_batch(){
 			
 			$data = array();
+			if(version_compare(APP_VER, '2.7.0', '>=')){
+				$this->EE->security->restore_xid();
+			}
 			
 			$data["status_id"] = $this->EE->input->post('status_id');
-			if($data["status_id"] == 'download'){
+			if(strpos($data["status_id"],'download_') > -1){
 				
 				$view=array();
-
-				if(version_compare(APP_VER, '2.7.0', '>=')){
-					$this->EE->security->restore_xid();
-				}
+				$this->EE->load->library('br_pdf');
 				
 				$this->vars["site_name"] = $this->EE->config->item('site_name');
 				$this->vars["company"] = $this->_config["store"][$this->site_id];
-				foreach($_POST["batch"] as $key => $val){
-					$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
-					$view[] = $this->_view('order/pack', $this->vars);	
+				$this->vars["print_css"] = $this->_theme('css/print.css');
+				if($data["status_id"] == 'download_pack'){
+					foreach($_POST["batch"] as $key => $val){
+						$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
+						$view[] = $this->_view('order/pack', $this->vars);	
+					}
+					$this->EE->br_pdf->print_html($view,'Packing Slips - Batch');
+				}else{
+					foreach($_POST["batch"] as $key => $val){
+						$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
+						// Create the order total
+							$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
+							$this->vars['order']['order_total'] = $total; 
+							
+						// Figure out the payments
+							$payment = 0;
+							foreach($this->vars['order']['payment'] as $p){
+								$payment += $p['amount'];
+							}
+							$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
+							$this->vars['order']['order_total_due']		= $this->_currency_round($this->vars['order']['order_total']-$this->vars['order']['order_total_paid']);
+
+						// Set to the view
+							$view[] = $this->_view('order/print', $this->vars);	
+					}
+					$this->EE->br_pdf->print_html($view,'Invoices - Batch');
 				}
-				$this->EE->load->library('br_pdf');
-				$this->EE->br_pdf->print_html($view,'Packing Slips - Batch');
 				exit;
 			}
 			// Are we going to notify
