@@ -352,7 +352,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Now that we have an order lets build some buttons
 				$right[lang('br_print_invoice')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true';
 				
-				#$right[lang('br_print_packing_slip')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=pack';
+				$right[lang('br_print_packing_slip')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=pack';
 				
 				if($this->vars['order']["order_total_due"] > 0){
 					$right[lang('br_add_payment')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment&order_id='.$this->vars['order']["order_id"];
@@ -384,7 +384,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->vars["print_css"] = $this->_theme('css/print.css');
 					$view = $this->_view('order/pack', $this->vars);	
 					$this->EE->load->library('br_pdf');
-					$this->EE->br_pdf->print_html(array($view,$view,$view));
+					$this->EE->br_pdf->print_html(array($view));
 					exit;
 				}else{
 					return $this->_view('order/detail', $this->vars);	
@@ -509,8 +509,26 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function order_batch(){
 			
 			$data = array();
-			$data["status_id"] = $this->EE->input->post('status_id');
 			
+			$data["status_id"] = $this->EE->input->post('status_id');
+			if($data["status_id"] == 'download'){
+				
+				$view=array();
+
+				if(version_compare(APP_VER, '2.7.0', '>=')){
+					$this->EE->security->restore_xid();
+				}
+				
+				$this->vars["site_name"] = $this->EE->config->item('site_name');
+				$this->vars["company"] = $this->_config["store"][$this->site_id];
+				foreach($_POST["batch"] as $key => $val){
+					$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
+					$view[] = $this->_view('order/pack', $this->vars);	
+				}
+				$this->EE->load->library('br_pdf');
+				$this->EE->br_pdf->print_html($view,'Packing Slips - Batch');
+				exit;
+			}
 			// Are we going to notify
 				if(isset($_POST["notify"])){
 					$data["notify"] = 'on';
@@ -920,6 +938,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						}
 						$_SESSION["message"] = lang('br_product_update_success');
 				}
+				
 			}
 			$this->EE->functions->redirect($this->base_url.'&method=product');
 		}

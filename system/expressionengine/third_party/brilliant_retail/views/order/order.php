@@ -65,19 +65,23 @@ $content = $this->table->generate();
 
 <?=$br_header?>
 <?=form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_batch',array('method' => 'POST', 'id' => 'order_form'))?>
-
 	<?=$content?>
 
 	<div id="order_status_id">
 		<select name="status_id" id="status_id">
-		<?php 
-			ksort($status);
-			foreach($status as $key => $val){
-				$sel = ($key == $order["status_id"]) ? 'selected="selected"' : '';
-				echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
-			}
-		?>
-		</select>&nbsp;<input type="submit" class="submit" value="<?=lang('update')?>" />
+			<optgroup label="Update Status">
+				<?php 
+					ksort($status);
+					foreach($status as $key => $val){
+						$sel = ($key == $order["status_id"]) ? 'selected="selected"' : '';
+						echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
+					}
+				?>
+			</optgroup>
+			<optgroup label="Download">
+				<option value="download">Packing Slips</option>
+			</optgroup>
+		</select>&nbsp;<input type="submit" class="submit" value="<?=lang('Go')?>" />
 		<br />
 		<div style="margin:5px 0">
 			<input type="checkbox" name="notify" style="float:left;" />&nbsp;<?=lang('br_status_notify')?>
@@ -85,7 +89,6 @@ $content = $this->table->generate();
 	</div>
 	<div class="b2r_clearboth"><!-- --></div>
 </form>
-        
 <?=$br_footer?>
 
 <script type="text/javascript">
