@@ -2190,14 +2190,29 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$cnt++;
 			}
 			if($cnt > 0){
-				$sql = "SELECT product_id,title FROM exp_br_product WHERE product_id in (".join(",",$products).")";
+				$sql = "SELECT 
+							pc.sort_order, 
+							p.product_id,
+							p.title 
+						FROM 
+							exp_br_product p, 
+							exp_br_product_category pc 
+						WHERE 
+							p.product_id = pc.product_id 
+						AND 
+							p.product_id in (".join(",",$products).")
+						AND 
+							pc.category_id = ".$cat[0]["category_id"]." 
+						ORDER BY 
+							pc.sort_order";
+
 				$qry = $this->EE->db->query($sql);
 				$i=0;
 				foreach($qry->result_array() as $rst)
 				{
 					$prod_ary[$i]['id']			= $rst['product_id'];
 					$prod_ary[$i]['title']		= $rst['title'];
-					$prod_ary[$i]['sort_order']	= $sort_order[$rst['product_id']];
+					$prod_ary[$i]['sort_order']	= $rst['sort_order'];
 					$i++;
 				}
 			}
@@ -2281,20 +2296,21 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 					if(!empty($_POST['items']))
 					{
-					
-						// Rebuild them
-							foreach($_POST['items'] as $key => $val)
-							{
-								$row = array(
-												'site_id' 		=> $this->site_id,
-												'category_id'	=> $_POST['category_id'],
-												'product_id'	=> $key, 
-												'sort_order'	=> $val
-											);
-								$this->EE->db->insert('br_product_category', $row);
-							}
+						$items = explode("|",rtrim($_POST['items'],"|"));
+						
+						foreach($items as $a)
+						{
+							$b = explode(":",$a);
+							$row = array(
+											'site_id' 		=> $this->site_id,
+											'category_id'	=> $_POST['category_id'],
+											'product_id'	=> $b[0], 
+											'sort_order'	=> $b[1]
+										);			
+							$this->EE->db->insert('br_product_category', $row);
+						}
 					}
-				
+
 				$data["url_title"] = $this->_check_category_url($data,$_POST["category_id"]);
 				$this->EE->product_model->update_category($_POST["category_id"],$data);
 				$this->EE->functions->clear_caching('db');
@@ -2305,11 +2321,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				return $this->config_category();
 			}elseif($_POST["action"] == 'create'){
 				$data = array(
-								"site_id" => $this->site_id,
-								"title" => trim($_POST["title"]), 
+								"site_id" 	=> $this->site_id,
+								"title" 	=> trim($_POST["title"]), 
 								"url_title" => $_POST["title"], 
 								"parent_id" => $_POST["parent_id"],
-								"sort" => -time() 
+								"sort" 		=> -time() 
 							);
 				$data["url_title"] = $this->_check_category_url($data,0);
 				$cat_id = $this->EE->product_model->update_category_create($data);

@@ -154,14 +154,12 @@
 	</tbody>
 </table>
 
-
-
-
+<input type="hidden" name="items" id="items" />
 
 <table id="product_sort_tbl"  class="product_edit" width="100%" cellpadding="0" cellspacing="0">
 	<thead>
 		<tr>
-			<td colspan="4">
+			<td colspan="3">
 				<img src="<?=$theme?>images/close.png" id="close_search" />
 				<input type="text" id="br_search" placeholder="<?=lang('br_category_edit_product_search')?>" />
 				<br />
@@ -183,7 +181,6 @@
 	</thead>
 	<tbody id="selection">
 	<?php 
-		$i = 1;
 		foreach($products as $items) 
 		{ 
 	?>
@@ -192,9 +189,7 @@
         		<?= $items['title'] ?>
         	</td>
         	<td>
-        		<input name="items[<?= $items['id']?>]" value="<?=$i++?>" type="text" /></td>
-        	<td class="move_image_row">
-	        	<img src="<?=$theme?>images/move.png"></td>
+        		<input id="items_<?= $items['id']?>" class="input_numeric" value="<?= $items['sort_order']?>" type="text" /></td>
 	    	<td>
 	    		<a href="#" class="delete_product"><img src="<?=$theme?>images/delete.png"></a></td>
 	    </tr>
@@ -273,26 +268,23 @@ function _init_cat()
 	});
 	
 	$('.delete_product').bind('click',
-	function(e){
-		e.preventDefault();
-		$(this).parent().parent().remove();	
-	});
+										function(e){
+											e.preventDefault();
+											$(this).parent().parent().remove();	
+										});
+	$('.input_numeric').change(_set_cat_order);
+	_set_cat_order();
+}
 
-	$('#product_sort_tbl tbody').sortable({axis:'y', cursor:'move', opacity:0.6, handle:'.move_image_row',
-						helper:function(e, ui) {
-							ui.children().each(function() {
-								$(this).width($(this).width());
-							});		
-							return ui;
-						},
-						update: function(){
-							var i = 0;
-							$('#product_sort_tbl input').each(function(){
-								$(this).val(i);
-								i++;
-							});	
-						}
-					});
+function _set_cat_order()
+{
+	$('#items').val('');
+	var str = '';
+	$( "input.input_numeric" ).each(function( index ) {
+		var set_id = $( this ).attr('id').split('_');
+		str +=  set_id[1] + ":" + $(this).val()+'|';
+	});
+	$('#items').val(str);
 }
 
 function _add_row(title,product_id)
@@ -302,7 +294,6 @@ function _add_row(title,product_id)
 				+title+
 			'</td>'+
 			'<td class="move_image_row">'+
-    			'<img src="<?=$theme?>images/move.png">'+
     			'<input name="items['+product_id+']" value="" type="hidden" /></td>'+
 			'<td>'+
 			'<a href="#" class="delete_product"><img src="<?=$theme?>images/delete.png"></a></td>'+
