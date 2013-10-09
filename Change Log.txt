@@ -1,5 +1,6 @@
 ### Version 1.4.0.x
 *October XX, 2013*
 
-* Fixed an issue with the original shipping lookup on checkout. It would look at shipping address in some instances instead of billing address.
+* Added an updated timestamp field to auto track the exp_br_orders table
 * Updated Realex Gateway to support #d Secure for Visa and MasterCard
+* Fixed an issue with the original shipping lookup on checkout. It would look at shipping address in some instances instead of billing address.

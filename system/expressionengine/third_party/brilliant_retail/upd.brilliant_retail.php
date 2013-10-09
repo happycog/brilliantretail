@@ -450,6 +450,7 @@ class Brilliant_retail_upd {
 				  agent_string varchar(255) default 'unknown',
 				  ip_address varchar(50),
 				  created int(10) unsigned NOT NULL default '0',
+				  updated timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP, 
 				  PRIMARY KEY  (order_id),
 				  KEY order_member_id (member_id) 
 				) ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;";
