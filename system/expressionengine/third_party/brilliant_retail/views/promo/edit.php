@@ -27,6 +27,7 @@ echo $br_header;
 
 <style type="text/css">
 	.opt_items,
+	#code_type,
 	#amount {
 		display: none;
 	}
@@ -306,13 +307,13 @@ echo $br_header;
 		$('#discount_type').bind('change',function(){
 			var a = $(this).val();
 			if(a == 'item'){
-				$('.opt_items').show();
-				$('#amount').show();
+				$('#amount,#code_type,.opt_items').show();
 			}else if(a == 'ship'){
+				$('#amount input').val('0');
 				$('#amount,#code_type').hide();
 				$('.opt_items').hide();
 			}else{
-				$('#amount').show();
+				$('#amount,#code_type').show();
 				$('.opt_items').hide();
 			}
 		});
