@@ -25,6 +25,12 @@
 echo $br_header;
 ?>
 
+<style type="text/css">
+	.opt_items,
+	#amount {
+		display: none;
+	}
+</style>
 
 <?=form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update', array('method' => 'POST', 'id' => 'promoForm','encrypt' => 'multipart/form-data'),$hidden)?>
 
@@ -91,7 +97,11 @@ echo $br_header;
 			<td>
 				<select name="discount_type" id="discount_type">
 					<?php
-						$opt = array('item' => lang('br_item'), 'cart' => lang('br_cart'));
+						$opt = array(	
+										'item' 	=> lang('br_item'), 
+										'cart' 	=> lang('br_cart'), 
+										'ship'	=> lang('br_free_shipping')
+									);
 						$sel = $promo[0]["discount_type"];
 						foreach($opt as $key => $val){
 							$selected = ($sel == $key) ? 'selected' : '';
@@ -100,7 +110,7 @@ echo $br_header;
 					?>
 				</select></td>
 		</tr>
-		<tr>
+		<tr id="code_type">
 			<td>
 				<?=lang('br_code_type')?></td>
 			<td>
@@ -115,7 +125,7 @@ echo $br_header;
 					?>
 				</select></td>
 		</tr>
-		<tr>
+		<tr id="amount">
 			<td>
 				<?=lang('br_amount')?></td>
 			<td>
@@ -135,19 +145,17 @@ echo $br_header;
 							value="<?=$promo[0]["min_subtotal"]?>"
 							title="<?=lang('br_min_subtotal')?>" style="width:100px;" /></td>
 							
-			</tr>
-			<tr>
-				<td>
-					<?=lang('br_min_subtotal')?></td>
-				<td>
-					<input 	type="text" 
-							name="min_subtotal"
-							value="<?=$promo[0]["min_subtotal"]?>"
-							title="<?=lang('br_min_subtotal')?>" style="width:100px;" /></td>
-							
-			</tr>
-		*/
+			</tr>		*/
 		?>
+		<tr>
+			<td>
+				<?=lang('br_min_subtotal')?></td>
+			<td>
+				<input 	type="text" 
+						name="min_subtotal"
+						value="<?=$promo[0]["min_subtotal"]?>"
+						title="<?=lang('br_min_subtotal')?>" style="width:100px;" /></td>
+		</tr>
 		<tr>
 			<td>
 				<?=lang('br_start_dt')?></td>
@@ -296,16 +304,25 @@ echo $br_header;
 		$('#promoTableEdit tr:even').addClass('even');
 		
 		$('#discount_type').bind('change',function(){
-			if($(this).val() == 'item'){
+			var a = $(this).val();
+			if(a == 'item'){
 				$('.opt_items').show();
+				$('#amount').show();
+			}else if(a == 'ship'){
+				$('#amount,#code_type').hide();
+				$('.opt_items').hide();
 			}else{
+				$('#amount').show();
 				$('.opt_items').hide();
 			}
 		});
 		
 		<?php
-			if($promo[0]["discount_type"] == 'cart'){
-				echo "$('.opt_items').hide();";
+			if($promo[0]["discount_type"] == 'item'){
+				echo "$('.opt_items').show();";
+			}
+			if($promo[0]["discount_type"] != 'ship'){
+				echo "$('#code_type').show();";
 			}
 		?>
 		

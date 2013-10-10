@@ -1333,6 +1333,28 @@ class Brilliant_retail_core {
 		$i 		= 0;
 		$rates 	= array();
 		
+		
+		// Lets show a promotion rate first
+			if(isset($_SESSION["discount"]) && $_SESSION["discount"]["discount_type"] == 'ship'){
+				if($data["total"] >= $_SESSION["discount"]["min_subtotal"])
+				{
+					$_SESSION["discount"]["free_shipping_set"] = true;
+					
+					$quote["free"] = array(
+												"code"	=> 'free',
+												"rate"	=> 0.00,
+												"label"	=> $_SESSION["discount"]["title"]
+											);
+					$rates[] = 	array(
+												'method' 	=> 'free',
+												'label' 	=> lang('br_free_shipping_promotion'),
+												'code' 		=> 'free',
+												'quote' 	=> $quote
+											);
+				}
+			}
+		
+		// Get options		
 		foreach($this->_config["shipping"][$this->site_id] as $ship){
 			
 			if($ship["enabled"] == 1){

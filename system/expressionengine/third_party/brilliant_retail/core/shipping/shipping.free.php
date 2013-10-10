@@ -30,8 +30,12 @@ class Shipping_free extends Brilliant_retail_shipping {
 	public $version = '1.0';
 
 	function quote($data,$config){
+		
 		$this->rates = array();
 		
+		// Did we already setup free shipping with the promtions module? 
+			if($_SESSION["discount"]["free_shipping_set"]){ return $this->rates; }
+
 		// No countries configured 
 			if(!isset($config["country"])){ return $this->rates; }
 		
