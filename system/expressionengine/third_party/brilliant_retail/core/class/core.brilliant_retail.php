@@ -2172,13 +2172,13 @@ class Brilliant_retail_core {
 	 * @param array product 
 	 * @return array amount 
 	 */
-		function _check_product_price($p)
+		function _check_product_price($p,$quantity=1)
 		{
 			// Catch to make sure we were passed a valid product
 				if($p == null){ return FALSE; }
 			
 			// Only lookup once
-				if(!isset($this->EE->session->cache["br_check_product_price"][$p["product_id"]])){
+				if(!isset($this->EE->session->cache["br_check_product_price"][$p["product_id"]][$quantity])){
 					
 					#$this->EE->TMPL->log_item('BrilliantRetail: _check_product_price ['.$p["product_id"].']');
 
@@ -2202,6 +2202,10 @@ class Brilliant_retail_core {
 						 		$price["group_id"] == $group_id){
 		
 								$valid 	= 1;
+								// Check Quantity
+									if($price["qty"] > $quantity){
+										$valid = 0;
+									}
 								
 								// Check Start time
 									if($price["start_dt"] != "0000-00-00 00:00:00" && $price["start_dt"] != "")
@@ -2272,9 +2276,9 @@ class Brilliant_retail_core {
 					if($this->EE->extensions->active_hook('br_check_product_price_end') === TRUE){
 						$amt = $this->EE->extensions->call('br_check_product_price_end', $amt); 
 					}
-				$this->EE->session->cache["br_check_product_price"][$p["product_id"]] = $amt;
+				$this->EE->session->cache["br_check_product_price"][$p["product_id"]][$quantity] = $amt;
 			}else{
-				$amt = $this->EE->session->cache["br_check_product_price"][$p["product_id"]];
+				$amt = $this->EE->session->cache["br_check_product_price"][$p["product_id"]][$quantity];
 			}
 
 			#if(!isset($amt["price"])){

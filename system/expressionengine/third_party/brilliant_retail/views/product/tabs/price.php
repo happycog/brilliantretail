@@ -38,7 +38,7 @@
 <table id="price_table" class="product_edit" cellspacing="0" cellpadding="0" border="0" width="100%">
 	<thead>
 		<tr>
-			<td colspan="6" align="right">
+			<td colspan="7" align="right">
 				<span class="button" style="float: right; margin: 0pt;">
 					<a class="submit" href="#" id="price_add_option" style="color:#fff"><?=lang('br_add_option')?></a>
 				</span></td>
@@ -46,6 +46,7 @@
 		<tr>
 			<th width="25%"><b><?=lang('br_member_group')?></b></th>
 			<th width="20%"><b><?=lang('br_price')?></b></th>
+			<th width="20%"><b><?=lang('br_quantity')?></b></th>
 			<th width="20%"><b><?=lang('br_start_dt')?></b></th>
 			<th width="20%"><b><?=lang('br_end_dt')?></b></th>
 			<th width="5%" colspan="2"><b><?=lang('br_actions')?></b></th>
@@ -70,14 +71,16 @@
 		// by default lets not offer the options to the 
 		// first row 
 		
-			$quantity 	= '<input type="hidden" name="price_qty[]" value="1" />';			
+			
 			if($i == 0){
+				$quantity 	= '<input type="text" value="1" disabled /><input type="hidden" name="price_qty[]" value="1" />';			
 				$start_dt 	= '<input type="hidden" name="price_start[]" value="" />&nbsp;';
 				$end_dt 	= '<input type="hidden" name="price_end[]" value="" />&nbsp;';
 				$move 	= '';
 				$remove = '';
 				$class = "nodrag nodrop";
 			}else{
+				$quantity 	= '<input type="text" name="price_qty[]" value="'.$m["qty"].'" />';			
 				$start = ($m["start_dt"] != '0000-00-00 00:00:00') ? date("m/d/Y",strtotime($m["start_dt"])) : '';
 				$start_dt = form_input(
 									array(	'name' => 'price_start[]', 
@@ -98,7 +101,6 @@
 			
 			echo "	<tr class='".$class."'>
 									<td>
-									".$quantity."
 									".$group."</td>
 									<td>
 										".form_input(
@@ -107,6 +109,8 @@
 													'title' => lang('br_pricing').' - '.lang('br_price').' '.lang('br_is_required'),
 													'value' => $m["price"])
 											)."</td>
+									<td>
+										".$quantity."</td>
 									<td>
 										".$start_dt."</td>
 									<td>
@@ -167,7 +171,6 @@
 					<table>
 						<tr>
 							<td>
-							<input type="hidden" name="price_qty[]" value="1" />
 							'.$group.'</td>
 							<td>
 								'.form_input(
@@ -176,6 +179,8 @@
 											'title' => lang('br_pricing').' - '.lang('br_price').' '.lang('br_is_required'),
 											'value' => '')
 									).'</td>
+							<td>
+								<input type="text" name="price_qty[]" value="" /></td>
 							<td>
 								'.form_input(array(	'name' 	=> 'price_start[]', 
 													'value' => '', 

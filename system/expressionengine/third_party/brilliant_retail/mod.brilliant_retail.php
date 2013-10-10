@@ -1006,6 +1006,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 								$j++;
 							}	
 						}
+					
 					// Build up the item array 
 						$hash = md5($key);
 						$items[$i] = $v;
@@ -1119,7 +1120,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$product_id = $data["product_id"];
 				$product = $this->EE->product_model->get_products($data["product_id"]);
 				
-				$amt = $this->_check_product_price($product[0]);
+				$amt = $this->_check_product_price($product[0],$data["quantity"]);
 		
 				// Set some defaults
 					$configurable_id = '';
@@ -1356,6 +1357,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if($qty[md5($key)] <= 0){
 						$this->EE->product_model->cart_unset(md5($key));	
 					}else{
+						
+						// Check for quantity discounts 
+							$p = $this->_get_product($val["product_id"]);
+							$price = $this->_check_product_price($p[0],$qty[md5($key)]);
+							if($price["price"] != $val["price"]){
+								$cart["items"][$key] = array_merge($cart["items"][$key],$price);
+							}
+
 						// Update the cart 
 							$cart["items"][$key]["quantity"] = $qty[md5($key)];	
 							$cart["items"][$key]["subtotal"] = $this->_currency_round(($cart["items"][$key]["price"] * $qty[md5($key)])); 	
