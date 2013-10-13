@@ -270,7 +270,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 	                </div>
 	                <div class="general">
 	                    <label>Security Code (CV2)<br />
-	                    <input class="txtinp" name="realex_cc_cv2" type="text" /></label>
+	                    <input class="txtinp required" name="realex_cc_cv2" type="text" /></label>
 	                </div>
 	                <div class="clearboth"><!-- --></div>';
 		return $form;

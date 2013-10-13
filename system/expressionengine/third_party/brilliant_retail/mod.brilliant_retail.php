@@ -181,6 +181,65 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$products[0]["configurable_js"] = '';
 				}
 				
+				// Setup a tiered pricing display tag
+					$products[0]["tiered_price"] 		= array();
+					$products[0]["has_tiered_price"]	= TRUE;
+				
+					if(count($products[0]["price_matrix"]) > 1){
+						$tier = array();
+						$member_id = $this->EE->session->userdata["member_id"];
+						foreach($products[0]["price_matrix"] as $row){
+							if($row["group_id"] == 0 || $row["group_id"] == $member_id)
+							{
+								$valid 	= 1;
+								// Only show quantities more than 1
+									if($row["qty"] <= 1){
+										$valid = 0;
+									}
+
+								// Check Start time
+									if($row["start_dt"] != "0000-00-00 00:00:00" && $row["start_dt"] != "")
+									{
+										$start 	= date("U",strtotime($row["start_dt"]));
+										if(time() < $start){
+											$valid = 0;
+										}
+									}
+								// Check End Time 
+									if($row["end_dt"] != "0000-00-00 00:00:00" && $row["end_dt"] != "")
+									{
+										$end 	= date("U",strtotime($row["end_dt"]));
+										if($end != 0 && time() > $end){
+											$valid = 0;
+										}
+									}
+								if($valid == 1){
+									$tier[$row["qty"]] = $row;
+								}
+							}
+						}
+			
+						// Only show tier options if we have more than one after filtering
+							if(count($tier) > 0){
+								// Sort by key which is quantity
+									ksort($tier);
+								// Setup the tag array
+									foreach($tier as $row){
+										$price = $products[0]["price"];
+										// Percent difference 
+											$percent = number_format(($price-$row["price"])/$price*100);
+										// Value difference 
+											$value = $price - $row["price"];						
+										$products[0]["tiered_price"][] = array(
+																				'tiered_qty'				=> $row["qty"],
+																				'tiered_price'				=> $this->_format_money($row["price"]), 	
+																				'tiered_discount_percent'	=> $percent,
+																				'tiered_discount_value'		=> $this->_format_money($value) 
+																				);
+									}
+							}						
+					}
+					
 				// Adding br_product_parse_before manipulate $products array prior to 
 				// parsion. Useful for adding tags, etc. ADDED 1.1.5 by dpd
 					if($this->EE->extensions->active_hook('br_product_parse_before') === TRUE){

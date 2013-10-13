@@ -135,6 +135,20 @@
 								{/if}
 							
 							<div class="clearboth"><!-- --></div>
+
+		                   	{if has_tiered_price} 
+								<ul>
+									{tiered_price} 
+										<li>
+											Buy {tiered_qty} for {tiered_price} save {tiered_discount_percent}% ({tiered_discount_value})
+										</li>
+									{/tiered_price}
+								</ul>
+								
+			                    <div class="clearboth"><!-- --></div>
+
+							{/if}		                    
+		                    
 		                    {!-- Insert Product Specific Selectors !--}
 		                    	
 								{!-- Configurable Product Type !--}

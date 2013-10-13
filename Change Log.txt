@@ -1,4 +1,4 @@
-### Version 1.4.0.x
+### Version 1.5.0.0
 *October XX, 2013*
 
 * Added a quantity field to the product price matrix for adding quantity based pricing
@@ -6,3 +6,12 @@
 * Added an updated timestamp field to auto track the exp_br_orders table
 * Updated Realex Gateway to support #d Secure for Visa and MasterCard
 * Fixed an issue with the original shipping lookup on checkout. It would look at shipping address in some instances instead of billing address.
+* Added tags for outputting tiered price options inside the product tag
+	* has_tiered_price (single - TRUE / FALSE) - Added to test for the existence of tiered pricing 
+	* tiered_price (pair) 
+		* tiered_qty - Quantity required to access that price level
+		* tiered_price - Price at this quantity
+		* tiered_discount_percent - 2 digit (rounded) percentage savings
+		* tiered_discount_value - Price formatted savings
+* Added tiered_price tag example to the blank theme demo templates
+* Added 3D Secure support to the Realex payment gateway
