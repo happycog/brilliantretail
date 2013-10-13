@@ -298,7 +298,6 @@ function _add_row(title,product_id)
 			'<td>'+
 			'<a href="#" class="delete_product"><img src="<?=$theme?>images/delete.png"></a></td>'+
 		'</tr>').prependTo($('#product_sort_tbl tbody#selection'));
-		alert(product_id);
 		$('#product_'+product_id).remove();
 }
 
