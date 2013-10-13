@@ -240,10 +240,9 @@ $(function() {
             		$('#results_div').slideDown();
 					$('#close_search').show();
 				}
-            	$('.add_related').unbind('click').bind('click',function(){
+            	$('.add_related').unbind('click').bind('click',function(e){
+					e.preventDefault();
 					_add_row($(this).data('title'),$(this).data('product_id'));
-					$(this).parent().parent().remove();
-					return false;
 				});
 				
         	_init_cat();
@@ -293,12 +292,14 @@ function _add_row(title,product_id)
 			'<td style="vertical-align:middle;">'
 				+title+
 			'</td>'+
-			'<td class="move_image_row">'+
-    			'<input name="items['+product_id+']" value="" type="hidden" /></td>'+
+			
+			'<td>'+
+        		'<input id="items_'+product_id+'" class="input_numeric" value="0" type="text" /></td>'+
 			'<td>'+
 			'<a href="#" class="delete_product"><img src="<?=$theme?>images/delete.png"></a></td>'+
 		'</tr>').prependTo($('#product_sort_tbl tbody#selection'));
-		$('#product_sort_tbl tbody#selection tr').effect("highlight", {}, 3000);
+		alert(product_id);
+		$('#product_'+product_id).remove();
 }
 
 -->
