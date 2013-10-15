@@ -180,9 +180,9 @@ class Brilliant_retail_core {
 		// Make a global reference to the currency_marker variable that we 
 		// can use in all of our view files
 			$this->vars["currency_marker"] = $this->_config["currency_marker"];
-			
-		// Create a snippets vars	
-			$this->vars["snippets"] = $this->EE->config->_global_vars;
+		
+		// Make sure the snippets are all initiated
+			$this->_init_snippets();	
 	}
 	
 	
@@ -1233,8 +1233,8 @@ class Brilliant_retail_core {
 						if($tmp->osc_enabled == $osc_enabled){
 							
 							// Check for a snippet if not load the base form method
-								if(isset($this->vars["snippets"]["br_payment_form_".$gateway["code"]])){
-									$form = $this->vars["snippets"]["br_payment_form_".$gateway["code"]];
+								if(isset($this->vars["snippets"]["br_payment_form_".$gateway["code"]]["snippet_contents"])){
+									$form = $this->vars["snippets"]["br_payment_form_".$gateway["code"]]["snippet_contents"];
 								}else{
 									$form = $tmp->form();
 								}
@@ -1256,7 +1256,7 @@ class Brilliant_retail_core {
 			}
 			
 			// Get the snippet data
-				$snippetdata = $this->vars["snippets"]["br_payment_layout"];
+				$snippetdata = $this->vars["snippets"]["br_payment_layout"]["snippet_contents"];
 			
 			$i = 0;
 			foreach($gateways as $g){
@@ -1273,7 +1273,6 @@ class Brilliant_retail_core {
 										"gateway_form"		=> 	trim($g["form"]), 
 										"has_form"			=> 	(trim($g["form"]) == "") ? FALSE : TRUE 
 									);
-
 				$tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
 				$this->EE->TMPL->parse($tmp);
 				$output .= $tmp;
@@ -1382,7 +1381,7 @@ class Brilliant_retail_core {
 			}
 		
 		// Get the snippet data
-			$snippetdata = $this->vars["snippets"]["br_shipping_layout"];
+			$snippetdata = $this->vars["snippets"]["br_shipping_layout"]["snippet_contents"];
 			
 		// Build the variable to parse out the available rate quotes
 			foreach($rates as $r)
@@ -3048,9 +3047,45 @@ class Brilliant_retail_core {
 	/* SNIPPET FORMAT HELPER */
 	/*************************/
 
+	function _init_snippets()
+	{
+		$path = PATH_THIRD.'brilliant_retail/core/snippets';
+		$this->EE->load->helper('file');
+		$files = read_dir_files($path);
+		
+		$this->EE->load->model('snippet_model');
+		
+		$list_snippets = $this->EE->snippet_model->get_snippets_by_site_id($this->site_id);
+		$snippents = array();
+
+		foreach($files as $f){
+			
+			// skip hidden files
+				if(substr($f,0,1) == '.') continue;
+
+			// proceed
+				$nm = substr($f,0,-5);
+				if(isset($list_snippets[$nm])){
+					$snippents[$nm] = $list_snippets[$nm];
+				}else{
+					$this->EE->load->helper('file');
+					$s = read_file(rtrim($path,"/")."/".$f);
+					$data = array(
+									'site_id' 			=> $this->EE->config->item('site_id'),
+									'snippet_name' 		=> $nm,
+									'snippet_contents' 	=> $s
+								);
+					$data["snippet_id"] = $this->EE->snippet_model->create_snippet($data);
+					$list_snippets[$nm] = $data;
+				}
+		}
+		// Send all templates to the view
+		$this->vars["snippets"] = $list_snippets;
+	}
+
 	function _snippet_format_price_html($price)
 	{
-		$snippetdata = $this->vars["snippets"]["br_price_html"];
+		$snippetdata = $this->vars["snippets"]["br_price_html"]["snippet_contents"];
 		$vars[0] = array(
 							'price' => $price
 						);
@@ -3060,7 +3095,7 @@ class Brilliant_retail_core {
 	
 	function _snippet_format_sale_price_html($price,$sale_price)
 	{
-		$snippetdata = $this->vars["snippets"]["br_sale_price_html"];
+		$snippetdata = $this->vars["snippets"]["br_sale_price_html"]["snippet_contents"];
 		$vars[0] = array(
 							'price' 		=> $price,
 							'sale_price'	=> $sale_price

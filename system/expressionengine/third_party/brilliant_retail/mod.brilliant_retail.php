@@ -59,7 +59,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 		{
 			$output = '';
 			if(isset($_SESSION["br_message"])){
-				$snippetdata = $this->vars["snippets"]["br_system_message"];
+				$snippetdata = $this->vars["snippets"]["br_system_message"]["snippet_contents"];
 				$vars[0] = array(
 									'message' => $_SESSION["br_message"]
 								);
@@ -68,7 +68,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}
 			
 			if(isset($_SESSION["br_alert"])){
-				$snippetdata = $this->vars["snippets"]["br_system_alert"];
+				$snippetdata = $this->vars["snippets"]["br_system_alert"]["snippet_contents"];
 				$vars[0] = array(
 									'alert' => $_SESSION["br_alert"]
 									);
@@ -2601,7 +2601,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 													);
 			
 				// Get the snippet data
-					$snippetdata = $this->vars["snippets"]["br_shipping_layout"];
+					$snippetdata = $this->vars["snippets"]["br_shipping_layout"]["snippet_contents"];
 					$tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
 					$this->EE->TMPL->parse($tmp);
 				
