@@ -1087,6 +1087,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$i++;
 				}
 			}
+			
 			$vars[0] = array(
 								'items' => $items 
 							);	
@@ -1160,6 +1161,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		// Create an array of products that we have added
 			$added = array();
+		
+		// Create an adjustment container so we can store it in the contents	
+			$price_adjustments = 0;
 			
 		// Now add them
 			foreach($post as $data){
@@ -1202,9 +1206,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 						if($tmp["adjust"] != 0){
 							if($tmp["adjust"] > 0){
 								$dir = '+';
+								$price_adjustments += $tmp["adjust"];
 								$amt["price"] = $this->_currency_round(($amt["price"] + $tmp["adjust"]));
 							}else{
 								$dir = '-';
+								$price_adjustments -= abs($tmp["adjust"]);
 								$amt["price"] = $this->_currency_round(($amt["price"] - abs($tmp["adjust"])));			
 							}
 							$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($tmp["adjust"])).')<br />';
@@ -1248,9 +1254,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 								if($price != 0){
 									if($price > 0){
 										$dir = '+';
+										$price_adjustments += $price;
 										$amt["price"] = $this->_currency_round(($amt["price"] + $price));
 									}else{
 										$dir = '-';
+										$price_adjustments -= abs($price);
 										$amt["price"] = $this->_currency_round(($amt["price"] - abs($price)));
 									}
 									$adjust = ' ('.$dir.' '.$this->_config["currency_marker"].$this->_currency_round(abs($price)).')<br />';
@@ -1278,6 +1286,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									'base'   			=> 	$this->_currency_round($amt["base"]),
 									'price'   			=> 	$this->_currency_round($amt["price"]),
 									'cost' 				=> 	$product[0]["cost"], 
+									'adjust'			=> 	$price_adjustments, 
 									'discount'			=> 	$this->_discount_amount($amt["price"]), 
 									'title'    			=> 	$product[0]["title"],
 									'taxable' 			=> 	$product[0]["taxable"], 
@@ -1409,6 +1418,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$cart = $this->EE->product_model->cart_get();
 			
 			foreach($cart["items"] as $key => $val){
+				
 				if(isset($qty[md5($key)])){
 					if(!is_integer($qty[md5($key)])){
 						$qty[md5($key)] = round($qty[md5($key)] * 1);
@@ -1416,13 +1426,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if($qty[md5($key)] <= 0){
 						$this->EE->product_model->cart_unset(md5($key));	
 					}else{
-						
 						// Check for quantity discounts 
 							$p = $this->_get_product($val["product_id"]);
 							$price = $this->_check_product_price($p[0],$qty[md5($key)]);
-							if($price["price"] != $val["price"]){
+								// Check for adjustments
+									if($cart["items"][$key]["adjust"] > 0){
+										$price["price"] += $cart["items"][$key]["adjust"];
+									}elseif($cart["items"][$key]["adjust"] < 0){
+										$price["price"] -= abs($cart["items"][$key]["adjust"]);
+									}
+
 								$cart["items"][$key] = array_merge($cart["items"][$key],$price);
-							}
 
 						// Update the cart 
 							$cart["items"][$key]["quantity"] = $qty[md5($key)];	
@@ -3250,6 +3264,33 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$cnt = count($orders);
 			for($i=0;$i<$cnt;$i++){
 
+				foreach($orders[$i]["items"] as $key => $val){
+					
+					$option = $opt_single = array();
+					
+					if($val["options"] != "")
+					{
+						$tmp = ltrim(rtrim($val["options"],"<br />"),"<h4>");
+						$p = explode("<h4>",$tmp);
+						
+						$j=0;;
+						foreach($p as $q)
+						{
+							$opt = explode("</h4>",$q);
+							$opt_single['option:'.$j] = $option[] = array(	
+												'label' => $opt[0],
+												'value' => isset($opt[1]) ? $opt[1] : '' 
+											);
+							$j++;
+						}
+						
+						$orders[$i]["items"][$key]['option'] = $option;
+						foreach($opt_single as $k => $v){
+							$orders[$i]["items"][$key][$k] = $v;
+						}
+					}
+				}
+				
 				// Set the 'has notes' variable
 					$orders[$i]["has_notes"] = (count($orders[$i]["notes"]) == 0) ? FALSE : TRUE ;
 

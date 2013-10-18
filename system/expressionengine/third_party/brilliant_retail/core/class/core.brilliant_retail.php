@@ -2528,7 +2528,6 @@ class Brilliant_retail_core {
 					);
 
 		$js_output = json_encode($js);
-		
 		for($i=0;$i<count($js["label"]);$i++)
 		{
 			if($i == 0){
@@ -2538,8 +2537,10 @@ class Brilliant_retail_core {
 					{
 						$value = (count($js["label"]) == 1) ? $val["config_id"] : $key;
 						$text = $this->_option_to_label($key); 
-						if($val["adjust"] > 0){
+						if($val["adjust"] > 0 && count($js["label"]) == 1){
 							$text .= " (+ ".$this->_format_money($val["adjust"]).")";
+						}else if($val["adjust"] < 0 && count($js["label"]) == 1){
+							$text .= " (- ".$this->_format_money($val["adjust"]).")";
 						}
 						$opts .= '<option value="'.$value.'">'.$text.'</option>';
 					}
@@ -2588,6 +2589,10 @@ class Brilliant_retail_core {
 																												if(opts.rows[i].adjust > 0)
 																												{
 																													adj = ' (+ ".$this->_config["currency_marker"]."'+opts.rows[i].adjust+')';
+																												}
+																												else if(opts.rows[i].adjust < 0)
+																												{
+																													adj = ' (- ".$this->_config["currency_marker"]."'+opts.rows[i].adjust.substr(1)+')';
 																												}
 																												if(opts.rows[i].qty > 0)
 																												{
