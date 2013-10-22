@@ -295,15 +295,24 @@ echo $br_header;
 					</tr>
 					<tr>
 						<td class="small_content_box">
-							<?php
-								if(isset($order["payment"][0]))
-								{
-									$d = unserialize($order["payment"][0]["details"]);
-									foreach($d as $key => $val){
-										echo '<b>'.lang(strtolower(str_replace(" ","_",trim($key)))).'</b> : '.$val.'<br />';
-									}								
-								}
-							?></td>
+							<table id="order_customer" cellspacing="0" width="100%">
+								<?php 
+									if(isset($order["payment"][0]))
+									{
+										$d = unserialize($order["payment"][0]["details"]);
+										foreach($d as $key => $val){
+											
+											echo '	<tr>
+														<td>
+															<strong>'.lang(strtolower(str_replace(" ","_",trim($key)))).'</strong></td>
+														<td>
+															'.$val.'		
+														</td>
+													</tr>';
+										}								
+									}
+								?>
+							</table></td>
 					</tr>
 				</table></td>
 			<td width="50%" valign="top">
@@ -314,19 +323,28 @@ echo $br_header;
 					</tr>
 					<tr>
 						<td class="small_content_box"> 
-							<?php 
-								if(isset($order["shipment"][0]))
-								{
-									$list = array(
-												'Method' 	=> strtoupper($order["shipment"][0]["method"]),
-												'label' 	=> $order["shipment"][0]["label"] 
-											);
-	
-									foreach($list as $key => $val){
-										echo '<b>'.lang($key).'</b> : '.$val.'<br />';
-									}								
-								}
-							?></td>
+							<table id="order_customer" cellspacing="0" width="100%">
+								<?php 
+									if(isset($order["shipment"][0]))
+									{
+										$list = array(
+													'br_ship_method' 	=> strtoupper($order["shipment"][0]["method"]),
+													'br_ship_label' 	=> $order["shipment"][0]["label"], 
+													'br_ship_tracknum'	=> $order["shipment"][0]["tracknum"] 
+												);
+		
+										foreach($list as $key => $val){
+											echo '	<tr>
+														<td>
+															<strong>'.lang($key).'</strong></td>
+														<td>
+															'.$val.'		
+														</td>
+													</tr>';
+										}								
+									}
+								?>
+							</table></td>
 					</tr>
 				</table></td>
 		</tr>  

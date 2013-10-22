@@ -18,3 +18,8 @@ themes/site_themes/brilliant_retail/_test.group/*
 _local/*
 /system/expressionengine/third_party/br_license_manager
 /themes/third_party/br_license_manager
+
+#Keepers
+!media/cache/index.html
+!media/file/index.html
+!media/download/index.html

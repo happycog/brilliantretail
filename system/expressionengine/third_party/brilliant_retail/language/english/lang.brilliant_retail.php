@@ -136,6 +136,11 @@ $lang = array(
 	'br_ship_to' 					=> 'Ship To Address',
 	'br_ship_same_address' 			=> 'Ship to Same Address',
 	'br_ship_same_address_notice' 	=> 'The shipping address is the same as the billing address.', 
+
+	'br_ship_method' 				=> 'Method',
+	'br_ship_label' 				=> 'Label',
+	'br_ship_tracknum'				=> 'Tracking Number',
+	
 	'br_item' 				=> 'Item', 
 	'br_sku' 				=> 'SKU',
 	'br_qty' 				=> 'Qty', 
