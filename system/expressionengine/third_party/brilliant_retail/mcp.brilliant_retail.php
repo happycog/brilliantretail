@@ -2660,6 +2660,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_gateway_update()
 		{
+			$this->EE->security->restore_xid();
+
 			remove_from_cache('config');
 			foreach($_POST as $key => $val){
 				$data[$key] = $val;

@@ -1,6 +1,7 @@
-### Version 1.5.0.0
+### Version 1.4.1.x
 *October XX, 2013*
 
+* Added 'Tracking Number' field to the order detail page in the control panel
 * Added a quantity field to the product price matrix for adding quantity based pricing
 * Added 'free shipping' as a promotion type 
 * Added an updated timestamp field to auto track the exp_br_orders table
@@ -16,3 +17,4 @@
 * Fixed an issue with the original shipping lookup on checkout. It would look at shipping address in some instances instead of billing address.
 * Fixed an issue with displaying price adjustments on configurable products. 
 * Fixed an issue with combining multiple negative adjustments when adding to the cart. 
+* Fixed an issue with the password field on gateway configurations. 

@@ -128,7 +128,7 @@ class Core_model extends CI_Model {
 			{
 				$list[$rst["config_data_id"]] = TRUE;
 			}
-			
+		
 		// Now update the params				
 			foreach($data as $key => $val){
 				if(strpos($key,'cAttribute_') !== false){ 
@@ -139,11 +139,11 @@ class Core_model extends CI_Model {
 				}
 				if(strpos($key,'cAttributePW_') !== false){ 
 					// Custom Attributes
-					if($val != '************************'){
-						$config_data_id = str_replace('0_cAttributePW_','',$key);
+					$config_data_id = str_replace('0_cAttributePW_','',$key);
+					if(trim($val) != '************************'){
 						$this->EE->db->update('br_config_data',array('value' => $val), "config_data_id = ".$config_data_id);
-						unset($list[$config_data_id]);
 					}
+					unset($list[$config_data_id]);
 				}
 			}
 		
