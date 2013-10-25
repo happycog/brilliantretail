@@ -1037,8 +1037,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			$update = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_update');
 			$remove = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_remove');
-			$output = '';
-			$items = array();
+			$output 	= '';
+			$items 		= array();
+			$cart_items = 0;
 			
 			$i = 0;
 			if(isset($cart["items"])){
@@ -1066,6 +1067,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 							}	
 						}
 					
+					// Get the number of items
+						$cart_items += $v["quantity"];
+					
 					// Build up the item array 
 						$hash = md5($key);
 						$items[$i] = $v;
@@ -1089,7 +1093,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}
 			
 			$vars[0] = array(
-								'items' => $items 
+								'items' 		=> $items,  
+								'cart_items' 	=> $cart_items
 							);	
 			$output = '';
 			if(strtolower($show_form) == "yes"){ 
@@ -1325,11 +1330,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 			} // End Data Loop
 
-
-			if(isset($_SESSION["discount"])){
-				$this->promo_check_code($_SESSION["discount"]["code"]);
-				unset($_SESSION["br_message"]);
-			}
+			
+			// Lets do a promo check for good measure to make sure 
+			// any changes don't effect promo goodness			
+				if(isset($_SESSION["discount"])){
+					$this->promo_check_code($_SESSION["discount"]["code"],FALSE);
+					unset($_SESSION["br_message"]);
+				}
 			
 			// Lets do a cart check to see if we can actually combine any of these:
 			
@@ -1382,6 +1389,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$this->_check_inventory($cart);
 					}
 					
+				// Get the cart again and run the update method... 
+				// Why? So we can correctly account for any price adjustments  
+				// based on multiple configurable product varients
+					$this->EE->security->restore_xid();
+					$quantity = array();
+					$cart = $this->EE->product_model->cart_get();
+					foreach($cart["items"] as $key=>$val)
+					{
+						$quantity[md5($key)]=$val["quantity"]; 	
+					}
+					$this->cart_update($quantity,FALSE);
+					
 			// If its an AJAX post then return the cart array:
 			if($ajax == 'yes'){
 				$cart = $this->EE->product_model->cart_get();
@@ -1401,6 +1420,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function cart_remove()
 		{
 			$this->EE->product_model->cart_unset($this->EE->input->get('id',TRUE));
+			// Check for price resets
+				$quantity = array();
+				$cart = $this->EE->product_model->cart_get();
+				foreach($cart["items"] as $key=>$val)
+				{
+					$quantity[md5($key)]=$val["quantity"]; 	
+				}
+				$this->cart_update($quantity,FALSE);
 			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
 		}
 	
@@ -1416,6 +1443,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$qty = $this->EE->input->post('qty',TRUE);
 				}
 				$cart = $this->EE->product_model->cart_get();
+
+			// Loop through to makes sure we don't already have the items in the cart! 
+				$product_hash 	= array();
+				$item_count		= array();
+				// Map the hash to product ids
+					foreach($cart["items"] as $key => $c){
+						$product_hash[md5($key)] = $c["product_id"];
+					}
+				// Setup the product counts
+					foreach($qty as $key => $val)
+					{
+						if(!isset($item_count[$product_hash[$key]])) $item_count[$product_hash[$key]] = 0; 
+						$item_count[$product_hash[$key]] += $qty[$key];
+					}
 			
 			foreach($cart["items"] as $key => $val){
 				
@@ -1428,7 +1469,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 					}else{
 						// Check for quantity discounts 
 							$p = $this->_get_product($val["product_id"]);
-							$price = $this->_check_product_price($p[0],$qty[md5($key)]);
+							
+							if(isset($item_count[$val["product_id"]])){
+								$price_qty = $item_count[$val["product_id"]];
+							}else{
+								$price_qty = $qty[md5($key)];
+							}
+							 
+							$price = $this->_check_product_price($p[0],$price_qty);
 								// Check for adjustments
 									if($cart["items"][$key]["adjust"] > 0){
 										$price["price"] += $cart["items"][$key]["adjust"];
@@ -3456,7 +3504,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 	/* END CUSTOMER */
 
-		function promo_check_code($inputCode='')
+		function promo_check_code($inputCode='',$continue=TRUE)
 		{
 			$this->EE->load->model('promo_model');
 			
@@ -3485,7 +3533,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				$_SESSION["br_alert"] = lang('br_discount_removed');
 				unset($_SESSION["discount"]);
-				$this->EE->functions->redirect($this->_secure_url($return));
+				// Redirect
+				if($continue){
+					$this->EE->functions->redirect($this->_secure_url($return));
+				}
 			}
 			$code = $this->EE->promo_model->get_promo_by_code($inputCode);
 			if($code){
@@ -3501,7 +3552,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$_SESSION["br_alert"] = str_replace("%s",$inputCode,lang('br_discount_invalid'));
 				unset($_SESSION["discount"]);
 			}
-			$this->EE->functions->redirect($this->_secure_url($return));
+			// Redirect
+			if($continue){
+				$this->EE->functions->redirect($this->_secure_url($return));
+			}
+			return;
 		}
 	
 		function promo_check_items()
