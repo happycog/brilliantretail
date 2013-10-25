@@ -14,7 +14,9 @@
 		* tiered_discount_value - Price formatted savings
 * Added tiered_price tag example to the blank theme demo templates
 * Added 3D Secure support to the Realex payment gateway for Visa and MasterCard
+* Added a return parameter to the promo_form tag
 * Fixed an issue with the original shipping lookup on checkout. It would look at shipping address in some instances instead of billing address.
 * Fixed an issue with displaying price adjustments on configurable products. 
 * Fixed an issue with combining multiple negative adjustments when adding to the cart. 
 * Fixed an issue with the password field on gateway configurations. 
+* Fixed an issue with the ammount field not displaying when editing promotions

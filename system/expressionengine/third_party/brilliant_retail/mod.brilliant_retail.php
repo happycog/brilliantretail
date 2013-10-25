@@ -201,7 +201,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									if($row["start_dt"] != "0000-00-00 00:00:00" && $row["start_dt"] != "")
 									{
 										$start 	= date("U",strtotime($row["start_dt"]));
-										if(time() < $start){
+										if($this->EE->localize->now < $start){
 											$valid = 0;
 										}
 									}
@@ -209,7 +209,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									if($row["end_dt"] != "0000-00-00 00:00:00" && $row["end_dt"] != "")
 									{
 										$end 	= date("U",strtotime($row["end_dt"]));
-										if($end != 0 && time() > $end){
+										if($end != 0 && $this->EE->localize->now > $end){
 											$valid = 0;
 										}
 									}
@@ -2300,7 +2300,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 					"cart_id"	 	=> $data["cart"]["cart_id"], 
 					"merchant_id" 	=> $data["transaction_id"],  
 					"coupon_code" 	=> $data["cart_coupon_code"], 
-					"created" 		=> time(),
+					"created" 		=> $this->EE->localize->now,
+					"updated"		=> $this->EE->localize->now,
 					"agent_string"	=> $this->EE->agent->agent_string(),
 					"ip_address"	=> $_SERVER["REMOTE_ADDR"]
 				); 
@@ -2474,10 +2475,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if(isset($data["instructions"])){
 						if(trim($data["instructions"]) != ''){
 							$arr = array(
-								'order_id' => $order_id,
-								'order_note' => $data["instructions"],
-								'created' => time(),
-								'member_id' => $member_id  
+								'order_id' 		=> $order_id,
+								'order_note'	=> $data["instructions"],
+								'created' 		=> $this->EE->localize->now,
+								'member_id' 	=> $member_id  
 							);
 							$this->EE->order_model->create_order_note($arr);
 						}
@@ -3462,7 +3463,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 			if($inputCode == ''){
 				$inputCode = $this->EE->input->post('code',TRUE);
 			}
-			
+
+			$return = $this->EE->input->post('return',TRUE);
+
 			// Check if there is a promo code in the url
 				$getCode = $this->EE->input->get('code',TRUE);
 				if($getCode != ''){
@@ -3482,7 +3485,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				$_SESSION["br_alert"] = lang('br_discount_removed');
 				unset($_SESSION["discount"]);
-				$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
+				$this->EE->functions->redirect($this->_secure_url($return));
 			}
 			$code = $this->EE->promo_model->get_promo_by_code($inputCode);
 			if($code){
@@ -3498,7 +3501,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$_SESSION["br_alert"] = str_replace("%s",$inputCode,lang('br_discount_invalid'));
 				unset($_SESSION["discount"]);
 			}
-			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
+			$this->EE->functions->redirect($this->_secure_url($return));
 		}
 	
 		function promo_check_items()
@@ -3581,6 +3584,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			$name 		= ($this->EE->TMPL->fetch_param('form_name')) ? $this->EE->TMPL->fetch_param('form_name') : 'promo_form';
 			$form_id 	= ($this->EE->TMPL->fetch_param('form_id')) ? $this->EE->TMPL->fetch_param('form_id') : 'promo_form';
 			$form_class = ($this->EE->TMPL->fetch_param('form_class')) ? $this->EE->TMPL->fetch_param('form_class') : 'promo_form';
+			$return 	= ($this->EE->TMPL->fetch_param('return')) ? $this->EE->TMPL->fetch_param('return') : 'cart';
 			$output 	= "";
 
 			if($form == 'yes'){
@@ -3589,7 +3593,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 								'action'		=> $action, 
 								'name'			=> $name,
 							  	'id'			=> $form_id, 
-							  	'class'			=> $form_class
+							  	'class'			=> $form_class, 
+							  	'hidden_fields'	=> array('return'=>$return)
 							  );  	
 				$output = $this->EE->functions->form_declaration($form_details);
 			}
@@ -3853,7 +3858,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 									$data = array(
 														'member_id' => $m[0]["member_id"],
 														'token'		=> $token, 
-														'created'	=> time(),
+														'created'	=> $this->EE->localize->now,
 														'ip'		=> md5($_SERVER["REMOTE_ADDR"]),
 														'secure'	=> $secure, 
 														'length'	=> $length
@@ -3924,7 +3929,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			// We have a valid token lets do some time / security checks 
 				$r = $reset->result_array();
-				if((time() - $r[0]["created"]) >= $r[0]["length"])
+				if(($this->EE->localize->now - $r[0]["created"]) >= $r[0]["length"])
 				{
 					$_SESSION["br_alert"] = lang('br_password_invalid_token');
 					$this->EE->functions->redirect($this->EE->functions->create_url($return));
@@ -3996,7 +4001,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				// We have a valid token lets do some time / security checks 
 					$r = $reset->result_array();
-					if((time() - $r[0]["created"]) >= $r[0]["length"])
+					if(($this->EE->localize->now - $r[0]["created"]) >= $r[0]["length"])
 					{
 						$_SESSION["br_alert"] = lang('br_password_invalid_token');
 						$this->EE->functions->redirect($this->EE->functions->create_url($return));

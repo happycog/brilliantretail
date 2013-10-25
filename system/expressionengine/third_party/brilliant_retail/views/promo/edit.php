@@ -322,6 +322,9 @@ echo $br_header;
 			if($promo[0]["discount_type"] == 'item'){
 				echo "$('.opt_items').show();";
 			}
+			if($promo[0]["discount_type"] == 'cart'){
+				echo "$('#amount,#code_type').show();";
+			}
 			if($promo[0]["discount_type"] != 'ship'){
 				echo "$('#code_type').show();";
 			}
