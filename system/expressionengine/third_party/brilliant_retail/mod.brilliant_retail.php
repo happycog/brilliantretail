@@ -1392,7 +1392,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Get the cart again and run the update method... 
 				// Why? So we can correctly account for any price adjustments  
 				// based on multiple configurable product varients
-					$this->EE->security->restore_xid();
 					$quantity = array();
 					$cart = $this->EE->product_model->cart_get();
 					foreach($cart["items"] as $key=>$val)
