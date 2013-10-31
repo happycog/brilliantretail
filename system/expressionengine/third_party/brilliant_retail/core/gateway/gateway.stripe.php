@@ -403,17 +403,19 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 			'description' => 'Customer for '.$data["email"]
 		));
 
+		$default_card = $customer->cards->retrieve($customer->default_card);
+
 		$post = $this->_get_address_data($_POST);
 
 		// save in our db
 		$this->EE->db->insert($this->table, array_merge($post, array(
-			'member_id' => $data["member_id"],
-			'stripe_id' => $customer->id,
-			'last_four' => $customer->active_card->last4,
-			'name'		=> $customer->active_card->name,
-			'type'		=> $customer->active_card->type,
-			'exp_month'	=> $customer->active_card->exp_month,
-			'exp_year'	=> $customer->active_card->exp_year,
+			'member_id' 	=> $data["member_id"],
+			'stripe_id' 	=> $customer->id,
+			'last_four' 	=> $default_card->last4,
+			'name'			=> $default_card->name,
+			'type'			=> $default_card->type,
+			'exp_month'		=> $default_card->exp_month,
+			'exp_year'		=> $default_card->exp_year
 		)));
 
 		return $customer;
