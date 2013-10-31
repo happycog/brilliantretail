@@ -21,3 +21,4 @@
 * Fixed an issue with combining multiple negative adjustments when adding to the cart. 
 * Fixed an issue with the password field on gateway configurations. 
 * Fixed an issue with the ammount field not displaying when editing promotions
+* Updated CKEditor for product editing to version 4.2.2. 
