@@ -248,12 +248,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 					$form_details = array(
 						'action'     		=> $action,
-	                  	'name'           	=> 'form_cart_add',
-	                  	'id'             	=> "form_".$products[0]["product_id"],
-	                  	'class'          	=> $form_class,
-	                  	'hidden_fields'  	=> array($products[0]["product_id"].'_product_id' => $products[0]["product_id"]), 
-	                  	'secure'         	=> TRUE
-	                  );
+						'enctype'			=> 'multipart/form-data',
+						'name'           	=> 'form_cart_add',
+						'id'             	=> "form_".$products[0]["product_id"],
+						'class'          	=> $form_class,
+						'hidden_fields'  	=> array($products[0]["product_id"].'_product_id' => $products[0]["product_id"]), 
+						'secure'         	=> TRUE
+					);
 
 					$form_open 	= $this->EE->functions->form_declaration($form_details);
 
