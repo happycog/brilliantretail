@@ -878,6 +878,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$qry = $this->EE->db->query("SELECT * from exp_br_category WHERE url_title = '".$key."'");
 				$layered = $qry->result_array();
 	
+				if(!isset($layered[0]['category_id']))
+				{
+					return $this->EE->TMPL->no_results();
+				}
+
 				$products = $this->EE->product_model->get_category_collection($layered[0]['category_id']);
 	
 				// Lets do some price checking magic! 

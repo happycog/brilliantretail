@@ -1680,7 +1680,11 @@ class Product_model extends CI_Model {
 	function get_category_collection($id)
 	{
 		$products = array();
-
+		
+		if($id == ''){
+			return $products;
+		}
+		
 		if(!isset($this->session->cache['br_get_category_collection'][$id])){
 			// Get the category products
 					$sql = "SELECT 
@@ -1705,6 +1709,7 @@ class Product_model extends CI_Model {
 				
 				// Get the products	
 					$sql = "SELECT 
+									p.title, 
 									p.product_id, 
 									p.type_id, 
 									p.quantity,  
@@ -1744,6 +1749,7 @@ class Product_model extends CI_Model {
 			// Start our product info array
 				foreach($rst as $p){
 					$products[$p["product_id"]] = array(
+															"title"			=> $p["title"],
 															"product_id" 	=> $p["product_id"],
 															"type_id"		=> $p["type_id"], 
 															"quantity"		=> $p["quantity"],
@@ -1776,7 +1782,7 @@ class Product_model extends CI_Model {
 				}	
 				$this->session->cache['br_get_category_collection'][$id] = $tmp;
 		}
-
+		
 		return $this->session->cache['br_get_category_collection'][$id];
 	}
 	
