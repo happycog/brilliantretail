@@ -327,12 +327,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order', 'BrilliantRetail '.lang('nav_br_order'));
 
-				// Do we have a user photo?
-					if($this->vars['order']['member']['photo_filename'] != ''){
-						$this->vars['member_photo'] = '<img src="'.$this->EE->config->slash_item('photo_url').$this->vars['order']['member']['photo_filename'].'" />';
-					}else{
-						$this->vars['member_photo'] = '<img src="'.$this->_config["media_url"].'images/profile-pic.jpg" />';
-					}
 				// Pass the order id
 					$this->vars["hidden"] = array(
 													'order_id' => $order_id
@@ -371,17 +365,47 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
 				if($print === 'true'){
-					$this->vars["site_name"] = $this->EE->config->item('site_name');
-					$this->vars["company"] = $this->_config["store"][$this->site_id];
-					$this->vars["print_css"] = $this->_theme('css/print.css');
-					$view = $this->_view('order/print', $this->vars);	
+					
+					// Get the invoice template 
+						$fl = PATH_THIRD.'brilliant_retail/core/template/invoice.html';
+						$template = read_file($fl);
+					
+					// Initiate a vars 
+						$vars[0] = $this->vars['order'];
+						$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
+						$vars[0]["company"][0] 		= $this->_config["store"][$this->site_id];
+						$vars[0]['currency_marker'] = $this->vars["currency_marker"];
+						
+						// Add in the language keys we want
+							$lang = array(
+												"lang:br_subtotal"		=> lang('br_subtotal'),
+												"lang:br_discount" 		=> lang('br_discount'),
+												"lang:br_shipping" 		=> lang('br_shipping'),
+												"lang:br_tax" 			=> lang('br_tax'),
+												"lang:br_total" 		=> ('br_total'),
+												"lang:br_total_paid" 	=> lang('br_total_paid'),
+												"lang:br_total_due" 	=> lang('br_total_due')
+											);
+						$vars[0] = array_merge($vars[0],$lang);
+
+						$output = $this->EE->TMPL->parse_variables($template, $vars);
+						$this->EE->TMPL->parse($output);
+						echo $output;
+						exit;
+						
+					
+						$this->EE->load->library('br_pdf');
+						$this->EE->br_pdf->print_html(array($output));
+					exit;
+					
+					
 					@header("HTTP/1.1 200 OK");
-					echo $view;
+					#echo $view;
 					exit();
 				}elseif($print == 'pack'){
-					$this->vars["site_name"] = $this->EE->config->item('site_name');
-					$this->vars["company"] = $this->_config["store"][$this->site_id];
-					$this->vars["print_css"] = $this->_theme('css/print.css');
+					$this->vars["site_name"] 	= $this->EE->config->item('site_name');
+					$this->vars["company"] 		= $this->_config["store"][$this->site_id];
+					$this->vars["print_css"]	= $this->_theme('css/print.css');
 					$view = $this->_view('order/pack', $this->vars);	
 					$this->EE->load->library('br_pdf');
 					$this->EE->br_pdf->print_html(array($view));

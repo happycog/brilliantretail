@@ -481,6 +481,9 @@ echo $br_header;
 		</table>
 
 <?=$br_footer?>	
+
+<iframe id="iframe_print" style="border:0;width:1px;height:1px;" name="iframe_print"></iframe>
+
 <?php
 /*
 	Because the native buttons are built with an EE function 
@@ -491,7 +494,8 @@ echo $br_header;
 ?>
 <script type="text/javascript">
 	$(function(){
-		$('.rightNav a.submit').filter(":last").attr('target','_blank');
+		$('.rightNav a.submit').not(":first").attr('target','iframe_print');
+
 		$('#order_status').bind('click',
 								function(){
 									var a = $('#order_status_form');

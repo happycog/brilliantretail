@@ -47,7 +47,7 @@ class br_pdf
 			// ---------------------------------------------------------
 			
 			// set font
-			$pdf->SetFont('helvetica', '', 10);
+				$pdf->SetFont('helvetica', '', 10);
 			
 			// writeHTML($html, $ln=true, $fill=false, $reseth=false, $cell=false, $align='')
 			// writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
@@ -64,8 +64,11 @@ class br_pdf
 					$pdf->lastPage();
 				}
 
+		// Force the print
+			$js = 'print(true);';
+			#$pdf->IncludeJS($js);
 		
 		//Close and output PDF document
-		$pdf->Output($title,'FD');
+		$pdf->Output($title,'I');
 	}
 }
