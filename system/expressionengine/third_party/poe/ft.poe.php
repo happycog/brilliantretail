@@ -352,8 +352,7 @@ class Poe_ft extends EE_Fieldtype {
 
 	private function _set_theme(){
 		if($this->theme == ''){
-			$BR = new Brilliant_retail_mcp();
-			$this->theme = base_url().'themes/third_party/brilliant_retail';
+			$this->theme = $this->EE->config->item('theme_folder_url').'third_party/brilliant_retail';
 		}
 	}
 }

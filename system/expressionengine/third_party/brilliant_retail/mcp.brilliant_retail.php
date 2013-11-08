@@ -316,7 +316,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
-				$print = $this->EE->input->get("print",'true');
+				$print = $this->EE->input->get("print");
 
 			// Order Information
 				$this->vars["status"] = $this->_config["status"];			
@@ -373,35 +373,40 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					// Initiate a vars 
 						$vars[0] = $this->vars['order'];
 						$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
-						$vars[0]["company"][0] 		= $this->_config["store"][$this->site_id];
+						$vars[0]["media_url"]		= $this->vars["media_url"];
+						
+						$has_notes = FALSE;
+						foreach($vars[0]["notes"] as $note){
+							if($note["isprivate"] == 0){
+								$has_notes = TRUE;
+								break;
+							}	
+						}
+						$vars[0]["has_notes"] = $has_notes;
+						
+						foreach($this->_config["store"][$this->site_id] as $key => $val)
+						{
+							$vars[0]["company"][0]["store_".$key] = $val;
+						}
+						
 						$vars[0]['currency_marker'] = $this->vars["currency_marker"];
 						
 						// Add in the language keys we want
-							$lang = array(
-												"lang:br_subtotal"		=> lang('br_subtotal'),
-												"lang:br_discount" 		=> lang('br_discount'),
-												"lang:br_shipping" 		=> lang('br_shipping'),
-												"lang:br_tax" 			=> lang('br_tax'),
-												"lang:br_total" 		=> ('br_total'),
-												"lang:br_total_paid" 	=> lang('br_total_paid'),
-												"lang:br_total_due" 	=> lang('br_total_due')
-											);
-						$vars[0] = array_merge($vars[0],$lang);
+							
+							foreach($this->EE->lang->language as $key => $val)
+							{
+								$lang['lang:'.$key] = $val;
+							}
 
+						$vars[0] = array_merge($vars[0],$lang);
+						
+						
 						$output = $this->EE->TMPL->parse_variables($template, $vars);
 						$this->EE->TMPL->parse($output);
-						echo $output;
+						$output = str_replace('</body>','<script type="text/javascript">this.print(true);</script></body>',$output);
+						$this->EE->load->library('Dompdf_lib');
+						$this->EE->dompdf_lib->convert_html_to_pdf($output,'sample.pdf', true);
 						exit;
-						
-					
-						$this->EE->load->library('br_pdf');
-						$this->EE->br_pdf->print_html(array($output));
-					exit;
-					
-					
-					@header("HTTP/1.1 200 OK");
-					#echo $view;
-					exit();
 				}elseif($print == 'pack'){
 					$this->vars["site_name"] 	= $this->EE->config->item('site_name');
 					$this->vars["company"] 		= $this->_config["store"][$this->site_id];
