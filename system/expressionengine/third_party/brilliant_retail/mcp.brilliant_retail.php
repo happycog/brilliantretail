@@ -344,15 +344,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['order']['order_total_due']		= $this->_currency_round($this->vars['order']['order_total']-$this->vars['order']['order_total_paid']);
 			
 			// Now that we have an order lets build some buttons
-				$right[lang('br_print_invoice')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true';
-				
-				$right[lang('br_print_packing_slip')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=pack';
-				
 				if($this->vars['order']["order_total_due"] > 0){
-					$right[lang('br_add_payment')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment&order_id='.$this->vars['order']["order_id"];
+					$this->vars['order']["right"][][lang('br_add_payment')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment&order_id='.$this->vars['order']["order_id"];
 				}
-		
-				$this->EE->cp->set_right_nav($right);
+				
+				$this->vars['order']["right"][][lang('br_print_packing_slip')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=pack';
+				
+				$this->vars['order']["right"][][lang('br_print_invoice')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true';
 			
 			// Get the group names
 				$qry = $this->EE->member_model->get_member_groups();
@@ -364,57 +362,62 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
-				if($print === 'true'){
-					
-					// Get the invoice template 
-						$fl = PATH_THIRD.'brilliant_retail/core/template/invoice.html';
-						$template = read_file($fl);
+				if($print != ''){
 					
 					// Initiate a vars 
-						$vars[0] = $this->vars['order'];
-						$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
-						$vars[0]["media_url"]		= $this->vars["media_url"];
-						
-						$has_notes = FALSE;
-						foreach($vars[0]["notes"] as $note){
-							if($note["isprivate"] == 0){
-								$has_notes = TRUE;
-								break;
-							}	
-						}
-						$vars[0]["has_notes"] = $has_notes;
-						
-						foreach($this->_config["store"][$this->site_id] as $key => $val)
-						{
-							$vars[0]["company"][0]["store_".$key] = $val;
-						}
-						
-						$vars[0]['currency_marker'] = $this->vars["currency_marker"];
-						
-						// Add in the language keys we want
+							$vars[0] = $this->vars['order'];
+							$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
+							$vars[0]["media_url"]		= $this->vars["media_url"];
 							
-							foreach($this->EE->lang->language as $key => $val)
-							{
-								$lang['lang:'.$key] = $val;
+							$has_notes = FALSE;
+							foreach($vars[0]["notes"] as $note){
+								if($note["isprivate"] == 0){
+									$has_notes = TRUE;
+									break;
+								}	
 							}
+							$vars[0]["has_notes"] = $has_notes;
+							
+							foreach($this->_config["store"][$this->site_id] as $key => $val)
+							{
+								$vars[0]["company"][0]["store_".$key] = $val;
+							}
+							
+							$vars[0]['currency_marker'] = $this->vars["currency_marker"];
+							
+							// Add in the language keys we want
+								
+								foreach($this->EE->lang->language as $key => $val)
+								{
+									$lang['lang:'.$key] = $val;
+								}
+	
+							$vars[0] = array_merge($vars[0],$lang);
+						
+					// Get the invoice template 
+					
+						if($print == 'true'){
+							// Invoice
+								$fl = PATH_THIRD.'brilliant_retail/core/template/invoice.html';
+						}else{
+							// Packing Slip
+								$fl = PATH_THIRD.'brilliant_retail/core/template/packing_slip.html';
+						}					
 
-						$vars[0] = array_merge($vars[0],$lang);
-						
-						
+					// Read the file into a variable
+						$template = read_file($fl);
+					
+					// Parse the variables and then the output (for conditionals) 
 						$output = $this->EE->TMPL->parse_variables($template, $vars);
 						$this->EE->TMPL->parse($output);
+					
+					// Add the print js
 						$output = str_replace('</body>','<script type="text/javascript">this.print(true);</script></body>',$output);
+					
+					// Load up the library and generate our pdf
 						$this->EE->load->library('Dompdf_lib');
-						$this->EE->dompdf_lib->convert_html_to_pdf($output,'sample.pdf', true);
+						$this->EE->dompdf_lib->convert_html_to_pdf($output,'Order '.$order_id.'.pdf', true);
 						exit;
-				}elseif($print == 'pack'){
-					$this->vars["site_name"] 	= $this->EE->config->item('site_name');
-					$this->vars["company"] 		= $this->_config["store"][$this->site_id];
-					$this->vars["print_css"]	= $this->_theme('css/print.css');
-					$view = $this->_view('order/pack', $this->vars);	
-					$this->EE->load->library('br_pdf');
-					$this->EE->br_pdf->print_html(array($view));
-					exit;
 				}else{
 					return $this->_view('order/detail', $this->vars);	
 				}
@@ -544,39 +547,88 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			$data["status_id"] = $this->EE->input->post('status_id');
 			if(strpos($data["status_id"],'download_') > -1){
-				
-				$view=array();
-				$this->EE->load->library('br_pdf');
+			
+				$view = '';
 				
 				$this->vars["site_name"] = $this->EE->config->item('site_name');
 				$this->vars["company"] = $this->_config["store"][$this->site_id];
 				$this->vars["print_css"] = $this->_theme('css/print.css');
-				if($data["status_id"] == 'download_pack'){
-					foreach($_POST["batch"] as $key => $val){
-						$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
-						$view[] = $this->_view('order/pack', $this->vars);	
-					}
-					$this->EE->br_pdf->print_html($view,'Packing Slips - Batch');
-				}else{
-					foreach($_POST["batch"] as $key => $val){
-						$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
-						// Create the order total
-							$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
-							$this->vars['order']['order_total'] = $total; 
-							
-						// Figure out the payments
-							$payment = 0;
-							foreach($this->vars['order']['payment'] as $p){
-								$payment += $p['amount'];
-							}
-							$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
-							$this->vars['order']['order_total_due']		= $this->_currency_round($this->vars['order']['order_total']-$this->vars['order']['order_total_paid']);
+			
+				$count = 0;
+				foreach($_POST["batch"] as $key => $val){
+					$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
+					
+					// Create the order total
+						$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
+						$this->vars['order']['order_total'] = $total; 
+						
+					// Figure out the payments
+						$payment = 0;
+						foreach($this->vars['order']['payment'] as $p){
+							$payment += $p['amount'];
+						}
+						$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
+						$this->vars['order']['order_total_due']		= $this->_currency_round($this->vars['order']['order_total']-$this->vars['order']['order_total_paid']);
 
-						// Set to the view
-							$view[] = $this->_view('order/print', $this->vars);	
+					$vars[0] = $this->vars['order'];
+					$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
+					$vars[0]["media_url"]		= $this->vars["media_url"];
+					
+					$has_notes = FALSE;
+					foreach($vars[0]["notes"] as $note){
+						if($note["isprivate"] == 0){
+							$has_notes = TRUE;
+							break;
+						}	
 					}
-					$this->EE->br_pdf->print_html($view,'Invoices - Batch');
+					$vars[0]["has_notes"] = $has_notes;
+					
+					foreach($this->_config["store"][$this->site_id] as $key => $val)
+					{
+						$vars[0]["company"][0]["store_".$key] = $val;
+					}
+					
+					$vars[0]['currency_marker'] = $this->vars["currency_marker"];
+					
+					// Add in the language keys we want
+						
+						foreach($this->EE->lang->language as $key => $val)
+						{
+							$lang['lang:'.$key] = $val;
+						}
+
+					$vars[0] = array_merge($vars[0],$lang);
+					
+					
+					
+					// Get the invoice template 
+						if($data["status_id"] == 'download_pack'){
+							$fl = PATH_THIRD.'brilliant_retail/core/template/packing_slip.html';
+						}else{
+							$fl = PATH_THIRD.'brilliant_retail/core/template/invoice.html';
+						}
+
+					// Read the file into a variable
+						$template = read_file($fl);
+					
+					// Parse the variables and then the output (for conditionals) 
+						$output = $this->EE->TMPL->parse_variables($template, $vars);
+						$this->EE->TMPL->parse($output);
+					
+						$view .= $output;
+					
+					// Break each page except the last
+						if($count!=count($_POST["batch"])-1){
+							$view .= '<div style="page-break-before: always;"></div>';
+						}	
+					$count++;
 				}
+				
+				$view = '<body>'.$view.'</body>';
+				
+				$this->EE->load->library('Dompdf_lib');
+				$this->EE->dompdf_lib->convert_html_to_pdf($view,'Batch Orders.pdf', false);
+
 				exit;
 			}
 			// Are we going to notify
@@ -3439,8 +3491,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 		function _check_category_url($data,$cnt=1)
 		{
-			if(trim($data["url_title"]) == ''){
-				$data["url_title"] = str_replace(" ","-",strtolower($data["title"]));
+			$sep = ($this->EE->config->item('word_separator') == 'dash') ? '-' : '_';
+			
+			if(trim($data["url_title"]) != ''){
+				$data["url_title"] = str_replace(" ",$sep,strtolower(trim($data["title"])));
 			}
 			$data["url_title"] = strtolower(preg_replace('/[^A-Za-z0-9-_]/','',$data["url_title"]));
 			if(!isset($data["category_id"])){

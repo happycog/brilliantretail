@@ -24,6 +24,27 @@
 
 echo $br_header;
 ?>
+<div class="rightNav" style="padding:0">
+	<div style="float: left; width: 100%;">
+			
+			<?php
+				foreach($order["right"] as $row)
+				{
+					foreach($row as $key => $val)
+					{
+						echo '	<span class="button">
+									<a 	id="'.strtolower(str_replace(" ","_",$key)).'"
+										title="'.$key.'" 
+										class="submit" 
+										href="index.php?S=34be0f01669fdbc39fbce5cc74e44422&amp;D=cp&amp;C=addons_modules&amp;M=show_module_cp&amp;module=brilliant_retail&amp;method=order_detail&amp;order_id=1000&amp;print=pack">'.$key.'</a>
+								</span>';
+					}
+				}
+			?>
+		</div>
+	<div class="clear_left"></div>
+</div>
+
 <div id="popin-overlay" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display:none;"></div>
 	<table id="order_table" width="100%" cellpadding="3" cellspacing="0">
 		<tr>
@@ -494,7 +515,7 @@ echo $br_header;
 ?>
 <script type="text/javascript">
 	$(function(){
-		$('.rightNav a.submit').not(":first").attr('target','iframe_print');
+		$('#print_invoice,#print_packing_slip').attr('target','iframe_print');
 
 		$('#order_status').bind('click',
 								function(){

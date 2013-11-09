@@ -1428,12 +1428,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Check for price resets
 				$quantity = array();
 				$cart = $this->EE->product_model->cart_get();
-				foreach($cart["items"] as $key=>$val)
+				if(isset($cart["items"]))
 				{
-					$quantity[md5($key)]=$val["quantity"]; 	
+					foreach($cart["items"] as $key=>$val)
+					{
+						$quantity[md5($key)]=$val["quantity"]; 	
+					}
+					$this->cart_update($quantity,FALSE);
 				}
-				$this->cart_update($quantity,FALSE);
-			$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
+					
+			// Redirect back to cart
+				$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
 		}
 	
 		/* Cart Update

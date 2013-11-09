@@ -1,216 +1,195 @@
-<style type="text/css">
-	* {
-		font-family: 'Helvetica Neue',Helvetica,sans-serif;
-		font-size: 12px;
-	}
-</style>
-<table width="100%" cellpadding="0" cellspacing="10">
-	<tr>
-		<td>
-			<img src="<?=rtrim($company["media_url"],'/').'/'.$company["logo"]?>" width="400"></td>
-		<td>
-			<?=lang('br_order_date')?> : <?=date("n/d/y",$order["created"])?><br />
-        	<?=lang('br_order_number')?> : <?=$order["order_id"]?>
-        </td>	
-	</tr>
-	<tr>
-		<td width="50%">
-			<table width="100%" style="border:1px #000000 solid" border="0" cellpadding="5" cellspacing="0">
-				<tr>
-					<th align="left" style="padding-left:2px;background-color:#DDDDDD;#color:#666666;border-bottom:1px #000000 solid">
-						<?=lang('br_ship_to')?></th>
-				</tr>
-				<tr>
-					<td>
-						<b><?=$order["address"][0]["shipping_fname"]?> <?=$order["address"][0]["shipping_lname"]?></b><br />
-						<?=$order["address"][0]["shipping_company"]?><br />
-						<?=$order["address"][0]["shipping_address1"]?><br />
-						<?php 
-							if(trim($order["address"][0]["shipping_address2"]) != '')
-							{
-								echo $order["address"][0]["shipping_address2"].'<br />';
-							}
-						?>
-						<?=$order["address"][0]["shipping_city"]?>, <?=$order["address"][0]["shipping_state"]?> <?=$order["address"][0]["shipping_zip"]?><br />
-						<?=$order["address"][0]["shipping_country"]?><br />
-						<?=$order["address"][0]["shipping_phone"]?></td>
-				</tr>
-			</table></td>
-		<td width="50%">
-			<table width="100%" border="1" cellpadding="5" cellspacing="0">
-				<tr>
-					<th align="left" style="padding-left:2px;background-color:#DDDDDD;#color:#666666">
-						<?=lang('br_bill_to')?></th>
-				</tr>
-				<tr>
-					<td>
-							<b><?=$order["address"][0]["billing_fname"]?> <?=$order["address"][0]["billing_lname"]?></b><br />
-							<?=$order["address"][0]["billing_company"]?><br />
-							<?=$order["address"][0]["billing_address1"]?><br />
-							<?php 
-								if(trim($order["address"][0]["billing_address2"]) != '')
-								{
-									echo $order["address"][0]["billing_address2"].'<br />';
-								}
-							?>
-							<?=$order["address"][0]["billing_city"]?>, <?=$order["address"][0]["billing_state"]?> <?=$order["address"][0]["billing_zip"]?><br />
-							<?=$order["address"][0]["billing_country"]?><br />
-							<?=$order["address"][0]["billing_phone"]?>
-						</td>
-				</tr>
-			</table></td>
-	</tr>
-	<tr>
-		<td colspan="2"  style="border-bottom-width:0">
-			<table width="100%" border="0" style="border:1px #000000 solid" cellpadding="5" cellspacing="0">
-				<tr>
-        			<th align="left" style="padding-left:2px;background-color:#DDDDDD;#color:#666666">
-						<?=lang('br_sku')?></th>
-        			<th align="left" style="padding-left:2px;background-color:#DDDDDD;#color:#666666">
-						<?=lang('br_item')?></th>
-        			<th align="left" style="padding-left:2px;background-color:#DDDDDD;#color:#666666">
-						<?=lang('br_qty')?></th>
-        		</tr>
-				<?php
-        			$i = 1;
-        			if(isset($order["items"])){
-            			foreach($order["items"] as $item){
-            				$class = ($i % 2 != 0) ? 'odd' : 'even';
-            				echo '	<tr class="'.$class.'">
-            							<td>
-            								'.$item["sku"].'</td>
-            							<td>
-            								<strong>'.$item["title"].'</strong>
-            								'.$item["options"];
-            					if(trim($item["opts"]) != ''){
-            						echo '<br />'.$item["opts"].'<br />';
-            					}			
-            				echo 			'</td>
-            							<td>
-            								'.$item["quantity"].'</td>
-            						</tr>';
-            				$i++;
-            			}
-					}
-				?>
-			</table></td>
-	</tr>
-	<tr>
-		<td width="50%" valign="top">
-			<table width="100%" border="0" style="border:1px #000000 solid" cellpadding="5" cellspacing="0">
-				<tr>
-					<th align="left" style="text-align:left;padding-left:5px;background-color:#DDDDDD;#color:#666666">
-						Payment Method</th>
-				</tr>
-				<tr>
-					<td style="height:100px" valign="top">
-						<?php
-							$d = unserialize($order["payment"][0]["details"]);
-							foreach($d as $key => $val){
-								echo '<b>'.lang(strtolower(str_replace(" ","_",trim($key)))).'</b> : '.$val.'<br />';
-							}
-						?></td>
-				</tr>
-			</table></td>
-		<td width="50%" valign="top">
-			<table width="100%" border="0" style="border:1px #000000 solid" cellpadding="5" cellspacing="0">
-				<tr>
-					<th align="left" style="padding-left:2px;background-color:#DDDDDD;#color:#666666">
-						Shipping Method</th>
-				</tr>
-				<tr>
-					<td style="height:100px" valign="top">
-						<?php 
-							$list = array(
-											'Method' 	=> strtoupper($order["shipment"][0]["method"]),
-											'label' 	=> $order["shipment"][0]["label"] 
-										);
+<style>
+body {
+	font-family: 	'DejaVu Sans';
+	line-height: 	14px;
+	font-size: 		12px;
+	color: #444444;
+}
+.left {
+	text-align: left;	
+}
+.right {
+	text-align: right;
+}
+.center {
+	text-align: center;
+}
 
-							foreach($list as $key => $val){
-								echo '<b>'.lang($key).'</b> : '.$val.'<br />';
-							}
-						?></td>
-				</tr>
-			</table></td>
-	</tr>  
+#toptable {
+	padding-top: 15px;
+	width:100%;
+}
+#company {
+	width: 50%;
+	color: #666666;
+	padding-left: 20px;
+}
+#logo {
+	vertical-align:top;
+	text-align: right;	
+}
+
+#detailtable {
+	width:100%;
+	margin-top: 50px;
+}
+
+#address {
+	width: 60%;
+	padding-left: 20px;
+	vertical-align:top;	
+}
+
+#invoice {
+	width: 40%;
+	vertical-align:top;	
+	text-align:right;	
+}
+
+#invoice td {
+	white-space:nowrap;
+	padding: 3px 5px;
+}
+
+#itemsTable {
+	border-color: #DDDDDD #DDDDDD #BBBBBB #DDDDDD;
+	border-style: solid;
+	border-width: 1px 1px 3px 1px;
+	margin-top: 40px;
+	width: 100%;
+}
+
+#itemsTable th {
+	font-size: 12px;
+	color: #666666;
+	border-bottom:1px #DDDDDD solid;
+	background-color:#E7E7E7;	
+	padding: 3px 10px;
+}
+
+#itemsTable td {
+	border-bottom:1px #DDDDDD solid;
+	background-color:#FFFFFF;	
+	padding: 3px 10px;
+	vertical-align: top;
+	font-size: 12px;
+}
+
+#itemsTable td h4 {
+	margin: 5px 0;
+}
+
+#order_notes {
+	padding: 40px 10px 5px;
+	border-bottom: 1px #E7E7E7 solid;
+}
+#order_notes td {
+	color: #666;
+	border-bottom: 1px #E7E7E7 solid;
+}
+
+</style>
+
+<table id="toptable">
 	<tr>
-		<td colspan="2"  style="border-bottom-width:0">
-			<table width="100%" border="0" style="border:1px #000000 solid" cellpadding="5" cellspacing="0">
-				<tr>
-					<th align="left" style="padding-left:2px;background-color:#DDDDDD;#color:#666666">
-						Notes</th>
-				</tr>
-				<?php
-					if(count($order["notes"]) > 0){
-						echo '	<tr>
-									<td colspan="2">
-										<div id="order_notes">';
-					}
-					
-					$i = 0;
-					foreach($order["notes"] as $n){ 
-						if(isset($n["order_note"])){
-							if($n["isprivate"] != 0){
-								continue;
-							}
-							$note = $n["order_note"];
-							
-							if($n["member_id"] == 0){
-								$by 	= date('n/d/y g:i:s a',$n["created"]);
-								$remove = '';
-							}else{
-								$by 	= lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.date('n/d/y g:i:s a',$n["created"]);
-								$remove = '<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'"><img src="'.$theme.'images/delete-grey.png" /></a>';
-							}
-							
-							// prep note in case there are strings that are too long which will 
-							// blow up the design. We do that by simply testing string length 
-							// and injecting spaces when needed.
-								// Break the note up into parts per word 
-											$arr = explode(" ",$note);
-								// Reset the note varialbe
-											$note = '';
-								// Loop 
-									foreach($arr as $a){
-										if(strlen($a) > 80){
-											if(strpos($a,"\n") !== false){
-												$b = explode("\n",$a);
-												foreach($b as $c){
-													$note .= "\n".wordwrap($c,80," ",true);
-												}
-											}else{
-												$note .= " ".wordwrap($a,80," ",true);
-											}
-										}else{
-											$note .= " ".$a;
-										}
-									}
-								
-							echo '	<table width="100%" class="order_notes" cellpadding="0" cellspacing="0">
-										<thead>
-											<tr>
-												<th align="left">
-													'.$by.'</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr class="'.$class.'">
-												<td>
-													'.nl2br($note).'</td>
-											</tr>
-										</tbody>
-									</table>';
-							$i++;
-						}
-					}
-				
-					if(count($order["notes"]) > 0){
-						echo '	</div>
-										</td>
-								</tr>';
-					}
-				?>
-			
-			</table></td>
+		<td id="company">
+			{company}
+					{site_name}<br/>
+					{store_address1}<br/>
+					{store_address2}<br/>
+					{store_city} {store_state}, {store_zipcode}<br/>
+			{/company}</td>
+		<td id="logo">
+			{company}
+				<img src="{media_url}{store_logo}" class="{site_name}" />
+			{/company}</td>
 	</tr>
 </table>
+
+<table id="detailtable">
+	<tbody>
+	<tr>
+		<td id="address">
+			{address}
+				{shipping_fname} {shipping_lname}</b><br />
+				{if shipping_company != ''}
+					
+					{shipping_company}<br />
+				
+				{/if}
+				
+				{shipping_address1}<br />
+				
+				{if shipping_address2 != ''}
+				
+					{shipping_address2}<br />
+				
+				{/if}
+				
+				{shipping_city}, {shipping_state} {shipping_zip}<br />
+				{shipping_phone}
+			{/address}
+		</td>
+		<td id="invoice">
+			
+			<table width="100%" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td>
+							<strong>{lang:br_order_number}</strong></td>
+						<td align="right">
+							{order_id}</td>
+					</tr>
+					<tr>
+						<td>
+							<strong>{lang:br_order_date}</strong></td>
+						<td align="right">
+							{created format="%F %d%S, %Y"}</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			
+		</td>
+	</tr>
+	</tbody>
+</table>
+<table id="itemsTable" cellpadding="3" cellspacing="0"> 
+	<thead> 
+		<tr> 
+		  <th width="50%" class="left">{lang:br_title}</th> 
+		  <th width="25%" class="left">{lang:br_sku}</th> 
+		  <th width="25%"  class="right">{lang:br_quantity}</th> 
+		</tr> 
+	</thead> 
+	<tbody> 
+
+		{items}
+			<tr>
+				<td class="left">
+					<strong>{title}</strong><br />
+					{options}</td>
+				<td class="left">{sku}</td>
+				<td class="right">{quantity}</td>
+			</tr>
+		{/items}
+
+	</tbody> 
+</table> 
+
+{if has_notes}
+	<h3 id="order_notes">
+		{lang:br_order_notes}
+	</h3>
+	<table cellpadding="0" cellspacing="0" width="100%">
+		{notes}
+			{if isprivate == 0}
+				<tr>
+					<td style="padding:5px 10px 15px;border-bottom: 1px #E7E7E7	 solid">
+						<strong>{screen_name} on {created format="%F %d%S, %Y"}</strong><br />
+						{order_note}</td>
+				</tr>
+			{/if}
+		{/notes}
+	</table>
+{/if}
