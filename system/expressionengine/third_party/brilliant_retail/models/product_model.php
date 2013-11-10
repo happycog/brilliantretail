@@ -1000,6 +1000,7 @@ class Product_model extends CI_Model {
 		$this->EE->db->delete('br_product', array('product_id' => $product_id));
 		$this->EE->db->delete('br_product_addon', array('parent_id' => $product_id)); 
 		$this->EE->db->delete('br_product_attributes', array('product_id' => $product_id)); 
+		$this->EE->db->delete('br_product_attributes_option', array('product_id' => $product_id));
 		$this->EE->db->delete('br_product_bundle', array('parent_id' => $product_id)); 
 		$this->EE->db->delete('br_product_category', array('product_id' => $product_id)); 
 		$this->EE->db->delete('br_product_configurable', array('product_id' => $product_id)); 

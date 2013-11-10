@@ -30,7 +30,5 @@
 
 
 ### TO DO 
-
-* Finish Packing Slips / Batch 
 * Finish Notifications in _local directory
 * Fix Country / State selector in tax setup

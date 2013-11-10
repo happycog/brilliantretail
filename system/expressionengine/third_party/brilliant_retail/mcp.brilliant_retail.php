@@ -412,7 +412,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->EE->TMPL->parse($output);
 					
 					// Add the print js
-						$output = str_replace('</body>','<script type="text/javascript">this.print(true);</script></body>',$output);
+						$output = $output.'<script type="text/javascript">this.print(true);</script>';
 					
 					// Load up the library and generate our pdf
 						$this->EE->load->library('Dompdf_lib');
@@ -1018,7 +1018,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								}
 							// Log it
 								$this->EE->logger->log_action("Product #".$key." deleted by ".$this->EE->session->userdata["username"]." (member_id: ".$this->EE->session->userdata["member_id"].")");
-							$this->_index_delete_product($data["product_id"]);
+								#$this->_index_delete_product($data["product_id"]);
 							remove_from_cache('product_'.$key);
 						}
 						$_SESSION["message"] = lang('br_product_delete_success');
@@ -1537,7 +1537,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					
 					// Reindex the products
-					$this->_index_delete_product($data["product_id"]);
+						#$this->_index_delete_product($data["product_id"]);
 					remove_from_cache('product_'.$data["product_id"]);
 					
 					$_SESSION["message"] = lang('br_product_delete_success');
@@ -1748,7 +1748,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			if($redirect==TRUE){
 				//Reindex product search
-					$this->_index_products($data["product_id"]);
 					$_SESSION["message"] = lang('br_product_update_success');
 					if($continue == TRUE){
 						$this->EE->functions->redirect($this->base_url.'&method=product_edit&product_id='.$data["product_id"].'&channel_id='.$this->br_channel_id.'&entry_id='.$entry_id);
@@ -1780,12 +1779,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$products = $this->EE->product_model->search_products($term,$type);
 			echo json_encode($products);
 			exit();
-		}
-		
-		function product_index_search()
-		{
-			// Reindex the search data
-			$this->_index_products();
 		}
 
 	/************************/
@@ -3143,6 +3136,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Get the tax info 				
 				$this->vars["states"] = $this->EE->tax_model->get_state();
 				$this->vars["zones"] = $this->EE->tax_model->get_zone();
+				
 				$this->vars["tax"] = $this->EE->tax_model->get_tax_by_id($tax_id);
 
 			$this->vars["content"] = $this->_view('config/tax_edit', $this->vars);	
