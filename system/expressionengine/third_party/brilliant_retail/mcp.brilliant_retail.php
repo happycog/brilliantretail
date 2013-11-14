@@ -435,7 +435,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->EE->TMPL->parse($output);
 					
 					// Add the print js
-						#$output = $output.'<script type="text/javascript">this.print(true);</script>';
+						$output = $output.'<script type="text/javascript">this.print(true);</script>';
 					
 					// Load up the library and generate our pdf
 						$this->EE->load->library('Dompdf_lib');
