@@ -368,6 +368,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$vars[0] = $this->vars['order'];
 							$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
 							$vars[0]["media_url"]		= $this->vars["media_url"];
+							$vars[0]["email"]			= $vars[0]["member"]["email"];
 							
 							$has_notes = FALSE;
 							foreach($vars[0]["notes"] as $note){
@@ -382,7 +383,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							{
 								$vars[0]["company"][0]["store_".$key] = $val;
 							}
-							
+
 							$vars[0]['currency_marker'] = $this->vars["currency_marker"];
 							
 							// Add in the language keys we want
@@ -393,15 +394,37 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								}
 	
 							$vars[0] = array_merge($vars[0],$lang);
-						
+							
+							foreach($vars[0]["payment"] as $key => $val)
+							{
+								$details = unserialize($val["details"]);
+								unset($vars[0]["payment"][$key]["details"]);
+								
+								foreach($details as $k => $v)
+								{
+									$vars[0]["payment"][$key]["details"][] = array(
+																					'label'	=> lang(strtolower(str_replace(" ","_",$k))),
+																					'value'	=> $v
+																					);
+								}
+							}
+
 					// Get the invoice template 
 					
 						if($print == 'true'){
 							// Invoice
-								$fl = PATH_THIRD.'brilliant_retail/core/template/invoice.html';
+								$short_name = $this->EE->config->item("site_short_name");
+								$fl = PATH_THIRD.'_local/brilliant_retail/template/'.$short_name.'/invoice.html';
+								if(!file_exists($fl)){
+									$fl = PATH_THIRD.'brilliant_retail/core/template/invoice.html';
+								}
 						}else{
 							// Packing Slip
-								$fl = PATH_THIRD.'brilliant_retail/core/template/packing_slip.html';
+								$short_name = $this->EE->config->item("site_short_name");
+								$fl = PATH_THIRD.'_local/brilliant_retail/template/'.$short_name.'/packing_slip.html';
+								if(!file_exists($fl)){
+									$fl = PATH_THIRD.'brilliant_retail/core/template/packing_slip.html';
+								}
 						}					
 
 					// Read the file into a variable
@@ -412,7 +435,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->EE->TMPL->parse($output);
 					
 					// Add the print js
-						$output = $output.'<script type="text/javascript">this.print(true);</script>';
+						#$output = $output.'<script type="text/javascript">this.print(true);</script>';
 					
 					// Load up the library and generate our pdf
 						$this->EE->load->library('Dompdf_lib');
@@ -555,6 +578,28 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["print_css"] = $this->_theme('css/print.css');
 			
 				$count = 0;
+				
+				
+				// Get the invoice template 
+					if($data["status_id"] == 'download_print'){
+						// Invoice
+							$short_name = $this->EE->config->item("site_short_name");
+							$fl = PATH_THIRD.'_local/brilliant_retail/template/'.$short_name.'/invoice.html';
+							if(!file_exists($fl)){
+								$fl = PATH_THIRD.'brilliant_retail/core/template/invoice.html';
+							}
+					}else{
+						// Packing Slip
+							$short_name = $this->EE->config->item("site_short_name");
+							$fl = PATH_THIRD.'_local/brilliant_retail/template/'.$short_name.'/packing_slip.html';
+							if(!file_exists($fl)){
+								$fl = PATH_THIRD.'brilliant_retail/core/template/packing_slip.html';
+							}
+					}					
+
+				// Read the file into a variable
+					$template = read_file($fl);
+				
 				foreach($_POST["batch"] as $key => $val){
 					$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
 					
@@ -570,9 +615,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
 						$this->vars['order']['order_total_due']		= $this->_currency_round($this->vars['order']['order_total']-$this->vars['order']['order_total_paid']);
 
+					$vars[0] = array();
+					
 					$vars[0] = $this->vars['order'];
 					$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
 					$vars[0]["media_url"]		= $this->vars["media_url"];
+					$vars[0]["email"]			= $vars[0]["member"]["email"];
 					
 					$has_notes = FALSE;
 					foreach($vars[0]["notes"] as $note){
@@ -597,19 +645,21 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$lang['lang:'.$key] = $val;
 						}
 
-					$vars[0] = array_merge($vars[0],$lang);
+						$vars[0] = array_merge($vars[0],$lang);
 					
-					
-					
-					// Get the invoice template 
-						if($data["status_id"] == 'download_pack'){
-							$fl = PATH_THIRD.'brilliant_retail/core/template/packing_slip.html';
-						}else{
-							$fl = PATH_THIRD.'brilliant_retail/core/template/invoice.html';
+						foreach($vars[0]["payment"] as $key => $val)
+						{
+							$details = unserialize($val["details"]);
+							unset($vars[0]["payment"][$key]["details"]);
+							
+							foreach($details as $k => $v)
+							{
+								$vars[0]["payment"][$key]["details"][] = array(
+																				'label'	=> lang(strtolower(str_replace(" ","_",$k))),
+																				'value'	=> $v
+																				);
+							}
 						}
-
-					// Read the file into a variable
-						$template = read_file($fl);
 					
 					// Parse the variables and then the output (for conditionals) 
 						$output = $this->EE->TMPL->parse_variables($template, $vars);

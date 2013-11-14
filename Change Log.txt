@@ -32,3 +32,4 @@
 ### TO DO 
 * Finish Notifications in _local directory
 * Fix Country / State selector in tax setup
+* Check TRUE/FALSE response from cart_has_discount method : http://www.brilliantretail.com/forum/viewthread/479/

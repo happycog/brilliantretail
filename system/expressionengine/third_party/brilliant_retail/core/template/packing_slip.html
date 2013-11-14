@@ -90,21 +90,19 @@ body {
 
 </style>
 
-<table id="toptable">
-	<tr>
-		<td id="company">
-			{company}
-					{site_name}<br/>
-					{store_address1}<br/>
-					{store_address2}<br/>
-					{store_city} {store_state}, {store_zipcode}<br/>
-			{/company}</td>
-		<td id="logo">
-			{company}
-				<img src="{media_url}{store_logo}" class="{site_name}" />
-			{/company}</td>
-	</tr>
-</table>
+{company}
+	<table id="toptable">
+		<tr>
+			<td id="company">
+						{site_name}<br/>
+						{store_address1}<br/>
+						{store_address2}<br/>
+						{store_city} {store_state}, {store_zipcode}</td>
+			<td id="logo">
+				<img src="{media_url}{store_logo}" class="{site_name}" /></td>
+		</tr>
+	</table>
+{/company}
 
 <table id="detailtable">
 	<tbody>

@@ -169,13 +169,12 @@ class Brilliant_retail_core {
 			$this->_load_files('gateway');
 			$this->_load_files('shipping');
 			$this->_load_files('integration');
-			
-			
-		// Build search index if it is not 
-		// present
-		#if(!file_Exists(APPPATH.'cache/brilliant_retail/'.md5($_SERVER["HTTP_HOST"]).'/search')){
-		#	$this->_index_products();
-		#}
+
+		// Adding a hook to update the system _config variable after the system 
+		// defaults are loaded. -dpd v.1.4.2
+			if($this->EE->extensions->active_hook('br_core_config_after') === TRUE){
+				$this->_config = $this->EE->extensions->call('br_core_config_after',$this->_config); 
+			}
 
 		// Make a global reference to the currency_marker variable that we 
 		// can use in all of our view files
