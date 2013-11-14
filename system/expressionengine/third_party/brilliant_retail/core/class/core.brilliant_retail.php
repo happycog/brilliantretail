@@ -2845,7 +2845,7 @@ class Brilliant_retail_core {
 						$email["content"] = read_file($fl);
 					}
 				
-				$output 	= $this->EE->TMPL2->parse_variables($email["content"], $vars);
+				$output = $this->EE->TMPL2->parse_variables($email["content"], $vars);
 				
 				// Pass output to parse method by reference 
 					$this->EE->TMPL2->parse($output);
@@ -2854,7 +2854,7 @@ class Brilliant_retail_core {
 				if($this->EE->extensions->active_hook('br_email_send_before') === TRUE){
 					$output = $this->EE->extensions->call('br_email_send_before', $output); 
 				}
-			
+
 			// Send it
 				$this->EE->email->mailtype = 'html';	
 				$this->EE->email->debug = TRUE;	

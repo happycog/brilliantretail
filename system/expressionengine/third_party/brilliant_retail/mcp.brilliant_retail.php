@@ -2474,12 +2474,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_email()
 		{
-			// Check available templates against 
-			// templates in the DB for the site id
-				
-				$this->vars['cp_page_title'] = lang('nav_br_config_email');
-				$this->vars["content"] = $this->_view('config/email', $this->vars);
-				return $this->_view('config/index', $this->vars);	
+			$this->vars['cp_page_title'] = lang('nav_br_config_email');
+			$this->vars["content"] = $this->_view('config/email', $this->vars);
+			return $this->_view('config/index', $this->vars);	
 		}
 
 		function config_email_edit()
