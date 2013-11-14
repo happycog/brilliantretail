@@ -383,6 +383,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							{
 								$vars[0]["company"][0]["store_".$key] = $val;
 							}
+							
+							// Logo must be absolute path
+								$vars[0]["company"][0]["store_logo"] = $this->vars["media_dir"].$vars[0]["company"][0]["store_logo"];
 
 							$vars[0]['currency_marker'] = $this->vars["currency_marker"];
 							
@@ -636,6 +639,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$vars[0]["company"][0]["store_".$key] = $val;
 					}
 					
+					// Logo must be absolute path
+						$vars[0]["company"][0]["store_logo"] = $this->vars["media_dir"].$vars[0]["company"][0]["store_logo"];
+
 					$vars[0]['currency_marker'] = $this->vars["currency_marker"];
 					
 					// Add in the language keys we want
