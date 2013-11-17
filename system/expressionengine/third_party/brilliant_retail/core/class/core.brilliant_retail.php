@@ -2447,9 +2447,17 @@ class Brilliant_retail_core {
 						$value = (count($js["label"]) == 1) ? $val["config_id"] : $key;
 						$text = $this->_option_to_label($key); 
 						if($val["adjust"] > 0 && count($js["label"]) == 1){
-							$text .= " (+ ".$this->_format_money($val["adjust"]).")";
+							if($this->EE->config->item('br_config_adjust_total') == 'y'){
+								$text .= " (".$this->_format_money($p["price"]+$val["adjust"]).")";
+							}else{
+								$text .= " (+ ".$this->_format_money($val["adjust"]).")";
+							}
 						}else if($val["adjust"] < 0 && count($js["label"]) == 1){
-							$text .= " (- ".$this->_format_money($val["adjust"]).")";
+							if($this->EE->config->item('br_config_adjust_total') == 'y'){
+								$text .= " (".$this->_format_money($p["price"] - abs($val["adjust"])).")";
+							}else{
+								$text .= " (- ".$this->_format_money(abs($val["adjust"])).")";
+							}
 						}
 						$opts .= '<option value="'.$value.'">'.$text.'</option>';
 					}

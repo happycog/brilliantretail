@@ -36,8 +36,8 @@ echo $br_header;
 									<a 	id="'.strtolower(str_replace(" ","_",$key)).'"
 										title="'.$key.'" 
 										class="submit" 
-										target="iframe_print" 
-										href="'.$val.'">'.$key.'</a>
+										target="'.$val["target"].'" 
+										href="'.$val["link"].'">'.$key.'</a>
 								</span>';
 					}
 				}

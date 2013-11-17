@@ -662,14 +662,14 @@ class Product_model extends CI_Model {
 			
 								// Build the array
 									$d = array(	
-												'product_id' => $product_id,
-												'type_id' => 1, // This is the price type (reg=1/sale=2) 
-												'group_id' => $data['price_group'][$i],
-												'price' => $p,
-												'qty' => $data['price_qty'][$i],
-												'end_dt' => $data['price_end'][$i],
-												'start_dt' => $data['price_start'][$i],
-												'sort_order' => $i 
+												'product_id' 	=> $product_id,
+												'type_id' 		=> 1, // This is the price type (reg=1/sale=2) 
+												'group_id' 		=> $data['price_group'][$i],
+												'price' 		=> $p,
+												'qty' 			=> $data['price_qty'][$i],
+												'end_dt' 		=> $data['price_end'][$i],
+												'start_dt' 		=> $data['price_start'][$i],
+												'sort_order' 	=> $i 
 												);
 									$i++;
 								$this->EE->db->insert('br_product_price',$d);

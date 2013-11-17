@@ -28,7 +28,7 @@ $html = <<< EOF
 		<td valign="top" align="center">
 			<table width="550" cellpadding="0" cellspacing="0">
 				<tr>
-					<td style="background-color:#FFFFFF;border-top:0px solid #000000;border-bottom:0px solid #FFCC66;text-align:right;" align="center"><span style="font-size:10px;color:#333333;line-height:200%;font-family:verdana;text-decoration:none;">{site_title}</span></td>
+					<td style="background-color:#FFFFFF;border-top:0px solid #000000;border-bottom:0px solid #FFCC66;text-align:right;" align="center"><span style="font-size:10px;color:#333333;line-height:200%;font-family:verdana;text-decoration:none;">{site_name}</span></td>
 				</tr>
 				<tr>
 					<td style="background-color:#FFFFFF;border-top:0px solid #FFFFFF;border-bottom:0px solid #333333;"><center><a href=""><IMG id=emailhead1 SRC="{media}/images/email-logo.jpg" BORDER="0" title="Your Company"  alt="Your Company" align="center"></a></center></td>

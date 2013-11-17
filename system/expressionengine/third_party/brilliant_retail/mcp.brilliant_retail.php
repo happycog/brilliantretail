@@ -345,12 +345,21 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			// Now that we have an order lets build some buttons
 				if($this->vars['order']["order_total_due"] > 0){
-					$this->vars['order']["right"][][lang('br_add_payment')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment&order_id='.$this->vars['order']["order_id"];
+					$this->vars['order']["right"][][lang('br_add_payment')] = array(	
+																						'link' 		=> BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment&order_id='.$this->vars['order']["order_id"],
+																						'target' 	=> ''
+																					); 
 				}
 				
-				$this->vars['order']["right"][][lang('br_print_packing_slip')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=pack';
+				$this->vars['order']["right"][][lang('br_print_packing_slip')] = array(	
+																						'link' 		=> BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=pack',
+																						'target' 	=> 'iframe_print'
+																					);
 				
-				$this->vars['order']["right"][][lang('br_print_invoice')] = BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true';
+				$this->vars['order']["right"][][lang('br_print_invoice')] = array(	
+																						'link' 		=> BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true',
+																						'target' 	=> 'iframe_print'
+																					);
 			
 			// Get the group names
 				$qry = $this->EE->member_model->get_member_groups();
@@ -436,7 +445,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					// Parse the variables and then the output (for conditionals) 
 						$output = $this->EE->TMPL->parse_variables($template, $vars);
 						$this->EE->TMPL->parse($output);
-					
+
 					// Add the print js
 						$output = $output.'<script type="text/javascript">this.print(true);</script>';
 					
