@@ -24,7 +24,8 @@
 * Fixed an issue with displaying price adjustments on configurable products. 
 * Fixed an issue with combining multiple negative adjustments when adding to the cart. 
 * Fixed an issue with the password field on gateway configurations. 
-* Fixed an issue with the ammount field not displaying when editing promotions
+* Fixed an issue with the amount field not displaying when editing promotions
+* Fixed an issue with save settings on shipping methods and payment gateways in EE 2.7+
 * Fixed a typo in the password email sent notice. 
 * Updated CKEditor for product editing to version 4.2.2. 
 * Updated the category method to use 'word_separator' for spaces in url_title just to make Chad Crowell happy.
