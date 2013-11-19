@@ -262,14 +262,32 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// AJAX url to get order_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
 			
+			// Get the statuses
+				$this->vars["status"] = $this->_config["status"];			
+			
+			// Set the selected status_id based on an existing cookie
+				$cookie = $this->EE->input->cookie('br_order_overview');
+				if($cookie == ''){
+					$this->vars["status_id"] = "";
+				}else{
+					$arr = unserialize(base64_decode($cookie));
+					$this->vars["status_id"] = $arr["status_id"];
+				}
 			
 			return $this->_view('order/order', $this->vars);	
 		}
 		
 		function order_ajax()
 		{
+			$status_id = ($_GET["status_id"] != "") ? $_GET["status_id"]  : '';
+			
+			$cookie = array(
+								'status_id' => $status_id
+							);
+			$this->EE->functions->set_cookie('br_order_overview',base64_encode(serialize($cookie)),time()+(8640*30));
+			
 			// Get the order collection
-				$orders = $this->EE->order_model->get_order_collection('','',$_GET["iDisplayLength"],$_GET["sSearch"],$_GET["iDisplayStart"],$_GET["iSortCol_0"],$_GET["sSortDir_0"]);
+				$orders = $this->EE->order_model->get_order_collection('','',$_GET["iDisplayLength"],$_GET["sSearch"],$_GET["iDisplayStart"],$_GET["iSortCol_0"],$_GET["sSortDir_0"],$status_id);
 			
 			// Individual order container
 				$order = array();

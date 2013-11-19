@@ -65,6 +65,27 @@ $content = $this->table->generate();
 
 <?=$br_header?>
 <?=form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_batch',array('method' => 'POST', 'id' => 'order_form'))?>
+	
+	
+	 <div id="filterMenu"> 
+			<fieldset>
+				<legend><?=lang('br_filter_orders')?></legend> 
+            	<label>
+            		<?=lang('br_order_status')?>:
+            	</label>
+            		<select name="status_id" id="status_id">
+						<option value=""><?=lang('br_all_orders')?></option>
+						<?php 
+							ksort($status);
+							foreach($status as $key => $val){
+								$sel = ($key == $status_id) ? 'selected="selected"' : '';
+								echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
+							}
+						?>
+					</select>
+			</fieldset> 
+		</div>
+	
 	<?=$content?>
 
 	<div id="order_status_id">
@@ -112,6 +133,17 @@ $content = $this->table->generate();
 													"bServerSide": true,
 													"aaSorting" : [[0,"desc"]],
 													"sAjaxSource": "<?=str_replace("&amp;","&",$ajax_url)?>", 
+													"fnServerData"	: function ( sSource, aoData, fnCallback ) {
+																		/* Add some extra data to the sender */
+																		aoData.push({ 	
+																						"name": "status_id", 
+																						"value": $('#status_id').val()
+																					});
+																		$.getJSON( sSource, aoData, function (json) { 
+																			/* Do whatever additional processing you want on the callback, then tell DataTables */
+																			fnCallback(json)
+																		} );
+																	},
 													"fnDrawCallback": function() {
 														$('#toggle_check').click(function(){
 															if(this.checked){
@@ -122,6 +154,10 @@ $content = $this->table->generate();
 																});  
 															}
 														});
+														
+														$('#status_id').bind('change',function(){
+															 oTable.fnDraw();
+														});
 													}
 												});
 		
@@ -130,6 +166,8 @@ $content = $this->table->generate();
 										oTable.fnFilterClear();
 										return false
 									});
+
+		
 		$('#toggle_check').click(function(){
 			if(this.checked){
 				$('input[type=checkbox]').attr('checked','checked');

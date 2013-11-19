@@ -12,6 +12,8 @@
 		* tiered_discount_value - Price formatted savings
 * Added 'Tracking Number' field to the order detail page in the control panel
 * Added 'free shipping' as a promotion type 
+* Added ability to filter order by status. Selection is remembered in cookie history for 30 days.
+* Added br_filter_orders language key
 * Added an updated timestamp field to auto track the exp_br_orders table
 * Added tiered_price tag example to the blank theme demo templates
 * Added 3D Secure support to the Realex payment gateway for Visa and MasterCard
@@ -23,6 +25,7 @@
 * Fixed an issue with combining multiple negative adjustments when adding to the cart. 
 * Fixed an issue with the password field on gateway configurations. 
 * Fixed an issue with the ammount field not displaying when editing promotions
+* Fixed a typo in the password email sent notice. 
 * Updated CKEditor for product editing to version 4.2.2. 
 * Updated the category method to use 'word_separator' for spaces in url_title just to make Chad Crowell happy.
 
