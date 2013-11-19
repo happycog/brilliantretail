@@ -268,7 +268,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			// Set the selected status_id based on an existing cookie
 				$cookie = $this->EE->input->cookie('br_order_overview');
 				if($cookie == ''){
-					$this->vars["status_id"] = "";
+					$this->vars["status_id"] = "all";
 				}else{
 					$arr = unserialize(base64_decode($cookie));
 					$this->vars["status_id"] = $arr["status_id"];
@@ -287,6 +287,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->set_cookie('br_order_overview',base64_encode(serialize($cookie)),time()+(8640*30));
 			
 			// Get the order collection
+				if($status_id == 'all'){$status_id = '';}
 				$orders = $this->EE->order_model->get_order_collection('','',$_GET["iDisplayLength"],$_GET["sSearch"],$_GET["iDisplayStart"],$_GET["iSortCol_0"],$_GET["sSortDir_0"],$status_id);
 			
 			// Individual order container

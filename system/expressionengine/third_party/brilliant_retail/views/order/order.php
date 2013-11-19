@@ -73,16 +73,18 @@ $content = $this->table->generate();
             	<label>
             		<?=lang('br_order_status')?>:
             	</label>
-            		<select name="status_id" id="status_id">
-						<option value=""><?=lang('br_all_orders')?></option>
-						<?php 
-							ksort($status);
-							foreach($status as $key => $val){
-								$sel = ($key == $status_id) ? 'selected="selected"' : '';
-								echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
-							}
-						?>
-					</select>
+        		<select name="status_id" id="status_id">
+					<option value="all" 
+							<?php if($status_id == 'all'){ echo 'selected="selected"'; }?>
+							><?=lang('br_all_orders')?></option>
+					<?php 
+						ksort($status);
+						foreach($status as $key => $val){
+							$sel = ($key == $status_id && $status_id != 'all') ? 'selected="selected"' : '';
+							echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
+						}
+					?>
+				</select>
 			</fieldset> 
 		</div>
 	
