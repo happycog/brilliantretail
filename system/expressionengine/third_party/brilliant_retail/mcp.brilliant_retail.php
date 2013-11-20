@@ -696,6 +696,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						}
 					
 					// Parse the variables and then the output (for conditionals) 
+						
+						if($count==1){
+							// on the second iteration we are going to remove all 
+							// of the style tags since we already have them in the 
+							// document. 
+								$a = explode("</style>",$template);
+								$template = $a[1];
+						}
+						
 						$output = $this->EE->TMPL->parse_variables($template, $vars);
 						$this->EE->TMPL->parse($output);
 					
