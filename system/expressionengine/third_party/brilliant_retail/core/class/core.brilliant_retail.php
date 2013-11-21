@@ -1246,47 +1246,51 @@ class Brilliant_retail_core {
 			if(isset($_SESSION["discount"]) && $_SESSION["discount"]["discount_type"] == 'ship'){
 				if($data["total"] >= $_SESSION["discount"]["min_subtotal"])
 				{
-					if(isset($_SESSION["discount"]["free_shipping_set"])){
-						unset($_SESSION["discount"]["free_shipping_set"]);
-					}
-					$allow_free_ship = true;
-					
-					$states 	= $this->EE->config->item('br_promo_ship_states');
-					$countries 	= $this->EE->config->item('br_promo_ship_countries');
-					
-					if($states != ''){
-						$s = explode("|",$states);
-						if(!in_array($data["to_state"],$s)){
-							$allow_free_ship = false;
+					// Set some tracking variables
+						if(isset($_SESSION["discount"]["free_shipping_set"])){
+							unset($_SESSION["discount"]["free_shipping_set"]);
 						}
-					}
-					
-					if($countries){
-						$c = explode("|",$countries);
-						if(!in_array($data["to_country"],$c)){
-							$allow_free_ship = false;
-						}
-					}
-					
-					if($allow_free_ship == true){
-						$_SESSION["discount"]["free_shipping_set"] = true;
+						$allow_free_ship = true;
+
+					// Check for override settings					
+						$states 	= $this->EE->config->item('br_promo_ship_states');
+						$countries 	= $this->EE->config->item('br_promo_ship_countries');
 						
-						$quote["free"] = array(
-													"code"	=> 'free',
-													"rate"	=> 0.00,
-													"label"	=> $_SESSION["discount"]["title"]
-												);
-						$rates[] = 	array(
-													'method' 	=> 'free',
-													'label' 	=> lang('br_free_shipping_promotion'),
-													'code' 		=> 'free',
-													'quote' 	=> $quote
-												);
-					}
+						if($states != ''){
+							$s = explode("|",$states);
+							if(!in_array($data["to_state"],$s)){
+								$allow_free_ship = false;
+							}
+						}
+						
+						if($countries){
+							$c = explode("|",$countries);
+							if(!in_array($data["to_country"],$c)){
+								$allow_free_ship = false;
+							}
+						}
+
+					// Allow for free shipping promo?					
+						if($allow_free_ship == true){
+							$_SESSION["discount"]["free_shipping_set"] = true;
+							
+							$quote["free"] = array(
+														"code"	=> 'free',
+														"rate"	=> 0.00,
+														"label"	=> $_SESSION["discount"]["title"]
+													);
+							$rates[] = 	array(
+														'method' 	=> 'free',
+														'label' 	=> lang('br_free_shipping_promotion'),
+														'code' 		=> 'free',
+														'quote' 	=> $quote
+													);
+						}
 				}
 			}
 		
-		// Get options		
+		// Get options
+				
 		foreach($this->_config["shipping"][$this->site_id] as $ship){
 			
 			if($ship["enabled"] == 1){

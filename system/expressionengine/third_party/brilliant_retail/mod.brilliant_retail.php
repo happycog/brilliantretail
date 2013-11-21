@@ -1547,6 +1547,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$vars[0]['remove_link'] = $action = $this->_secure_url(QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'promo_check_code')).'&code=remove';
 					$vars[0]['subtotal'] 	= $this->_config["currency_marker"].$this->_currency_round($subtotal);
 					$vars[0]['discount'] 	= $this->_config["currency_marker"].$this->_currency_round($discount);
+					$vars[0]['coupon_code'] = $_SESSION["discount"]["code"];
 					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 					$this->return_data = $output;
 				}
