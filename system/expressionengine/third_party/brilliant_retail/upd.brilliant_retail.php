@@ -1089,6 +1089,8 @@ class Brilliant_retail_upd {
 				  min_subtotal decimal(10,2) NOT NULL DEFAULT '1.00',
 				  min_quantity int(11) NOT NULL DEFAULT '1',
 				  uses_per int(11) NOT NULL DEFAULT '0',
+				  priority int(11) NOT NULL DEFAULT '1',
+				  stop_rules int(11) NOT NULL DEFAULT '0',
 				  PRIMARY KEY (promo_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 

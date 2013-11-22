@@ -28,16 +28,6 @@
 * Fixed an issue with the amount field not displaying when editing promotions
 * Fixed an issue with save settings on shipping methods and payment gateways in EE 2.7+
 * Fixed a typo in the password email sent notice. 
+* Updated the return on cart_has_discount method to return 'true' or 'false' instead of TRUE / FALSE
 * Updated CKEditor for product editing to version 4.2.2. 
 * Updated the category method to use 'word_separator' for spaces in url_title just to make Chad Crowell happy.
-
-
-
-
-### TO DO 
-* Finish Notifications in _local directory
-* Fix Country / State selector in tax setup
-* Check TRUE/FALSE response from cart_has_discount method : http://www.brilliantretail.com/forum/viewthread/479/
-
-Test: $config['br_config_adjust_total'] = 'y'; 
-* Issues with add to cart?

@@ -1528,10 +1528,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 		public function cart_has_discount() {
 			if(isset($_SESSION["discount"])){
 				if($_SESSION["discount"]["code"] != ''){
-					return ($this->_get_cart_discount() > 0);
+					if($this->_get_cart_discount() > 0)
+					{
+						return 'true';
+					}
 				}
 			}
-			return FALSE;
+			return 'false';
 		}
 		
 		function cart_discount()
@@ -3341,7 +3344,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				}
 				
 				// Set the 'has notes' variable
-					$orders[$i]["has_notes"] = (count($orders[$i]["notes"]) == 0) ? FALSE : TRUE ;
+					$orders[$i]["has_notes"] = (count($orders[$i]["notes"]) == 0) ? 'false' : 'true' ;
 
 				// Need to adjust the total to include the 
 				// shipping, tax and discount
