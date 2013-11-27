@@ -126,6 +126,7 @@ $lang = array(
 	'br_order_select_customer'		=> 'Select Customer', 
 	'br_order_id' 					=> 'ID',
 	'br_filter_orders'				=> 'Filter Orders',
+	'br_batch_order_action'			=> 'Batch Order Actions', 
 	'br_subtotal' 					=> 'Subtotal',
 	'br_total_paid' 				=> 'Total Paid',
 	'br_total_due' 					=> 'Total Due',

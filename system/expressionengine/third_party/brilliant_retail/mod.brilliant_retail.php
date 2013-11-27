@@ -1488,12 +1488,30 @@ class Brilliant_retail extends Brilliant_retail_core{
 						// Update the cart 
 							$cart["items"][$key]["quantity"] = $qty[md5($key)];	
 							$cart["items"][$key]["subtotal"] = $this->_currency_round(($cart["items"][$key]["price"] * $qty[md5($key)])); 	
-							$content = serialize($cart["items"][$key]);
-							$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
-											'session_id' => session_id(), 
-											'content' => $content,
-											'updated' => date("Y-n-d G:i:s"));
-							$this->EE->product_model->cart_update($data,$key);
+							
+							
+							// br_product_cartupdate_before manipulate $cart["items"][$key] array
+							// ADDED 1.4.5 by dpd
+								if($this->EE->extensions->active_hook('br_product_cartupdate_before') === TRUE){
+									$cart["items"][$key] = $this->EE->extensions->call('br_product_cartupdate_before', $cart["items"][$key]); 
+								}				
+								
+								$content = serialize($cart["items"][$key]);
+
+								$data = array(	'member_id' => $this->EE->session->userdata["member_id"],
+												'session_id' => session_id(), 
+												'content' => $content,
+												'updated' => date("Y-n-d G:i:s"));
+	
+								$this->EE->product_model->cart_update($data,$key);
+
+			
+							// br_product_cartupdate_after manipulate $cart["items"][$key] array
+							// ADDED 1.4.5 by dpd
+								if($this->EE->extensions->active_hook('br_product_cartupdate_after') === TRUE){
+									$data = $this->EE->extensions->call('br_product_cartupdate_after', $data); 
+								}
+
 					}
 				}
 			}

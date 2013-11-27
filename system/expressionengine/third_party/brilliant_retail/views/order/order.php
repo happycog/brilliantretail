@@ -73,7 +73,7 @@ $content = $this->table->generate();
             	<label>
             		<?=lang('br_order_status')?>:
             	</label>
-        		<select name="status_id" id="status_id">
+        		<select name="filter_status_id" id="filter_status_id">
 					<option value="all" 
 							<?php if($status_id == 'all'){ echo 'selected="selected"'; }?>
 							><?=lang('br_all_orders')?></option>
@@ -92,12 +92,12 @@ $content = $this->table->generate();
 
 	<div id="order_status_id">
 		<select name="status_id" id="status_id">
+			<option selected="selected"><?=lang('br_batch_order_action')?></option>
 			<optgroup label="Update Status">
 				<?php 
 					ksort($status);
 					foreach($status as $key => $val){
-						$sel = ($key == $order["status_id"]) ? 'selected="selected"' : '';
-						echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';  
+						echo '<option value="'.$key.'">'.$val.'</option>';  
 					}
 				?>
 			</optgroup>
@@ -139,7 +139,7 @@ $content = $this->table->generate();
 																		/* Add some extra data to the sender */
 																		aoData.push({ 	
 																						"name": "status_id", 
-																						"value": $('#status_id').val()
+																						"value": $('#filter_status_id').val()
 																					});
 																		$.getJSON( sSource, aoData, function (json) { 
 																			/* Do whatever additional processing you want on the callback, then tell DataTables */
@@ -157,7 +157,7 @@ $content = $this->table->generate();
 															}
 														});
 														
-														$('#status_id').bind('change',function(){
+														$('#filter_status_id').bind('change',function(){
 															 oTable.fnDraw();
 														});
 													}

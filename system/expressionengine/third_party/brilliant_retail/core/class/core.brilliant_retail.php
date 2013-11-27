@@ -2474,18 +2474,25 @@ class Brilliant_retail_core {
 					{
 						$value = (count($js["label"]) == 1) ? $val["config_id"] : $key;
 						$text = $this->_option_to_label($key); 
-						if($val["adjust"] > 0 && count($js["label"]) == 1){
-							if($this->EE->config->item('br_config_adjust_total') == 'y'){
-								$text .= " (".$this->_format_money($p["price"]+$val["adjust"]).")";
-							}else{
-								$text .= " (+ ".$this->_format_money($val["adjust"]).")";
-							}
-						}else if($val["adjust"] < 0 && count($js["label"]) == 1){
-							if($this->EE->config->item('br_config_adjust_total') == 'y'){
-								$text .= " (".$this->_format_money($p["price"] - abs($val["adjust"])).")";
-							}else{
-								$text .= " (- ".$this->_format_money(abs($val["adjust"])).")";
-							}
+						
+						if($this->EE->config->item('br_config_hide_adjust_total') != 'y'){
+							if($val["adjust"] > 0 && count($js["label"]) == 1){
+								if($this->EE->config->item('br_config_adjust_total') == 'y'){
+									$text .= " (".$this->_format_money($p["price"]+$val["adjust"]).")";
+								}else{
+									$text .= " (+ ".$this->_format_money($val["adjust"]).")";
+								}
+							}else if($val["adjust"] < 0 && count($js["label"]) == 1){
+								if($this->EE->config->item('br_config_adjust_total') == 'y'){
+									$text .= " (".$this->_format_money($p["price"] - abs($val["adjust"])).")";
+								}else{
+									$text .= " (- ".$this->_format_money(abs($val["adjust"])).")";
+								}
+							}else if($val["adjust"] == 0 && count($js["label"]) == 1){
+								if($this->EE->config->item('br_config_adjust_total') == 'y'){
+									$text .= " (".$this->_format_money($p["price"]).")";
+								}
+							}						
 						}
 						$opts .= '<option value="'.$value.'">'.$text.'</option>';
 					}
