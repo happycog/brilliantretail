@@ -246,7 +246,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['cp_page_title'] = lang('nav_br_order');
 	
 			// Breadcrumb
-				$this->EE->cp->set_breadcrumb($this->base_url.'&method=orders', 'BrilliantRetail '.lang('nav_br_order'));
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
 		
 			// Right Button (Create Order)
 				$this->EE->cp->set_right_nav(array(
@@ -343,8 +343,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 			// Page title
 				$this->vars['cp_page_title'] = lang('nav_br_order_detail');
-		
-				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order', 'BrilliantRetail '.lang('nav_br_order'));
+			
+			// Breadcrumbs	
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order', lang('nav_br_order'));
 
 				// Pass the order id
 					$this->vars["hidden"] = array(
@@ -372,12 +374,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				
 				$this->vars['order']["right"][][lang('br_print_packing_slip')] = array(	
 																						'link' 		=> BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=pack',
-																						'target' 	=> 'iframe_print'
+																						'target' 	=> '_blank'
 																					);
 				
 				$this->vars['order']["right"][][lang('br_print_invoice')] = array(	
 																						'link' 		=> BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$this->vars['order']["order_id"].'&print=true',
-																						'target' 	=> 'iframe_print'
+																						'target' 	=> '_blank'
 																					);
 			
 			// Get the group names
@@ -413,7 +415,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							}
 							
 							// Logo must be absolute path
-								$vars[0]["company"][0]["store_logo"] = $this->vars["media_dir"].$vars[0]["company"][0]["store_logo"];
+								$vars[0]["company"][0]["store_logo"] = $this->vars["media_url"].$vars[0]["company"][0]["store_logo"];
 
 							$vars[0]['currency_marker'] = $this->vars["currency_marker"];
 							
@@ -466,11 +468,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->EE->TMPL->parse($output);
 
 					// Add the print js
-						$output = $output.'<script type="text/javascript">this.print(true);</script>';
+						$output = '<html>
+									<head><script type="text/javascript">this.print(true);</script></head>
+									<body>
+									'.$output.'
+									</body>
+									</html>';
 					
-					// Load up the library and generate our pdf
-						$this->EE->load->library('Dompdf_lib');
-						$this->EE->dompdf_lib->convert_html_to_pdf($output,'Order '.$order_id.'.pdf', true);
+						echo $output;
 						exit;
 				}else{
 					return $this->_view('order/detail', $this->vars);	
@@ -486,7 +491,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['cp_page_title'] = lang('nav_br_order_detail_add_payment');
 		
 			// Add breadcrumb back to order detail
-				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order_detail&order_id='.$order_id, 'BrilliantRetail '.lang('nav_br_order_detail').' '.$order_id.'');
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order_detail&order_id='.$order_id, lang('nav_br_order_detail').' '.$order_id.'');
 			
 			// Order Information
 				$this->vars["status"] = $this->_config["status"];			
@@ -668,7 +673,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 					
 					// Logo must be absolute path
-						$vars[0]["company"][0]["store_logo"] = $this->vars["media_dir"].$vars[0]["company"][0]["store_logo"];
+						$vars[0]["company"][0]["store_logo"] = $this->vars["media_url"].$vars[0]["company"][0]["store_logo"];
 
 					$vars[0]['currency_marker'] = $this->vars["currency_marker"];
 					
@@ -716,12 +721,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						}	
 					$count++;
 				}
-				
-				$view = '<body>'.$view.'</body>';
-				
-				$this->EE->load->library('Dompdf_lib');
-				$this->EE->dompdf_lib->convert_html_to_pdf($view,'Batch Orders.pdf', false);
-
+				$js = '<script type="text/javascript">this.print(true);</script>';
+				echo '<html><head>'.$js.'</head><body>'.$view.'</body></html>';
 				exit;
 			}
 			// Are we going to notify
@@ -1036,8 +1037,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$_SESSION["catid"] 	= $this->EE->input->get("cat_id");
 				$_SESSION["typeid"] = $this->EE->input->get("type_id");
 				
-				$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
-				$this->vars['cp_page_title'] = lang('view').' '.lang('nav_br_products');
+				$this->vars['cp_page_title'] = lang('nav_br_products');
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
 
 			// Get the categories & product types for filtering
 				$this->vars['categories'] 	= $this->EE->product_model->get_all_categories();
@@ -1148,7 +1149,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function product_edit()
 		{			
-			$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
+			$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', lang('nav_br_products'));
 
 			// Load Resources Required for custom fields
 				$this->EE->lang->loadfile('content');
@@ -1178,7 +1179,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											));
 
 			// Set the Breadcrumb
-				$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', 'BrilliantRetail '.lang('nav_br_products'));
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', lang('nav_br_products'));
 
 			// Lets setup a new product flag. If we are going to edit the product flip 
 			// to FALSE so that we can differeniate in certain places when needed. 
@@ -1883,8 +1884,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["promo"] = $this->EE->promo_model->get_promo();
 			
 			// Set the header/breadcrumb 
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
 				$this->vars['cp_page_title'] = lang('nav_br_promotion');
-			
+
 				$this->EE->cp->set_right_nav(array(
 					'br_new_promo' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_new'
 				));
@@ -2066,6 +2068,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function report()
 		{
 			// Set the header/breadcrumb 
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
 				$this->vars['cp_page_title'] = lang('nav_br_report');
 				
 			// Get all of the reports

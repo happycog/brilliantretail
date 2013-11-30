@@ -502,17 +502,8 @@ echo $br_header;
 					?>
 		</table>
 
-<?=$br_footer?>	
-
-<iframe id="iframe_print" style="border:0;width:1px;height:1px;" name="iframe_print"></iframe>
-
 <?php
-/*
-	Because the native buttons are built with an EE function 
-	we have to use some jquery to set the 'print' button to 
-	open in a new window. Use filter(:last) over selector:last 
-	for performance. -dpd
-*/
+	echo $br_footer;
 ?>
 <script type="text/javascript">
 	$(function(){

@@ -105,9 +105,9 @@ $content = $this->table->generate();
 				<option value="download_print">Invoices</option>
 				<option value="download_pack">Packing Slips</option>
 			</optgroup>
-		</select>&nbsp;<input type="submit" class="submit" value="<?=lang('Go')?>" />
+		</select>&nbsp;<input type="submit" id="batch_submit" class="submit" disabled="disabled" value="<?=lang('Go')?>" />
 		<br />
-		<div style="margin:5px 0" id="notify_option">
+		<div style="margin:5px 0" class="nodisplay" id="notify_option">
 			<input type="checkbox" name="notify" style="float:left;" />&nbsp;<?=lang('br_status_notify')?>
 		</div>
 	</div>
@@ -179,6 +179,11 @@ $content = $this->table->generate();
 		});
 		
 		$('#status_id').bind('change',function(){
+			if($(this).val() == ''){
+				$('#batch_submit').attr('disabled','disabled');
+			}else{
+				$('#batch_submit').removeAttr('disabled');	
+			}
 			var intRegex = /^\d+$/;
 			if(intRegex.test($(this).val())){
 				$('#notify_option').show();

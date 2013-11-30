@@ -1,18 +1,46 @@
-<!-- 	
-	Important: Do NOT add any content above the opening style tag. 
+{!-- 	
+	Packing Slip Template
+	
+	DO NOT EDIT THIS TEMPLATE! To create your own version copy this file 
+	to third_party/_local/brilliant_retail/template/default_site/packing_slip.html 
+	and edit it there. That will protect from overwriting in future updates. 
+	
+	IMPORTANT: Do NOT add any content above the opening style tag. 
 	For performance it it is removed from iterations in batch mode
 	
-	For Your Styles: Do NOT use id selectors in your styles. The same
+	For Your Styles: Do NOT use id (#) selectors in your styles. The same
 	template will be loaded multiple times in batch mode and can cause 
-	performance issues with id declorations. 
-!-->
+	performance issues with id declarations. 
+
+	## Layout
+		1. Styles 
+		2. Header
+			2.1 Company Address 
+			2.2 Logo
+		3. Addresses
+			3.1 Shipping Address 
+			3.2 Billing Address
+		4. Items
+		5. Shipping Info
+		6. Notes
+!--}
+
+{!-- 1. Styles !--}
+
 <style>
-body {
-	font-family: 	'DejaVu Sans';
-	line-height: 	14px;
+*,body {
+	-webkit-print-color-adjust:exact;
+	font-family: 	'Helvetica';
 	font-size: 		12px;
+	line-height: 	16px;
 	color: #444444;
 }
+
+.container {
+	width: 900px;
+	margin: 0 auto;
+}
+
 .left {
 	text-align: left;	
 }
@@ -23,24 +51,19 @@ body {
 	text-align: center;
 }
 
-.toptable {
-	padding-top: 15px;
-	width:100%;
-	margin: 0 20px 0 11px;
-}
 .company {
 	width: 50%;
 	color: #666666;
-	padding-left: 10px;
+	padding: 10px;
 }
 .logo {
 	vertical-align:top;
 	text-align: right;	
+	padding: 10px;
 }
 
 .detailtable {
 	width:100%;
-	margin-top: 10px;
 }
 
 .address {
@@ -49,28 +72,23 @@ body {
 	border: 1px #E7E7E7 solid;
 }
 
+.address thead tr th {
+	background: #E7E7E7;
+	padding:  	5px 10px;
+	font-weight: 500;
+}
+
+.address tfoot tr td,
+.address tbody tr td {
+	padding:  5px 10px;;
+}
+
 .itemTable {
-	border-left: 	1px #E7E7E7 solid;
-	border-right: 	1px #E7E7E7 solid;
 	width: 100%;
-	margin: 0 20px 0 11px;
 }
 
 .itemTable thead tr th {
 	background: #E7E7E7;
-	font-size:	14px;
-	font-weight: 500;
-}
-
-.itemTable tbody tr.items td h4 {
-	margin: 5px 0;
-}
-
-.address thead tr th {
-	background: #E7E7E7;
-	text-align: left;
-	padding:  	5px 10px 7px;
-	font-size:	14px;
 	font-weight: 500;
 }
 
@@ -79,252 +97,287 @@ body {
 	border-bottom: 1px #E7E7E7 solid;
 }
 
-.address tfoot tr td,
-.address tbody tr td {
-	text-align: left;
-	padding:  3px 10px;;
+.itemTable tbody tr.items td h4 {
+	margin: 5px 0;
 }
 
-.total_row {
-	border:1px #CCCCCC solid;
-	background-color:#E7E7E7;
-	font-weight: bold;
+.notes_header {
+	padding: 5px 10px;
 }
-
-.order_notes {
-	padding: 40px 10px 5px;
-	border-bottom: 1px #E7E7E7 solid;
-}
-.order_notes td {
-	color: #666;
-	border-bottom: 1px #E7E7E7 solid;
+.notes_row {
+	padding:5px 10px 15px;
+	border-top: 1px #E7E7E7 solid;
 }
 </style>
+
+<div class="container">
+
+{!-- 2. Header !--} 
 	
 {company}
-	<table class="toptable">
-		<tr>
-			<td class="company">
-						<strong>{site_name}</strong><br/>
-						{store_address1}<br/>
-						{store_address2}<br/>
-						{store_city} {store_state}, {store_zipcode}</td>
-			<td class="logo">
-				<img src="{store_logo}" class="{site_name}" /></td>
-		</tr>
+
+	<table class="detailtable" cellspacing="5" cellpadding="0">
+		<tbody>
+			<tr>
+				<td class="company">
+					<strong>{site_name}</strong><br/>
+					{store_address1}<br/>
+					{store_address2}<br/>
+					{store_city} {store_state}, {store_zipcode}</td>
+				<td class="logo">
+					<img src="{store_logo}" class="{site_name}" /></td>
+			</tr>
+		</tbody>
 	</table>
+	
 {/company}
 
-<table class="detailtable" cellspacing="15">
-	<tbody>
-	<tr>
-		<td colspan="2" class="address">
-			<table width="100%" cellspacing="0">
-				<thead>
-					<tr>
-						<th>{lang:br_order_details}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<table width="100%" cellpadding="0" cellspacing="0">
-								<tr>
-									<td width="20%">
-										<b>{lang:br_order_number}:</b></td>
-									<td width="30%">
-										{order_id}</td>
-									<td width="20%">
-										<b>{lang:br_customer}:</b></td>
-									<td width="30%">
-										Customer</td>
-								</tr>
-								<tr>
-									<td width="20%">
-										<b>{lang:br_order_date}</td>
-									<td width="30%">
-										{created format="%F %d%S, %Y"}</td>
-									<td width="20%">
-										<b>{lang:br_customer_email}</td>
-									<td width="30%">
-										{email}</td>
-								</tr>
-							</table></td>
-					</tr>
-				</tbody>
-			</table></td>
-	</tr>
-	<tr>
-		<td class="address">
-			{address}
-				<table width="100%" cellspacing="0">
-					<thead>
-						<tr>
-							<th>{lang:br_ship_to}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<b>{shipping_fname} {shipping_lname}</b></td>
-						</tr>
-			
-						{if shipping_company != ''}
-			
+	<table class="detailtable" cellspacing="5" cellpadding="0">
+		<tbody>
+			<tr>
+				<td colspan="2" class="address">
+					<table width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th class="left">{lang:br_order_details}</th>
+							</tr>
+						</thead>
+						<tbody>
 							<tr>
 								<td>
-									{shipping_company}</td>
+									<table width="100%" cellpadding="0" cellspacing="0">
+										<tr>
+											<td width="20%">
+												<b>{lang:br_order_number}:</b></td>
+											<td width="30%">
+												{order_id}</td>
+											<td width="20%">
+												<b>{lang:br_customer}:</b></td>
+											<td width="30%">
+												Customer</td>
+										</tr>
+										<tr>
+											<td width="20%">
+												<b>{lang:br_order_date}</td>
+											<td width="30%">
+												{created format="%F %d%S, %Y"}</td>
+											<td width="20%">
+												<b>{lang:br_customer_email}</td>
+											<td width="30%">
+												{email}</td>
+										</tr>
+									</table></td>
 							</tr>
-			
-						{/if}
-						
-						<tr>
-							<td>
-								{shipping_address1}</td>
-						</tr>
-			
-						{if shipping_address2 != ''}
-							<tr>
-								<td>
-									{shipping_address2}</td>
-							</tr>
-						{/if}
-						
-						<tr>
-							<td>
-								{shipping_city}, {shipping_state} {shipping_zip}</td>
-						</tr>
-						<tr>
-							<td>
-								{shipping_phone}</td>
-						</tr>
-					</tbody>
-				</table>
-			{/address}
-		</td>
-		<td class="address">
-			{address}
-				<table width="100%" cellspacing="0">
-					<thead>
-						<tr>
-							<th>{lang:br_bill_to}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<b>{billing_fname} {billing_lname}</b></td>
-						</tr>
-
-						{if billing_company != ''}
-	
-							<tr>
-								<td>
-									{billing_company}</td>
-							</tr>
-
-						{/if}
-						
-						<tr>
-							<td>
-								{billing_address1}</td>
-						</tr>
-
-						{if billing_address2 != ''}
-							<tr>
-								<td>
-									{billing_address2}</td>
-							</tr>
-						{/if}
-						
-						<tr>
-							<td>
-								{billing_city}, {billing_state} {billing_zip}</td>
-						</tr>
-						<tr>
-							<td>
-								{billing_phone}</td>
-						</tr>
-					</tbody>
-				</table>
-			{/address}
-		</td>
-	</tr>
-</table>
-<div style="clear:both"></div>
-<table class="itemTable" width="100%" cellspacing="0" cellpadding="5">
-<thead> 
-	<tr> 
-	  <th width="50%" class="left">{lang:br_title}</th> 
-	  <th width="25%" class="left">{lang:br_sku}</th> 
-	  <th width="25%"  class="right">{lang:br_quantity}</th> 
-	</tr> 
-</thead> 
-<tbody> 
-	{items}
-		<tr class="items">
-			<td class="left">
-				<strong>{title}</strong><br />
-				{options}</td>
-			<td class="left">{sku}</td>
-			<td class="right">{quantity}</td>
-		</tr>
-	{/items}
-</tbody> 
-</table>
-
-<div style="clear:both"></div>
-
-<table class="detailtable" cellspacing="15">
-	<tr>
-		<td class="address">
-				<table width="100%" cellspacing="0">
-					<thead>
-						<tr>
-							<th colspan="2">Shipping Info</th>
-						</tr>
-					</thead>
-					<tbody>
-						{shipment}
-							<tr>
-								<td>
-									<b>{lang:br_ship_method}</b></td>
-								<td>
-									{method}</td>
-							</tr>
-							<tr>
-								<td>
-									<b>{lang:br_ship_label}</b></td>
-								<td>
-									{label}</td>
-							</tr>
-							<tr>
-								<td>
-									<b>{lang:br_ship_tracknum}</b></td>
-								<td>
-									{tracknum}</td>
-							</tr>
-						{/shipment}
-					</tbody>
-				</table>
-		</td>
-	</tr>
-	</tbody>
-</table>
-
-{if has_notes}
-	<h3 class="order_notes">
-		{lang:br_order_notes}
-	</h3>
-	<table cellpadding="0" cellspacing="0" width="100%">
-		{notes}
-			{if isprivate == 0}
-				<tr>
-					<td style="padding:5px 10px 15px;border-bottom: 1px #E7E7E7	 solid">
-						<strong>{screen_name} on {created format="%F %d%S, %Y"}</strong><br />
-						{order_note}</td>
-				</tr>
-			{/if}
-		{/notes}
+						</tbody>
+					</table></td>
+			</tr>
+		</tbody>
 	</table>
-{/if}
+
+{!-- 3. Addresses !--}
+
+	<table class="detailtable" cellspacing="5" cellpadding="0">
+		<tbody>
+			<tr>
+				<td class="address">
+					{address}
+						<table width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="left">{lang:br_ship_to}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<b>{shipping_fname} {shipping_lname}</b></td>
+								</tr>
+					
+								{if shipping_company != ''}
+					
+									<tr>
+										<td>
+											{shipping_company}</td>
+									</tr>
+					
+								{/if}
+								
+								<tr>
+									<td>
+										{shipping_address1}</td>
+								</tr>
+					
+								{if shipping_address2 != ''}
+									<tr>
+										<td>
+											{shipping_address2}</td>
+									</tr>
+								{/if}
+								
+								<tr>
+									<td>
+										{shipping_city}, {shipping_state} {shipping_zip}</td>
+								</tr>
+								<tr>
+									<td>
+										{shipping_phone}</td>
+								</tr>
+							</tbody>
+						</table>
+					{/address}
+				</td>
+				<td class="address">
+					{address}
+						<table width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="left">{lang:br_bill_to}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<b>{billing_fname} {billing_lname}</b></td>
+								</tr>
+		
+								{if billing_company != ''}
+			
+									<tr>
+										<td>
+											{billing_company}</td>
+									</tr>
+		
+								{/if}
+								
+								<tr>
+									<td>
+										{billing_address1}</td>
+								</tr>
+		
+								{if billing_address2 != ''}
+									<tr>
+										<td>
+											{billing_address2}</td>
+									</tr>
+								{/if}
+								
+								<tr>
+									<td>
+										{billing_city}, {billing_state} {billing_zip}</td>
+								</tr>
+								<tr>
+									<td>
+										{billing_phone}</td>
+								</tr>
+							</tbody>
+						</table>
+					{/address}
+				</td>
+			</tr>
+		</tbody>	
+	</table>
+		
+{!-- 4. Items !--}
+		
+	<table class="detailtable" cellspacing="5" cellpadding="0">
+		<tbody>
+			<tr>
+				<td class="address">
+					<table class="itemTable" width="100%" cellspacing="0" cellpadding="5">
+						<thead> 
+							<tr> 
+							  <th width="60%" class="left">{lang:br_title}</th> 
+							  <th width="20%" class="right">{lang:br_sku}</th> 
+							  <th width="20%"  class="right">{lang:br_quantity}</th> 
+							</tr> 
+						</thead> 
+						<tbody> 
+							{items}
+								<tr class="items">
+									<td class="left">
+										<strong>{title}</strong><br />
+										{options}</td>
+									<td class="right">{sku}</td>
+									<td class="right">{quantity}</td>
+								</tr>
+							{/items}
+						</tbody> 
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+		
+{!-- 5. Shipping Info !--}
+
+	<table class="detailtable" cellspacing="5" cellpadding="0">
+		<tbody>
+			<tr>
+				<td class="address">
+						<table width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="left" colspan="2">Shipping Info</th>
+								</tr>
+							</thead>
+							<tbody>
+								{shipment}
+									<tr>
+										<td>
+											<b>{lang:br_ship_method}</b></td>
+										<td>
+											{method}</td>
+									</tr>
+									<tr>
+										<td>
+											<b>{lang:br_ship_label}</b></td>
+										<td>
+											{label}</td>
+									</tr>
+									<tr>
+										<td>
+											<b>{lang:br_ship_tracknum}</b></td>
+										<td>
+											{tracknum}</td>
+									</tr>
+								{/shipment}
+							</tbody>
+						</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+{!-- Order Notes !--}
+
+	{if has_notes}
+		<table class="detailtable" cellspacing="5" cellpadding="0">
+			<tbody>
+				<tr>
+					<td class="address">
+						<table width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="notes_header left">{lang:br_order_notes}</th>
+								</tr>
+							</thead>
+							<tbody>
+							{notes}
+								{if isprivate == 0}
+									<tr>
+										<td class="notes_row">
+											<strong>{screen_name} on {created format="%F %d%S, %Y"}</strong><br />
+											{order_note}</td>
+									</tr>
+								{/if}
+							{/notes}
+							</tbody>
+						</table></td>
+				</tr>
+			</tbody>
+		</table>
+	{/if}
+
+</div>
+
+{!-- End Invoice Template !--}
