@@ -2281,7 +2281,6 @@ class Brilliant_retail_core {
 				}
 				unset($prod);
 			
-				/*
 				if($p["type_id"] == 3){
 					// Get the configurable products for the item
 					$id 	= $this->EE->product_model->get_product_configurable($p["product_id"]);
@@ -2302,8 +2301,7 @@ class Brilliant_retail_core {
 						}
 					}
 				}
-				*/
-				
+
 				$this->EE->session->cache["br_check_attr"][$p["product_id"]] = $attr;
 			}
 			return $attr;
