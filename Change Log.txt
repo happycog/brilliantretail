@@ -27,7 +27,7 @@
 * Updated the Settings > Tax Rules edit & create form to display only the state options for the selected country
 * Updated the invoice template and added batch invoice print option
 * Updated the return on cart_has_discount method to return 'true' or 'false' instead of TRUE / FALSE
-* Updated CKEditor for product editing to version 4.2.2. 
+* Updated CKEditor for product editing to version 4.3. 
 * Updated the category method to use 'word_separator' for spaces in url_title just to make Chad Crowell happy.* Fixed an issue with the original shipping lookup on checkout. It would look at shipping address in some instances instead of billing address.
 * Fixed an issue with displaying price adjustments on configurable products. 
 * Fixed an issue with combining multiple negative adjustments when adding to the cart. 
@@ -37,4 +37,4 @@
 * Fixed a typo in the password email sent notice. 
 * Fixed an issue with the free shipping method adding multiple enabled fields.
 * Fixed an issue with the customer profile update form
-** (optional | Default *customer/profile*) - Set a custom return value from the form. 
+* Fixed an issue with configurable attributes note displaying in result_filter_set tag
