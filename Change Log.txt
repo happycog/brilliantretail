@@ -23,7 +23,8 @@
 * Added br_product_cartupdate_before and br_product_cartupdate_after to manipulate $item array before and after updates
 * Added packing slip template and added batch packing slip print option
 * Added Notifications to the _local directory lookup so you can maintain local versions of your store emails in the _local directory.
-* Add form_name,form_id, form_class, return parameters to the customer_profile tag
+* Added form_name,form_id, form_class, return parameters to the customer_profile tag
+* Updated breadcrumbs throughout the control panel for better consistency
 * Updated the Settings > Tax Rules edit & create form to display only the state options for the selected country
 * Updated the invoice template and added batch invoice print option
 * Updated the return on cart_has_discount method to return 'true' or 'false' instead of TRUE / FALSE
