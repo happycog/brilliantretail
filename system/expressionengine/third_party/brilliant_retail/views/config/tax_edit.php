@@ -47,7 +47,7 @@
 				<td>
 					<?=lang('br_zone')?></td>
 				<td>
-					<select name="zone_id">
+					<select name="zone_id" id="zone_id">
 						<option value="0"><?=lang('br_all_zones')?></option>
 						<?php
 							$opt = array(1 => lang('br_enabled'), 0 => lang('br_disabled'));
@@ -63,14 +63,14 @@
 				<td>
 					<?=lang('br_state')?></td>
 				<td>
-					<select name="state_id">
+					<select name="state_id" id="state_id">
 						<option value="0"><?=lang('br_all_states')?></option>
 						<?php
 							$opt = array(1 => lang('br_enabled'), 0 => lang('br_disabled'));
 							$sel = $tax["state_id"];
 							foreach($states as $s){
 								$selected = ($s["state_id"] == $sel) ? 'selected="selected"' : '';
-								echo '<option value="'.$s["state_id"].'" '.$selected.'>'.$s["title"].'</option>';
+								echo '<option value="'.$s["state_id"].'" data-zone_id="'.$s["zone_id"].'" class="nodisplay" '.$selected.'>'.$s["title"].'</option>';
 							}
 						?>
 					</select></td>
@@ -110,6 +110,10 @@
 </form>                     
 
 <script type="text/javascript">
+
+	var map = Array();
+	var select;
+	
 	$(function(){
 		$('#taxTable tr:even').addClass('even');
 		$('#taxTable tr:odd').addClass('odd');
@@ -120,5 +124,22 @@
 			}
 			return false;
 		});
+		
+		// Handle the state filtering
+			select = $('#state_id');
+			var state_selected = <?=$tax["state_id"]?>;
+			var country_state_map = <?=$map?>;
+			
+			$('#zone_id').bind('change',function(){
+			
+				var country = $('#zone_id option:selected').val();
+				var str = '<option value="0"><?=lang('br_all_states')?></option>';
+				
+				$.each(country_state_map[country], function(k, v) {
+																		str += '<option value="'+v+'">'+k+'</option>';
+																	});
+				select.empty().append(str);
+				select.val(state_selected);
+			}).triggerHandler('change');
 	});
 </script>

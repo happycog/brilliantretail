@@ -102,6 +102,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			if(version_compare(APP_VER, '2.7.0', '>=')){		
 				$this->EE->core_model->exempt_csfr();
 			}
+			
 		// Now we load up stuff. Only do it once! 
 		// Thats what the session->cache check is for
 			if(!isset($this->EE->session->cache['mcp_brilliantretail_construct'])){
@@ -242,12 +243,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function order()
 		{
-			// Page Title 
-				$this->vars['cp_page_title'] = lang('nav_br_order');
-	
-			// Breadcrumb
+			// Breadcrumb & Page Title 
 				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
-		
+				$this->vars['cp_page_title'] = lang('nav_br_order');
+
 			// Right Button (Create Order)
 				$this->EE->cp->set_right_nav(array(
 					#'br_new_order' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_new'
@@ -3229,9 +3228,15 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["hidden"] = array('tax_id' => $tax_id);
 
 			// Get the tax info 				
-				$this->vars["states"] = $this->EE->tax_model->get_state();
 				$this->vars["zones"] = $this->EE->tax_model->get_zone();
+				$states = $this->EE->tax_model->get_state();
+				foreach($states as $s)
+				{
+					$this->vars["states"][$s["zone_id"]][$s["title"]] = $s["state_id"]; 
 				
+				}
+				$this->vars["map"] 	= json_encode($this->vars["states"]);
+					
 				$this->vars["tax"] = $this->EE->tax_model->get_tax_by_id($tax_id);
 
 			$this->vars["content"] = $this->_view('config/tax_edit', $this->vars);	

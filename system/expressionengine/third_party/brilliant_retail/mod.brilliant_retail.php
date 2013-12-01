@@ -1737,6 +1737,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 			public function wishlist_public()
 			{
+				$form_name 	= $this->EE->TMPL->fetch_param('form_name','wishlist_form');
+				$form_id 	= $this->EE->TMPL->fetch_param('form_id','wishlist_form');
+				$form_class = $this->EE->TMPL->fetch_param('form_class','wishlist_form');
+
 				// Load the wishlist model
 					$this->EE->load->model('wishlist_model');
 
@@ -1758,9 +1762,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
 				
 				// Set up the parse array
+					
+					$form_details = array(
+							'action'     		=> $action,
+		                  	'name'           	=> $form_name,
+		                  	'id'             	=> $form_id,
+		                  	'class'          	=> $form_class,
+		                  	'secure'         	=> TRUE
+		                  );
+	
+					$form_open 	= $this->EE->functions->form_declaration($form_details);
+					
 					$vars[0] = array(	'no_results' 	=> array(),
 										'results' 		=> $product,
-										'form_open' 	=> '<form action="'.$action.'" method="POST">',
+										'form_open' 	=> $form_open,
 										'form_close' 	=> '</form>');
 				
 				// Finally get the member info 
@@ -3212,8 +3227,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function customer_profile()
 		{
 
-			$form_class = $this->EE->TMPL->fetch_param('form_class');
-
+			$form_name 	= $this->EE->TMPL->fetch_param('form_name','profile_edit');
+			$form_id 	= $this->EE->TMPL->fetch_param('form_id','profile_edit');
+			$form_class = $this->EE->TMPL->fetch_param('form_class','profile_edit');
+			$return 	= $this->EE->TMPL->fetch_param('return');
+			
 			// By default we look for the logged in user 
 			// but we can also passs the member_id param
 				$member_id 	= ($this->EE->TMPL->fetch_param('member_id')) ? ($this->EE->TMPL->fetch_param('member_id')) : $this->EE->session->userdata["member_id"];
@@ -3227,13 +3245,22 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($member){
 					$vars[0] = $member;
 					$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_profile_update');
+					
 					if(is_secure())
 					{
 						$action = str_replace("http://","https://",$action);
 					}
-					$vars[0]["form_open"] = form_open($action,array('id'=>'profile_edit',
-																	'form_class' => $form_class
-																	));
+
+					$form_details = array(
+								'action'		=> $action, 
+								'name'			=> $form_name, 
+								'id'			=> $form_id, 
+							  	'class'			=> $form_class, 
+							  	'hidden_fields'	=> array('return'=>$return)
+							  );  	
+					
+					$vars[0]["form_open"] = $this->EE->functions->form_declaration($form_details);
+
 					$vars[0]["form_close"] = '</form>';
 					$output = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $vars);
 				
@@ -3281,10 +3308,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function customer_profile_update()
 		{
 			$this->EE->load->model('customer_model');
-			
 			$member = '';
 			$custom = '';
 			$member_fields = array("username","screen_name","email","url","location","occupation","interests","bday_d","bday_m","bday_y","aol_im","yahoo_im","msn_im","icq","bio","signature","avatar_filename","avatar_width","avatar_height","photo_filename","photo_width","photo_height","sig_img_filename","sig_img_width","sig_img_height","private_messages","accept_messages","last_view_bulletins","last_bulletin_date","ip_address","join_date","last_visit","last_activity","total_entries","total_comments","total_forum_topics","total_forum_posts","last_entry_date","last_comment_date","last_forum_post_date","last_email_date","in_authorlist","accept_admin_email","accept_user_email","notify_by_default","notify_of_pm","display_avatars","display_signatures","parse_smileys","smart_notifications","language","timezone","localization_is_site_default","time_format","profile_theme","forum_theme");
+			
+			// Set the return 
+				$return = $this->EE->input->post('return');
+				if($return == '')
+				{
+					$return = $_SERVER["HTTP_REFERER"];
+				}
+			
 			// Get the custom fields and reverse them 
 				$tmp = $this->EE->customer_model->_get_custom_fields();			
 				foreach($tmp as $key => $val){
@@ -3304,10 +3338,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$member_id = $this->EE->session->userdata["member_id"];
 				if($this->EE->customer_model->update_member_profile($member,$custom,$member_id)){
 					$_SESSION["br_message"] = lang('br_profile_updated_successfully');
-					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+					$this->EE->functions->redirect($return);
 				}else{
 					$_SESSION["br_alert"] = lang('br_profile_update_error');
-					$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
+					$this->EE->functions->redirect($return);
 				}
 		}
 		
