@@ -127,7 +127,7 @@
 		
 		// Handle the state filtering
 			select = $('#state_id');
-			var state_selected = <?=$tax["state_id"]?>;
+			var state_selected = <?php echo ($tax["state_id"]=='') ? "''" : $tax["state_id"]; ?>;
 			var country_state_map = <?=$map?>;
 			
 			$('#zone_id').bind('change',function(){
@@ -135,9 +135,15 @@
 				var country = $('#zone_id option:selected').val();
 				var str = '<option value="0"><?=lang('br_all_states')?></option>';
 				
-				$.each(country_state_map[country], function(k, v) {
-																		str += '<option value="'+v+'">'+k+'</option>';
-																	});
+				/* 
+					If its 0 then its the all country selection and we don't 
+					need to evaluate the states.
+				 */
+					if(country != 0){
+						$.each(country_state_map[country], function(k, v) {
+																				str += '<option value="'+v+'">'+k+'</option>';
+																			});
+					}
 				select.empty().append(str);
 				select.val(state_selected);
 			}).triggerHandler('change');

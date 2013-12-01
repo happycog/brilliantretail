@@ -187,8 +187,10 @@ $content = $this->table->generate();
 			var intRegex = /^\d+$/;
 			if(intRegex.test($(this).val())){
 				$('#notify_option').show();
+				$('#order_form').attr('target','_self');
 			}else{
 				$('#notify_option').hide();
+				$('#order_form').attr('target','_blank');
 			}
 		});
 	});

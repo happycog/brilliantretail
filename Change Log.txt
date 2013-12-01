@@ -11,7 +11,7 @@
 		* tiered_discount_value - Price formatted savings
 * Added tiered_price tag example to the blank theme demo templates
 * Added 'Tracking Number' field to the order detail page in the control panel
-* Added 'free shipping' as a promotion type 
+* Added 'free shipping' option as a promotion type 
 * Added ability to filter order by status. Selection is remembered in cookie history for 30 days.
 * Added br_filter_orders language key
 * Added an updated timestamp field to auto track the exp_br_orders table
@@ -24,7 +24,7 @@
 * Added packing slip template and added batch packing slip print option
 * Added Notifications to the _local directory lookup so you can maintain local versions of your store emails in the _local directory.
 * Add form_name,form_id, form_class, return parameters to the customer_profile tag
-* Updated the Settings > Tax Rules edit form to display only the state options for the selected country
+* Updated the Settings > Tax Rules edit & create form to display only the state options for the selected country
 * Updated the invoice template and added batch invoice print option
 * Updated the return on cart_has_discount method to return 'true' or 'false' instead of TRUE / FALSE
 * Updated CKEditor for product editing to version 4.2.2. 

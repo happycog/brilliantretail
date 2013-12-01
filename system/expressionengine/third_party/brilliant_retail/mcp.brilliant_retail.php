@@ -200,11 +200,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	 */	
 		function dashboard()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_dashboard');
-
-			// Breadcrumb
+			// Breadcrumb & Title
 				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
-		
+				$this->vars['cp_page_title'] = lang('nav_br_dashboard');
+
 			// Get the sales report
 				$dir = PATH_THIRD.'brilliant_retail/core/report/report.sales.php';
 				include_once($dir);
@@ -604,6 +603,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			
 			$data["status_id"] = $this->EE->input->post('status_id');
+			
+			$batch = isset($_POST["batch"]) ? $_POST["batch"] : array() ;
+			
 			if(strpos($data["status_id"],'download_') > -1){
 			
 				$view = '';
@@ -634,8 +636,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 				// Read the file into a variable
 					$template = read_file($fl);
-				
-				foreach($_POST["batch"] as $key => $val){
+
+				foreach($batch as $key => $val){
 					$this->vars['order'] = $this->EE->order_model->get_order($key,TRUE);
 					
 					// Create the order total
@@ -729,7 +731,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$data["notify"] = 'on';
 				}
 			
-				foreach($_POST["batch"] as $key => $val){
+				foreach($batch as $key => $val){
 					$data["order_id"] = $key;
 					
 					// Update the order status
@@ -948,10 +950,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	
 		function customer()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_customer');
-
-			// Breadcrumb
+			// Breadcrumb & Title
 				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_customer');
 
 			// ajax url to get customer_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=customer_ajax';
@@ -2100,6 +2101,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		*/
 		function report_detail()
 		{
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=report', lang('nav_br_report'));
+				$this->vars['cp_page_title'] = lang('br_report_detail');
+
 			// Add the data picker js
 				$this->EE->cp->add_js_script(array('ui' => 'datepicker'));
 			
@@ -2122,11 +2128,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["title"] 	= $report->title;
 				$this->vars["detail"] 	= $report->get_report();
 				$this->vars["input"] 	= '';
-				
-				// Set the title
-					$this->vars['cp_page_title'] = lang('br_report_detail');
-					
-				$this->EE->cp->set_breadcrumb($this->base_url.'&method=report', lang('nav_br_report'));
 				
 				foreach($this->vars["detail"]["input"] as $in){
 					$this->vars["input"] .= $this->_build_report_input($in);
@@ -2154,7 +2155,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_attribute()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
 			
 			$this->vars["attributes"] = (array)$this->EE->product_model->get_attributes();
 			// Set the selected menu
@@ -2230,8 +2233,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_attribute_edit()
 		{
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
+
 			$attribute_id = $this->EE->input->get('attribute_id');
-			$this->vars['cp_page_title'] = lang('nav_br_config_attribute');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_by_id($attribute_id);
 			$this->vars["attributes"]["attribute_id"] = $attribute_id;
 			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
@@ -2242,7 +2248,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_attributeset()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_attributeset');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_attributeset');
 
 			$this->vars["attributes"] = (array)$this->EE->product_model->get_attribute_sets();
 			
@@ -2271,7 +2279,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_attributeset_edit()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_attributeset');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_attributeset');
 
 			$attribute_set_id = $this->EE->input->get('attribute_set_id');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_set_list($attribute_set_id);
@@ -2313,8 +2323,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_category()
 		{
-			// Set the selected menu
-			$this->vars['cp_page_title'] = lang('nav_br_config_category');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_category');
 
 			$this->EE->cp->add_js_script( array(
 												'ui' => 'droppable' 
@@ -2335,7 +2346,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_category_edit()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_category');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_category');
 
 			$this->vars['product_search'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 
@@ -2513,13 +2526,20 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_email()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_email');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_email');
+	
 			$this->vars["content"] = $this->_view('config/email', $this->vars);
 			return $this->_view('config/index', $this->vars);	
 		}
 
 		function config_email_edit()
 		{
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_email');
+
 			$list = $this->EE->email_model->get_emails_by_site_id($this->site_id);
 			$email_id = $this->EE->input->get('email_id');
 			$this->vars["email"] = $this->EE->email_model->get_email_by_id($email_id);
@@ -2566,7 +2586,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_feeds()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_feeds');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_feeds');
 			
 			$this->EE->cp->set_right_nav(array(
 				'br_new_config_feeds' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_feeds_edit'
@@ -2580,8 +2602,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 		
 		function config_feeds_edit()
-		{		  
-			$this->vars['cp_page_title'] = lang('nav_br_config_feeds');
+		{	
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_feeds');
 
   			// Load Libraries & Helpers
   				$this->EE->load->library( array('form_validation') );
@@ -2671,7 +2695,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_gateway()
 		{
-			// Set the selected menu
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
 				$this->vars['cp_page_title'] = lang('nav_br_config_gateway');
 
 			// Load the content
@@ -2757,7 +2782,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_gateway_edit()
 		{
-			// Set the selected menu
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
 				$this->vars['cp_page_title'] = lang('nav_br_config_gateway');
 				
 				$code 		= $_GET["code"];
@@ -2866,7 +2892,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_permission()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_permission');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_permission');
 			
 			$this->vars["groups"] = $this->EE->access_model->get_member_groups();
 
@@ -2877,7 +2905,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_permission_edit()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_permission');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_permission');
 			$group_id = $this->EE->input->get("group_id",TRUE);
 			$this->vars["permissions"] = $this->_admin_permission_tree($group_id);
 			$this->vars["group"] = $this->EE->access_model->get_group_title($group_id);
@@ -2920,8 +2950,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 		function config_shipping()
 		{
-			
-			// Set the selected menu
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
 				$this->vars['cp_page_title'] = lang('nav_br_config_shipping');
 
 			// Load the content
@@ -3039,8 +3069,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_shipping_edit()
 		{
-			// Set the selected menu
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
 				$this->vars['cp_page_title'] = lang('nav_br_config_shipping');
+
 				$code = $_GET["code"];
 				foreach($this->_config["shipping"][$this->site_id][$code]["config_data"] as $f){
 					// Use our input functions
@@ -3118,12 +3150,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_site()
 		{
-			$this->vars['cp_page_title'] = lang('nav_br_config_site');
-			
-			// Load the accordion ui plugin
-			$this->EE->cp->add_js_script( array(
-									'ui' => 'accordion' 
-									));
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_site');
 
 			$this->vars["hidden"] = array(
 											'site_id' => $this->site_id 
@@ -3185,7 +3214,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function config_tax()
 		{ 
-			$this->vars['cp_page_title'] = lang('nav_br_config_tax');
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_tax');
 			
 			$this->EE->cp->set_right_nav(array('br_new_tax' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_new'));
 			
@@ -3194,17 +3225,27 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 
-		function config_tax_new(){
-		
-			$this->vars['cp_page_title'] = lang('nav_br_config_tax');
+		function config_tax_new()
+		{
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_tax');
 
 			// GET THE TAX ID 
 				$tax_id = 0;
 
 				$this->vars["hidden"] = array('tax_id' => $tax_id);
 			// Get the tax info 				
-				$this->vars["states"] = $this->EE->tax_model->get_state();
+			// Get the tax info 				
 				$this->vars["zones"] = $this->EE->tax_model->get_zone();
+				$states = $this->EE->tax_model->get_state();
+				foreach($states as $s)
+				{
+					$this->vars["states"][$s["zone_id"]][$s["title"]] = $s["state_id"]; 
+				
+				}
+				$this->vars["map"] 	= json_encode($this->vars["states"]);
+
 				$this->vars["tax"] = array(
 												'tax_id' 	=> 0,
 												'title' 	=> '',
@@ -3219,9 +3260,11 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 
-		function config_tax_edit(){
-		
-			$this->vars['cp_page_title'] = lang('nav_br_config_tax');
+		function config_tax_edit()
+		{
+			// Breadcrumb & Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->vars['cp_page_title'] = lang('nav_br_config_tax');
 
 			// GET THE TAX ID 
 				$tax_id = (int) $_GET["tax_id"];
