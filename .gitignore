@@ -23,3 +23,5 @@ themes/site_themes/brilliant_retail/_test.group/*
 !media/cache/index.html
 !media/file/index.html
 !media/download/index.html
+!media/products/noimage.jpg
+!media/images/loading.gif
