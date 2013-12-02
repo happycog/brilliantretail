@@ -244,7 +244,7 @@ class Brilliant_retail_ext {
 					}
 
 				$script = "<script type=\"text/javascript\">\n".$script."\n</script>\n";
-				$this->EE->session->cache['br_output_js'] = '';
+				$this->EE->session->cache['br_output_js'] = array();
 			}
 			$a = explode('</body>',$tmp);
 			$output = trim($a[0].$script.'</body>'.$a[1]);

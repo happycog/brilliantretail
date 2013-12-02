@@ -25,7 +25,8 @@
 * Added Notifications to the _local directory lookup so you can maintain local versions of your store emails in the _local directory.
 * Added form_name,form_id, form_class, return parameters to the customer_profile tag
 * Added priority parameter to the js method to set the order of scripts when included above the closing body tag. 
-* Added br_filter_orders language key
+* Added noimage.jpg and loading.gif to blank theme
+* Added br_filter_orders language key for order overview page
 * Updated breadcrumbs throughout the control panel for better consistency
 * Updated the Settings > Tax Rules edit & create form to display only the state options for the selected country
 * Updated the invoice template and added batch invoice print option
