@@ -304,7 +304,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$status = $this->_config["status"][$row["status_id"]];
 					
 						$order[] = array('	<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$row["order_id"].'">'.$row["order_id"].'</a>', 
-											date('n/d/y',$row["created"]),
+											$this->EE->localize->format_date('%n/%d/%y', $row["created"]), 
 											$customer, 
 											$row["total"],
 											$row["payment"],
@@ -330,26 +330,34 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 		function order_detail()
 		{
-		
+			// Breadcrumbs & Page Title
+				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
+				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order', lang('nav_br_order'));
+				$this->vars['cp_page_title'] = lang('nav_br_order_detail');
+			
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
 				$print = $this->EE->input->get("print");
 
 			// Order Information
-				$this->vars["status"] = $this->_config["status"];			
-				$this->vars['order'] = $this->EE->order_model->get_order($order_id,TRUE);
-				
-			// Page title
-				$this->vars['cp_page_title'] = lang('nav_br_order_detail');
-			
-			// Breadcrumbs	
-				$this->EE->cp->set_breadcrumb($this->base_url, lang('nav_br_store'));
-				$this->EE->cp->set_breadcrumb($this->base_url.'&method=order', lang('nav_br_order'));
+				$this->vars["status"] 	= $this->_config["status"];			
+				$this->vars["order"] 	= $this->EE->order_model->get_order($order_id,TRUE);
 
-				// Pass the order id
-					$this->vars["hidden"] = array(
-													'order_id' => $order_id
-												);
+			// Pass the order id
+				$this->vars["hidden"] = array(
+												'order_id' => $order_id
+											);
+
+			// Localize Created Date
+				$this->vars["order"]["created"] = $this->EE->localize->format_date('%m/%d/%Y %h:%i:%s %a',$this->vars["order"]["created"]);
+
+			// Localize Order Notes				
+				
+				foreach($this->vars["order"]["notes"] as $key => $val)
+				{
+					$this->vars["order"]["notes"][$key]["created"] = $this->EE->localize->format_date('%m/%d/%Y %h:%i:%s %a',$val["created"]);
+				}
+				
 			// Create the order total
 				$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
 				$this->vars['order']['order_total'] = $total; 
@@ -388,6 +396,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 				$this->vars["groups"] = $groups;
 			
+
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
 				if($print != ''){
@@ -399,8 +408,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							$vars[0]["email"]			= $vars[0]["member"]["email"];
 							
 							$has_notes = FALSE;
-							foreach($vars[0]["notes"] as $note){
-								if($note["isprivate"] == 0){
+							foreach($vars[0]["notes"] as $key => $val){
+								if($val["isprivate"] == 0){
 									$has_notes = TRUE;
 									break;
 								}	

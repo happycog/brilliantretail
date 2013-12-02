@@ -94,7 +94,7 @@ class Report_sales extends Brilliant_retail_report {
 				if($row["status_id"] >= 1){
 					$result[] = array(
 										$row["order_id"],
-										date("m/d/Y",$row["created"]),
+										$this->EE->localize->format_date('%m/%d/%Y', $row["created"]),
 										$this->_currency_round($row["base"]),
 										$this->_currency_round($row["tax"]),
 										$this->_currency_round($row["shipping"]),

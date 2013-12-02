@@ -84,10 +84,13 @@ class Report_customer_sales extends Brilliant_retail_report {
 			foreach($orders["results"] as $row){
 				// only add orders if they are not canceled
 				if($row["status_id"] >= 1){
+					
+					$created = $this->EE->localize->format_date('%m/%d/%Y', $row["created"]);
+					
 					$result[] = array(
 										"<strong>".$row['order_id']."</strong>",
 										"<strong>".$row["customer"]."</strong>",
-										"<strong>".date("m/d/Y",$row["created"])."</strong>",
+										"<strong>".$created."</strong>",
 										"<strong>".$this->_currency_round($row["base"])."</strong>",
 										"<strong>".$this->_currency_round($row["tax"])."</strong>",
 										"<strong>".$this->_currency_round($row["shipping"])."</strong>",

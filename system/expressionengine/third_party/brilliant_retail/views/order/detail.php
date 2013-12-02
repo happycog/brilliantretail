@@ -68,7 +68,7 @@ echo $br_header;
 									<td>
 										<strong><?=lang('br_order_date')?></strong></td>
 									<td>
-										<?=date("m/d/Y h:i:s a",$order["created"])?></td>
+										<?=$order["created"]?></td>
 								</tr>
 								<tr>
 									<td>
@@ -444,10 +444,10 @@ echo $br_header;
     							}
     							
     							if($n["member_id"] == 0){
-    								$by 	= date('n/d/y g:i:s a',$n["created"]);
+    								$by 	= $n["created"];
     								$remove = '';
     							}else{
-    								$by 	= lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.date('n/d/y g:i:s a',$n["created"]);
+    								$by 	= lang('br_posted_by').' <b><a href="'.BASE.'&C=myaccount&id='.$n["member_id"].'">'.$n["screen_name"].'</a></b> on '.$n["created"];
     								$remove = '<a href="'.$base_url.'&method=order_remove_note&order_id='.$n["order_id"].'&note_id='.$n["order_note_id"].'"><img src="'.$theme.'images/delete-grey.png" /></a>';
     							}
     							

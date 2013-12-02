@@ -88,7 +88,7 @@ class Report_customer_downloads extends Brilliant_retail_report {
 					$result[] = array(
 										$row['order_id'],
 										"<strong>".$row["email"]."</strong>",
-										date("m/d/Y",$row["created"]),
+										$this->EE->localize->format_date('%m/%d/%Y', $row["created"]),
 										$row['cnt']
 									);
 					

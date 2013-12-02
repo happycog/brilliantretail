@@ -33,6 +33,7 @@
 * Updated the return on cart_has_discount method to return 'true' or 'false' instead of TRUE / FALSE
 * Updated CKEditor for product editing to version 4.3. 
 * Updated the category method to use 'word_separator' for spaces in url_title just to make Chad Crowell happy.* Fixed an issue with the original shipping lookup on checkout. It would look at shipping address in some instances instead of billing address.
+* Updated dashboard, order overview and order detail to better handle localization
 * Fixed an issue with displaying price adjustments on configurable products. 
 * Fixed an issue with combining multiple negative adjustments when adding to the cart. 
 * Fixed an issue with the password field on gateway configurations. 

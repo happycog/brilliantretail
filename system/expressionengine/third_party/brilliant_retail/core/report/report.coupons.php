@@ -89,7 +89,7 @@ class Report_coupons extends Brilliant_retail_report {
 					$row_total = $row["total"] + $row["tax"] + $row["shipping"];
 					$result[] = array(
 										$row["order_id"],
-										date("m/d/Y",$row["created"]),
+										$this->EE->localize->format_date('%m/%d/%Y', $row["created"]),
 										$this->_currency_round($row["base"]),
 										$this->_currency_round($row["tax"]),
 										$this->_currency_round($row["shipping"]),
