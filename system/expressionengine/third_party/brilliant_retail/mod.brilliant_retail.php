@@ -173,7 +173,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				// Setup a tiered pricing display tag
 					$products[0]["tiered_price"] 		= array();
-					$products[0]["has_tiered_price"]	= TRUE;
+					$products[0]["has_tiered_price"]	= 'false';
 				
 					if(count($products[0]["price_matrix"]) > 1){
 						$tier = array();
@@ -211,6 +211,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 						// Only show tier options if we have more than one after filtering
 							if(count($tier) > 0){
+								
+								$products[0]["has_tiered_price"]	= 'true';
+				
 								// Sort by key which is quantity
 									ksort($tier);
 								// Setup the tag array
@@ -220,12 +223,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 											$percent = number_format(($price-$row["price"])/$price*100);
 										// Value difference 
 											$value = $price - $row["price"];						
-										$products[0]["tiered_price"][] = array(
-																				'tiered_qty'				=> $row["qty"],
-																				'tiered_price'				=> $this->_format_money($row["price"]), 	
-																				'tiered_discount_percent'	=> $percent,
-																				'tiered_discount_value'		=> $this->_format_money($value) 
-																				);
+											$products[0]["tiered_price"][] = array(
+																					'tiered_qty'				=> $row["qty"],
+																					'tiered_price'				=> $this->_format_money($row["price"]), 	
+																					'tiered_discount_percent'	=> $percent,
+																					'tiered_discount_value'		=> $this->_format_money($value) 
+																					);
 									}
 							}						
 					}

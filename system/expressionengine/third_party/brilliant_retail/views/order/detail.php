@@ -249,7 +249,13 @@ echo $br_header;
 					</tr>		
 					<tr>
 						<td colspan="3" class="totals">
-							<?=lang('br_discount')?> :</td>
+							<?=lang('br_discount')?> :
+							<?php
+								if($order["coupon_code"] != '')
+								{
+									echo '<br /><span style="font-weight:normal">('.lang('br_promo_code').': '.$order["coupon_code"].')</span>';
+								}
+							?>&nbsp;</td>
 						<td colspan="2">
 							<?=$currency_marker.$order["discount"]?></td>
 					</tr>

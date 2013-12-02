@@ -329,7 +329,11 @@
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 								<td>
-									{lang:br_discount}: </td>
+									{lang:br_discount}: 
+									
+									{if coupon_code != ''}
+										<br />({lang:br_promo_code}: {coupon_code})
+									{/if}</td>
 								<td style="text-align:right" class="right">
 									({currency_marker}{discount})</td>
 							</tr>

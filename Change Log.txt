@@ -1,45 +1,4 @@
 ### Version 1.5.0.0
 *December 3, 2013*
 
-* New Feature: Added a quantity field to the product price matrix for adding quantity based pricing
-* Added tags for outputting tiered price options inside the product tag
-	* has_tiered_price (single - TRUE / FALSE) - Added to test for the existence of tiered pricing 
-	* tiered_price (pair) 
-		* tiered_qty - Quantity required to access that price level
-		* tiered_price - Price at this quantity
-		* tiered_discount_percent - 2 digit (rounded) percentage savings
-		* tiered_discount_value - Price formatted savings
-* Added tiered_price tag example to the blank theme demo templates
-* Added 'Tracking Number' field to the order detail page in the control panel
-* Added 'free shipping' option as a promotion type 
-* Added ability to filter order by status. Selection is remembered in cookie history for 30 days.
-* Added google analytics e-commerce tracking code example to checkout/thankyou template 
-* Added an updated timestamp field to auto track the exp_br_orders table
-* Added 3D Secure support to the Realex payment gateway for Visa and MasterCard
-* Added a return parameter to the promo_form tag
-* Added cart_items tag to the cart tag to return the number of items in the cart
-* Added important notice to brilliant_retail config.php file about the proper location for local config variables. 
-* Added coupon_code tag to the cart_discount 
-* Added br_product_cartupdate_before and br_product_cartupdate_after to manipulate $item array before and after updates
-* Added packing slip template and added batch packing slip print option
-* Added Notifications to the _local directory lookup so you can maintain local versions of your store emails in the _local directory.
-* Added form_name,form_id, form_class, return parameters to the customer_profile tag
-* Added priority parameter to the js method to set the order of scripts when included above the closing body tag. 
-* Added noimage.jpg and loading.gif to blank theme
-* Added br_filter_orders language key for order overview page
-* Updated breadcrumbs throughout the control panel for better consistency
-* Updated the Settings > Tax Rules edit & create form to display only the state options for the selected country
-* Updated the invoice template and added batch invoice print option
-* Updated the return on cart_has_discount method to return 'true' or 'false' instead of TRUE / FALSE
-* Updated CKEditor for product editing to version 4.3. 
-* Updated the category method to use 'word_separator' for spaces in url_title just to make Chad Crowell happy.* Fixed an issue with the original shipping lookup on checkout. It would look at shipping address in some instances instead of billing address.
-* Updated dashboard, order overview and order detail to better handle localization
-* Fixed an issue with displaying price adjustments on configurable products. 
-* Fixed an issue with combining multiple negative adjustments when adding to the cart. 
-* Fixed an issue with the password field on gateway configurations. 
-* Fixed an issue with the amount field not displaying when editing promotions
-* Fixed an issue with save settings on shipping methods and payment gateways in EE 2.7+
-* Fixed a typo in the password email sent notice. 
-* Fixed an issue with the free shipping method adding multiple enabled fields.
-* Fixed an issue with the customer profile update form
-* Fixed an issue with configurable attributes note displaying in result_filter_set tag
+Change Log: http://docs.brilliantretail.com/5-release-notes/index.html

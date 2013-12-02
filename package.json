@@ -43,7 +43,7 @@
 		},{
 			"name" : "brilliant_retail",
 			"label": "BrilliantRetail",
-			"version": "1.4.0.0",
+			"version": "1.5.0.0",
 			"types": ["module","fieldtype","extension"],
 			"paths": {
 				"system": [
@@ -58,24 +58,8 @@
 			},
 			"update_notes": [
 	                {
-	                        "version": "1.3.0.0",
-	                        "message": '<a href="http://docs.brilliantretail.com/developers/release-notes/current-version.html">Full Release Notes.</a>'
-	                },
-	                {
-	                        "version": "1.2.0.0",
-	                        "message": '<h1>IMPORTANT UPGRADE NOTES:</h1>
-				                        <p>
-				                        	If you are using the Stripe payment gateway you will need to remove and reinstall it from the Settings > Payment Gateway section of your website.	
-				                        </p>
-				                        <p>
-				                        	<a href="http://docs.brilliantretail.com/developers/release-notes/previous-versions.html#v1200">Full Release Notes.</a>
-				                        </p>'
-	                },
-	                {
-	                        "version": "1.2.1.0",
-	                        "message": '<p>
-				                        	<a href="http://docs.brilliantretail.com/developers/release-notes/current-version.html">Full Release Notes.</a>
-				                        </p>'
+	                        "version": "1.5.0.0",
+	                        "message": '<a href="http://docs.brilliantretail.com/5-release-notes/index.html">Full Release Notes.</a>'
 	                }
 	        ]
 		}
