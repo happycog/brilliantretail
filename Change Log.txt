@@ -13,7 +13,7 @@
 * Added 'Tracking Number' field to the order detail page in the control panel
 * Added 'free shipping' option as a promotion type 
 * Added ability to filter order by status. Selection is remembered in cookie history for 30 days.
-* Added br_filter_orders language key
+* Added google analytics e-commerce tracking code example to checkout/thankyou template 
 * Added an updated timestamp field to auto track the exp_br_orders table
 * Added 3D Secure support to the Realex payment gateway for Visa and MasterCard
 * Added a return parameter to the promo_form tag
@@ -24,6 +24,8 @@
 * Added packing slip template and added batch packing slip print option
 * Added Notifications to the _local directory lookup so you can maintain local versions of your store emails in the _local directory.
 * Added form_name,form_id, form_class, return parameters to the customer_profile tag
+* Added priority parameter to the js method to set the order of scripts when included above the closing body tag. 
+* Added br_filter_orders language key
 * Updated breadcrumbs throughout the control panel for better consistency
 * Updated the Settings > Tax Rules edit & create form to display only the state options for the selected country
 * Updated the invoice template and added batch invoice print option

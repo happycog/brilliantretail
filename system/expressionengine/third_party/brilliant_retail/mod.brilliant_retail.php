@@ -32,7 +32,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 	function __construct(){
 		parent::__construct();
 		if(!isset($this->EE->session->cache['br_output_js'])){
-			$this->EE->session->cache['br_output_js'] = '';
+			$this->EE->session->cache['br_output_js'] 		= array();	# Container for scripts
+			$this->EE->session->cache['br_output_js_cnt'] 	= 0;		# Counter for script priority
 		}
 	}
 
@@ -165,7 +166,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					// the session cache so that we can append it 
 					// to the bottom of the page. 
 						if(strpos(strtolower($tagdata),'{configurable_js}') != FALSE){
-							$this->EE->session->cache['br_output_js'] .= $products[0]["configurable_js"];
+							$this->js($products[0]["configurable_js"]);
 						}
 						$products[0]["configurable_js"] = '';
 				}
@@ -252,7 +253,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$products[0]["form_open"] 	= $form_open;
 						$products[0]["form_close"]	= form_close();
 						if($show_js == 'yes'){
-							$this->EE->session->cache['br_output_js'] .= '$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});';
+							$this->js('$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});');
 						}
 					}
 					
@@ -269,7 +270,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Build the form and add the js to the footer
 					if($form == 'yes'){
 						$output 	= $form_open.$output.form_close();
-						$this->EE->session->cache['br_output_js'] .= '$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});';
+						$this->js('$(function(){$(\'#form_'.$products[0]["product_id"].'\').validate();});');
 					}
 							
 			$this->switch_cnt = 0;
@@ -2055,7 +2056,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 														after_update_totals(data);
 													}
 												}";
-					$this->EE->session->cache['br_output_js'] .= $checkout_js;
+					$this->js($checkout_js);
 				}
 				
 				// Clear any form errors from session if they exist
@@ -2731,6 +2732,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 		
 		function checkout_thankyou($vars = '')
 		{
+			
+			// This configuration variable was added for testing your checkout template  
+			// and should NEVER be set in a live enviroment! 
+				if($this->EE->config->item('br_checkout_thankyou_order_id') != '') {
+					$_SESSION["order_id"] = $this->EE->config->item('br_checkout_thankyou_order_id');
+				}
+			
 			if(!isset($_SESSION["order_id"])){
 				$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["customer_url"]));
 			}
@@ -3270,33 +3278,33 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if($show_js === TRUE){
 						$countries = $this->EE->product_model->get_countries();
 						$map = json_encode($this->EE->product_model->get_states($countries));
-						$this->EE->session->cache['br_output_js'] .= "	$(function(){
-																			$('#profile_edit').validate();
-																			
-																			// get all tied selects
-																			var selects = $('select[data-br_country]'),
-																				country_state_map = ".$map.";
-																			
-																			selects.each(function() {
-																				var select = $(this),
-																					country = $( '#'+select.data('br_country') );
-																				
-																				// when the country changes, populate the states
-																				// trigger the first change right away to update
-																				country.change(function() {
-																					var str = '',
-																						country = this.options[this.selectedIndex].text;
-																					
-																					$.each(country_state_map[country], function(k, v) {
-																						str += '<option value=\"'+k+'\">'+v+'</option>';
-																					});
-																					
-																					select.empty().append(str);
-																					select.val(select.data('br_selected'));
-																					
-																				}).triggerHandler('change');
-																			});
-																		});";
+						$this->js("	$(function(){
+													$('#profile_edit').validate();
+													
+													// get all tied selects
+													var selects = $('select[data-br_country]'),
+														country_state_map = ".$map.";
+													
+													selects.each(function() {
+														var select = $(this),
+															country = $( '#'+select.data('br_country') );
+														
+														// when the country changes, populate the states
+														// trigger the first change right away to update
+														country.change(function() {
+															var str = '',
+																country = this.options[this.selectedIndex].text;
+															
+															$.each(country_state_map[country], function(k, v) {
+																str += '<option value=\"'+k+'\">'+v+'</option>';
+															});
+															
+															select.empty().append(str);
+															select.val(select.data('br_selected'));
+															
+														}).triggerHandler('change');
+													});
+												});");
 					}
 				
 				
@@ -4171,8 +4179,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 	/* 
 	*/
 	
-	function js(){
-		$this->EE->session->cache['br_output_js'] .= $this->EE->TMPL->tagdata;
+	function js($js=''){
+		
+		$priority = $this->EE->TMPL->fetch_param('priority');
+		if($priority == ''){
+			$priority = $this->EE->session->cache['br_output_js_cnt']++;
+		}	
+		$script = ($js != '') ? $js : $this->EE->TMPL->tagdata;
+		$this->EE->session->cache['br_output_js'][$priority][] = $script;
 	}
 	
 	/* Get Url

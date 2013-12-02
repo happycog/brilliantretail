@@ -61,6 +61,48 @@
 	    			Sincerely,<br />
 	    			{site_name}
 	    		</p>
+	    		
+	    		{!-- 
+		    			Google Analytics Tracking Code
+		    			
+		    			We are using the BrilliantRetail js method to push the 
+		    			code into the compressed javascript in the footer. In the example below 
+		    			we are also assuming the standard pageview and code is in the footer template 
+		    			so we have already initialized the "_gaq" variable. 
+	
+						Important: We use the priority parameter to push the javascript priority below the 
+						scripts added in the footer template. 
+	    		!--}
+
+	    		{exp:brilliant_retail:js priority="100"}
+					  _gaq.push(['_addTrans',
+					    '{order_id}',       // order ID - required
+					    '{site_name}',      // affiliation or store name
+					    '{total}',          // total - required
+					    '{tax}',            // tax
+					    '{shipping}',       // shipping
+					    {address}
+		  			    	'{billing_city}',     // city
+			  		    	'{billing_state}',    // state or province
+				  	    	'{billing_country}'   // country
+					    {/address}
+					  ]);
+					  {items}
+					      // add item might be called for every item in the shopping cart
+					      // where your ecommerce engine loops through each item in the cart and
+					      // prints out _addItem for each
+					      _gaq.push(['_addItem',
+					        '{order_id}',     // order ID - required
+					        '{sku}',          // SKU/code - required
+					        '{title}',        // product name
+					        '',               // category or variation
+					        '{price}',        // unit price - required
+					        '{quantity}'      // quantity - required
+				    	  ]);
+		    			  _gaq.push(['_trackTrans']); //submits transaction to the Analytics servers
+					  {/items}
+				{/exp:brilliant_retail:js}
+
 	    	{/exp:brilliant_retail:checkout_thankyou}         
 	
 		</div> <!-- main -->

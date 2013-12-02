@@ -22,6 +22,11 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 !--}
+
+{if logged_out}
+{redirect='customer/login'}
+{/if}
+
 {embed="_assets/header"}
 
 <body>

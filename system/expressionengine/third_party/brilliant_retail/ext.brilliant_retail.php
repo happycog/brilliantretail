@@ -221,7 +221,19 @@ class Brilliant_retail_ext {
 		}
 		
 		if(strpos($tmp,'</body>') !== false){
-			$script = isset($this->EE->session->cache['br_output_js']) ? $this->EE->session->cache['br_output_js'] : '';
+			$output_js = $this->EE->session->cache['br_output_js'];
+			$script = '';
+			// Loop through the session array. We put the scripts into 
+			// the session variable by priority with an auto increment [] 
+			// key so that like priorities would not be overwritten. Thus 
+			// the double loop. 
+				ksort($output_js);
+				foreach($output_js as $a){
+					foreach($a as $b){
+						$script .= $b;
+					}
+				}
+			
 			if($script != ''){
 				// Should we compress our output? 
 				// Added 1.3.5 - dpd
