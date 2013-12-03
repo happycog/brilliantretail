@@ -1095,13 +1095,6 @@ class Brilliant_retail_upd {
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
-##  Records of exp_br_promo
-## ----------------------------
-	$sql[] = "INSERT INTO exp_br_promo VALUES ('21', '1', 'Default Save 20% All Products', '20', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', 'item', 0, '20.00', '1', 'All customers save 20% on all products in all categories. ', '', '', '1.00', '1', '0'), 
-				('22', '1', 'Default Save 10% on SLR Camera', '10', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', 'item', 0, '10.00', '1', 'All customers save 10% on Capture RX20 Digital SLR', '[\"70\"]', '[\"2516\"]', '1.00', '1', '0'), 
-				('23', '1', 'Jacket Discount', '25JACK', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'percent', 'item', 0, '25.00', '1', '25% off jackets', '[\"64\"]', '[\"2511\"]', '1.00', '1', '0');";
-
-## ----------------------------
 ##  Table structure for exp_br_search
 ## ----------------------------
 	$sql[] = "DROP TABLE IF EXISTS exp_br_search;";
