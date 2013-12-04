@@ -30,7 +30,7 @@ class Shipping_ups extends Brilliant_retail_shipping {
 	public $version = '1.0';
 
 	function quote($data,$config){
-		
+
 		$this->rates = array();
 		$tmp = array();
 		
@@ -54,7 +54,6 @@ class Shipping_ups extends Brilliant_retail_shipping {
 
 		$code = unserialize($config["code"]);
 		if(is_array($code)){
-			foreach($code as $c){
 				$reqs = '<?xml version="1.0"?>  
 						<AccessRequest xml:lang="en-US">  
 							<AccessLicenseNumber>8C6D8C424E63C8D0</AccessLicenseNumber>  
@@ -69,7 +68,7 @@ class Shipping_ups extends Brilliant_retail_shipping {
 									<XpciVersion>1.0001</XpciVersion>  
 								</TransactionReference>  
 								<RequestAction>Rate</RequestAction>  
-								<RequestOption>Rate</RequestOption>  
+								<RequestOption>Shop</RequestOption>  
 							</Request>  
 							<PickupType>  
 								<Code>01</Code>  
@@ -95,9 +94,13 @@ class Shipping_ups extends Brilliant_retail_shipping {
 										<CountryCode>'.$config["from_country"].'</CountryCode>  
 									</Address>  
 								</ShipFrom>  
-								<Service>  
-									<Code>'.$c.'</Code>  
-								</Service>  
+								<Service>';  
+				
+				foreach($code as $c){
+						$reqs .= '<Code>'.$c.'</Code>';
+				}		 
+				
+					$reqs .= '	</Service>  
 								<Package>  
 									<PackagingType>  
 										<Code>02</Code>  
@@ -119,20 +122,27 @@ class Shipping_ups extends Brilliant_retail_shipping {
 								</Package>  
 							</Shipment>  
 						</RatingServiceSelectionRequest>'; 
-			// Curl
+			// Get the rate options
 				$results = $this->_curl($config["url"],$reqs);
-			
-			// Match Rate
-				preg_match('/<MonetaryValue>(.*?)<\/MonetaryValue>/',$results,$rate);
-				$price = isset($rate[1]) ? $rate[1] : '' ;
-				if($price != ''){
-					$tmp[$price][$c] = array(
-										'code' => $c,
-										'rate' => $price,
-										'label' => $title[$c]
-									);
-				}
-			}
+				$xml= new SimpleXmlElement($results);
+				
+				$tmp = array();
+				
+				// Loop through them
+					foreach($xml->RatedShipment as $rate){
+						$price = (string) $rate->RatedPackage->TotalCharges->MonetaryValue[0];
+						$ratecode  = (string) $rate->Service->Code[0];
+						
+						if(in_array($ratecode,$code))
+						{
+							$tmp[$price][$ratecode] = array(
+																'code' 	=> $ratecode,
+																'rate' 	=> $price,
+																'label' => $title[$ratecode]
+															);
+						}
+						
+					}
 		}
 		// Resort the responses based on rate
 			ksort($tmp);
@@ -147,7 +157,7 @@ class Shipping_ups extends Brilliant_retail_shipping {
 		}
 
 		// Reture rates
-		return $this->rates;
+			return $this->rates;
 	}
 	
 	

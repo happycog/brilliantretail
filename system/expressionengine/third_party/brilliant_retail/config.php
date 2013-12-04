@@ -9,10 +9,9 @@
 /* to the /system/expressionengine/config/config.php file. 						*/
 /* 																				*/
 /********************************************************************************/
- 
-if ( ! defined('BR_VERSION'))
-{
-	define('BR_VERSION','1.5.0.0');
+
+if ( ! defined('BR_VERSION')) {
+    define('BR_VERSION','1.5.0.0');
 }
 
 $config['name']			=	'BrilliantRetail';

@@ -1887,6 +1887,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 											var ship_note;
 											var cnt = 0;
 											var payment;
+											var shipXHR;
 											
 											$(function(){
 												ship_to = $('#ship_same_address');
@@ -1991,6 +1992,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 											}
 											
 											function _get_shipping_quote(address){
+												
+												if(shipXHR)
+												{
+													shipXHR.abort();
+												}
+												
 												var url = '".$shipping_action."';
 												
 												var params = {	
@@ -2007,7 +2014,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 												ship_note = contain.html();
 												contain.html('&nbsp;Calculating Rates<br /><img src=\"".$this->_config["media_url"]."images/loading.gif\" />');
 												
-												$.post(url,params,function(data){
+												shipXHR = $.post(url,params,function(data){
 										   			$('#shipping_options div#options').html(data);
 											 		_update_cart_totals();
 										 			$('input.shipping').bind('change',_update_cart_totals);
