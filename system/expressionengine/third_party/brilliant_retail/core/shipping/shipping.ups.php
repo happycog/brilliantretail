@@ -273,7 +273,7 @@ class Shipping_ups extends Brilliant_retail_shipping {
 							'label'	 	=> 'API Url', 
 							'code' 		=> 'url',
 							'type' 		=> 'text',
-							'value' 	=> 'https://www.ups.com/ups.app/xml/Rate', 
+							'value' 	=> 'https://onlinetools.ups.com/ups.app/xml/Rate', 
 							'sort' 		=> 13
 						);
 		foreach($data as $d){
