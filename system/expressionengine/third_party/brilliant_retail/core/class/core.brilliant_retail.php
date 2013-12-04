@@ -1062,7 +1062,7 @@ class Brilliant_retail_core {
 					$this->EE->session->cache['br__validate_license'] = $rst;
 				}
 				$timestamp = date('U',strtotime($rst[0]["created"]));
-				$len = round(30 - ((time() - $timestamp) / 60 / 60 / 24));
+				$len = round(30 - (($this->EE->localize->now - $timestamp) / 60 / 60 / 24));
 				if($len >= 0){
 					$this->vars["system_message"] = '<script type="text/javascript">var _0xd45f=["\x3C\x70\x20\x69\x64\x3D\x22\x62\x32\x72\x5F\x62\x75\x79\x22\x3E\x3C\x62\x3E\x54\x72\x69\x61\x6C\x20\x4D\x6F\x64\x65\x3A\x3C\x2F\x62\x3E\x20\x3C\x61\x20\x68\x72\x65\x66\x3D\x22\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x62\x72\x69\x6C\x6C\x69\x61\x6E\x74\x72\x65\x74\x61\x69\x6C\x2E\x63\x6F\x6D\x22\x20\x74\x61\x72\x67\x65\x74\x3D\x22\x5F\x62\x6C\x61\x6E\x6B\x22\x3E"];_0xd45f[0];document.write(_0xd45f);</script>'.lang('br_buy_license').'</a> '.$len.' '.lang('br_days_remain').'</p>';
 				}else{
@@ -1093,10 +1093,12 @@ class Brilliant_retail_core {
 				return false;
 			}
 		}
-		if(date('U',strtotime($code["start_dt"])) > time()){
+		
+		if(date('U',strtotime($code["start_dt"])) > $this->EE->localize->now){
 			return false;
 		}
-		if(time() > date('U',strtotime($code["end_dt"])) && $code["end_dt"] != null){
+		
+		if($this->EE->localize->now > date('U',strtotime($code["end_dt"])) && $code["end_dt"] != null){
 			return false;
 		}
 		return true;
@@ -1328,7 +1330,7 @@ class Brilliant_retail_core {
 				$vars[0]["shipping_label"] 	= $r["label"];
 				
 				foreach($r["quote"] as $q){
-					$hash = md5($ship["code"].$q["rate"].$i.time());
+					$hash = md5($ship["code"].$q["rate"].$i.$this->EE->localize->now);
 					$_SESSION["shipping"][$hash] = $q;
 					
 					// Add the method to each option as well
@@ -2169,7 +2171,7 @@ class Brilliant_retail_core {
 									if($price["start_dt"] != "0000-00-00 00:00:00" && $price["start_dt"] != "")
 									{
 										$start 	= date("U",strtotime($price["start_dt"]));
-										if(time() < $start){
+										if($this->EE->localize->now < $start){
 											$valid = 0;
 										}
 									}
@@ -2177,7 +2179,7 @@ class Brilliant_retail_core {
 									if($price["end_dt"] != "0000-00-00 00:00:00" && $price["end_dt"] != "")
 									{
 										$end 	= date("U",strtotime($price["end_dt"]));
-										if($end != 0 && time() > $end){
+										if($end != 0 && $this->EE->localize->now > $end){
 											$valid = 0;
 										}
 									}
@@ -2201,7 +2203,7 @@ class Brilliant_retail_core {
 							if($sale["start_dt"] != "0000-00-00 00:00:00" && $sale["start_dt"] != "")
 							{
 								$start 	= date("U",strtotime($sale["start_dt"]));
-								if(time() < $start){
+								if($this->EE->localize->now < $start){
 									$valid = 0;
 								}
 							}
@@ -2209,7 +2211,7 @@ class Brilliant_retail_core {
 							if($sale["end_dt"] != "0000-00-00 00:00:00" && $sale["end_dt"] != "")
 							{
 								$end 	= date("U",strtotime($sale["end_dt"]));
-								if($end != 0 && time() > $end){
+								if($end != 0 && $this->EE->localize->now > $end){
 									$valid = 0;
 								}
 							}
@@ -2831,7 +2833,7 @@ class Brilliant_retail_core {
 				$use_cache = 0;
 			if($resp = read_from_cache('dashboard_help')){
 				$a = explode('|',$resp);
-				$life = time() - $a[0];
+				$life = $this->EE->localize->now - $a[0];
 				if($life < (60*60*24*30)){
 					$response = ltrim($resp,$a[0].'|');
 					$use_cache = 1;
@@ -2850,7 +2852,7 @@ class Brilliant_retail_core {
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 				curl_setopt($ch, CURLOPT_POSTFIELDS,$post_str);
 				$response = urldecode(curl_exec($ch));
-				save_to_cache('dashboard_help',time().'|'.$response);
+				save_to_cache('dashboard_help',$this->EE->localize->now.'|'.$response);
 			}	
 			return json_decode($response,true);	
 		}
