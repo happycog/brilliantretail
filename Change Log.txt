@@ -1,4 +1,5 @@
-### Version 1.5.0.0
-*December 3, 2013*
+### Version 1.6.0.0
+*January XX, 2014*
 
-Change Log: http://docs.brilliantretail.com/5-release-notes/index.html
+* Updated the _get_shipping_quote in the checkout_form to abort previous request when new ones are generated 
+* Updated the UPS shipping method to get all options in a single API call

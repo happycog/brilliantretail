@@ -124,13 +124,18 @@ class Shipping_ups extends Brilliant_retail_shipping {
 						</RatingServiceSelectionRequest>'; 
 			// Get the rate options
 				$results = $this->_curl($config["url"],$reqs);
+				
+				#echo htmlentities($results);
+				
 				$xml= new SimpleXmlElement($results);
 				
 				$tmp = array();
-				
+
 				// Loop through them
+
 					foreach($xml->RatedShipment as $rate){
-						$price = (string) $rate->RatedPackage->TotalCharges->MonetaryValue[0];
+						
+						$price = (string) $rate->TotalCharges->MonetaryValue[0];
 						$ratecode  = (string) $rate->Service->Code[0];
 						
 						if(in_array($ratecode,$code))
