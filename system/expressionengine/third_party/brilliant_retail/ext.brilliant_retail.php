@@ -221,6 +221,11 @@ class Brilliant_retail_ext {
 		}
 		
 		if(strpos($tmp,'</body>') !== false){
+			if(!isset($this->EE->session->cache['br_output_js']))
+			{
+				return $tmp;
+			}
+			
 			$output_js = $this->EE->session->cache['br_output_js'];
 			$script = '';
 			// Loop through the session array. We put the scripts into 

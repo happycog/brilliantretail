@@ -1094,13 +1094,14 @@ class Brilliant_retail_core {
 			}
 		}
 		
-		if(date('U',strtotime($code["start_dt"])) > $this->EE->localize->now){
+		if(date('U',strtotime($code["start_dt"])) > date('U',strtotime($this->EE->localize->human_time()))){
 			return false;
 		}
 		
-		if($this->EE->localize->now > date('U',strtotime($code["end_dt"])) && $code["end_dt"] != null){
+		if(date('U',strtotime($this->EE->localize->human_time())) > date('U',strtotime($code["end_dt"])) && $code["end_dt"] != null){
 			return false;
 		}
+		
 		return true;
 	
 	}

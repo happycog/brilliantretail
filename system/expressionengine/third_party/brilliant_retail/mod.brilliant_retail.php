@@ -1902,8 +1902,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 																						after_validate_checkout();
 																					}else{
 																						$('#checkout_button').attr('disabled', 'disabled');
-																				        form.submit();
-																					}
+																				        form[0].submit();
+																				    }
 																				}
 																			}); 
 												

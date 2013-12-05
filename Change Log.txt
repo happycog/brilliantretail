@@ -4,3 +4,6 @@
 * Updated the _get_shipping_quote in the checkout_form to abort previous request when new ones are generated 
 * Updated the UPS shipping method to get all options in a single API call
 * Updated the demo checkout template to default the country to US for guests
+* Updated references to time() to use $this->EE->localize->now property
+* Fixed an issue with validating time based promotions with the localize class. 
+* Fixed an issue with the form submit method on checkout in older versions of Safari. (Thanks Casey Reid)
