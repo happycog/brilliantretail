@@ -32,7 +32,7 @@ $plugin_info = array(  	'pi_name' => 'BR Shorthand',
                         'pi_description' => 'BR Short hand creates a simplified class declaration for BrilliantRetail tags by replacing the brilliant_retail portion of the tag with "br"',
                         'pi_usage' => Br_usage::instructions() );
 
-class pi.br extends Brilliant_retail
+class br extends Brilliant_retail
 {
     public function __construct()
     {
