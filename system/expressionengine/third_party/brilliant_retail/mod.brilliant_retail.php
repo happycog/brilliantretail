@@ -3455,9 +3455,18 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$downloads[$i]['download_note'] = $downloads[$i]['note'];
 					unset($downloads[$i]['note']);
 
-				// Create the note save action
-					$downloads[$i]['download_note_action'] =  $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_download_note').'&lic='.md5($downloads[$i]["license"]).'&id='.md5($downloads[$i]["order_download_id"]);
-
+				// Create the note save form
+    					$form_details = array(
+        								'action'		=> $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'customer_download_note').'&lic='.md5($downloads[$i]["license"]).'&id='.md5($downloads[$i]["order_download_id"]), 
+        								'secure'         	=> TRUE
+        							  );  	
+    
+                        $downloads[$i]["form_open"] = $this->EE->functions->form_declaration($form_details);
+                        $downloads[$i]["form_close"] = form_close();
+				    
+				    // Depreciated - 2.7 form post rules
+					   $downloads[$i]['download_note_action'] =  '';
+					
 				if($downloads[$i]["download_limit"] == 0){
 					$downloads[$i]["download_remaining"] = lang('br_download_unlimited');
 				}else{
