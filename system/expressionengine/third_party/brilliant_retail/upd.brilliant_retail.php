@@ -601,7 +601,7 @@ class Brilliant_retail_upd {
 ## ----------------------------
 ##  Table structure for exp_br_password_reset
 ## ----------------------------
-	$sql[] = "DROP TABLE IF EXISTS `exp_br_password_reset";
+	$sql[] = "DROP TABLE IF EXISTS exp_br_password_reset;";
 	$sql[] = "	CREATE TABLE `exp_br_password_reset` (
 					`id` int(11) NOT NULL AUTO_INCREMENT,
 					`member_id` int(11) NOT NULL,

@@ -1,5 +1,5 @@
 ### Version 1.5.1.0
-*December 10, 2013*
+*December 9, 2013*
 
 * IMPORTANT: The **download_note_action** internal tag in the customer_downloads tag has been depreciated and replaced with a 
 **form_open** and **form_close** tag to comply with EE 2.7+ new form posting rules. 
@@ -11,3 +11,4 @@
 * Fixed an issue with the initialization of the br_output_js array in the BrilliantRetail extension file. 
 * Fixed an issue with validating time based promotions with the localize class. 
 * Fixed an issue with the form submit method on checkout in older versions of Safari. (Thanks Casey Reid)
+* Fixed a typo in the drop table syntax in the install update file.
