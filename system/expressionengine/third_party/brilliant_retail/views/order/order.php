@@ -33,7 +33,7 @@ $this->table->set_heading(
 		),
 	array(
 			'data' => lang('br_order_date'),
-			'style' => 'width:60px'
+			'style' => 'width:100px'
 		),
 	array(	
 			'data' => lang('br_order_customer'),

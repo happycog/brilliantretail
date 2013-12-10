@@ -304,7 +304,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$status = $this->_config["status"][$row["status_id"]];
 					
 						$order[] = array('	<a href="'.BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail&order_id='.$row["order_id"].'">'.$row["order_id"].'</a>', 
-											$this->EE->localize->format_date('%n/%d/%y', $row["created"]), 
+											$this->EE->localize->format_date('%n/%d/%y %g:%i%a', $row["created"]), 
 											$customer, 
 											$row["total"],
 											$row["payment"],
