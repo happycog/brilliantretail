@@ -4555,6 +4555,7 @@ class Brilliant_retail_upd {
 			$sql[] = "DELETE FROM exp_actions WHERE class = 'Brilliant_retail_mcp'";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_admin_access;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_attribute;";
+			$sql[] = "DROP TABLE IF EXISTS exp_br_attribute_option;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_attribute_set;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_attribute_set_attribute;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_cart;";
@@ -4573,6 +4574,7 @@ class Brilliant_retail_upd {
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_options;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_payment;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_order_ship;";
+			$sql[] = "DROP TABLE IF EXISTS exp_br_password_reset;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_addon;";
 			$sql[] = "DROP TABLE IF EXISTS exp_br_product_attributes;";
@@ -4602,6 +4604,8 @@ class Brilliant_retail_upd {
 		{
 			$this->EE->db->query($query);
 		}
+
+		$this->reset_cache();
 
 		return TRUE;
 	}
@@ -4660,11 +4664,11 @@ class Brilliant_retail_upd {
 	}
 	
 	function reset_cache(){
-		$files = $this->read_dir_files(APPPATH.'cache/brilliant_retail/'.$_SERVER["HTTP_HOST"]);
+		$files = $this->read_dir_files(APPPATH.'cache/brilliant_retail');
 		foreach($files as $f){
-			$nm = APPPATH.'cache/brilliant_retail/'.$_SERVER["HTTP_HOST"].'/'.$f;
+			$nm = APPPATH.'cache/brilliant_retail/'.$f;
 			if(file_exists($nm)){
-				unlink($nm);
+				@unlink($nm);
 			}
 		}
 	}

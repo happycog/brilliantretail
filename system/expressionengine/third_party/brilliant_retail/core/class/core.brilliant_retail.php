@@ -2327,6 +2327,33 @@ class Brilliant_retail_core {
 					$arr[$key] =  explode(",",$val);	
 				}
 			}
+
+			$uri = $this->EE->uri->uri_string();
+            if(strpos($uri,'filters') > 0){
+                if(!isset($arr['filters'])){
+                    $a = explode('/',$uri);
+                    $set = '';
+                    foreach($a as $b){
+                        if($b == 'filters')
+                        {
+                            $set = 'filters';
+                            continue;
+                        }
+                        if($set == 'filters')
+                        {
+                            $tmp = array();
+        					parse_str($b, $output);
+        					foreach($output as $k => $v)
+        					{
+        						$tmp[$k] = explode(",",$v);
+        					}
+        					$arr['filters'] = $tmp;
+                            break;
+                        }
+                    }
+                }
+            }
+
 			return $arr;
 		}
 		
