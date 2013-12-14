@@ -1,6 +1,7 @@
 ### Version 1.5.2.0
 *December X, 2013*
 
+* Added the order id to the invoice number field on the Authorize.net gateway
 * Updated the checkout method to create an order_id before the payment is processed so the 
 order_id is available in the $data array passed to the gateway.
 * Updated copyright dates from 2010-2012 to 2010-2013 in system files.  

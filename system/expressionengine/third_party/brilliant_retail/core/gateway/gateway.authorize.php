@@ -81,7 +81,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 							'x_method'			=> 'CC',
 							'x_relay_response'	=> 'FALSE',
 							'x_encap_char'		=> '',
-							'x_invoice_num'		=> '', 
+							'x_invoice_num'		=> $data["order_id"], 
 							'x_cust_id'			=> $data["member_id"],
 							'x_first_name'		=> $data["br_billing_fname"], 
 							'x_last_name'		=> $data["br_billing_lname"],
