@@ -10,7 +10,7 @@ session_start();
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2012						*/
+/* 	@copyright	Copyright (c) 2010-2013						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -2330,26 +2330,24 @@ class Brilliant_retail_core {
 
 			$uri = $this->EE->uri->uri_string();
             if(strpos($uri,'filters') > 0){
-                if(!isset($arr['filters'])){
-                    $a = explode('/',$uri);
-                    $set = '';
-                    foreach($a as $b){
-                        if($b == 'filters')
-                        {
-                            $set = 'filters';
-                            continue;
-                        }
-                        if($set == 'filters')
-                        {
-                            $tmp = array();
-        					parse_str($b, $output);
-        					foreach($output as $k => $v)
-        					{
-        						$tmp[$k] = explode(",",$v);
-        					}
-        					$arr['filters'] = $tmp;
-                            break;
-                        }
+                $a = explode('/',$uri);
+                $set = '';
+                foreach($a as $b){
+                    if($b == 'filters')
+                    {
+                        $set = 'filters';
+                        continue;
+                    }
+                    if($set == 'filters')
+                    {
+                        $tmp = array();
+    					parse_str($b, $output);
+    					foreach($output as $k => $v)
+    					{
+    						$tmp[$k] = explode(",",$v);
+    					}
+    					$arr['filters'] = $tmp;
+                        break;
                     }
                 }
             }

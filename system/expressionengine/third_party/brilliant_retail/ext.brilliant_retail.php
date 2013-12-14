@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2012						*/
+/* 	@copyright	Copyright (c) 2010-2013						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -224,6 +224,9 @@ class Brilliant_retail_ext {
 			if(!isset($this->EE->session->cache['br_output_js']))
 			{
 				return $tmp;
+			}
+			if(is_string($this->EE->session->cache['br_output_js'])){
+                $this->EE->session->cache['br_output_js'][0] = $this->EE->session->cache['br_output_js'];
 			}
 			
 			$output_js = $this->EE->session->cache['br_output_js'];

@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2012						*/
+/* 	@copyright	Copyright (c) 2010-2013						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /* 	@since		Version 1.0.0 Beta							*/
@@ -337,6 +337,7 @@ class Brilliant_retail_upd {
 	$sql[] = "INSERT INTO exp_br_config (title,label,code,type,enabled,descr,version,sort) VALUES ('Status Codes', '', 'status', 'system', '1', '', '0.0', '1')";
 	$sql[] = "INSERT INTO exp_br_config (title,label,code,type,enabled,descr,version,sort) VALUES ('Free Shipping', 'Free Shipping', 'free', 'shipping', '1', 'Free shipping with a minimum purchase amount', '1.0', '1')";
 	$sql[] = "INSERT INTO exp_br_config (title,label,code,type,enabled,descr,version,sort) VALUES ('Mail In', 'Mail in Payment', 'mailin', 'gateway', '1', 'Allow users to mail in payment after the purchase.', '0.5', '1')";
+	$sql[] = "INSERT INTO exp_br_config (title,label,code,type,enabled,descr,version,sort) VALUES ('Order ID', '', 'order_id', 'system', '1', '', '', '')";
 
 ## ----------------------------
 ##  Table structure for exp_br_config_data
@@ -369,7 +370,9 @@ class Brilliant_retail_upd {
 				('7', '2', 'Label', 'label', 'text', 'Free Shipping', null, null, '0', '0'), 
 				('8', '2', 'Countries', 'country', 'multiselect', 'a:1:{i:0;s:2:\"US\";}', 'AF:Afghanistan|AX:Aland Islands|AL:Albania|DZ:Algeria|AD:Andorra|AO:Angola|AI:Anguilla|AQ:Antarctica|AG:Antigua and Barbuda|AR:Argentina|AM:Armenia|AW:Aruba|AU:Australia|AT:Austria|AZ:Azerbaijan|BS:Bahamas|BH:Bahrain|BD:Bangladesh|BB:Barbados|BY:Belarus|BE:Belgium|BZ:Belize|BJ:Benin|BM:Bermuda|BT:Bhutan|BO:Bolivia|BA:Bosnia and Herzegovina|BW:Botswana|BV:Bouvet Island|BR:Brazil|IO:British Indian Ocean Territory|VG:British Virgin Islands|BN:Brunei|BG:Bulgaria|BF:Burkina Faso|BI:Burundi|KH:Cambodia|CM:Cameroon|CA:Canada|CV:Cape Verde|KY:Cayman Islands|CF:Central African Republic|TD:Chad|CL:Chile|CN:China|CX:Christmas Island|CC:Cocos [Keeling] Islands|CO:Colombia|KM:Comoros|CG:Congo - Brazzaville|CD:Congo - Kinshasa|CK:Cook Islands|CR:Costa Rica|CI:Cote d|HR:Croatia|CU:Cuba|CY:Cyprus|CZ:Czech Republic|DK:Denmark|DJ:Djibouti|DM:Dominica|DO:Dominican Republic|EC:Ecuador|EG:Egypt|SV:El Salvador|GQ:Equatorial Guinea|ER:Eritrea|EE:Estonia|ET:Ethiopia|FK:Falkland Islands|FO:Faroe Islands|FJ:Fiji|FI:Finland|FR:France|GF:French Guiana|PF:French Polynesia|TF:French Southern Territories|GA:Gabon|GM:Gambia|GE:Georgia|DE:Germany|GH:Ghana|GI:Gibraltar|GR:Greece|GL:Greenland|GD:Grenada|GP:Guadeloupe|GT:Guatemala|GN:Guinea|GW:Guinea-Bissau|GY:Guyana|HT:Haiti|HM:Heard Island and McDonald Islands|HN:Honduras|HK:Hong Kong SAR China|HU:Hungary|IS:Iceland|IN:India|ID:Indonesia|IR:Iran|IQ:Iraq|IE:Ireland|IM:Isle of Man|IL:Israel|IT:Italy|JM:Jamaica|JP:Japan|JO:Jordan|KZ:Kazakhstan|KE:Kenya|KI:Kiribati|KW:Kuwait|KG:Kyrgyzstan|LA:Laos|LV:Latvia|LB:Lebanon|LS:Lesotho|LR:Liberia|LY:Libya|LI:Liechtenstein|LT:Lithuania|LU:Luxembourg|MO:Macau SAR China|MK:Macedonia|MG:Madagascar|MW:Malawi|MY:Malaysia|MV:Maldives|ML:Mali|MT:Malta|MQ:Martinique|MR:Mauritania|MU:Mauritius|YT:Mayotte|MX:Mexico|FM:Micronesia|MD:Moldova|MC:Monaco|MN:Mongolia|MS:Montserrat|MA:Morocco|MZ:Mozambique|MM:Myanmar [Burma]|NA:Namibia|NR:Nauru|NP:Nepal|NL:Netherlands|AN:Netherlands Antilles|NC:New Caledonia|NZ:New Zealand|NI:Nicaragua|NE:Niger|NG:Nigeria|NU:Niue|NF:Norfolk Island|KP:North Korea|MP:Northern Mariana Islands|NO:Norway|OM:Oman|PK:Pakistan|PS:Palestinian Territories|PA:Panama|PG:Papua New Guinea|PY:Paraguay|PE:Peru|PH:Philippines|PN:Pitcairn Islands|PL:Poland|PT:Portugal|QA:Qatar|RE:Reunion|RO:Romania|RU:Russia|RW:Rwanda|SH:Saint Helena|KN:Saint Kitts and Nevis|LC:Saint Lucia|PM:Saint Pierre and Miquelon|VC:Saint Vincent and the Grenadines|WS:Samoa|SM:San Marino|ST:Sao Tome and Principe|SA:Saudi Arabia|SN:Senegal|SC:Seychelles|SL:Sierra Leone|SG:Singapore|SK:Slovakia|SI:Slovenia|SB:Solomon Islands|SO:Somalia|ZA:South Africa|GS:South Georgia and the South Sandwich Islands|KR:South Korea|ES:Spain|LK:Sri Lanka|SD:Sudan|SR:Suriname|SJ:Svalbard and Jan Mayen|SZ:Swaziland|SE:Sweden|CH:Switzerland|SY:Syria|TW:Taiwan|TJ:Tajikistan|TZ:Tanzania|TH:Thailand|TL:Timor-Leste|TG:Togo|TK:Tokelau|TO:Tonga|TT:Trinidad and Tobago|TN:Tunisia|TR:Turkey|TM:Turkmenistan|TC:Turks and Caicos Islands|TV:Tuvalu|UM:U.S. Minor Outlying Islands|UG:Uganda|UA:Ukraine|AE:United Arab Emirates|GB:United Kingdom|US:United States|UY:Uruguay|UZ:Uzbekistan|VU:Vanuatu|VA:Vatican City|VE:Venezuela|VN:Vietnam|WF:Wallis and Futuna|EH:Western Sahara|YE:Yemen|ZM:Zambia|ZW:Zimbabwe', 'Select countries where free shipping is available. Control + click to add multiple countries', '0', '1'), 
 				('9', '2', 'Amount', 'amount', 'text', '0', null, 'Minimum amount for free shipping', '0', '2'), 
-				('10', '1', 'Canceled', '', '', '0', null, null, '0', '0')";
+				('10', '1', 'Canceled', '', '', '0', null, null, '0', '0'),
+				('11', '4', 'Order ID', '', '', '10000', null, null, '0', '0')";
+				
 
 
 ## ----------------------------
@@ -453,7 +456,7 @@ class Brilliant_retail_upd {
 				  updated timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP, 
 				  PRIMARY KEY  (order_id),
 				  KEY order_member_id (member_id) 
-				) ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;";
+				) ENGINE=MyISAM AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8;";
 
 ## ----------------------------
 ##  Table structure for exp_br_order_address
