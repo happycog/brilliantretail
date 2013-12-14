@@ -225,6 +225,9 @@ class Brilliant_retail_ext {
 			{
 				return $tmp;
 			}
+			if(is_string($this->EE->session->cache['br_output_js'])){
+                $this->EE->session->cache['br_output_js'][0] = $this->EE->session->cache['br_output_js'];
+			}
 			
 			$output_js = $this->EE->session->cache['br_output_js'];
 			$script = '';

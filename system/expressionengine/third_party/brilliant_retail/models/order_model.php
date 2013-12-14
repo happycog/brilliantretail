@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2012						*/
+/* 	@copyright	Copyright (c) 2010-2013						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -470,12 +470,49 @@ class Order_model extends CI_Model {
 	function update_download_note(){
 	
 	}
-	
+
+/**
+ * Create Order Id
+ *
+ * Returns the next order id so that we can have it before actually creating the order. 
+ * @author David Dexter
+ * @package	Order
+ */	
+	function create_order_id()
+	{
+	   // Get the next order id
+    	   $this->EE->db->select('config_data_id,value')->from('br_config_data')->where('label','Order ID'); 
+    	   $qry = $this->EE->db->get();
+    	   $result = $qry->row();
+    	   $order_id = $result->value;
+        
+        // Set the order_id to a next number  
+            $this->db->where('config_data_id', $result->config_data_id);
+            $this->db->update('br_config_data', array('value'=>($order_id+1)));
+
+        // Return the order_id	   
+            return $order_id;
+	}
+
+/**
+ * Create Order
+ *
+ * Creates the main order record
+ * @author David Dexter
+ * @package	Order
+ */		
 	function create_order($order){
 		$this->EE->db->insert('br_order',$order);
 		return $this->EE->db->insert_id();
 	}
-	
+
+/**
+ * Create Shipment
+ *
+ * Creates the main shipment record for an order
+ * @author David Dexter
+ * @package	Order
+ */
 	function create_shipment($data){
 		$this->EE->db->insert('br_order_ship',$data);
 		return $this->EE->db->insert_id();

@@ -2370,6 +2370,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if(isset($update)){
 					$this->EE->customer_model->update_member_profile('',$update,$member_id);
 				}
+			
+			// We've validated addresses and shipping so lets go ahead and get an order number 
+			// so we can send it to the payment gateway. 
+                $data["order_id"] = $this->EE->order_model->create_order_id();
 				
 			// Process the payment
 				$data["transaction_id"] 	= md5(time().rand(1000,1000000).time());
@@ -2385,6 +2389,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Create the order 
 				$order = array (
 					"site_id" 		=> $this->EE->session->userdata["site_id"], 
+					"order_id"      => $data["order_id"],  
 					"member_id" 	=> $member_id, 
 					"status_id" 	=> $data["payment"]["status"],
 					"base" 			=> $this->_currency_round($data["cart_subtotal"]),
@@ -2410,7 +2415,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 							}
 						}
 
-					$order_id = $this->EE->order_model->create_order($order);
+					$this->EE->order_model->create_order($order);
 
 				// Order is a success, destory old form field values
 					if (isset($_SESSION['br_form_post_data']))
@@ -2420,13 +2425,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// a shipment is necessary	
 				
 				if(isset($_SESSION["shipping"][$data["shipping"]]["rate"])){
-					$_SESSION["shipping"][$data["shipping"]]["order_id"] = $order_id;
+					$_SESSION["shipping"][$data["shipping"]]["order_id"] = $data["order_id"];
 					$this->EE->order_model->create_shipment($_SESSION["shipping"][$data["shipping"]]);
 				}
 				
 				// Address 
 					$address[0] = array(	
-										"order_id" 			=> $order_id,
+										"order_id" 			=> $data["order_id"],
 										"billing_fname" 	=> $data["br_billing_fname"],
 										"billing_lname" 	=> $data["br_billing_lname"],
 										"billing_company" 	=> $data["br_billing_company"],
@@ -2453,7 +2458,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				// Add the payment info to the database now that we have
 				// have an order_id for the item. 
 					$payment[0] = array(
-											'order_id' => $order_id, 
+											'order_id' => $data["order_id"], 
 											'transaction_id' => $data["payment"]["transaction_id"],
 											'payment_type' => $data["payment"]["payment_type"],
 											'details' => $data["payment"]["details"],
@@ -2477,7 +2482,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}
 
 						$item = array(
-											'order_id' 			=> $order_id, 
+											'order_id' 			=> $data["order_id"], 
 											'product_id' 		=> $items["product_id"],
 											'configurable_id' 	=> $items["configurable_id"],  
 											'base' 				=> $this->_currency_round($items["base"]),
@@ -2514,7 +2519,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 											if($b["type_id"] == 4){
 												$file[] = array(
 																'quantity' 		=> $items["quantity"], 
-																'order_id' 		=> $order_id,
+																'order_id' 		=> $data["order_id"],
 																'product_id' 	=> $b["product_id"]
 																);
 											}
@@ -2570,7 +2575,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					if(isset($data["instructions"])){
 						if(trim($data["instructions"]) != ''){
 							$arr = array(
-								'order_id' 		=> $order_id,
+								'order_id' 		=> $data["order_id"],
 								'order_note'	=> $data["instructions"],
 								'created' 		=> $this->EE->localize->now,
 								'member_id' 	=> $member_id  
@@ -2591,8 +2596,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 												"email" 			=> $email, 
 												"address" 			=> $address,
 												"payment" 			=> $payment,
-												"order_id" 			=> $order_id, 
-												"order_num" 		=> $order_id, 
+												"order_id" 			=> $data["order_id"], 
+												"order_num" 		=> $data["order_id"], 
 												"order_note" 		=> $data["instructions"], 
 												"delivery_method" 	=> $_SESSION["shipping"][$data["shipping"]]["method"], 
 												"delivery_label" 	=> $_SESSION["shipping"][$data["shipping"]]["label"], 
@@ -2610,7 +2615,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}
 							
 						// Hook after we create the order before cleanup 
-							$data["order_id"] = $order_id;
 							if($this->EE->extensions->active_hook('br_order_create_after') === TRUE){
 								$data = $this->EE->extensions->call('br_order_create_after', $data); 
 							}
@@ -2622,7 +2626,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 							$this->EE->functions->clear_caching('db');
 		
 						// Redirect to account				
-							$_SESSION["order_id"] = $order_id;
+							$_SESSION["order_id"] = $data["order_id"];
 							$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["thankyou_url"]));
 							exit();		
 					
@@ -2636,7 +2640,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						// Clear out the cache 
 							$this->EE->functions->clear_caching('db');
 						
-							$data["order_id"] = $order_id;	
+							$data["order_id"] = $data["order_id"];	
 							$data["email"] = $email;
 						
 						// Get the gateway id

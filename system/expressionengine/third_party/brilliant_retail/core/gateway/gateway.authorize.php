@@ -145,13 +145,13 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 											"Card Type" => $resp[51],
 											"Card" => $resp[50],
 											"Approval Code" => $resp[4],
-											"Transaction ID" => $resp[37]
+											"Transaction ID" => $resp[6]
 										);
 
 					// Return the trans details 
 						$trans = array(
 											'status' => 3, 
-											'transaction_id' => $resp[37],
+											'transaction_id' => $resp[6],
 											'payment_card' => $resp[50],
 											'payment_type' => 'Authorize', 
 											'amount' => $data["order_total"],
