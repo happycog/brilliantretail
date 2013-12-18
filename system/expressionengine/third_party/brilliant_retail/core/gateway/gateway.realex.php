@@ -34,6 +34,8 @@ class Gateway_realex extends Brilliant_retail_gateway {
 
 	public $version = 1.0;
 
+    private $debug = false;
+
 	function __construct()
 	{
 		parent::__construct();
@@ -106,6 +108,11 @@ class Gateway_realex extends Brilliant_retail_gateway {
 								</tssinfo>
 							</request>";
 		        
+    		        if($this->debug)
+    		        {
+                        $this->_log_it('realex_3D_xml_request',$xml);
+    		        }
+				
 				// Send the request array to Realex Payments
 					$ch = curl_init();  
 					curl_setopt($ch, CURLOPT_HEADER, 0);  
@@ -118,6 +125,11 @@ class Gateway_realex extends Brilliant_retail_gateway {
 					$response = curl_exec ($ch);     
 					curl_close ($ch); 
 				
+    		        if($this->debug)
+    		        {
+                        $this->_log_it('realex_3D_xml_response',$response);
+    		        }
+				    
 					$response = preg_replace ("/\s+/", " ", $response);
 					$response = preg_replace ("/[\r\n]/", "", $response);
 		
@@ -177,6 +189,11 @@ class Gateway_realex extends Brilliant_retail_gateway {
 								</tssinfo>
 							</request>";
 		        
+		          if($this->debug)
+    		        {
+                        $this->_log_it('realex_xml_response',$response);
+    		        }
+    		        
 				// Send the request array to Realex Payments
 					$ch = curl_init();  
 					curl_setopt($ch, CURLOPT_HEADER, 0);  
@@ -189,6 +206,11 @@ class Gateway_realex extends Brilliant_retail_gateway {
 					$response = curl_exec ($ch);     
 					curl_close ($ch); 
 						
+					if($this->debug)
+    		        {
+                        $this->_log_it('realex_xml_response',$response);
+    		        }
+    		        	
 				//Tidy it up
 				
 					$response = preg_replace ("/\s+/", " ", $response);
@@ -435,6 +457,14 @@ class Gateway_realex extends Brilliant_retail_gateway {
 			$arr[$c[0]] = $c[1];
 		}
 		return $arr;
+	}
+	
+	function _log_it($title,$data)
+	{
+        $br = APPPATH.'cache/brilliant_retail';    		        
+        $fp = fopen($path.'/'.$title.'_'.time().'.txt', 'w');
+        fwrite($fp,$data);
+        fclose($fp);	       
 	}
 
 }

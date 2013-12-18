@@ -2625,7 +2625,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						// Clear out the cache 
 							$this->EE->functions->clear_caching('db');
 		
-						// Redirect to account				
+						// Redirect to thank you page with the order_id				
 							$_SESSION["order_id"] = $data["order_id"];
 							$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["thankyou_url"]));
 							exit();		
