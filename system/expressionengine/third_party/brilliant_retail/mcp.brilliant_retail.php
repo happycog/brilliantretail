@@ -652,7 +652,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					// Create the order total
 						$total = $this->_currency_round($this->vars['order']["total"]+$this->vars['order']["tax"]+$this->vars['order']["shipping"]);
 						$this->vars['order']['order_total'] = $total; 
-						
+
+        			// Localize Created Date
+        				$this->vars["order"]["created"] = $this->EE->localize->format_date('%m/%d/%Y %h:%i:%s %a',$this->vars["order"]["created"]);
+        
+        			// Localize Order Notes				
+        				
+        				foreach($this->vars["order"]["notes"] as $key => $val)
+        				{
+        					$this->vars["order"]["notes"][$key]["created"] = $this->EE->localize->format_date('%m/%d/%Y %h:%i:%s %a',$val["created"]);
+        				}
+        				
 					// Figure out the payments
 						$payment = 0;
 						foreach($this->vars['order']['payment'] as $p){
