@@ -1516,6 +1516,44 @@ class Brilliant_retail extends Brilliant_retail_core{
 									$data = $this->EE->extensions->call('br_product_cartupdate_after', $data); 
 								}
 
+							//@CDC 2013/12/10
+							//We need to make sure the cart subtotal hasn't dropped enough to cancel out a 
+							//cart-based min amount or qty coupon. There may be other things that need to
+							//be checked here but this shit is vital. - Chad Crowell
+
+								//do we have a discount in the session?
+								if(isset($_SESSION["discount"])) {
+
+									$initial = true; // Initial checks some settings against the whole cart. 
+					
+									// Does the subtotal meet the minimum requirement
+										$subtotal = $this->cart_subtotal();
+										if($_SESSION["discount"]["min_subtotal"] > $subtotal){
+											$initial = false;
+										}
+							
+									// Are there enough items in the cart to match 
+									// the request?
+										$cnt = $this->cart_items();
+										if($_SESSION["discount"]["min_quantity"] > $cnt){
+											$initial = false;
+										}
+
+									if($_SESSION["discount"]["discount_type"] == 'cart'){
+
+										//$initial was set above. If it is true, then the min subtotal for the cart
+										//and the min # of items in the cart have passed and we can still allow the
+										//discount. Since the code was already been checked for existence, enabled, //uses, start and end dates when it was added to the cart, we don't need to
+										//recheck that here.
+										//if $initial is false, unset the session discount and show the invalid message
+										if($initial == false) {
+											$_SESSION["br_alert"] = str_replace("%s",$_SESSION["discount"]["code"],lang('br_discount_invalid'));
+											unset($_SESSION["discount"]);
+										}
+									}
+								}
+							//@END CDC 2013/12/10
+
 					}
 				}
 			}
@@ -3355,6 +3393,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$custom[$custom_fields[$key]] = $this->EE->input->post($key,TRUE);
 				}
 			}
+
+			//Hook to modify customer custom profile data before update
+			// CDC 2013/12/18
+			if($this->EE->extensions->active_hook('br_member_profile_update_before') === TRUE){
+				$custom = $this->EE->extensions->call('br_member_profile_update_before', $custom); 
+			}
 			
 			// Update the members details
 				$member_id = $this->EE->session->userdata["member_id"];
@@ -3717,6 +3761,23 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$this->EE->product_model->cart_update($data,$key);
 					}
 				}	
+
+				//@CDC 2013/12/10
+				// Maybe its just me, but I don't see any cart based discount finalization
+					if($_SESSION["discount"]["discount_type"] == 'cart'){
+
+						//$initial was set above. If it is true, then the min subtotal for the cart
+						//and the min # of items in the cart have passed and we can still allow the
+						//discount. The code has already been checked for existence, enabled, uses,
+						//start and end dates.
+						//if $initial is false, unset the session discount and show the invalid message
+						if($initial == false) {
+							$_SESSION["br_alert"] = str_replace("%s",$inputCode,lang('br_discount_invalid'));
+							unset($_SESSION["discount"]);
+						}
+					}
+				// @END CDC
+
 		}
 	
 		function promo_form()
