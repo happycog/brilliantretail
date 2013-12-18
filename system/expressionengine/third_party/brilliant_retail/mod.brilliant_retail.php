@@ -1547,7 +1547,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 										//recheck that here.
 										//if $initial is false, unset the session discount and show the invalid message
 										if($initial == false) {
-											$_SESSION["br_alert"] = str_replace("%s",$_SESSION["discount"]["code"],lang('br_discount_invalid'));
+											$_SESSION["br_alert"] = str_replace("%s",$_SESSION["discount"]["code"],lang('br_discount_removed_amount'));
 											unset($_SESSION["discount"]);
 										}
 									}
@@ -3677,7 +3677,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			if($valid == true){
 				$_SESSION["br_message"] = $code[0]["descr"];
 				$_SESSION["discount"] = $code[0];
-				$this->promo_check_items();
+				$this->promo_check_items($inputCode);
 			}else{
 				$_SESSION["br_alert"] = str_replace("%s",$inputCode,lang('br_discount_invalid'));
 				unset($_SESSION["discount"]);
@@ -3689,7 +3689,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			return;
 		}
 	
-		function promo_check_items()
+		function promo_check_items($inputCode)
 		{
 			$cart = $this->EE->product_model->cart_get();
 			$initial = true; // Initial checks some settings against the whole cart. 
