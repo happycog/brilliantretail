@@ -3393,6 +3393,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$custom[$custom_fields[$key]] = $this->EE->input->post($key,TRUE);
 				}
 			}
+
+			//Hook to modify customer custom profile data before update
+			// CDC 2013/12/18
+			if($this->EE->extensions->active_hook('br_member_profile_update_before') === TRUE){
+				$custom = $this->EE->extensions->call('br_member_profile_update_before', $custom); 
+			}
 			
 			// Update the members details
 				$member_id = $this->EE->session->userdata["member_id"];
