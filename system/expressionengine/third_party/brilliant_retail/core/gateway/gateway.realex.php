@@ -421,6 +421,11 @@ class Gateway_realex extends Brilliant_retail_gateway {
 			$response = curl_exec ($ch);     
 			curl_close ($ch); 
 
+            if($this->debug)
+	        {
+                $this->_log_it('realex_gateway_ipn',$response);
+	        }
+
 			$response = preg_replace ("/\s+/", " ", $response);
 			$response = preg_replace ("/[\r\n]/", "", $response);
 
@@ -461,8 +466,8 @@ class Gateway_realex extends Brilliant_retail_gateway {
 	
 	function _log_it($title,$data)
 	{
-        $br = APPPATH.'cache/brilliant_retail';    		        
-        $fp = fopen($path.'/'.$title.'_'.time().'.txt', 'w');
+        $path = APPPATH.'cache/brilliant_retail';    		        
+        $fp = fopen($path.'/'.time().'_'.$title.'.txt', 'w');
         fwrite($fp,$data);
         fclose($fp);	       
 	}

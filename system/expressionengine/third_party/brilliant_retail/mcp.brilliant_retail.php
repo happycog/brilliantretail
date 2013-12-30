@@ -3647,23 +3647,43 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 		function _check_category_url($data,$cnt=1)
 		{
-			$sep = ($this->EE->config->item('word_separator') == 'dash') ? '-' : '_';
+  			if(version_compare(APP_VER, '2.7.0', '>=')){
+				$this->EE->security->restore_xid();
+			}
+
+			// If the url_title is blank we better default one
+                if(trim($data["url_title"]) == ''){
+                    $data["url_title"] = str_replace(" ",$sep,strtolower(trim($data["title"])));
+    			}
+
+            // We should use the core seperator for EE 
+    			$sep = ($this->EE->config->item('word_separator') == 'dash') ? '-' : '_';
 			
-			if(trim($data["url_title"]) != ''){
-				$data["url_title"] = str_replace(" ",$sep,strtolower(trim($data["title"])));
-			}
-			$data["url_title"] = strtolower(preg_replace('/[^A-Za-z0-9-_]/','',$data["url_title"]));
-			if(!isset($data["category_id"])){
-				$data["category_id"] = 0;
-			}
-			$count = $this->EE->product_model->_check_url($data["url_title"],$data["category_id"]);
+			// Need to clean out an special characters and 
+			// recursively check to make sure that we aren't 
+			// creating any double seperators. 
+                $data["url_title"] = strtolower(preg_replace('/[^A-Za-z0-9-_]/',$sep,trim($data["url_title"])));
+			    $data["url_title"] = trim($data["url_title"],$sep);
+
+                // Replace the double instance.
+                    $pattern = '/'.$sep.$sep.'+/';
+                    $data["url_title"] = preg_replace($pattern,$sep,$data["url_title"]);
+
+			// If its new lets just say teh category_id is 0 
+			// so it plays nicely with our model then 
+			// check that there are no duplicates in the system
+    			if(!isset($data["category_id"])){
+    				$data["category_id"] = 0;
+    			}
+    			$count = $this->EE->product_model->_check_url($data["url_title"],$data["category_id"]);
 			
-			if($count == 0){
-				return $data["url_title"];
-			}else{
-				$data["url_title"] = $data["url_title"].'-'.$cnt;
-				return $this->_check_category_url($data,$cnt++);
-			}
+			// If no dupes we're good. If not append a count and go again
+    			if($count == 0){
+    				return $data["url_title"];
+    			}else{
+    				$data["url_title"] = $data["url_title"].'-'.$cnt;
+    				return $this->_check_category_url($data,$cnt++);
+    			}
 		}
 			
 		function _build_report_input($in)

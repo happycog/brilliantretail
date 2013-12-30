@@ -3,6 +3,7 @@
 
 * Added the order id to the invoice number field on the Authorize.net gateway
 * Added br_member_profile_update_before hook
+* Updated the category url_title function to remove repeating, leading and trailing separators
 * Updated the checkout method to create an order_id before the payment is processed so the 
 order_id is available in the $data array passed to the gateway.
 * Updated copyright dates from 2010-2012 to 2010-2013 in system files.  
@@ -10,3 +11,4 @@ order_id is available in the $data array passed to the gateway.
 * Fixed an issue with removing all "exp_br_" tables when BrilliantRetail is uninstalled. 
 * Fixed an issue with the core url parsing method when passing filters in the catalog. 
 * Fixed an issue with the transaction id recorded from the authorize.net payment gateway
+* Fixed an issue with checking category_url titles when editing categories
