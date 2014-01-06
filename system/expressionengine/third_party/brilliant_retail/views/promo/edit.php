@@ -320,7 +320,7 @@ echo $br_header;
 		
 		<?php
 			if($promo[0]["discount_type"] == 'item'){
-				echo "$('.opt_items').show();";
+				echo "$('#amount,#code_type,.opt_items').show();";
 			}
 			if($promo[0]["discount_type"] == 'cart'){
 				echo "$('#amount,#code_type').show();";

@@ -1938,7 +1938,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			$this->vars["promo"][0] = array(
 												"promo_id" 		=> 0,
-												"discount_type" => 'fixed',
+												"discount_type" => 'item',
 												"title" 		=> '',
 											    "code" 			=> '',
 											    "start_dt" 		=> '',
