@@ -32,9 +32,9 @@ class Gateway_realex extends Brilliant_retail_gateway {
 	public $osc_enabled = true;
 	public $cart_button = false;
 
-	public $version = 1.0;
+	public $version = 1.1;
 
-    private $debug = false;
+    private $debug = FALSE;
 
 	function __construct()
 	{
@@ -102,7 +102,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 								<autosettle flag='1'/>
 								<sha1hash>$sha1hash</sha1hash>
 								<tssinfo>
-									<address type=\"billing\">
+									<address type='billing'>
 										<country>ie</country>
 									</address>
 								</tssinfo>
@@ -191,7 +191,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 		        
 		          if($this->debug)
     		        {
-                        $this->_log_it('realex_xml_response',$response);
+                        $this->_log_it('realex_xml_request',$response);
     		        }
     		        
 				// Send the request array to Realex Payments
@@ -432,16 +432,89 @@ class Gateway_realex extends Brilliant_retail_gateway {
 			$xmlcheck = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
 			
 			if($xmlcheck->result == 00){
-				$sql = "SELECT order_id from exp_br_order_payment WHERE transaction_id = '".$xmlcheck->orderid."'";
-				$qry = $this->EE->db->query($sql);
-				$rst = $qry->result_array();
-				$order_id = $rst[0]["order_id"];
+				
+				// Submit the 'Auth' request back to Realex
+    				$xml = "<request timestamp='".$timestamp."' type='auth'>
+                                    <merchantid>".$config['merchant_id']."</merchantid>
+                                    <account />
+                                    <orderid>".$arr["orderid"]."</orderid>
+                                    <amount currency='".$arr['currency']."'>".$arr["amount"]."</amount>
+            						<card> 
+            							<number>".$arr["cardnumber"]."</number>
+            							<expdate>".$arr["expdate"]."</expdate>
+            							<type>".$arr["cardtype"]."</type> 
+            							<chname>".$arr["cardname"]."</chname> 
+            						</card>
+                                    <mpi>
+                                        <cavv>".$xmlcheck->threedsecure->cavv."</cavv>
+                                        <xid>".$xmlcheck->threedsecure->xid."</xid>
+                                        <eci>".$xmlcheck->threedsecure->eci."</eci>
+                                    </mpi>
+                                    <autosettle flag='1'/>
+            						<pares>".$_POST["PaRes"]."</pares>
+            						<sha1hash>".$sha1hash."</sha1hash>
+                            </request>";
+
+                    if($this->debug)
+        	        {
+                        $this->_log_it('realex_gateway_ipn_auth_request',$xml);
+        	        }
+    				
+    				$ch = curl_init();  
+        			curl_setopt($ch, CURLOPT_HEADER, 0);  
+        			curl_setopt($ch, CURLOPT_URL, "https://epage.payandshop.com/epage-remote.cgi");
+        			curl_setopt($ch, CURLOPT_POST, 1); 
+        			curl_setopt($ch, CURLOPT_USERAGENT, "payandshop.com php version 0.9"); 
+        			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+        			curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+        			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // this line makes it work under https 
+        			$response = curl_exec ($ch);     
+        			curl_close ($ch); 
+
+                    if($this->debug)
+        	        {
+                        $this->_log_it('realex_gateway_ipn_auth_response',$response);
+        	        }
+
+                // Finish updating the order
+    				$sql = "SELECT order_id from exp_br_order_payment WHERE transaction_id = '".$xmlcheck->orderid."'";
+    				$qry = $this->EE->db->query($sql);
+    				$rst = $qry->result_array();
+    				$order_id = $rst[0]["order_id"];
 
 				// Set the status id
 					$data["order_id"] 	= $order_id;
 					$data["status_id"]	= 3;
+
+				// Hook before we update the order
+					if($this->EE->extensions->active_hook('br_order_update_before') === TRUE){
+						$data = $this->EE->extensions->call('br_order_update_before', $data); 
+					}
+
 					$this->EE->order_model->update_order_status($data);
-				// Redirect to account				
+									
+				// Hook after we update the order
+					if($this->EE->extensions->active_hook('br_order_update_after') === TRUE){
+						$data = $this->EE->extensions->call('br_order_update_after', $data); 
+					}
+    			
+    				$tmp = $this->EE->order_model->get_order($order_id);
+    			
+    			// Send the email	
+    				$eml = array();
+    				$eml[0]["email"]        = $tmp["member"]["email"];
+    				$eml[0]["order_id"]     = $order_id;
+    				$eml[0]["order_num"]    = $order_id;
+    				$eml[0]["order_status"] = $this->_config["status"][3];
+    				
+    				foreach($tmp["member"] as $key => $val){
+    					if(substr($key,0,3) == 'br_'){
+    						$eml[0][str_replace("br_","",$key)] = $val;
+    					}
+    				}
+    				$this->_send_email('customer-order-status', $eml);
+
+				// Redirect to thank you page				
 					$_SESSION["order_id"] = $order_id;
 					$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["thankyou_url"]));
 					exit();	
@@ -466,10 +539,9 @@ class Gateway_realex extends Brilliant_retail_gateway {
 	
 	function _log_it($title,$data)
 	{
+        $this->EE->load->helper('file');
         $path = APPPATH.'cache/brilliant_retail';    		        
-        $fp = fopen($path.'/'.time().'_'.$title.'.txt', 'w');
-        fwrite($fp,$data);
-        fclose($fp);	       
+        write_file($path.'/'.time().'_'.$title.'.txt',$data);
 	}
 
 }

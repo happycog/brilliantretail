@@ -1,16 +1,20 @@
-### Version 1.5.2.0
-*December X, 2013*
+### Version 1.5.X.X
+*February X, 2013*
 
 * Added the order id to the invoice number field on the Authorize.net gateway
 * Added br_member_profile_update_before hook
+* Added XID to the logout url
 * Updated the category url_title function to remove repeating, leading and trailing separators
 * Updated the checkout method to create an order_id before the payment is processed so the 
 order_id is available in the $data array passed to the gateway.
 * Updated copyright dates from 2010-2012 to 2010-2013 in system files.  
 * Updated the 'Uses Per' label to a more descriptive 'Uses Per Code'
+* Updated the PayPal Standard gateway to set the order to 'New Order' status when issues occur with the IPN Validation
 * Fixed an issue with parsing filters in the url on the catalog page.
 * Fixed an issue with removing all "exp_br_" tables when BrilliantRetail is uninstalled. 
 * Fixed an issue with the core url parsing method when passing filters in the catalog. 
 * Fixed an issue with the transaction id recorded from the authorize.net payment gateway
 * Fixed an issue with checking category_url titles when editing categories
 * Fixed an issue with the default fields showing when creating new promotions
+* Fixed an issue with related products where products from other stores 
+* Fixed an issue with Realex payment gateway 

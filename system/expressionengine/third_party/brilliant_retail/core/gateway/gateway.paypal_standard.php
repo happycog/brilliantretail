@@ -127,7 +127,9 @@ class Gateway_paypal_standard extends Brilliant_retail_gateway {
 	
 	// Process IPN Calls 
 		public function gateway_ipn($config){
-			$cancel = $this->EE->input->get('cancel',TRUE);
+			$cancel      = $this->EE->input->get('cancel',TRUE);
+			$ipn_valid   = FALSE;
+			
 			if($cancel != ''){
 				$this->EE->product_model->cart_update_status(session_id(),0);
 				$this->EE->functions->redirect($this->EE->functions->create_url($this->_config["store"][$this->site_id]["cart_url"]));
@@ -146,24 +148,33 @@ class Gateway_paypal_standard extends Brilliant_retail_gateway {
 			// Check validity and write down it
 			if ($myPaypal->validateIpn())
 			{
-			    if ($myPaypal->ipnData['payment_status'] == 'Completed' || $myPaypal->ipnData['payment_status'] == 'Pending')
-			    {
-					$status['Pending'] = 2;
-				    $status['Completed'] = 3;
-				    $new_status = $status[$myPaypal->ipnData['payment_status']];
-					// The ipn_create_order funtion is a core 
-			    	// function that will 'create' the order 
-			    	// based on the merchant_id value stored in the br_order_table. 
-			    	// Function handles both creating and updating from pending to complete
-			    	// just pass the merchant_id. For paypal standard it is in the custom field. 
-			 	   		$this->ipn_create_order($myPaypal->ipnData['custom'],$new_status);
-			    }
-				@header("HTTP/1.0 200 OK");
-				@header("HTTP/1.1 200 OK");
-				exit('Success');
-			}else{
-				exit('Error');
-			}
+                $ipn_valid = TRUE;
+            }
+            
+            // Update BR
+		    if ($myPaypal->ipnData['payment_status'] == 'Completed' || $myPaypal->ipnData['payment_status'] == 'Pending')
+		    {
+				if($ipn_valid == TRUE)
+				{
+    				$status['Pending'] = 2;
+    			    $status['Completed'] = 3;
+    			    $new_status = $status[$myPaypal->ipnData['payment_status']];
+				}
+				else
+				{
+				    $new_status = 1;
+				}
+				
+				// The ipn_create_order funtion is a core 
+		    	// function that will 'create' the order 
+		    	// based on the merchant_id value stored in the br_order_table. 
+		    	// Function handles both creating and updating from pending to complete
+		    	// just pass the merchant_id. For paypal standard it is in the custom field. 
+		 	   		$this->ipn_create_order($myPaypal->ipnData['custom'],$new_status);
+		    }
+			@header("HTTP/1.0 200 OK");
+			@header("HTTP/1.1 200 OK");
+			exit('Success');
 		}
 	
 	// Create a inputs for the checkout form

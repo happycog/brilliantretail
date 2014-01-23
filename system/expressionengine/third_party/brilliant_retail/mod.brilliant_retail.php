@@ -1590,11 +1590,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($_SESSION["discount"]["code"] != ''){
 					if($this->_get_cart_discount() > 0)
 					{
-						return 'true';
+						return 'TRUE';
 					}
 				}
 			}
-			return 'false';
+			return 'FALSE';
 		}
 		
 		function cart_discount()
@@ -4317,7 +4317,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 					return $out;
 				}elseif (strtolower($src) == 'logout'){
 					$qs = ($this->EE->config->item('force_query_string') == 'y') ? '' : '?';		
-					return $this->_secure_url($qs.'ACT='.$this->EE->functions->fetch_action_id('Member', 'member_logout'));
+					$XID = $this->EE->security->generate_xid();
+					return $this->_secure_url($qs.'ACT='.$this->EE->functions->fetch_action_id('Member', 'member_logout').'&XID='.$XID);
 				}else{
 					return $this->EE->functions->create_url($src);
 				}

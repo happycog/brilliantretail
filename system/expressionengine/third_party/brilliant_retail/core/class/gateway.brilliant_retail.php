@@ -88,39 +88,6 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 		function remove($config_id){
 			return true;		
 		}
-
-
-/** SUBSCRIPTION METHODS **/
-
-	// Create a new subscription
-		public function create_subscription($item,$data,$config)
-		{
-			return TRUE;
-		}
-
-	// Update an existing subscription	
-		public function update_subscription()
-		{
-			return TRUE;
-		}
-	
-	// Cancel an existing subscription
-		public function cancel_subscription()
-		{
-			return TRUE;
-		}
-
-	// Check the status of an existing subscription	
-		public function status_subscription()
-		{
-			return TRUE;
-		}
-	
-	// Update the gateway
-		public function update($config_id)
-		{
-			return TRUE;		
-		}
 	
 /** IPN FUNCTIONS **/
 
