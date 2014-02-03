@@ -30,7 +30,8 @@ class Shipping_usps extends Brilliant_retail_shipping {
 	public $enabled = true;
 	public $version = '1.1';
 
-
+    public $debug   = FALSE;
+     
 	public $domestic = array(	
 								'FIRST CLASS:First Class',
 								#'FIRST CLASS COMMERCIAL:First Class Commercial',
@@ -105,6 +106,9 @@ class Shipping_usps extends Brilliant_retail_shipping {
 			$ozs = ($data["weight"] - $lbs) * 16;
 			if($lbs == 0 and $ozs < 1) $ozs = 1;
 		
+		  // We can't go above 70lbs
+		      if($lbs > 70){ $lbs = 70; }
+		      
 		// Code(s)
 			if(!is_array($domestic)) {
 				$domestic = array($domestic);
@@ -164,8 +168,14 @@ class Shipping_usps extends Brilliant_retail_shipping {
 			}		
 
 		// Curl
-			$results = $this->_curl($config["url"],$reqs);
 			
+	        if($this->debug){ $this->_br_log_it('usps_rate_request',$reqs); }
+    		        
+            // Get the results
+			 $results = $this->_curl($config["url"],$reqs);
+			
+	        if($this->debug){ $this->_br_log_it('usps_rate_response',$results); }
+
 			if($isdomestic == 1){ // Domestic 
 				// Domestic Rate(s)
 				preg_match_all('/<Package ID="([0-9]{1,3})">(.+?)<\/Package>/',$results,$packages);

@@ -110,7 +110,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 		        
     		        if($this->debug)
     		        {
-                        $this->_log_it('realex_3D_xml_request',$xml);
+                        $this->_br_log_it('realex_3D_xml_request',$xml);
     		        }
 				
 				// Send the request array to Realex Payments
@@ -127,7 +127,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 				
     		        if($this->debug)
     		        {
-                        $this->_log_it('realex_3D_xml_response',$response);
+                        $this->_br_log_it('realex_3D_xml_response',$response);
     		        }
 				    
 					$response = preg_replace ("/\s+/", " ", $response);
@@ -191,7 +191,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 		        
 		          if($this->debug)
     		        {
-                        $this->_log_it('realex_xml_request',$response);
+                        $this->_br_log_it('realex_xml_request',$response);
     		        }
     		        
 				// Send the request array to Realex Payments
@@ -208,7 +208,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 						
 					if($this->debug)
     		        {
-                        $this->_log_it('realex_xml_response',$response);
+                        $this->_br_log_it('realex_xml_response',$response);
     		        }
     		        	
 				//Tidy it up
@@ -423,7 +423,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 
             if($this->debug)
 	        {
-                $this->_log_it('realex_gateway_ipn',$response);
+                $this->_br_log_it('realex_gateway_ipn',$response);
 	        }
 
 			$response = preg_replace ("/\s+/", " ", $response);
@@ -457,7 +457,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 
                     if($this->debug)
         	        {
-                        $this->_log_it('realex_gateway_ipn_auth_request',$xml);
+                        $this->_br_log_it('realex_gateway_ipn_auth_request',$xml);
         	        }
     				
     				$ch = curl_init();  
@@ -473,7 +473,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
 
                     if($this->debug)
         	        {
-                        $this->_log_it('realex_gateway_ipn_auth_response',$response);
+                        $this->_br_log_it('realex_gateway_ipn_auth_response',$response);
         	        }
 
                 // Finish updating the order
@@ -536,13 +536,5 @@ class Gateway_realex extends Brilliant_retail_gateway {
 		}
 		return $arr;
 	}
-	
-	function _log_it($title,$data)
-	{
-        $this->EE->load->helper('file');
-        $path = APPPATH.'cache/brilliant_retail';    		        
-        write_file($path.'/'.time().'_'.$title.'.txt',$data);
-	}
-
 }
 /* End of file gateway.realex.php */

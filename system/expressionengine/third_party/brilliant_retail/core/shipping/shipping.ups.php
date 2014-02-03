@@ -29,6 +29,8 @@ class Shipping_ups extends Brilliant_retail_shipping {
 	public $enabled = true;
 	public $version = '1.0';
 
+    public $debug = FALSE;
+    
 	function quote($data,$config){
 
 		$this->rates = array();
@@ -51,7 +53,12 @@ class Shipping_ups extends Brilliant_retail_shipping {
 			if($data["weight"] <= 1){
 				$data["weight"] = 1;
 			}
-
+            
+            $lbs = ($config["weight_unit"] != "lb" ? $this->_convert_weight($data["weight"],$config["weight_unit"],"lb") : $data["weight"]);
+            
+        // 150 pound weight limit            
+            if($lbs > 150) { $lbs = 150; }
+            
 		$code = unserialize($config["code"]);
 		if(is_array($code)){
 				$reqs = '<?xml version="1.0"?>  
@@ -117,14 +124,20 @@ class Shipping_ups extends Brilliant_retail_shipping {
 										<UnitOfMeasurement>  
 											<Code>LBS</Code>  
 										</UnitOfMeasurement>  
-										<Weight>'.($config["weight_unit"] != "lb" ? $this->_convert_weight($data["weight"],$config["weight_unit"],"lb") : $data["weight"]).'</Weight>  
+										<Weight>'.$lbs.'</Weight>  
 									</PackageWeight>  
 								</Package>  
 							</Shipment>  
 						</RatingServiceSelectionRequest>'; 
 			// Get the rate options
-				$results = $this->_curl($config["url"],$reqs);
 				
+    			if($this->debug){ $this->_br_log_it('usps_rate_request',$reqs); }
+        		        
+                // Get the results
+                    $results = $this->_curl($config["url"],$reqs);			
+    	        
+    	        if($this->debug){ $this->_br_log_it('usps_rate_response',$results); }
+
 				#echo htmlentities($results);
 				
 				$xml= new SimpleXmlElement($results);

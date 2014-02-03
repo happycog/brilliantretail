@@ -3085,4 +3085,11 @@ class Brilliant_retail_core {
 						);
 		return $this->EE->TMPL->parse_variables($snippetdata, $vars);
 	}
+	
+	function _br_log_it($title,$data)
+	{
+        $this->EE->load->helper('file');
+        $path = APPPATH.'cache/brilliant_retail';    		        
+        write_file($path.'/'.$title.'_'.time().'.txt',$data);
+	}
 }

@@ -48,7 +48,7 @@ class Product_model extends CI_Model {
 				// Try and return it from session cache
 					if (isset($this->session->cache['get_products'][$product_id])){
 						
-						$this->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from session data '.round(memory_get_usage()/1024/1024, 2).'MB');
+						$this->EE->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from session data '.round(memory_get_usage()/1024/1024, 2).'MB');
 
 						return $this->session->cache['get_products'][$product_id];
 					}
@@ -64,7 +64,7 @@ class Product_model extends CI_Model {
 								if($arr[0]["enabled"] == 1){
 									$this->session->cache['get_products'][$product_id] = $arr;
 									
-									$this->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from cache file '.round(memory_get_usage()/1024/1024, 2).'MB');
+									$this->EE->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from cache file '.round(memory_get_usage()/1024/1024, 2).'MB');
 
 									return $arr;
 								}
@@ -195,7 +195,7 @@ class Product_model extends CI_Model {
 					$this->session->cache['get_products'][$product_id] = $products;
 				}
 
-			$this->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from database '.round(memory_get_usage()/1024/1024, 2).'MB');
+			$this->EE->TMPL->log_item('BrilliantRetail: return product_id ('.$product_id.') from database '.round(memory_get_usage()/1024/1024, 2).'MB');
 
 			return $products;
 		}

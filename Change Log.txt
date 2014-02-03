@@ -4,6 +4,9 @@
 * Added the order id to the invoice number field on the Authorize.net gateway
 * Added br_member_profile_update_before hook
 * Added XID to the logout url
+* Added _br_log_it method to core.brilliant_retail.php for logging and debugging various system calls cache
+* Added weight limit to UPS (150 pounds)
+* Added weight limit to USPS (70 pounds)
 * Updated the category url_title function to remove repeating, leading and trailing separators
 * Updated the checkout method to create an order_id before the payment is processed so the 
 order_id is available in the $data array passed to the gateway.
