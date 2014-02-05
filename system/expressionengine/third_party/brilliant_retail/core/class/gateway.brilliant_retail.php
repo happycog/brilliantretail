@@ -88,7 +88,19 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 		function remove($config_id){
 			return true;		
 		}
-	
+
+	/**
+	 * update function.
+	 * 
+	 * @access public
+	 * @param mixed $config_id
+	 * @return void
+	 */
+    	public function update($config_id)
+		{
+			return TRUE;		
+		}
+    		
 /** IPN FUNCTIONS **/
 
 	public function start_ipn($data,$config)
