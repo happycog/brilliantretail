@@ -20,4 +20,5 @@ order_id is available in the $data array passed to the gateway.
 * Fixed an issue with checking category_url titles when editing categories
 * Fixed an issue with the default fields showing when creating new promotions
 * Fixed an issue with related products where products from other stores 
-* Fixed an issue with Realex payment gateway 
+* Fixed an issue with Realex payment gateway
+* Fixed an issue with product attribute type text on output

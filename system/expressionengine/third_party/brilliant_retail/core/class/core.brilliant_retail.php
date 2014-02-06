@@ -2642,6 +2642,12 @@ class Brilliant_retail_core {
 									'value' => $list,
 									'file' 	=> '' 
 									);
+					}elseif($p["fieldtype"] == 'text'){
+						$tmp = array(
+									'label' => $p["label"],
+									'value' => $p["value"][0],
+									'file' 	=> '' 
+									);
 					}else{
 						$tmp = array(
 									'label' => $p["label"],
