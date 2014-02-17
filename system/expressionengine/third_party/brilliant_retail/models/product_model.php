@@ -593,11 +593,11 @@ class Product_model extends CI_Model {
     		// in a bundle search
     			if($type == 'bundle'){
     				$types = array(1,4,5,7);
-    				$sql .= " AND type_id IN (".$types.")";
+    				$sql .= " AND type_id IN (".join(",",$types).")";
     			}
     			$sql .= " order by title desc";
     		
-    		$query = $this->EE->db->query($sql);
+            $query = $this->EE->db->query($sql);
     		foreach ($query->result_array() as $row){
     			$products[] = $row;
     		}
