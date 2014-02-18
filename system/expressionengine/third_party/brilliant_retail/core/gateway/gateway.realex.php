@@ -512,7 +512,7 @@ class Gateway_realex extends Brilliant_retail_gateway {
     						$eml[0][str_replace("br_","",$key)] = $val;
     					}
     				}
-    				$this->_send_email('customer-order-status', $eml);
+    				$this->_send_email('customer-order-new', $eml);
 
 				// Redirect to thank you page				
 					$_SESSION["order_id"] = $order_id;

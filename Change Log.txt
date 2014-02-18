@@ -13,6 +13,7 @@ order_id is available in the $data array passed to the gateway.
 * Updated copyright dates from 2010-2012 to 2010-2013 in system files.  
 * Updated the 'Uses Per' label to a more descriptive 'Uses Per Code'
 * Updated the PayPal Standard gateway to set the order to 'New Order' status when issues occur with the IPN Validation
+* Updated the poe editor on the product edit form to allow for inserting iframes
 * Fixed an issue with parsing filters in the url on the catalog page.
 * Fixed an issue with removing all "exp_br_" tables when BrilliantRetail is uninstalled. 
 * Fixed an issue with the core url parsing method when passing filters in the catalog. 
@@ -23,3 +24,4 @@ order_id is available in the $data array passed to the gateway.
 * Fixed an issue with Realex payment gateway
 * Fixed an issue with product attribute type text on output
 * Fixed an issue with creating bundle products (type_id join error)
+* Reset all BR related entries in the exp_actions table 

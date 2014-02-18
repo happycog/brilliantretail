@@ -134,7 +134,7 @@ class Shipping_usps extends Brilliant_retail_shipping {
 									<Service>'.$s[0].'</Service>
 									'.$firstclasstype.'
 									<ZipOrigination>'.$config["from_zip"].'</ZipOrigination>
-									<ZipDestination>'.$data["to_zip"].'</ZipDestination>
+									<ZipDestination>'.substr($data["to_zip"],0,5).'</ZipDestination>
 									<Pounds>'.$lbs.'</Pounds>
 									<Ounces>'.$ozs.'</Ounces>
 									<Container></Container>
