@@ -1832,6 +1832,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 			
 	/* CHECKOUT */
 
+		/**
+		 * Create the checkout button options
+		 * 
+		 * @access public
+		 * @return void
+		 */
 		function checkout_buttons()
 		{
 			$class = ($this->EE->TMPL->fetch_param('class')) ? ($this->EE->TMPL->fetch_param('class')) : "checkout" ;

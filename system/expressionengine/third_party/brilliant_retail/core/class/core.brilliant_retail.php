@@ -407,11 +407,30 @@ class Brilliant_retail_core {
 			return $this->_config["currency_marker"].number_format($amt,2);
 		}
 		
-		function _secure_url($path){
-			$str = rtrim($this->_config["store"][$this->site_id]["secure_url"],"/").'/'.$path;
-			return $str;
-		}
+		/**
+		 * Create a path with the secure url
+		 * 
+		 * @access private
+		 * @param mixed $path
+		 * @return void
+		 */
+    		function _secure_url($path){
+                $index = $this->EE->config->item('site_index');
+                if(trim($index) != '')
+                {
+                    $path = $index.'/'.$path;
+                }
+    			$str = rtrim($this->_config["store"][$this->site_id]["secure_url"],"/").'/'.$path;
+    			return $str;
+    		}
 
+		/**
+		 * Get a product based on the product's id value
+		 * 
+		 * @access private
+		 * @param mixed $product_id
+		 * @return void
+		 */
 		function _get_product($product_id){
 			if($product_id == ''){
 				// Get product by param or dynamically 
