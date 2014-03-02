@@ -10,6 +10,7 @@
 * Added _br_log_it method to core.brilliant_retail.php for logging and debugging various system calls cache
 * Added weight limit to UPS (150 pounds)
 * Added weight limit to USPS (70 pounds)
+* Updated the action on the product edit form
 * Updated action value in CP config forms (2.8 compatibility) 
     * Attribute Create
     * Attribute Edit

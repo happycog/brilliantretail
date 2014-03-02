@@ -4,7 +4,7 @@
 /*															*/
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2013						*/
+/* 	@copyright	Copyright (c) 2010-2014						*/
 /* 	@license	http://brilliantretail.com/license.html		*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
@@ -24,6 +24,11 @@
 
 include_once(PATH_THIRD.'brilliant_retail/core/class/core.brilliant_retail.php');
 
+/**
+ * Brilliant_retail_mcp class for control panel methods
+ * 
+ * @extends Brilliant_retail_core
+ */
 class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 	/************************/
@@ -71,133 +76,145 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											
 			private $disallowed_fieldtypes = array('wygwam','Wyvern');								
 
-	function __construct($switch = TRUE,$extended = FALSE)
-	{
-		parent::__construct();
-		
-		// BrilliantRetail Version Number
-			$this->vars['version'] = BR_VERSION;
-			
-		$this->vars["media_dir"] 	= $this->_config["media_dir"];
-		$this->vars["media_url"] 	= $this->_config["media_url"];
-		$this->vars["site_url"] 	= $this->EE->config->item('site_url');
-		$this->vars["site_id"] 		= $this->site_id;
-		
-		// Set the ajax url
-			$this->_ajax_url();
-			$this->vars["ajax_url"] = $this->ajax_url;
-		
-		// Load the access model for the control panel
-			$this->EE->load->model('access_model');
-
-		// Lets check to makes sure each site/store has 
-		// a channel setup!
-			$this->_check_store_channel();
-					
-		// Let's check to make sure each product has a 
-		// paird channel entry
-			$this->_check_product_entry_pair();
-		
-		// Match sure our IPN / Callbacks are csfr exempt
-			if(version_compare(APP_VER, '2.7.0', '>=')){		
-				$this->EE->core_model->exempt_csfr();
-			}
-			
-		// Now we load up stuff. Only do it once! 
-		// Thats what the session->cache check is for
-			if(!isset($this->EE->session->cache['mcp_brilliantretail_construct'])){
-				
-				// Security for our filemanager integration
-		
-				$_SESSION["filemanager"] = TRUE;
-			
-				$this->EE->session->cache['mcp_brilliantretail_construct'] = TRUE;	
-			
-				if($switch == TRUE){
-					$this->module = $this->EE->input->get("module",TRUE);
-					$this->method = ($this->EE->input->get("method",TRUE)) ? ($this->EE->input->get("method",TRUE)) : "index" ;
-		
-					$this->base_url = BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->module;
-					$this->vars["base_url"] = $this->base_url;
-	
-					// Do an admin access check 
-						$access = $this->_check_admin_access($this->method);
-	
-						if($this->EE->extensions->active_hook('br_check_admin_access_after') === TRUE){
-							$access = $this->EE->extensions->call('br_check_admin_access_after', $access); 
-						}
-	
-					// System ALERT / MESSAGE
-						$this->vars['message'] = ''; 
-						$this->vars['alert'] = '';
-						
-						$message = br_get('message');
-							if($message){
-								$this->vars['message'] = br_get('message');	
-								br_unset('message');
-							}
-						$alert = br_get('alert');
-							if($alert){
-								$this->vars['alert'] = br_get('alert');	
-								br_unset('alert');
-							}
-	
-					// Make sure all emails are initiated
-						$this->_init_emails();
-
-					// Product Types
-						$this->vars['product_type'] = $this->_config['product_type'];	
-
-					// BR Styles
-						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css?v='.str_replace('.','',BR_VERSION)).'" />');
-					
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
-						// Added to match EE default styling
-							$this->EE->cp->add_to_head('<script type="text/javascript">$.fn.dataTableExt.oStdClasses.sSortAsc="headerSortUp";$.fn.dataTableExt.oStdClasses.sSortDesc = "headerSortDown";</script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
-						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
-							
-					// Set our admin theme 	
-						$this->vars['theme'] = $this->_theme();	
-							
-						$this->vars["site_name"] 	= $this->EE->config->item('site_name');
-						$this->vars["br_header"] 	= $this->_view('_assets/_header', $this->vars);
-						$this->vars["br_logo"] 		= $this->_view('_assets/_logo', $this->vars);
-						$this->vars["br_footer"] 	= $this->_view('_assets/_footer', $this->vars);
-
-						// Set the acton url for uploading images in the product detail tab
-						// Have to set the upload path based on the control panel 
-						// url so we don't have crossdomain issus
-					 		$this->vars['image_upload'] = $this->_theme('upload/image.php');
-					 		$this->vars['download_upload'] = $this->_theme('upload/file.php');
-							$_SESSION["media_dir"] = $this->vars["media_dir"];
-							$_SESSION["media_url"] = $this->vars["media_url"];
-				}else{
-					$this->EE->lang->loadfile('brilliant_retail');
-				}	
-			}
-		}
+	/**
+	 * __construct function
+	 * 
+	 * @access public
+	 * @param mixed $switch (default: TRUE)
+	 * @param mixed $extended (default: FALSE)
+	 * @return void
+	 */
+    	function __construct($switch = TRUE,$extended = FALSE)
+    	{
+    		parent::__construct();
+    		
+    		// BrilliantRetail Version Number
+    			$this->vars['version'] = BR_VERSION;
+    			
+    		$this->vars["media_dir"] 	= $this->_config["media_dir"];
+    		$this->vars["media_url"] 	= $this->_config["media_url"];
+    		$this->vars["site_url"] 	= $this->EE->config->item('site_url');
+    		$this->vars["site_id"] 		= $this->site_id;
+    		
+    		// Set the ajax url
+    			$this->_ajax_url();
+    			$this->vars["ajax_url"] = $this->ajax_url;
+    		
+    		// Load the access model for the control panel
+    			$this->EE->load->model('access_model');
+    
+    		// Lets check to makes sure each site/store has 
+    		// a channel setup!
+    			$this->_check_store_channel();
+    					
+    		// Let's check to make sure each product has a 
+    		// paird channel entry
+    			$this->_check_product_entry_pair();
+    		
+    		// Match sure our IPN / Callbacks are csfr exempt
+    			if(version_compare(APP_VER, '2.7.0', '>=')){		
+    				$this->EE->core_model->exempt_csfr();
+    			}
+    			
+    		// Now we load up stuff. Only do it once! 
+    		// Thats what the session->cache check is for
+    			if(!isset($this->EE->session->cache['mcp_brilliantretail_construct'])){
+    				
+    				// Security for our filemanager integration
+    		
+    				$_SESSION["filemanager"] = TRUE;
+    			
+    				$this->EE->session->cache['mcp_brilliantretail_construct'] = TRUE;	
+    			
+    				if($switch == TRUE){
+    					$this->module = $this->EE->input->get("module",TRUE);
+    					$this->method = ($this->EE->input->get("method",TRUE)) ? ($this->EE->input->get("method",TRUE)) : "index" ;
+    		
+    					$this->base_url = BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->module;
+    					$this->vars["base_url"] = $this->base_url;
+    	
+    					// Do an admin access check 
+    						$access = $this->_check_admin_access($this->method);
+    	
+    						if($this->EE->extensions->active_hook('br_check_admin_access_after') === TRUE){
+    							$access = $this->EE->extensions->call('br_check_admin_access_after', $access); 
+    						}
+    	
+    					// System ALERT / MESSAGE
+    						$this->vars['message'] = ''; 
+    						$this->vars['alert'] = '';
+    						
+    						$message = br_get('message');
+    							if($message){
+    								$this->vars['message'] = br_get('message');	
+    								br_unset('message');
+    							}
+    						$alert = br_get('alert');
+    							if($alert){
+    								$this->vars['alert'] = br_get('alert');	
+    								br_unset('alert');
+    							}
+    	
+    					// Make sure all emails are initiated
+    						$this->_init_emails();
+    
+    					// Product Types
+    						$this->vars['product_type'] = $this->_config['product_type'];	
+    
+    					// BR Styles
+    						$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->_theme('/css/style.css?v='.str_replace('.','',BR_VERSION)).'" />');
+    					
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/br.js').'"></script>');
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.min.js').'"></script>');
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.dataTables.clear.js').'"></script>');
+    						// Added to match EE default styling
+    							$this->EE->cp->add_to_head('<script type="text/javascript">$.fn.dataTableExt.oStdClasses.sSortAsc="headerSortUp";$.fn.dataTableExt.oStdClasses.sSortDesc = "headerSortDown";</script>');
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.validate.pack.js').'"></script>');
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.metadata.js').'"></script>');
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.asmselect.js').'"></script>');
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/swfupload/swfupload.js').'"></script>');
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.form.js').'"></script>');
+    						$this->EE->cp->add_to_head('<script type="text/javascript" src="'.$this->_theme('/script/jquery.blockui.js').'"></script>');
+    							
+    					// Set our admin theme 	
+    						$this->vars['theme'] = $this->_theme();	
+    							
+    						$this->vars["site_name"] 	= $this->EE->config->item('site_name');
+    						$this->vars["br_header"] 	= $this->_view('_assets/_header', $this->vars);
+    						$this->vars["br_logo"] 		= $this->_view('_assets/_logo', $this->vars);
+    						$this->vars["br_footer"] 	= $this->_view('_assets/_footer', $this->vars);
+    
+    						// Set the acton url for uploading images in the product detail tab
+    						// Have to set the upload path based on the control panel 
+    						// url so we don't have crossdomain issus
+    					 		$this->vars['image_upload'] = $this->_theme('upload/image.php');
+    					 		$this->vars['download_upload'] = $this->_theme('upload/file.php');
+    							$_SESSION["media_dir"] = $this->vars["media_dir"];
+    							$_SESSION["media_url"] = $this->vars["media_url"];
+    				}else{
+    					$this->EE->lang->loadfile('brilliant_retail');
+    				}	
+    			}
+    		}
 	
 	/**
-	 * Index 
-	 *
-	 * @return method	Dashboard
-	 */	
+	 * index function returns dashboard
+	 * 
+	 * @access public
+	 * @return method Dashboard
+	 */
 		function index()
 		{
 			return $this->dashboard();
 		}
 
 	/**
-	 * Dashboard 
-	 *
-	 */	
+	 * dashboard function.
+     * Displays a  
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function dashboard()
 		{
 			// Breadcrumb & Title
@@ -240,6 +257,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Order Tab		 	*/
 	/************************/
 
+    /**
+     * order function.
+     * 
+     * Displays an overview of the current orders
+     *
+     * @access public
+     * @return void
+     */
 		function order()
 		{
 			// Breadcrumb & Page Title 
@@ -275,6 +300,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('order/order', $this->vars);	
 		}
 		
+	/**
+	 * order_ajax function.
+	 * 
+	 * Callback to get the orders in the overview
+     * 
+	 * @access public
+	 * @return void
+	 */
 		function order_ajax()
 		{
 			$status_id = ($_GET["status_id"] != "") ? $_GET["status_id"]  : '';
@@ -328,6 +361,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				exit();
 		}
 		
+	/**
+	 * order_detail function.
+	 * 
+	 * Display the order detail page
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function order_detail()
 		{
 			// Breadcrumbs & Page Title
@@ -488,6 +529,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					return $this->_view('order/detail', $this->vars);	
 				}
 		}
+
+	/**
+	 * order_detail_add_payment function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function order_detail_add_payment(){
 			// Parameters
 				$order_id = $this->EE->input->get("order_id");
@@ -531,6 +579,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('order/detail_add_payment', $this->vars);	
 		}
 		
+	/**
+	 * order_detail_add_payment_process function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function order_detail_add_payment_process(){
 			foreach($_POST as $key => $val){
 				$data[$key] = $this->EE->input->post($key);
@@ -604,6 +658,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.'&method=order_detail&order_id='.$order_id);
 		}		
 
+	/**
+	 * order_batch function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function order_batch(){
 			
 			$data = array();
@@ -760,6 +820,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 		}
 		
+	/**
+	 * order_update_status function.
+	 * 
+	 * @access public
+	 * @param string $data (default: '')
+	 * @param mixed $redirect (default: TRUE)
+	 * @return void
+	 */
 		function order_update_status($data='',$redirect=TRUE)
 		{
 
@@ -832,6 +900,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 		}
 		
+	/**
+	 * order_add_note function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function order_add_note()
 		{
 			foreach($_POST as $key => $val){
@@ -879,6 +953,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->functions->redirect($this->base_url.AMP.'method=order_detail'.AMP.'order_id='.$data["order_id"]);
 		}
 		
+	/**
+	 * order_remove_note function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function order_remove_note()
 		{
 			// Get the parameters 
@@ -965,6 +1045,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Customer Tab		 	*/
 	/************************/
 	
+	/**
+	 * customer function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function customer()
 		{
 			// Breadcrumb & Title
@@ -977,6 +1063,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('customer/customer', $this->vars);	
 		}
 		
+	/**
+	 * customer_ajax function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function customer_ajax()
 		{
 			// Member Collection	
@@ -1009,6 +1101,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				exit();
 		}
 		
+	/**
+	 * customer_orders function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function customer_orders()
 		{
 			// Parameters
@@ -1048,6 +1146,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Product Tab		 	*/
 	/************************/
 	
+	/**
+	 * product function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function product()
 		{
 			// Set the parameters 
@@ -1076,6 +1180,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $output;
 		}
 
+	/**
+	 * product_ajax function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function product_ajax()
 		{
 			// Pass in the db prefix for advanced sql statements
@@ -1110,6 +1220,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				exit();
 		}
 		
+	/**
+	 * product_batch function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function product_batch()
 		{
 			foreach($_POST as $key => $val){
@@ -1159,11 +1275,23 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.'&method=product');
 		}
 		
+	/**
+	 * product_new function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function product_new()
 		{
 			return $this->product_edit();	
 		}
 		
+	/**
+	 * product_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function product_edit()
 		{			
 			$this->EE->cp->set_breadcrumb($this->base_url.'&method=product', lang('nav_br_products'));
@@ -1589,7 +1717,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			
 			$this->EE->javascript->compile();
-			
+
+            // Set the form action
+                $this->vars["action"] = $this->base_url.AMP.'method=product_update';
+
 			return $this->_view('product/edit', $this->vars);	
 		}
 	
@@ -1869,6 +2000,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 		}
 
+	/**
+	 * product_configurable_create_options function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function product_configurable_create_options()
 		{
 			// Get the products 
@@ -1881,6 +2018,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 		
+	/**
+	 * product_search function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function product_search()
 		{
 			// Get the products 
@@ -1895,6 +2038,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Promotions Tab	 	*/
 	/************************/
 	
+	/**
+	 * promo function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function promo()
 		{
 			$this->vars["promo"] = $this->EE->promo_model->get_promo();
@@ -1914,6 +2063,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('promo/promo', $this->vars);	
 		}
 	
+	/**
+	 * promo_new function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function promo_new()
 		{
 			// Search Url for selecting individual products
@@ -1956,7 +2111,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('promo/edit', $this->vars);
 		}
 		
-		
+	/**
+	 * promo_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function promo_edit()
 		{
 			$promo_id = $this->EE->input->get('promo_id');
@@ -2009,6 +2169,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('promo/edit', $this->vars);	
 		}
 		
+	/**
+	 * promo_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function promo_update()
 		{
 			// Check for delete
@@ -2073,11 +2239,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Reports Tab  		*/
 	/************************/
 	
-		/* 
-		* Report list method
-		* 
-		* @author David Dexter 
-		*/ 
+	/**
+	 * report function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function report()
 		{
 			// Set the header/breadcrumb 
@@ -2107,11 +2274,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('report/report', $this->vars);	
 		}
 
-		/* 
-		* Report Detail
-		* 
-		* @author David Dexter 
-		*/
+	/**
+	 * report_detail function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function report_detail()
 		{
 			// Breadcrumb & Title
@@ -2158,14 +2326,22 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	/* Configuration Tab 	*/
 	/************************/
 		
-		/* 
-		*	Config method is just a placeholder 
-		* 	to build our permissions array. 
-		*
-		* 	@author David Dexter
-		*/
+    /**
+     * config function.
+     * 
+     * IMPORTANT: Config method is just a placeholder to build our permissions array. 
+     * 
+     * @access public
+     * @return void
+     */
 		function config(){}
 		
+    /**
+     * config_attribute function.
+     * 
+     * @access public
+     * @return void
+     */
 		function config_attribute()
 		{
 			// Breadcrumb & Title
@@ -2183,6 +2359,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 
+	/**
+	 * config_attribute_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_attribute_update()
 		{
 			$continue = FALSE;
@@ -2224,6 +2406,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 		}
 		
+	/**
+	 * config_attribute_create function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_attribute_create()
 		{
 			$this->vars["attributes"] = array(
@@ -2245,6 +2433,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);			
 		}
 
+	/**
+	 * config_attribute_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_attribute_edit()
 		{
 			// Breadcrumb & Title
@@ -2264,6 +2458,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 		
 		
+	/**
+	 * config_attributeset function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_attributeset()
 		{
 			// Breadcrumb & Title
@@ -2280,6 +2480,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);	
 		}
 
+	/**
+	 * config_attributeset_create function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_attributeset_create()
 		{
 			$this->vars['cp_page_title'] = lang('nav_br_config_attributeset');
@@ -2297,6 +2503,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);	
 		}
 		
+	/**
+	 * config_attributeset_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_attributeset_edit()
 		{
 			// Breadcrumb & Title
@@ -2316,6 +2528,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);	
 		}	
 		
+	/**
+	 * config_attributeset_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_attributeset_update()
 		{	
 			$this->EE->product_model->update_attribute_set();
@@ -2332,6 +2550,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 		}
 
+	/**
+	 * config_attributeset_delete function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_attributeset_delete()
 		{
 			$attribute_set_id = $this->EE->input->get('attribute_set_id');
@@ -2342,6 +2566,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 		
+	/**
+	 * config_category function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_category()
 		{
 			// Breadcrumb & Title
@@ -2368,6 +2598,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 		
+	/**
+	 * config_category_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_category_edit()
 		{
 			// Breadcrumb & Title
@@ -2453,6 +2689,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 		
+	/**
+	 * config_category_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_category_update()
 		{
 			if($_POST["action"] == 'order'){
@@ -2551,6 +2793,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 
+	/**
+	 * config_email function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_email()
 		{
 			// Breadcrumb & Title
@@ -2561,6 +2809,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);	
 		}
 
+	/**
+	 * config_email_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_email_edit()
 		{
 			// Breadcrumb & Title
@@ -2587,6 +2841,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 		
+	/**
+	 * config_email_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_email_update()
 		{
 			$email_id = $_POST["email_id"];
@@ -2613,6 +2873,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.AMP.'method=config_email');
 		}
 		
+	/**
+	 * config_feeds function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_feeds()
 		{
 			// Breadcrumb & Title
@@ -2630,6 +2896,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 		
+	/**
+	 * config_feeds_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_feeds_edit()
 		{	
 			// Breadcrumb & Title
@@ -2719,12 +2991,25 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				return $this->_view('config/index', $this->vars);
 		}
 		
+	/**
+	 * _feed_code_exists function.
+	 * 
+	 * @access private
+	 * @param mixed $code
+	 * @return void
+	 */
 		function _feed_code_exists( $code )
 		{
 		  $feeds = $this->EE->feed_model->get_feed_by_code( $code );
 		  return (count( $feeds ) == 0 ? TRUE : FALSE);
 		}
 
+	/**
+	 * config_gateway function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_gateway()
 		{
 			// Breadcrumb & Title
@@ -2779,6 +3064,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 		
+	/**
+	 * config_gateway_install function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_gateway_install()
 		{
 			$type = trim(strtolower($_GET["type"]));
@@ -2810,6 +3101,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway_edit'.AMP.'config_id='.$config_id.AMP.'code='.$code);
 		}
 		
+	/**
+	 * config_gateway_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_gateway_edit()
 		{
 			// Breadcrumb & Title
@@ -2891,65 +3188,71 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 		
-		/**
-		 * Update the gateway in the database
-		 * 
-		 * @access public
-		 * @return void
-		 */
-    		function config_gateway_update()
-    		{
-    			remove_from_cache('config');
-    			
-	  			if(version_compare(APP_VER, '2.7.0', '>=')){
-    				$this->EE->security->restore_xid();
-    			}
-    			
-                foreach($_POST as $key => $val){
-    				$data[$key] = $val;
-    			}
-    			
-                if(!isset($data["groups"]))
-                {
-                    $data["groups"] = 0;
-                }else{
-                    $data["groups"] = join(',',$data["groups"]);
-                }
+	/**
+	 * Update the gateway in the database
+	 * 
+	 * @access public
+	 * @return void
+	 */
+		function config_gateway_update()
+		{
+			remove_from_cache('config');
+			
+  			if(version_compare(APP_VER, '2.7.0', '>=')){
+				$this->EE->security->restore_xid();
+			}
+			
+            foreach($_POST as $key => $val){
+				$data[$key] = $val;
+			}
+			
+            if(!isset($data["groups"]))
+            {
+                $data["groups"] = 0;
+            }else{
+                $data["groups"] = join(',',$data["groups"]);
+            }
 
-    			$this->EE->core_model->module_update($data);
-    			$_SESSION["message"] = lang('br_module_update_success');
-    			$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway');
-    		}
+			$this->EE->core_model->module_update($data);
+			$_SESSION["message"] = lang('br_module_update_success');
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway');
+		}
 
-		/**
-		 * Remove the gateway from the database 
-		 * 
-		 * @access public
-		 * @return void
-		 */
-    		function config_gateway_remove()
-    		{
-    			$config_id = strtolower($this->EE->input->get("config_id",TRUE));
-    			$code = strtolower($this->EE->input->get("code",TRUE));
-    			
-    			// Make sure the class file is loaded
-    				$str = 'Gateway_'.$code;
-    				if(!class_exists($str)){
-    					$local_path = PATH_THIRD.'_local/brilliant_retail/gateway/gateway.'.$_GET["code"].'.php';
-    					if(file_exists($local_path)){
-    						include_once($local_path);
-    					}else{
-    						include_once(PATH_THIRD.'brilliant_retail/core/gateway/gateway.'.$_GET["code"].'.php');
-    					}
-    				}
-    			$class = new $str();
-    			$class->remove($config_id);
-    			$this->EE->core_model->module_remove($_GET["config_id"]);
-    			$_SESSION["message"] = lang('br_module_remove_success');
-    			remove_from_cache('config');
-    			$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway');
-    		}
+	/**
+	 * Remove the gateway from the database 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+		function config_gateway_remove()
+		{
+			$config_id = strtolower($this->EE->input->get("config_id",TRUE));
+			$code = strtolower($this->EE->input->get("code",TRUE));
+			
+			// Make sure the class file is loaded
+				$str = 'Gateway_'.$code;
+				if(!class_exists($str)){
+					$local_path = PATH_THIRD.'_local/brilliant_retail/gateway/gateway.'.$_GET["code"].'.php';
+					if(file_exists($local_path)){
+						include_once($local_path);
+					}else{
+						include_once(PATH_THIRD.'brilliant_retail/core/gateway/gateway.'.$_GET["code"].'.php');
+					}
+				}
+			$class = new $str();
+			$class->remove($config_id);
+			$this->EE->core_model->module_remove($_GET["config_id"]);
+			$_SESSION["message"] = lang('br_module_remove_success');
+			remove_from_cache('config');
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway');
+		}
 
+	/**
+	 * config_permission function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_permission()
 		{
 			// Breadcrumb & Title
@@ -2963,6 +3266,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 
+	/**
+	 * config_permission_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_permission_edit()
 		{
 			// Breadcrumb & Title
@@ -2985,6 +3294,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}		
 
+	/**
+	 * config_permission_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_permission_update()
 		{
 			// Remove any previous group records
@@ -3009,6 +3324,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->functions->redirect($this->base_url.AMP.'method=config_permission');
 		}
 
+	/**
+	 * config_shipping function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_shipping()
 		{
 			// Breadcrumb & Title
@@ -3072,6 +3393,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 		
+	/**
+	 * config_shipping_install function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_shipping_install()
 		{
 			$type = trim(strtolower($_GET["type"]));
@@ -3115,6 +3442,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.AMP.'method=config_shipping_edit'.AMP.'config_id='.$config_id.AMP.'code='.$code);
 		}
 		
+	/**
+	 * config_shipping_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_shipping_edit()
 		{
 			// Breadcrumb & Title
@@ -3167,6 +3500,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 		
+	/**
+	 * config_shipping_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_shipping_update()
 		{
 			remove_from_cache('config');
@@ -3191,6 +3530,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.AMP.'method=config_shipping');
 		}
 
+	/**
+	 * config_shipping_remove function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_shipping_remove()
 		{
 			$config_id = $this->EE->input->get("config_id",TRUE);
@@ -3215,6 +3560,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.AMP.'method=config_shipping');
 		}
 		
+	/**
+	 * config_site function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_site()
 		{
 			// Breadcrumb & Title
@@ -3240,6 +3591,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}		
 		
+	/**
+	 * config_site_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_site_update()
 		{ 
 			// Set the selected menu
@@ -3282,6 +3639,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.AMP.'method=config_site');
 		}
 		
+	/**
+	 * config_tax function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_tax()
 		{ 
 			// Breadcrumb & Title
@@ -3295,6 +3658,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 
+	/**
+	 * config_tax_new function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_tax_new()
 		{
 			// Breadcrumb & Title
@@ -3333,6 +3702,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 
+	/**
+	 * config_tax_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_tax_edit()
 		{
 			// Breadcrumb & Title
@@ -3363,6 +3738,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $this->_view('config/index', $this->vars);
 		}
 
+	/**
+	 * config_tax_update function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 		function config_tax_update()
 		{
 			// Check for delete
@@ -3395,20 +3776,32 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->functions->redirect($this->base_url.AMP.'method=config_tax');
 		}
 
-	public function tools_clear_cache()
-	{
-		// First delete all the cache files
-			delete_file_cache();
-
-		// Set a success message 
-			$_SESSION["message"] = lang('br_tools_cache_delete');
-
-		// Redirect to dashboard 
-			$this->EE->functions->redirect($this->base_url.'&method=dashboard');
-	}
+	/**
+	 * tools_clear_cache function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+    	public function tools_clear_cache()
+    	{
+    		// First delete all the cache files
+    			delete_file_cache();
+    
+    		// Set a success message 
+    			$_SESSION["message"] = lang('br_tools_cache_delete');
+    
+    		// Redirect to dashboard 
+    			$this->EE->functions->redirect($this->base_url.'&method=dashboard');
+    	}
 		
 	/* Helper Functions */
 		
+	/**
+	 * _ajax_url function.
+	 * 
+	 * @access private
+	 * @return void
+	 */
 		function _ajax_url()
 		{
 			$url = $this->EE->functions->fetch_site_index(0,0);
@@ -3421,6 +3814,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		}
 		
 		
+	/**
+	 * _init_emails function.
+	 * 
+	 * @access private
+	 * @return void
+	 */
 		private function _init_emails()
 		{
 			$path = PATH_THIRD.'brilliant_retail/core/notifications';
@@ -3465,6 +3864,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["emails"] = $emails;
 		}
 		
+	/**
+	 * _product_entry_id function.
+	 * 
+	 * @access private
+	 * @param mixed $product_id
+	 * @return void
+	 */
 		function _product_entry_id($product_id){
 			if (isset($this->session->cache['product_entry_id'])){
 				$products = $this->session->cache['product_entry_id'];
@@ -3480,6 +3886,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $products[$product_id];
 		}
 		
+	/**
+	 * _get_sub_type function.
+	 * 
+	 * @access private
+	 * @param string $type (default: '')
+	 * @param mixed $allow_edit (default: FALSE)
+	 * @return void
+	 */
 		function _get_sub_type($type = '',$allow_edit=FALSE) 
 		{
 			$str = ''; 
@@ -3578,50 +3992,60 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 							</script>"; 
 			return $str;
 		}
-		
-		/**
-		 * Check for access to the admin sections 
-		 */		
-			function _check_admin_access($method){
-				
-				// Get the Group ID
-					$group_id = $this->EE->session->userdata['group_id'];
-	
-				// Reset the index method to dashboard
-					if($method == 'index'){
-						$method = 'dashboard';
-					}
-				
-				// Super Admins can go anywhere
-					if($group_id == 1){
-						// We are going to give the super admin access to 
-						// all sections
-						$f = get_class_methods('Brilliant_retail_mcp');
-						foreach($f as $m){
-							if(substr($m,0,1) != '_' && $m != 'index'){
-								$this->group_access['brilliant_retail'][$m] = $m;
-							}
+
+    /**
+     * _check_admin_access function.
+     * 
+     * Check for access to the admin sections 
+     * 		 
+     * @access private
+     * @param mixed $method
+     * @return void
+     */
+		function _check_admin_access($method){
+			
+			// Get the Group ID
+				$group_id = $this->EE->session->userdata['group_id'];
+
+			// Reset the index method to dashboard
+				if($method == 'index'){
+					$method = 'dashboard';
+				}
+			
+			// Super Admins can go anywhere
+				if($group_id == 1){
+					// We are going to give the super admin access to 
+					// all sections
+					$f = get_class_methods('Brilliant_retail_mcp');
+					foreach($f as $m){
+						if(substr($m,0,1) != '_' && $m != 'index'){
+							$this->group_access['brilliant_retail'][$m] = $m;
 						}
-						return TRUE;
-					}else{
-						// all other memeber groups are validated
-						if(!in_array($method,$this->method_ignore)){
-							$this->group_access = $this->EE->access_model->get_admin_access($group_id);
-							if(in_array($method,$this->group_access[$this->module])){
-								return TRUE;
-							}else{
-								return FALSE;					
-							}
-						}else{
-							$this->group_access = $this->EE->access_model->get_admin_access($group_id);
-						} 
 					}
-				return TRUE;
-			}
-		
-		/**
-		 *
-		 */
+					return TRUE;
+				}else{
+					// all other memeber groups are validated
+					if(!in_array($method,$this->method_ignore)){
+						$this->group_access = $this->EE->access_model->get_admin_access($group_id);
+						if(in_array($method,$this->group_access[$this->module])){
+							return TRUE;
+						}else{
+							return FALSE;					
+						}
+					}else{
+						$this->group_access = $this->EE->access_model->get_admin_access($group_id);
+					} 
+				}
+			return TRUE;
+		}
+
+	/**
+	 * _admin_permission_tree function.
+	 * 
+	 * @access public
+	 * @param mixed $group_id
+	 * @return void
+	 */
 		public function _admin_permission_tree($group_id)
 		{
 			$group = $this->EE->access_model->get_admin_access($group_id);
@@ -3669,6 +4093,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $tree;
 		}
 		
+	/**
+	 * _check_product_sku function.
+	 * 
+	 * @access private
+	 * @param mixed $data
+	 * @param int $cnt (default: 1)
+	 * @return void
+	 */
 		function _check_product_sku($data,$cnt=1)
 		{
 				if(trim($data["sku"]) == ''){
@@ -3684,6 +4116,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			}
 			
+	/**
+	 * _check_product_url function.
+	 * 
+	 * @access private
+	 * @param mixed $data
+	 * @param int $cnt (default: 1)
+	 * @return void
+	 */
 		function _check_product_url($data,$cnt=1)
 		{
 			if(trim($data["url"]) == ''){
@@ -3699,6 +4139,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}			
 		}
 			
+	/**
+	 * _check_category_url function.
+	 * 
+	 * @access private
+	 * @param mixed $data
+	 * @param int $cnt (default: 1)
+	 * @return void
+	 */
 		function _check_category_url($data,$cnt=1)
 		{
   			if(version_compare(APP_VER, '2.7.0', '>=')){
@@ -3740,6 +4188,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
     			}
 		}
 			
+	/**
+	 * _build_report_input function.
+	 * 
+	 * @access private
+	 * @param mixed $in
+	 * @return void
+	 */
 		function _build_report_input($in)
 		{
 			$val = $this->EE->input->post($in[2]);
@@ -3789,6 +4244,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $str;
 		}
 			
+	/**
+	 * _build_report_csv function.
+	 * 
+	 * @access private
+	 * @param mixed $data
+	 * @return void
+	 */
 		function _build_report_csv($data)
 		{
 			$csvoutput = '';
@@ -3808,6 +4270,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			exit();
 		}
 		
+	/**
+	 * _build_configurable_form function.
+	 * 
+	 * @access private
+	 * @param mixed $fields
+	 * @param string $values (default: '')
+	 * @return void
+	 */
 		function _build_configurable_form($fields,$values = '')
 		{
 			$str = '<input id="config_attr" name="config_attr" type="hidden" value="'.join($fields,',').'" />
@@ -3848,6 +4318,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $str;
 		}
 			
+	/**
+	 * _view function.
+	 * 
+	 * @access private
+	 * @param mixed $view
+	 * @param mixed $vars
+	 * @return void
+	 */
 		function _view($view,$vars){
 			if(file_exists(PATH_THIRD.'_local/brilliant_retail/views/'.trim($view).'.php')){
 				$this->EE->load->add_package_path(PATH_THIRD.'_local/brilliant_retail');
@@ -3860,8 +4338,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $output;
 		}
 		
-	# Thanks Brandon Kelly for this Cross-compatible between ExpressionEngine 2.0 and 2.4
-	# Referenced: https://gist.github.com/1671737
+	/**
+	 * _get_upload_preferences function.
+	 * 
+     * Thanks Brandon Kelly for this Cross-compatible between ExpressionEngine 2.0 and 2.4
+     * Referenced: https://gist.github.com/1671737
+	 * 
+	 * @access private
+	 * @param mixed $group_id (default: NULL)
+	 * @param mixed $id (default: NULL)
+	 * @return void
+	 */
 		function _get_upload_preferences($group_id = NULL, $id = NULL)
 		{
 			if (version_compare(APP_VER, '2.4', '>='))
@@ -3894,148 +4381,170 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			return $return_array;
 		}
 
-	/** 
-	*	Method checks to see if there is a paired 
-	* 	channel_id for a store
-	*/
+	/**
+	 * _check_store_channel function.
+	 * 
+     * Method checks to see if there is a paired 
+	 * channel_id for a store
+     * 
+	 * @access private
+	 * @return void
+	 */
+    	function _check_store_channel(){
+    
+    		$this->EE->load->library('api'); 
+    		$this->EE->api->instantiate('channel_structure');
+    		$this->EE->api->instantiate('channel_entries');
+    		$this->EE->api->instantiate('channel_fields');
+    
+    		$reset_config = FALSE;
+    		
+    		foreach($this->_config["store"] as $store){
+    
+    			if($store["channel_id"] == 0){
+    			
+    				// We will want to reset the _config variable 
+    				// when we're all done. 
+    					$reset_config = TRUE;
+    			
+    				// Create a field group for the site
+    					$data = array(	
+    									"site_id" 		=> $store["site_id"],
+    									"group_name" 	=> "BrilliantRetail Products"
+    								);
+    					$this->EE->db->insert("field_groups",$data);
+    					$field_group = $this->EE->db->insert_id();
+    				
+    				// Create a channel for the site
+    					$channel = array(
+    										"site_id"		=> $store["site_id"],
+    										"field_group"	=> $field_group, 
+    										"channel_title" => "BrilliantRetail Products",
+    										"channel_name"	=> "brilliantretail_".$store["site_id"] 
+    									);
+    					
+    					$this->br_channel_id = $this->EE->api_channel_structure->create_channel($channel);
+    					
+    					$this->EE->session->userdata['assigned_channels'][$this->br_channel_id] = $channel['channel_title'];
+    				
+    				// Create a matching channel entry for every product
+    					$this->EE->db->from('br_product');
+    					$this->EE->db->WHERE('site_id',$store["site_id"]);
+    					$qry = $this->EE->db->get();
+    					foreach($qry->result_array() as $rst){
+    						$data = array(
+    						        'title'         => $rst["title"],
+    						        'status'		=> ($rst["enabled"] == 1) ? 'open' : 'closed', 
+    						        'entry_date'    => time() 
+    						);
+    						$this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$data);	
+    						$qry = $this->EE->db->query("SELECT entry_id FROM exp_channel_titles ORDER BY entry_id DESC LIMIT 1");
+    						$result = $qry->result_array();
+    
+    						$this->EE->db->query("	INSERT INTO 
+    													exp_br_product_entry 
+    												(product_id, entry_id) 
+    													VALUES 
+    												(".$rst["product_id"].",".$result[0]["entry_id"].")");
+    						
+    						// Remove cache file
+    							remove_from_cache('product_'.$rst["product_id"]);
+    					}
+    
+    				// Update the br_store table with the new 
+    				// channel_id value	
+    					$data = array(
+    		               			'channel_id' => $this->br_channel_id
+    		               		);
+    					$this->EE->db->where('site_id', $store["site_id"]);
+    					$this->EE->db->update('br_store', $data);
+    			}
+    		}
+    		
+    		if($reset_config == TRUE){
+    			remove_from_cache('config');
+    		}
+    
+    	}	
 	
-	function _check_store_channel(){
+	/**
+	 * _check_product_entry_pair function.
+	 * 
+     * Create a method for verifying that there is a product and 
+	 * entry for all products in the system
+	 * 
+	 * @access private
+	 * @return void
+	 */
+    	function _check_product_entry_pair(){
+    		$this->EE->load->database();
+    		$sql = "SELECT 
+    					p.product_id, 
+    					p.title, 
+    					p.enabled 
+    				FROM 
+    					".$this->EE->db->dbprefix."br_product p 
+    				WHERE 
+    					p.site_id = ".$this->vars["site_id"]." 
+    				AND 
+    					p.product_id 
+    						NOT IN 
+    							(SELECT product_id FROM ".$this->EE->db->dbprefix."br_product_entry)";
+    		$qry = $this->EE->db->query($sql);
+    		if($qry->num_rows() >= 0){
+    			
+    			foreach($qry->result_array() as $rst){
+    				$data = array(
+    				        'title'         => $rst["title"],
+    				        'status'		=> ($rst["enabled"] == 1) ? 'open' : 'closed', 
+    				        'entry_date'    => time() 
+    				);
+    				$this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$data);	
+    				$qry = $this->EE->db->query("SELECT entry_id FROM exp_channel_titles ORDER BY entry_id DESC LIMIT 1");
+    				$result = $qry->result_array();
+    
+    				$this->EE->db->query("	INSERT INTO 
+    											exp_br_product_entry 
+    										(product_id, entry_id) 
+    											VALUES 
+    										(".$rst["product_id"].",".$result[0]["entry_id"].")");
+    				
+    				// Remove cache file
+    					remove_from_cache('product_'.$rst["product_id"]);
+    			}
+    		}
+    	}
 
-		$this->EE->load->library('api'); 
-		$this->EE->api->instantiate('channel_structure');
-		$this->EE->api->instantiate('channel_entries');
-		$this->EE->api->instantiate('channel_fields');
-
-		$reset_config = FALSE;
-		
-		foreach($this->_config["store"] as $store){
-
-			if($store["channel_id"] == 0){
-			
-				// We will want to reset the _config variable 
-				// when we're all done. 
-					$reset_config = TRUE;
-			
-				// Create a field group for the site
-					$data = array(	
-									"site_id" 		=> $store["site_id"],
-									"group_name" 	=> "BrilliantRetail Products"
-								);
-					$this->EE->db->insert("field_groups",$data);
-					$field_group = $this->EE->db->insert_id();
-				
-				// Create a channel for the site
-					$channel = array(
-										"site_id"		=> $store["site_id"],
-										"field_group"	=> $field_group, 
-										"channel_title" => "BrilliantRetail Products",
-										"channel_name"	=> "brilliantretail_".$store["site_id"] 
-									);
-					
-					$this->br_channel_id = $this->EE->api_channel_structure->create_channel($channel);
-					
-					$this->EE->session->userdata['assigned_channels'][$this->br_channel_id] = $channel['channel_title'];
-				
-				// Create a matching channel entry for every product
-					$this->EE->db->from('br_product');
-					$this->EE->db->WHERE('site_id',$store["site_id"]);
-					$qry = $this->EE->db->get();
-					foreach($qry->result_array() as $rst){
-						$data = array(
-						        'title'         => $rst["title"],
-						        'status'		=> ($rst["enabled"] == 1) ? 'open' : 'closed', 
-						        'entry_date'    => time() 
-						);
-						$this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$data);	
-						$qry = $this->EE->db->query("SELECT entry_id FROM exp_channel_titles ORDER BY entry_id DESC LIMIT 1");
-						$result = $qry->result_array();
-
-						$this->EE->db->query("	INSERT INTO 
-													exp_br_product_entry 
-												(product_id, entry_id) 
-													VALUES 
-												(".$rst["product_id"].",".$result[0]["entry_id"].")");
-						
-						// Remove cache file
-							remove_from_cache('product_'.$rst["product_id"]);
-					}
-
-				// Update the br_store table with the new 
-				// channel_id value	
-					$data = array(
-		               			'channel_id' => $this->br_channel_id
-		               		);
-					$this->EE->db->where('site_id', $store["site_id"]);
-					$this->EE->db->update('br_store', $data);
-			}
-		}
-		
-		if($reset_config == TRUE){
-			remove_from_cache('config');
-		}
-
-	}	
-	
-	/* Create a method for verifying that there is a product and 
-	/* entry for all products in the system
-	*/ 
-	function _check_product_entry_pair(){
-		$this->EE->load->database();
-		$sql = "SELECT 
-					p.product_id, 
-					p.title, 
-					p.enabled 
-				FROM 
-					".$this->EE->db->dbprefix."br_product p 
-				WHERE 
-					p.site_id = ".$this->vars["site_id"]." 
-				AND 
-					p.product_id 
-						NOT IN 
-							(SELECT product_id FROM ".$this->EE->db->dbprefix."br_product_entry)";
-		$qry = $this->EE->db->query($sql);
-		if($qry->num_rows() >= 0){
-			
-			foreach($qry->result_array() as $rst){
-				$data = array(
-				        'title'         => $rst["title"],
-				        'status'		=> ($rst["enabled"] == 1) ? 'open' : 'closed', 
-				        'entry_date'    => time() 
-				);
-				$this->EE->api_channel_entries->submit_new_entry($this->br_channel_id,$data);	
-				$qry = $this->EE->db->query("SELECT entry_id FROM exp_channel_titles ORDER BY entry_id DESC LIMIT 1");
-				$result = $qry->result_array();
-
-				$this->EE->db->query("	INSERT INTO 
-											exp_br_product_entry 
-										(product_id, entry_id) 
-											VALUES 
-										(".$rst["product_id"].",".$result[0]["entry_id"].")");
-				
-				// Remove cache file
-					remove_from_cache('product_'.$rst["product_id"]);
-			}
-		}
-	}
-
-	public function s3_get_files()
-	{	
-		$bucket = $this->EE->input->get('bucket');
-		
-		// Get the buckets 
-		$this->EE->load->library('aws');
-		$this->EE->aws->AWSAccessKeyId 	= $this->_config["store"][$this->site_id]["downlaods_s3_access_key"];
-		$this->EE->aws->AWSSecretKey	= $this->_config["store"][$this->site_id]["downlaods_s3_secret_key"];
-		$list = $this->EE->aws->listFiles($bucket);
-		echo json_encode($list);
-		exit;
-	}
+	/**
+	 * s3_get_files function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+    	public function s3_get_files()
+    	{	
+    		$bucket = $this->EE->input->get('bucket');
+    		
+    		// Get the buckets 
+    		$this->EE->load->library('aws');
+    		$this->EE->aws->AWSAccessKeyId 	= $this->_config["store"][$this->site_id]["downlaods_s3_access_key"];
+    		$this->EE->aws->AWSSecretKey	= $this->_config["store"][$this->site_id]["downlaods_s3_secret_key"];
+    		$list = $this->EE->aws->listFiles($bucket);
+    		echo json_encode($list);
+    		exit;
+    	}
 	
 	/************************************************/
 	/* The section below includes helper functions	*/
 	/* required by the Channel Fieldtypes. 			*/ 
 	/************************************************/
 
+	/**
+	 * _setup_file_list function.
+	 * 
+	 * @access private
+	 * @return void
+	 */
 		private function _setup_file_list()
 		{
 			$this->EE->load->model('file_upload_preferences_model');
@@ -4063,257 +4572,284 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			}
 		}
-		
-		
-	function _markitup()
-	{
-		$this->EE->load->model('admin_model');
-		
-		$html_buttons = $this->EE->admin_model->get_html_buttons($this->EE->session->userdata('member_id'));
-		$button_js = array();
-		$has_image = FALSE;
-		
-		foreach ($html_buttons->result() as $button)
-		{
-			if (strpos($button->classname, 'btn_img') !== FALSE)
-			{
-				// images are handled differently because of the file browser
-				// at least one image must be available for this to work
-				$has_image = TRUE;
-												
-				if (count($this->_file_manager['file_list']))
-				{
-					$button_js[] = array('name' => $button->tag_name, 'key' => $button->accesskey, 'replaceWith' => '', 'className' => $button->classname);
-					$this->EE->javascript->set_global('filebrowser.image_tag', $button->tag_open);
-				}
-			}
-			elseif(strpos($button->classname, 'markItUpSeparator') !== FALSE)
-			{
-				// separators are purely presentational
-				$button_js[] = array('separator' => '---');
-			}
-			else
-			{
-				$button_js[] = array('name' => $button->tag_name, 'key' => strtoupper($button->accesskey), 'openWith' => $button->tag_open, 'closeWith' => $button->tag_close, 'className' => $button->classname);
-			}
-		}
-		
-		// We force an image button if it doesn't already exist
-		if ($has_image == FALSE && count($this->_file_manager['file_list']))
-		{
-			$button_js[] = array('name' => 'img', 'key' => '', 'replaceWith' => '', 'className' => 'btn_img');
-			$this->EE->javascript->set_global('filebrowser.image_tag', '<img src="[![Link:!:http://]!]" alt="[![Alternative text]!]" />');			
-		}
-		
-		$this->EE->javascript->set_global('p.image_tag', 'foo you!');
 
-		$markItUp = $markItUp_writemode = array(
-			'nameSpace'		=> "html",
-			'onShiftEnter'	=> array('keepDefault' => FALSE, 'replaceWith' => "<br />\n"),
-			'onCtrlEnter'	=> array('keepDefault' => FALSE, 'openWith' => "\n<p>", 'closeWith' => "</p>\n"),
-			'markupSet'		=> $button_js,
-		);
-
-		// -------------------------------------------
-		//	Hidden Configuration Variable
-		//	- allow_textarea_tabs => Add tab preservation to all textareas or disable completely
-		// -------------------------------------------
-
-		if ($this->EE->config->item('allow_textarea_tabs') == 'y')
-		{
-			$markItUp['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
-			$markItUp_writemode['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
-		}
-		elseif ($this->EE->config->item('allow_textarea_tabs') != 'n')
-		{
-			$markItUp_writemode['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
-		}
-
-		$markItUp_nobtns = $markItUp;
-		unset($markItUp_nobtns['markupSet']);
-
-		$this->EE->cp->add_js_script(array("
-			<script type=\"text/javascript\" charset=\"utf-8\">
-			// <![CDATA[
-			mySettings = ".json_encode($markItUp).";
-			myNobuttonSettings = ".json_encode($markItUp_nobtns).";
-			myWritemodeSettings = ".json_encode($markItUp_writemode).";
-			// ]]>
-			</script>
-
-		"), FALSE);
-
-		$this->EE->javascript->set_global('publish.show_write_mode', ($this->_channel_data['show_button_cluster'] == 'y') ? TRUE : FALSE);
-	}
+	/**
+	 * _markitup function.
+	 * 
+	 * @access private
+	 * @return void
+	 */
+    	function _markitup()
+    	{
+    		$this->EE->load->model('admin_model');
+    		
+    		$html_buttons = $this->EE->admin_model->get_html_buttons($this->EE->session->userdata('member_id'));
+    		$button_js = array();
+    		$has_image = FALSE;
+    		
+    		foreach ($html_buttons->result() as $button)
+    		{
+    			if (strpos($button->classname, 'btn_img') !== FALSE)
+    			{
+    				// images are handled differently because of the file browser
+    				// at least one image must be available for this to work
+    				$has_image = TRUE;
+    												
+    				if (count($this->_file_manager['file_list']))
+    				{
+    					$button_js[] = array('name' => $button->tag_name, 'key' => $button->accesskey, 'replaceWith' => '', 'className' => $button->classname);
+    					$this->EE->javascript->set_global('filebrowser.image_tag', $button->tag_open);
+    				}
+    			}
+    			elseif(strpos($button->classname, 'markItUpSeparator') !== FALSE)
+    			{
+    				// separators are purely presentational
+    				$button_js[] = array('separator' => '---');
+    			}
+    			else
+    			{
+    				$button_js[] = array('name' => $button->tag_name, 'key' => strtoupper($button->accesskey), 'openWith' => $button->tag_open, 'closeWith' => $button->tag_close, 'className' => $button->classname);
+    			}
+    		}
+    		
+    		// We force an image button if it doesn't already exist
+    		if ($has_image == FALSE && count($this->_file_manager['file_list']))
+    		{
+    			$button_js[] = array('name' => 'img', 'key' => '', 'replaceWith' => '', 'className' => 'btn_img');
+    			$this->EE->javascript->set_global('filebrowser.image_tag', '<img src="[![Link:!:http://]!]" alt="[![Alternative text]!]" />');			
+    		}
+    		
+    		$this->EE->javascript->set_global('p.image_tag', 'foo you!');
+    
+    		$markItUp = $markItUp_writemode = array(
+    			'nameSpace'		=> "html",
+    			'onShiftEnter'	=> array('keepDefault' => FALSE, 'replaceWith' => "<br />\n"),
+    			'onCtrlEnter'	=> array('keepDefault' => FALSE, 'openWith' => "\n<p>", 'closeWith' => "</p>\n"),
+    			'markupSet'		=> $button_js,
+    		);
+    
+    		// -------------------------------------------
+    		//	Hidden Configuration Variable
+    		//	- allow_textarea_tabs => Add tab preservation to all textareas or disable completely
+    		// -------------------------------------------
+    
+    		if ($this->EE->config->item('allow_textarea_tabs') == 'y')
+    		{
+    			$markItUp['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
+    			$markItUp_writemode['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
+    		}
+    		elseif ($this->EE->config->item('allow_textarea_tabs') != 'n')
+    		{
+    			$markItUp_writemode['onTab'] = array('keepDefault' => FALSE, 'replaceWith' => "\t");
+    		}
+    
+    		$markItUp_nobtns = $markItUp;
+    		unset($markItUp_nobtns['markupSet']);
+    
+    		$this->EE->cp->add_js_script(array("
+    			<script type=\"text/javascript\" charset=\"utf-8\">
+    			// <![CDATA[
+    			mySettings = ".json_encode($markItUp).";
+    			myNobuttonSettings = ".json_encode($markItUp_nobtns).";
+    			myWritemodeSettings = ".json_encode($markItUp_writemode).";
+    			// ]]>
+    			</script>
+    
+    		"), FALSE);
+    
+    		$this->EE->javascript->set_global('publish.show_write_mode', ($this->_channel_data['show_button_cluster'] == 'y') ? TRUE : FALSE);
+    	}
 		
-	private function _load_channel_data($channel_id)
-	{
-		$this->EE->load->model('channel_model');
-		$query = $this->EE->channel_model->get_channel_info($channel_id);
-		$row = $query->row_array();
-		return $row;
-	}
-	
-	private function _prep_field_wrapper($field_list)
-	{
-		$defaults = array(
-			'field_show_spellcheck'			=> 'n',
-			'field_show_smileys'			=> 'n',
-			'field_show_glossary'			=> 'n',
-			'field_show_formatting_btns'	=> 'n',
-			'field_show_writemode'			=> 'n',
-			'field_show_file_selector'		=> 'n',
-			'field_show_fmt'				=> 'n',
-			'field_fmt_options'				=> array()
-		);
-		
-		$markitup_buttons = array();
-		$get_format = array();
-	
-		foreach ($field_list as $field => &$data)
-		{
-			$data['has_extras'] = FALSE;
-			
-			foreach($defaults as $key => $val)
-			{
-				if (isset($data[$key]) && $data[$key] == 'y')
-				{
-					$data['has_extras'] = TRUE;
-					continue;
-				}
-
-				$data[$key] = $val;
-			}
-			
-			if ($data['field_show_smileys'] == 'y' && $this->vars["smileys_enabled"] === TRUE)
-			{
-				$data['smiley_table'] = $this->_build_smiley_table($field);
-			}
-			
-			if ($data['field_show_fmt'] == 'y')
-			{
-				// We'll get all the format options in one go
-				$get_format[] = $data['field_id'];
-			}
-			
-			if ($this->_channel_data['show_button_cluster'] == 'y' && isset($data['field_show_formatting_btns']) && $data['field_show_formatting_btns'] == 'y')
-			{
-				$markitup_buttons['fields'][$field] = $data['field_id'];
-			}
-		}
-		
-		// Field formatting
-		if (count($get_format) > 0)
-		{
-			$this->EE->db->select('field_id, field_fmt');
-			$this->EE->db->where_in('field_id', $get_format);
-			$this->EE->db->order_by('field_fmt');
-			$query = $this->EE->db->get('field_formatting');
-
-			if ($query->num_rows() > 0)
-			{
-				foreach ($query->result_array() as $format)
-				{
-					$name = ucwords(str_replace('_', ' ', $format['field_fmt']));
-			
-					if ($name == 'Br')
-					{
-						$name = lang('auto_br');
-					}
-					elseif ($name == 'Xhtml')
-					{
-						$name = lang('xhtml');
-					}
-					
-					$field_list['field_id_'.$format['field_id']]['field_fmt_options'][$format['field_fmt']] = $name;
-				}
-			}
-		}
-		
-		$this->EE->javascript->set_global('publish.markitup', $markitup_buttons);
-		
-		return $field_list;
-	}
-	
-	private function _build_smiley_table($field_name)
-	{		
-		$this->EE->load->library('table');
-
-		$this->EE->table->set_template(array(
-			'table_open' => 
-			'<table style="text-align: center; margin-top: 5px;" cellspacing="0" class="mainTable padTable smileyTable">'
-		));
-
-		$image_array = get_clickable_smileys($this->EE->config->slash_item('emoticon_url'),$field_name);
-		$col_array = $this->EE->table->make_columns($image_array, 8);
-		$smilies = '<div class="smileyContent" style="display: none;">';
-		$smilies .= $this->EE->table->generate($col_array).'</div>';
-		$this->EE->table->clear();
-		
-		return $smilies;
-	}
+	/**
+	 * _load_channel_data function.
+	 * 
+	 * @access private
+	 * @param mixed $channel_id
+	 * @return void
+	 */
+    	private function _load_channel_data($channel_id)
+    	{
+    		$this->EE->load->model('channel_model');
+    		$query = $this->EE->channel_model->get_channel_info($channel_id);
+    		$row = $query->row_array();
+    		return $row;
+    	}
 	
 	/**
-	 * Set Global Javascript
-	 *
-	 * @param 	int
-	 * @return 	void
+	 * _prep_field_wrapper function.
+	 * 
+	 * @access private
+	 * @param mixed $field_list
+	 * @return void
 	 */
-	private function _set_global_js($entry_id)
-	{
-		$autosave_interval_seconds = ($this->EE->config->item('autosave_interval_seconds') === FALSE) ? 60 : $this->EE->config->item('autosave_interval_seconds');
-
-		//	Create Foreign Character Conversion JS
-		include(APPPATH.'config/foreign_chars.php');
-
-		/* -------------------------------------
-		/*  'foreign_character_conversion_array' hook.
-		/*  - Allows you to use your own foreign character conversion array
-		/*  - Added 1.6.0
-		* 	- Note: in 2.0, you can edit the foreign_chars.php config file as well
-		*/  
-			if (isset($this->extensions->extensions['foreign_character_conversion_array']))
-			{
-				$foreign_characters = $this->extensions->call('foreign_character_conversion_array');
-			}
-		/*
-		/* -------------------------------------*/
-
-		$date_fmt = ($this->EE->session->userdata('time_format') != '') ? $this->EE->session->userdata('time_format') : $this->EE->config->item('time_format');
-
-		$this->EE->javascript->set_global(array(
-			'date.format'						=> $date_fmt,
-			'lang.add_new_html_button'			=> lang('add_new_html_button'),
-			'lang.add_tab' 						=> lang('add_tab'),
-			'lang.close' 						=> lang('close'),
-			'lang.confirm_exit'					=> lang('confirm_exit'),
-			'lang.duplicate_tab_name'			=> lang('duplicate_tab_name'),
-			'lang.hide_toolbar' 				=> lang('hide_toolbar'),
-			'lang.illegal_characters'			=> lang('illegal_characters'),
-			'lang.loading'						=> lang('loading'),
-			'lang.tab_name'						=> lang('tab_name'),
-			'lang.show_toolbar' 				=> lang('show_toolbar'),
-			'lang.tab_name_required' 			=> lang('tab_name_required'),
-			'publish.channel_id'				=> $this->_channel_data['channel_id'],
-			'publish.default_entry_title'		=> $this->_channel_data['default_entry_title'],
-			'publish.field_group'				=> $this->_channel_data['field_group'],
-			'publish.foreignChars'				=> $foreign_characters,
-			'publish.lang.layout_removed'		=> lang('layout_removed'),
-			'publish.lang.no_member_groups'		=> lang('no_member_groups'),
-			'publish.lang.refresh_layout'		=> lang('refresh_layout'),
-			'publish.lang.tab_count_zero'		=> lang('tab_count_zero'),
-			'publish.lang.tab_has_req_field'	=> lang('tab_has_req_field'),
-			'publish.markitup.foo'				=> FALSE,
-			'publish.smileys'					=> ($this->vars["smileys_enabled"]) ? TRUE : FALSE,
-			'publish.url_title_prefix'			=> $this->_channel_data['url_title_prefix'],
-			'publish.which'						=> ($entry_id === 0) ? 'new' : 'edit',
-			'publish.word_separator'			=> $this->EE->config->item('word_separator') != "dash" ? '_' : '-',
-			'user.can_edit_html_buttons'		=> $this->EE->cp->allowed_group('can_edit_html_buttons'),
-			'user.foo'							=> FALSE,
-			'user_id'							=> $this->EE->session->userdata('member_id'),
-			'upload_directories'				=> $this->_file_manager['file_list'],
-		));
-	}
+    	private function _prep_field_wrapper($field_list)
+    	{
+    		$defaults = array(
+    			'field_show_spellcheck'			=> 'n',
+    			'field_show_smileys'			=> 'n',
+    			'field_show_glossary'			=> 'n',
+    			'field_show_formatting_btns'	=> 'n',
+    			'field_show_writemode'			=> 'n',
+    			'field_show_file_selector'		=> 'n',
+    			'field_show_fmt'				=> 'n',
+    			'field_fmt_options'				=> array()
+    		);
+    		
+    		$markitup_buttons = array();
+    		$get_format = array();
+    	
+    		foreach ($field_list as $field => &$data)
+    		{
+    			$data['has_extras'] = FALSE;
+    			
+    			foreach($defaults as $key => $val)
+    			{
+    				if (isset($data[$key]) && $data[$key] == 'y')
+    				{
+    					$data['has_extras'] = TRUE;
+    					continue;
+    				}
+    
+    				$data[$key] = $val;
+    			}
+    			
+    			if ($data['field_show_smileys'] == 'y' && $this->vars["smileys_enabled"] === TRUE)
+    			{
+    				$data['smiley_table'] = $this->_build_smiley_table($field);
+    			}
+    			
+    			if ($data['field_show_fmt'] == 'y')
+    			{
+    				// We'll get all the format options in one go
+    				$get_format[] = $data['field_id'];
+    			}
+    			
+    			if ($this->_channel_data['show_button_cluster'] == 'y' && isset($data['field_show_formatting_btns']) && $data['field_show_formatting_btns'] == 'y')
+    			{
+    				$markitup_buttons['fields'][$field] = $data['field_id'];
+    			}
+    		}
+    		
+    		// Field formatting
+    		if (count($get_format) > 0)
+    		{
+    			$this->EE->db->select('field_id, field_fmt');
+    			$this->EE->db->where_in('field_id', $get_format);
+    			$this->EE->db->order_by('field_fmt');
+    			$query = $this->EE->db->get('field_formatting');
+    
+    			if ($query->num_rows() > 0)
+    			{
+    				foreach ($query->result_array() as $format)
+    				{
+    					$name = ucwords(str_replace('_', ' ', $format['field_fmt']));
+    			
+    					if ($name == 'Br')
+    					{
+    						$name = lang('auto_br');
+    					}
+    					elseif ($name == 'Xhtml')
+    					{
+    						$name = lang('xhtml');
+    					}
+    					
+    					$field_list['field_id_'.$format['field_id']]['field_fmt_options'][$format['field_fmt']] = $name;
+    				}
+    			}
+    		}
+    		
+    		$this->EE->javascript->set_global('publish.markitup', $markitup_buttons);
+    		
+    		return $field_list;
+    	}
+	
+	/**
+	 * _build_smiley_table function.
+	 * 
+	 * @access private
+	 * @param mixed $field_name
+	 * @return void
+	 */
+    	private function _build_smiley_table($field_name)
+    	{		
+    		$this->EE->load->library('table');
+    
+    		$this->EE->table->set_template(array(
+    			'table_open' => 
+    			'<table style="text-align: center; margin-top: 5px;" cellspacing="0" class="mainTable padTable smileyTable">'
+    		));
+    
+    		$image_array = get_clickable_smileys($this->EE->config->slash_item('emoticon_url'),$field_name);
+    		$col_array = $this->EE->table->make_columns($image_array, 8);
+    		$smilies = '<div class="smileyContent" style="display: none;">';
+    		$smilies .= $this->EE->table->generate($col_array).'</div>';
+    		$this->EE->table->clear();
+    		
+    		return $smilies;
+    	}
+	
+	/**
+	 * _set_global_js function.
+	 * 
+	 * @access private
+	 * @param mixed $entry_id
+	 * @return void
+	 */
+    	private function _set_global_js($entry_id)
+    	{
+    		$autosave_interval_seconds = ($this->EE->config->item('autosave_interval_seconds') === FALSE) ? 60 : $this->EE->config->item('autosave_interval_seconds');
+    
+    		//	Create Foreign Character Conversion JS
+    		include(APPPATH.'config/foreign_chars.php');
+    
+    		/* -------------------------------------
+    		/*  'foreign_character_conversion_array' hook.
+    		/*  - Allows you to use your own foreign character conversion array
+    		/*  - Added 1.6.0
+    		* 	- Note: in 2.0, you can edit the foreign_chars.php config file as well
+    		*/  
+    			if (isset($this->extensions->extensions['foreign_character_conversion_array']))
+    			{
+    				$foreign_characters = $this->extensions->call('foreign_character_conversion_array');
+    			}
+    		/*
+    		/* -------------------------------------*/
+    
+    		$date_fmt = ($this->EE->session->userdata('time_format') != '') ? $this->EE->session->userdata('time_format') : $this->EE->config->item('time_format');
+    
+    		$this->EE->javascript->set_global(array(
+    			'date.format'						=> $date_fmt,
+    			'lang.add_new_html_button'			=> lang('add_new_html_button'),
+    			'lang.add_tab' 						=> lang('add_tab'),
+    			'lang.close' 						=> lang('close'),
+    			'lang.confirm_exit'					=> lang('confirm_exit'),
+    			'lang.duplicate_tab_name'			=> lang('duplicate_tab_name'),
+    			'lang.hide_toolbar' 				=> lang('hide_toolbar'),
+    			'lang.illegal_characters'			=> lang('illegal_characters'),
+    			'lang.loading'						=> lang('loading'),
+    			'lang.tab_name'						=> lang('tab_name'),
+    			'lang.show_toolbar' 				=> lang('show_toolbar'),
+    			'lang.tab_name_required' 			=> lang('tab_name_required'),
+    			'publish.channel_id'				=> $this->_channel_data['channel_id'],
+    			'publish.default_entry_title'		=> $this->_channel_data['default_entry_title'],
+    			'publish.field_group'				=> $this->_channel_data['field_group'],
+    			'publish.foreignChars'				=> $foreign_characters,
+    			'publish.lang.layout_removed'		=> lang('layout_removed'),
+    			'publish.lang.no_member_groups'		=> lang('no_member_groups'),
+    			'publish.lang.refresh_layout'		=> lang('refresh_layout'),
+    			'publish.lang.tab_count_zero'		=> lang('tab_count_zero'),
+    			'publish.lang.tab_has_req_field'	=> lang('tab_has_req_field'),
+    			'publish.markitup.foo'				=> FALSE,
+    			'publish.smileys'					=> ($this->vars["smileys_enabled"]) ? TRUE : FALSE,
+    			'publish.url_title_prefix'			=> $this->_channel_data['url_title_prefix'],
+    			'publish.which'						=> ($entry_id === 0) ? 'new' : 'edit',
+    			'publish.word_separator'			=> $this->EE->config->item('word_separator') != "dash" ? '_' : '-',
+    			'user.can_edit_html_buttons'		=> $this->EE->cp->allowed_group('can_edit_html_buttons'),
+    			'user.foo'							=> FALSE,
+    			'user_id'							=> $this->EE->session->userdata('member_id'),
+    			'upload_directories'				=> $this->_file_manager['file_list'],
+    		));
+    	}
 
 
 }	

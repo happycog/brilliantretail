@@ -28,9 +28,14 @@
 }
 </style>
 
-<?=$br_header?>
+	<?php
 
-	<?=form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_update',array('method' => 'POST', 'id' => 'productForm'),$hidden)?>
+	   echo $br_header;   
+	   
+	   echo form_open_multipart(
+	                       $action,
+	                       array('method' => 'POST', 'id' => 'productForm'),$hidden);
+    ?>
 
     <div id="error" style="display:none">
 		<p>
