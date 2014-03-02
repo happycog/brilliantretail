@@ -970,77 +970,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$_SESSION["message"] = lang('br_order_remove_note_success');
 				$this->EE->functions->redirect($this->base_url.AMP.'method=order_detail'.AMP.'order_id='.$order_id);
 		}
-		
-		/************************/
-		/* Create a new order 	*/
-		/************************/
-		/*
-		function order_new()
-		{
-			
-			// Add the create product button
-				$this->EE->cp->set_right_nav(array(
-					'br_orders' => BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order'
-				));
-			
-			
-			$this->vars['cp_page_title'] = lang('nav_br_order_new');
-
-
-			$member_id = (int) $this->EE->input->get('member_id');
-			if($member_id == 0)
-			{
-				// ajax url to get customer_collection from data tables
-				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_new_customer_ajax';
-			
-				return $this->_view('order/order_new_customer', $this->vars);	
-			}else{
-				// Get the info for the selected member
-					$this->vars["member"] = $this->EE->customer_model->get_customer_profile($member_id);
 				
-				// Get the group names
-					$qry = $this->EE->member_model->get_member_groups();
-					$groups = array();
-					foreach($qry->result_array() as $row){
-						$groups[$row["group_id"]] = $row["group_title"];
-					}
-					$this->vars["groups"] = $groups;
-				
-				return $this->_view('order/order_new', $this->vars);	
-			}
-		}
-		
-		function order_new_customer_ajax()
-		{
-			// Member Collection	
-				$members = $this->EE->customer_model->get_customers('',$_GET["iDisplayLength"],$_GET["iDisplayStart"],$_GET["sSearch"],$_GET["iSortCol_0"],$_GET["sSortDir_0"]);
-			
-			// Container for member rows
-				$member = array();
-				foreach ($members["results"] as $row){
-					if($row["customer"] == ''){
-						$row["customer"] = '('.lang('empty').')';
-					}
-					$member[] = array(	'<b>'.$row["customer"].'</b>',
-										$row["email"],
-										$row["group_title"],
-										'<a href="'.BASE.'&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_new&member_id='.$row["member_id"].'">'.lang('br_order_select_customer').'</a>'
-									);
-				}
-			// Build the response array
-				$output = array(
-									"sEcho" => $_GET["sEcho"],
-									"iTotalRecords" => $members["total"],
-									"iTotalDisplayRecords" => $members["displayTotal"],
-									"aaData" => $member  
-								);
-			// Return the json data 
-				@header("HTTP/1.1 200 OK");
-				echo json_encode($output);
-				exit();
-		}
-		*/
-		
 	/************************/
 	/* Customer Tab		 	*/
 	/************************/
