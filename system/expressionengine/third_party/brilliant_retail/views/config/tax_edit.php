@@ -22,7 +22,14 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 ?>
-<?=form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_update', array('method' => 'POST', 'id' => 'taxTable','encrypt' => 'multipart/form-data'),$hidden)?>
+<?=form_open(  
+                $action, 
+                array(  
+                        'method' => 'POST', 
+                        'id' => 'taxTable'
+                    ),
+                $hidden
+            )?>
 	<table class="product_edit" width="100%" cellpadding="0" cellspacing="0">
     	<thead>
     		<tr>

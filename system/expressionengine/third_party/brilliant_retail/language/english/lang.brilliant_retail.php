@@ -428,7 +428,8 @@ $lang = array(
 	'br_config_shipping_instructions'		=> 'Select and manage your shipping methods',
 	'br_config_site_instructions'			=> 'General configuration settings for your store',
 	'br_config_tax_instructions'			=> 'Setup and manage your stores tax rates and rules.',
-
+    'br_member_groups'                      => 'Member Groups',
+    
 	// Attributes 
 		'br_text' => 'Text',
 		'br_file' => 'File',
@@ -453,7 +454,7 @@ $lang = array(
 		'br_new_attribute' 					=> 'New Attribute',	
 		'br_attribute_set' 					=> 'Attribute Sets',
 		'br_attribute_set_instruction' 		=> 'Select the attributes you would like to populate when the set is selected.<br />(Hint: You can drag & drop the titles to set the order.)',
-		'br_new_attribute_set' 				=> 'New Attribute',
+		'br_new_attribute_set' 				=> 'New Attribute Set',
 		'br_attribute_set_settings' 		=> 'Attribute Set Settings', 
 		'br_confirm_delete_attribute_set' 	=> 'Are you sure you want to delete the selected attribute set? Warning: This can not be undone!',
 		'br_attribute_set_delete_success' 	=> 'Attribute Set Successfully Deleted!', 

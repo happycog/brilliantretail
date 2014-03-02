@@ -22,7 +22,12 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-	echo form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_permission_update',array('method' => 'POST', 'id' => 'storeForm'),$hidden);
+	echo form_open_multipart(  $action, 
+	                           array(
+	                                   'method' => 'POST', 
+	                                   'id' => 'storeForm'
+	                               ),
+	                           $hidden);
 ?>
 	<table cellspacing="0" id="site_edit" cellpadding="0" border="0" class="product_edit" width="100%">
 		<thead>

@@ -1190,24 +1190,40 @@ class Brilliant_retail_core {
 				$snippetdata = $this->vars["snippets"]["br_payment_layout"]["snippet_contents"];
 			
 			$i = 0;
+            
+            // We need to tell the javascript if their is a payment option available. 
+                $payment_options_available = 0;
+
 			foreach($gateways as $g){
-				$sel 		= ($i == 0) ? 'checked="checked"' : '';
-				$display 	= ($i == 0) ? 'style="display:block"' : '';
 				
-				$vars[0]	= array(
-										"payment_id"		=> 	'gateway_'.$g["code"], 
-										"gateway_value"		=>	md5($g["config_id"]),
-										"gateway_id"		=> 	'gateway_'.$i, 
-										"gateway_checked"	=> 	$sel, 
-										"gateway_label"		=> 	$g["label"], 
-										"gateway_display"	=> 	$display,
-										"gateway_form"		=> 	trim($g["form"]), 
-										"has_form"			=> 	(trim($g["form"]) == "") ? FALSE : TRUE 
-									);
-				$tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
-				$this->EE->TMPL->parse($tmp);
-				$output .= $tmp;
-				$i++;
+				// Is the gateway in the group list? 
+    				$group_id = $this->EE->session->userdata["group_id"];
+    				$groups = explode(',',$g["groups"]);
+    
+                    if(!in_array(0,$groups) && !in_array($group_id,$groups))
+                    {
+                        continue;
+                    }
+
+                // This user group can see it				
+                    $sel 		= ($i == 0) ? 'checked="checked"' : '';
+                    $display 	= ($i == 0) ? 'style="display:block"' : '';
+                    
+                    $vars[0]	= array(
+                    						"payment_id"		=> 	'gateway_'.$g["code"], 
+                    						"gateway_value"		=>	md5($g["config_id"]),
+                    						"gateway_id"		=> 	'gateway_'.$i, 
+                    						"gateway_checked"	=> 	$sel, 
+                    						"gateway_label"		=> 	$g["label"], 
+                    						"gateway_display"	=> 	$display,
+                    						"gateway_form"		=> 	trim($g["form"]), 
+                    						"has_form"			=> 	(trim($g["form"]) == "") ? FALSE : TRUE 
+                    					);
+                    $tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
+                    $this->EE->TMPL->parse($tmp);
+                    $output .= $tmp;
+                    $payment_options_available = 1;
+                    $i++;
 			}
 		
 		// This will allow us to add stuff directly into the payment option response form
@@ -1216,6 +1232,8 @@ class Brilliant_retail_core {
 				$output = $this->EE->extensions->call('br_payment_options_after', $output);
 			}
 		
+        $output .= '<input type="hidden" id="payment_options_available" value="'.$payment_options_available.'" />';
+        		
 		return $output;
 	}
 	
@@ -1313,8 +1331,17 @@ class Brilliant_retail_core {
 		
 		// Get options
 				
+		$group_id = $this->EE->session->userdata["group_id"];
+    						
 		foreach($this->_config["shipping"][$this->site_id] as $ship){
-			
+
+			// Is the method in the group list? 
+    			$groups = explode(',',$ship["groups"]);
+                if(!in_array(0,$groups) && !in_array($group_id,$groups))
+                {
+                    continue;
+                }
+
 			if($ship["enabled"] == 1){
 				$config = array();
 				foreach($ship["config_data"] as $d){

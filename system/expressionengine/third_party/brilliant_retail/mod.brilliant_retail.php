@@ -2097,7 +2097,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 																$('#shipping_container').html(data[0].marker+data[0].shipping);
 																$('#total_container').html(data[0].marker+data[0].total);
 																// Only show the button if we have shipping options
-																if($('#shipping_options_available').val() == 1){
+																if($('#shipping_options_available').val() == 1 && $('#payment_options_available').val() == 1){
 																	$('#checkout_btn').show();						
 																}
 																_checkout_callback(data[0]);

@@ -21,12 +21,14 @@
 /* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
-echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_shipping_update',
-				array(	'method' 	=> 'POST', 
-						'id' 		=> 'shipping_edit',
-						'class' 	=> 'b2r_category', 
-						'encrypt' 	=> 'multipart/form-data'),
-				array(	'config_id' => $config_id));
+echo form_open_multipart(
+                             $action,
+            				 array(	'method' 	=> 'POST', 
+            						'id' 		=> 'shipping_edit',
+            						'class' 	=> 'b2r_category', 
+            						'encrypt' 	=> 'multipart/form-data'),
+            				 array(	'config_id' => $config_id)
+        				 );
 ?>
 <div id="b2r_page" class="b2r_category">
 	<table id="shipping_tbl" class="product_edit" width="100%" cellspacing="0" cellpadding="0">
@@ -67,6 +69,30 @@ echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&
 	        		<?=lang('br_sort')?></td>
 	        	<td>
 	            	<input type="text" class="{required:true,digit:true}" title="<?=lang('br_sort')?> is required" value="<?=$sort?>" name="sort"></td>
+	    	</tr>
+	    	<tr>
+	        	<td class="cell_1">
+	        		<?=lang('br_member_groups')?></td>
+	        	<td>
+	            	<select name="groups[]" multiple="multiple" style="width:200px;height:100px;">
+                        <?php
+                            $sel = '';
+                            $all_groups = FALSE;
+                            if(in_array(0,$groups))
+                            {
+                                $sel = 'selected="selected"';
+                                $all_groups = TRUE;
+                            }
+                            
+                            echo '<option value="0" '.$sel.'>'.lang('br_all_groups').'</option>';
+                            
+                            foreach($group_list as $key => $val)
+                            {
+                                $sel = (in_array($key,$groups) && $all_groups == FALSE) ? 'selected="selected"' : '';
+                                echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';
+                            }
+                        ?>
+	            	</select></td>
 	    	</tr>
 	    	<?php
 		    	$i=0;

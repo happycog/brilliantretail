@@ -324,6 +324,7 @@ class Brilliant_retail_upd {
   code varchar(100) NOT NULL,
   type varchar(100) NOT NULL,
   enabled int(11) NOT NULL DEFAULT '0',
+  groups varchar(100) NOT NULL DEFAULT '0',
   descr varchar(255) NOT NULL,
   version float(10,1) NOT NULL,
   sort int(11) NOT NULL DEFAULT '1',

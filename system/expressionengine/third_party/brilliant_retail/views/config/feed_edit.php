@@ -72,16 +72,16 @@
                     {
                       $hidden['feed_id'] = $feed['feed_id'];
                     }
-                  	echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_feeds_edit',
-          					  array(	
-          					    'method'  => 'POST', 
-                    		'id' 		  => 'feed_edit',
-                    		'encrypt' => 'multipart/form-data'
-                    	),
-                    	$hidden
+                  	echo form_open(  $action,
+                  					 array(	
+                                            'method'  => 'POST', 
+                                            'id' 		  => 'feed_edit',
+                                            'encrypt' => 'multipart/form-data'
+                                        ),
+                                    $hidden
                     );
-                    ?>
-        						<div id="b2r_page" class="b2r_category">
+?>
+<div id="b2r_page" class="b2r_category">
     		<table id="feed_tbl" class="product_edit" width="100%" cellspacing="0" cellspacing="0">
             	<thead>
 					<tr class="odd">

@@ -274,7 +274,14 @@
 						</table>
 					</div>";
 		
-		echo form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_site_update',array('method' => 'POST', 'id' => 'storeForm'),$hidden);
+		echo form_open_multipart(
+    		                          $action,
+    		                          array(
+    		                                  'method'    => 'POST', 
+    		                                  'id'        => 'storeForm'
+    		                              ),
+    		                          $hidden
+		                          );
 ?>
 
 	

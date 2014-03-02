@@ -67,7 +67,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											"config_category_edit","config_email_edit","config_gateway_install",
 											"config_gateway_edit","config_gateway_remove","config_permission_edit",
 											"config_shipping_install","config_shipping_edit","config_shipping_remove",
-											"config_tax_new","config_tax_edit","tools_clear_cache");
+											"config_tax_new","config_tax_edit","tools_clear_cache","s3_get_files");
 											
 			private $disallowed_fieldtypes = array('wygwam','Wyvern');								
 
@@ -117,7 +117,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->module = $this->EE->input->get("module",TRUE);
 					$this->method = ($this->EE->input->get("method",TRUE)) ? ($this->EE->input->get("method",TRUE)) : "index" ;
 		
-					$this->base_url = str_replace('&amp;','&',BASE).'&C=addons_modules&M=show_module_cp&module='.$this->module;
+					$this->base_url = BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->module;
 					$this->vars["base_url"] = $this->base_url;
 	
 					// Do an admin access check 
@@ -255,7 +255,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["status"] = $this->_config["status"];			
 				
 			// Batch Action
-				$this->vars['action']	= $this->base_url.'&method=order_batch';
+				$this->vars['action']	= $this->base_url.AMP.'method=order_batch';
 
 			// AJAX url to get order_collection from data tables
 				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
@@ -876,8 +876,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->order_model->create_order_note($data);
 			// Message and relocate
 				$_SESSION["message"] = lang('br_order_add_note_success');
-				header('location: '.$this->base_url.'&method=order_detail&order_id='.$data["order_id"]);
-				exit();
+				$this->EE->functions->redirect($this->base_url.AMP.'method=order_detail'.AMP.'order_id='.$data["order_id"]);
 		}
 		
 		function order_remove_note()
@@ -889,8 +888,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->order_model->remove_order_note($order_note_id);
 			// Message and redirect
 				$_SESSION["message"] = lang('br_order_remove_note_success');
-				header('location: '.$this->base_url.'&method=order_detail&order_id='.$order_id);
-				exit();
+				$this->EE->functions->redirect($this->base_url.AMP.'method=order_detail'.AMP.'order_id='.$order_id);
 		}
 		
 		/************************/
@@ -1654,8 +1652,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					remove_from_cache('product_'.$data["product_id"]);
 					
 					$_SESSION["message"] = lang('br_product_delete_success');
-					header('location: '.$this->base_url.'&method=product');
-					exit();
+					$this->EE->functions->redirect($this->base_url.AMP.'method=product');
 				}
 			
 			if(isset($data["duplicate"])){
@@ -1966,7 +1963,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			if(!is_numeric($promo_id)){
 				$this->EE->session->set_flashdata('message_failure',lang('br_error_invalid_id'));
-				header('location: '.$this->base_url.'&method=config_promo');
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_promo');
 			}
 			$this->vars['product_search'] = $this->ajax_url.$this->EE->cp->fetch_action_id('Brilliant_retail_mcp', 'product_search');			
 
@@ -2025,8 +2022,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				if(isset($_POST["delete"])){
 					$this->EE->promo_model->delete_promo($_POST["promo_id"]);
 					$_SESSION["message"] = lang('br_promo_delete_success');
-					header('location: '.$this->base_url.'&method=promo');
-					exit();
+					$this->EE->functions->redirect($this->base_url.AMP.'method=promo');
 				}
 			
 			// Format the dates 
@@ -2068,11 +2064,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			$_SESSION["message"] = lang('br_promo_update_success');
 			if($continue == 1){
-				header('location: '.$this->base_url.'&method=promo_edit&promo_id='.$promo_id);
-				exit();
+				$this->EE->functions->redirect($this->base_url.AMP.'method=promo_edit'.AMP.'promo_id='.$promo_id);
 			}
-			header('location: '.$this->base_url.'&method=promo');
-			exit();
+			$this->EE->functions->redirect($this->base_url.AMP.'method=promo');
 		}
 		
 	/************************/
@@ -2207,8 +2201,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->EE->product_model->delete_attribute($_POST["attribute_id"]);
 					remove_from_cache('config');
 					$_SESSION["message"] = lang('br_attribute_delete_success');
-					header('location: '.$this->base_url.'&method=config_attribute');
-					exit();
+					$this->EE->functions->redirect($this->base_url.AMP.'method=config_attribute');
 				}
 			
 			// Check for Save Buttons
@@ -2225,11 +2218,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			remove_from_cache('config');
 			$_SESSION["message"] = lang('br_attribute_update_success');
 			if($continue == TRUE){
-				header('location: '.$this->base_url.'&method=config_attribute_edit&attribute_id='.$attribute_id);
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_attribute_edit'.AMP.'attribute_id='.$attribute_id);
 			}else{
-				header('location: '.$this->base_url.'&method=config_attribute');
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_attribute');
 			}
-			exit();
 		}
 		
 		function config_attribute_create()
@@ -2245,6 +2237,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 												'options' 		=> array()
 												);
 
+            // Set the form action
+                $this->vars["action"] = $this->base_url.AMP.'method=config_attribute_update';
+
 			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
 			
 			return $this->_view('config/index', $this->vars);			
@@ -2259,8 +2254,12 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$attribute_id = $this->EE->input->get('attribute_id');
 			$this->vars["attributes"] = $this->EE->product_model->get_attribute_by_id($attribute_id);
 			$this->vars["attributes"]["attribute_id"] = $attribute_id;
-			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
-			$_SESSION["message"] = lang('br_attribute_update_success');
+			
+            // Set the form action
+                $this->vars["action"] = $this->base_url.AMP.'method=config_attribute_update';
+
+    			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
+
 			return $this->_view('config/index', $this->vars);			
 		}
 		
@@ -2292,6 +2291,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["attribute_set_id"] = $attribute_set_id;
 			$this->vars["title"] = '';
 
+            $this->vars["action"] = $this->base_url.AMP.'method=config_attributeset_update';
+
 			$this->vars["content"] = $this->_view('config/attribute_set_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);	
 		}
@@ -2309,6 +2310,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["attribute_set_id"] = $attribute_set_id;
 			$this->vars["title"] = $attribute_set[0]["title"];
 
+            $this->vars["action"] = $this->base_url.AMP.'method=config_attributeset_update';
+
 			$this->vars["content"] = $this->_view('config/attribute_set_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);	
 		}	
@@ -2320,14 +2323,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$_SESSION["message"] = lang('br_attribute_set_update_success');
 			if(isset($_POST["continue"])){
 				// stay on the edit screen
-				header('location: '.$this->base_url.'&method=config_attributeset_edit&attribute_set_id='.$_POST["attribute_set_id"]);
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_attributeset_edit'.AMP.'attribute_set_id='.$_POST["attribute_set_id"]);
 			}
 			else
 			{
 				// go to the overview
-				header('location: '.$this->base_url.'&method=config_attributeset');
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_attributeset');
 			}
-			exit();
 		}
 
 		function config_attributeset_delete()
@@ -2336,7 +2338,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["attributes"] = $this->EE->product_model->delete_attribute_set($attribute_set_id);
 			remove_from_cache('config');
 			$_SESSION["message"] = lang('br_attribute_set_delete_success');
-			header('location: '.$this->base_url.'&method=config_attributeset');
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_attributeset');
 			exit();
 		}
 		
@@ -2358,6 +2360,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}else{
 					$this->vars["categories"] = array();
 				}
+			
+            $this->vars["action"] = $this->base_url.AMP.'method=config_category_update';
+
 			$this->vars["content"] = $this->_view('config/category', $this->vars);
 
 			return $this->_view('config/index', $this->vars);
@@ -2441,6 +2446,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			$this->vars['products'] = $prod_ary;
 			$this->vars["category"] = $cat[0];
+			
+            $this->vars["action"] = $this->base_url.AMP.'method=config_category_update';
+
 			$this->vars["content"] = $this->_view('config/category_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -2572,6 +2580,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->vars["email"]["content"] = read_file($fl);
 				}
 			
+            // Set the form action
+                $this->vars["action"] = $this->base_url.AMP.'method=config_email_update';
+
 			$this->vars["content"] = $this->_view('config/email_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -2599,8 +2610,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			
 			$_SESSION["message"] = lang('br_email_update_success');
-			header('location: '.$this->base_url.'&method=config_email');
-			exit();
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_email');
 		}
 		
 		function config_feeds()
@@ -2701,6 +2711,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['feed']         = $feed_data;
 				$this->vars['categories']   = $this->EE->product_model->get_all_categories();
 				$this->vars['products']     = $this->EE->product_model->get_products_by_feed($feed_id);
+				
+                $this->vars["action"]       = $this->base_url.AMP.'method=config_feeds_edit';
+				
 				$this->vars["content"]      = $this->_view('config/feed_edit', $this->vars);
 				
 				return $this->_view('config/index', $this->vars);
@@ -2777,8 +2790,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			if(!file_exists($path)){ 
 				$this->EE->session->set_flashdata('message_failure',lang('br_module_install_error'));
-				header('location: '.$this->base_url.'&method=config_gateway');
-				exit();
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway');
 			}else{
 				include_once($path);
 				$str = 'Gateway_'.$code;
@@ -2795,8 +2807,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$class->install($config_id);
 			}
 			remove_from_cache('config');
-			header('location: '.$this->base_url.'&method=config_gateway_edit&config_id='.$config_id.'&code='.$code);
-			exit();
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway_edit'.AMP.'config_id='.$config_id.AMP.'code='.$code);
 		}
 		
 		function config_gateway_edit()
@@ -2863,51 +2874,81 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["label"] 		= $this->_config["gateway"][$this->site_id][$code]["label"];
 			$this->vars["sort"] 		= $this->_config["gateway"][$this->site_id][$code]["sort"];
 			$this->vars["enabled"] 		= $this->_config["gateway"][$this->site_id][$code]["enabled"];
+			$this->vars["groups"] 		= explode(",",$this->_config["gateway"][$this->site_id][$code]["groups"]);
 			$this->vars["fields"] 		= $fields;
 
+            $qry = $this->EE->member_model->get_member_groups();
+            $groups = array();
+            foreach($qry->result_array() as $row){
+            	$groups[$row["group_id"]] = $row["group_title"];
+            }
+            $this->vars["group_list"] = $groups;
+
+            // Set the form action
+            $this->vars["action"] = $this->base_url.AMP.'method=config_gateway_update';
+        
 			$this->vars["content"] = $this->_view('config/gateway_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
 		
-		function config_gateway_update()
-		{
-			if(version_compare(APP_VER, '2.7.0', '>=')){
-				$this->EE->security->restore_xid();
-			}
-			
-			remove_from_cache('config');
-			foreach($_POST as $key => $val){
-				$data[$key] = $val;
-			}
-			$this->EE->core_model->module_update($data);
-			$_SESSION["message"] = lang('br_module_update_success');
-			header('location: '.$this->base_url.'&method=config_gateway');
-			exit();
-		}
+		/**
+		 * Update the gateway in the database
+		 * 
+		 * @access public
+		 * @return void
+		 */
+    		function config_gateway_update()
+    		{
+    			remove_from_cache('config');
+    			
+	  			if(version_compare(APP_VER, '2.7.0', '>=')){
+    				$this->EE->security->restore_xid();
+    			}
+    			
+                foreach($_POST as $key => $val){
+    				$data[$key] = $val;
+    			}
+    			
+                if(!isset($data["groups"]))
+                {
+                    $data["groups"] = 0;
+                }else{
+                    $data["groups"] = join(',',$data["groups"]);
+                }
 
-		function config_gateway_remove()
-		{
-			$config_id = strtolower($this->EE->input->get("config_id",TRUE));
-			$code = strtolower($this->EE->input->get("code",TRUE));
-			
-			// Make sure the class file is loaded
-				$str = 'Gateway_'.$code;
-				if(!class_exists($str)){
-					$local_path = PATH_THIRD.'_local/brilliant_retail/gateway/gateway.'.$_GET["code"].'.php';
-					if(file_exists($local_path)){
-						include_once($local_path);
-					}else{
-						include_once(PATH_THIRD.'brilliant_retail/core/gateway/gateway.'.$_GET["code"].'.php');
-					}
-				}
-			$class = new $str();
-			$class->remove($config_id);
-			$this->EE->core_model->module_remove($_GET["config_id"]);
-			$_SESSION["message"] = lang('br_module_remove_success');
-			remove_from_cache('config');
-			header('location: '.$this->base_url.'&method=config_gateway');
-			exit();
-		}
+    			$this->EE->core_model->module_update($data);
+    			$_SESSION["message"] = lang('br_module_update_success');
+    			$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway');
+    		}
+
+		/**
+		 * Remove the gateway from the database 
+		 * 
+		 * @access public
+		 * @return void
+		 */
+    		function config_gateway_remove()
+    		{
+    			$config_id = strtolower($this->EE->input->get("config_id",TRUE));
+    			$code = strtolower($this->EE->input->get("code",TRUE));
+    			
+    			// Make sure the class file is loaded
+    				$str = 'Gateway_'.$code;
+    				if(!class_exists($str)){
+    					$local_path = PATH_THIRD.'_local/brilliant_retail/gateway/gateway.'.$_GET["code"].'.php';
+    					if(file_exists($local_path)){
+    						include_once($local_path);
+    					}else{
+    						include_once(PATH_THIRD.'brilliant_retail/core/gateway/gateway.'.$_GET["code"].'.php');
+    					}
+    				}
+    			$class = new $str();
+    			$class->remove($config_id);
+    			$this->EE->core_model->module_remove($_GET["config_id"]);
+    			$_SESSION["message"] = lang('br_module_remove_success');
+    			remove_from_cache('config');
+    			$this->EE->functions->redirect($this->base_url.AMP.'method=config_gateway');
+    		}
 
 		function config_permission()
 		{
@@ -2938,6 +2979,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											);
 				$this->vars["store"] = $this->EE->store_model->get_store_by_id($this->site_id);
 
+            $this->vars['action']	= $this->base_url.AMP.'method=config_permission_update';
+
 			$this->vars["content"] = $this->_view('config/permission_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}		
@@ -2963,8 +3006,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		
 			// Set a message and return to overview
 				$_SESSION["message"] = lang('br_permission_update_success');
-				header('location: '.$this->base_url.'&method=config_permission');
-				exit();
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_permission');
 		}
 
 		function config_shipping()
@@ -3041,8 +3083,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 			if(!file_exists($path)){ 
 				$this->EE->session->set_flashdata('message_failure',lang('br_module_install_error'));
-				header('location: '.$this->base_url.'&method=config_shipping');
-				exit();
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_shipping');
 			}else{
 				include_once($path);
 				$str = 'Shipping_'.$code;
@@ -3064,26 +3105,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								'sort' 		=> 0, 
 								'value' 	=> $class->label
 								);
-				/*
-					// Depreciating internal enable setting.
-					$data[] = array(
-								'config_id' => $config_id, 
-								'label'	 	=> lang('br_enabled'), 
-								'code' 		=> 'enabled',
-								'type' 		=> 'dropdown',
-								'options' 	=> '1:'.lang('br_yes').'|0:'.lang('br_no'), 	
-								'sort' 		=> 0, 
-								'value' 	=> 1
-								);
-				*/
+
 				foreach($data as $d){
 					$this->EE->db->insert('br_config_data',$d);
 				}
 				$class->install($config_id);
 			}
 			remove_from_cache('config');
-			header('location: '.$this->base_url.'&method=config_shipping_edit&config_id='.$config_id.'&code='.$code);
-			exit();
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_shipping_edit'.AMP.'config_id='.$config_id.AMP.'code='.$code);
 		}
 		
 		function config_shipping_edit()
@@ -3121,7 +3150,19 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["label"] 	= $this->_config["shipping"][$this->site_id][$code]["label"];
 			$this->vars["enabled"] 	= $this->_config["shipping"][$this->site_id][$code]["enabled"];
 			$this->vars["sort"] 	= $this->_config["shipping"][$this->site_id][$code]["sort"];
+			$this->vars["groups"] 	= explode(",",$this->_config["shipping"][$this->site_id][$code]["groups"]);
 			
+            // Get member groups
+                $qry = $this->EE->member_model->get_member_groups();
+                $groups = array();
+                foreach($qry->result_array() as $row){
+                	$groups[$row["group_id"]] = $row["group_title"];
+                }
+                $this->vars["group_list"] = $groups;
+
+            // Set the form action
+                $this->vars["action"] = $this->base_url.AMP.'method=config_shipping_update';
+            
 			$this->vars["content"] = $this->_view('config/shipping_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}
@@ -3129,17 +3170,25 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 		function config_shipping_update()
 		{
 			remove_from_cache('config');
-			foreach($_POST as $key => $val){
+			
+			if(!isset($_POST["groups"]))
+            {
+                $_POST["groups"] = 0;
+            }else{
+                $_POST["groups"] = join(',',$_POST["groups"]);
+            }
+            
+            foreach($_POST as $key => $val){
 				if(is_array($val)){
 					$data[$key] = serialize($_POST[$key]);
 				}else{
 					$data[$key] = $val;
 				}
 			}
+			
 			$this->EE->core_model->module_update($data);
 			$_SESSION["message"] = lang('br_module_update_success');
-			header('location: '.$this->base_url.'&method=config_shipping');
-			exit();
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_shipping');
 		}
 
 		function config_shipping_remove()
@@ -3163,8 +3212,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->core_model->module_remove($config_id);
 			$_SESSION["message"] = lang('br_module_remove_success');
 			remove_from_cache('config');
-			header('location: '.$this->base_url.'&method=config_shipping');
-			exit();
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_shipping');
 		}
 		
 		function config_site()
@@ -3184,6 +3232,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			
 			$this->vars["currencies"] = $this->EE->store_model->get_currencies();
 			$this->vars["countries"] = $this->EE->product_model->get_countries(0);
+			
+            // Set the update 
+                $this->vars["action"] = $this->base_url.AMP.'method=config_site_update';
+			
 			$this->vars["content"] = $this->_view('config/site_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
 		}		
@@ -3227,8 +3279,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->EE->core_model->get_config();
 			
 			$_SESSION["message"] = lang('br_store_update_success');
-			header('location: '.$this->base_url.'&method=config_site');
-			exit();
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_site');
 		}
 		
 		function config_tax()
@@ -3274,6 +3325,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 												'rate' 		=> '10.00'
 											);
 				
+            // Set the update 
+                $this->vars["action"] = $this->base_url.AMP.'method=config_tax_update';
+			
 			$this->vars["content"] = $this->_view('config/tax_edit', $this->vars);	
 			
 			return $this->_view('config/index', $this->vars);
@@ -3301,6 +3355,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					
 				$this->vars["tax"] = $this->EE->tax_model->get_tax_by_id($tax_id);
 
+            // Set the update 
+                $this->vars["action"] = $this->base_url.AMP.'method=config_tax_update';
+
 			$this->vars["content"] = $this->_view('config/tax_edit', $this->vars);	
 			
 			return $this->_view('config/index', $this->vars);
@@ -3319,8 +3376,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				if(isset($_POST["delete"])){
 					$this->EE->tax_model->delete_tax($_POST["tax_id"]);
 					$_SESSION["message"] = lang('br_tax_delete_success');
-					header('location: '.$this->base_url.'&method=config_tax');
-					exit();
+					$this->EE->functions->redirect($this->base_url.AMP.'method=config_tax');
 				}
 			
 			$continue = isset($_POST["save_continue"]) ? 1 : 0 ;
@@ -3334,11 +3390,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			}
 			$_SESSION["message"] = lang('br_tax_update_success');
 			if($continue == 1){
-				header('location: '.$this->base_url.'&method=config_tax_edit&tax_id='.$tax_id);
-				exit();
+				$this->EE->functions->redirect($this->base_url.AMP.'method=config_tax_edit'.AMP.'tax_id='.$tax_id);
 			}
-			header('location: '.$this->base_url.'&method=config_tax');
-			exit();
+			$this->EE->functions->redirect($this->base_url.AMP.'method=config_tax');
 		}
 
 	public function tools_clear_cache()

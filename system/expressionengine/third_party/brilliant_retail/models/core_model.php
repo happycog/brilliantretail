@@ -111,7 +111,8 @@ class Core_model extends CI_Model {
 									array(
 											'sort' 		=> round($data["sort"] * 1),
 											'label' 	=> $data["label"],
-											'enabled' 	=> $data["enabled"]
+											'enabled' 	=> $data["enabled"],
+											'groups'    => isset($data["groups"]) ? $data["groups"] : 0
 										), 
 									"config_id = ".$data["config_id"]
 								);

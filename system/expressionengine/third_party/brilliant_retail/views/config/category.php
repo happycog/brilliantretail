@@ -22,7 +22,7 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_update',
+echo form_open( $action,
 				array(	'method' 	=> 'POST', 
 						'id' 		=> 'add_cat',
 						'class' 	=> '', 

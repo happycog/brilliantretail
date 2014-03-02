@@ -35,14 +35,17 @@
 
 
 <?php
-	echo form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_update',
-					array(	'method' 	=> 'POST', 
-							'id' 		=> 'category_update_order',
-							'class' 	=> '', 
-							'encrypt' 	=> 'multipart/form-data'));
+	echo form_open_multipart($action,
+        					 array(	
+        					        'method' 	 => 'POST', 
+        				            'id' 	 	 => 'category_update_order',
+        							'class' 	 => ''
+        							),
+                             array(  
+    		                         'action'        => 'update',
+    		                         'category_id'   => $category["category_id"]
+    		                     ));
 ?>
-	<input type="hidden" id="action" name="action" value="update" />
-	<input type="hidden" id="category_id" name="category_id" value="<?=$category["category_id"]?>" />
 	
 
 <div id="b2r_page" class="b2r_category">
