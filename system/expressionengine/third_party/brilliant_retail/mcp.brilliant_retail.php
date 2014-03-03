@@ -283,7 +283,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['action']	= $this->base_url.AMP.'method=order_batch';
 
 			// AJAX url to get order_collection from data tables
-				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_ajax';
+				$this->vars["ajax_url"] = $this->base_url.AMP.'method=order_ajax';
 			
 			// Get the statuses
 				$this->vars["status"] = $this->_config["status"];			
@@ -296,7 +296,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$arr = unserialize(base64_decode($cookie));
 					$this->vars["status_id"] = $arr["status_id"];
 				}
-			
+
+            $this->vars["action"] = $this->base_url.AMP.'method=order_batch';
+
 			return $this->_view('order/order', $this->vars);	
 		}
 		
@@ -435,13 +437,17 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				foreach($qry->result_array() as $row){
 					$groups[$row["group_id"]] = $row["group_title"];
 				}
+
 				$this->vars["groups"] = $groups;
-			
+
+            // Create the form actions 
+                $this->vars["status_action"] = $this->base_url.AMP.'method=order_update_status'.AMP.'order_id='.$order_id;
+                $this->vars["note_action"]   = $this->base_url.AMP.'module=brilliant_retail'.AMP.'method=order_add_note';
 
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
 				if($print != ''){
-					
+
 					// Initiate a vars 
 							$vars[0] = $this->vars['order'];
 							$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
@@ -572,6 +578,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 				$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
 				$this->vars['order']['order_total_due']		= $this->_currency_round($total-$payment);
+			
+                $this->vars["action"] = $this->base_url.AMP.'method=order_detail_add_payment_process';
 			
 			// Lets get our options
 				$this->vars['order']["payment_options"] = $this->_payment_options(TRUE,$this->vars['order']["tax"],$this->vars['order']["shipping"],TRUE);
@@ -908,23 +916,34 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	 */
 		function order_add_note()
 		{
-			foreach($_POST as $key => $val){
-				$data[$key] = $this->EE->input->post($key);
-			}
+            // Only allow these POST variables
+    			$allowed = array(
+                        			"order_id",
+                        			"order_note",
+                                    "isprivate",
+                                    "order_note_notify"
+                                );
+            // Put the POST in a data array			
+    			foreach($_POST as $key => $val){
+    				if(in_array($key,$allowed))
+    				{
+                        $data[$key] = $this->EE->input->post($key);
+    				}
+    			}
 
-			if(isset($_FILES)){
-				$attachment = $this->vars["media_dir"].'attachments';
-				if(!file_exists($attachment)){
-					mkdir($attachment,DIR_WRITE_MODE,TRUE);
-				}
-				$config['upload_path'] 	= $attachment;
-				$config['allowed_types'] = $this->_config["allowed_filetypes"];
-				$this->EE->load->library('upload',$config);
-				if($this->EE->upload->do_upload('order_note_file')){
-					$result = array('upload_data' => $this->EE->upload->data()); 
-					$data["filenm"] = $result["upload_data"]["file_name"];
-				}
-			}
+    			if(isset($_FILES)){
+    				$attachment = $this->vars["media_dir"].'attachments';
+    				if(!file_exists($attachment)){
+    					mkdir($attachment,DIR_WRITE_MODE,TRUE);
+    				}
+    				$config['upload_path'] 	= $attachment;
+    				$config['allowed_types'] = $this->_config["allowed_filetypes"];
+    				$this->EE->load->library('upload',$config);
+    				if($this->EE->upload->do_upload('order_note_file')){
+    					$result = array('upload_data' => $this->EE->upload->data()); 
+    					$data["filenm"] = $result["upload_data"]["file_name"];
+    				}
+    			}
 			
 			// Get Order Details
 				$tmp = $this->EE->order_model->get_order($data["order_id"]);
@@ -988,7 +1007,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['cp_page_title'] = lang('nav_br_customer');
 
 			// ajax url to get customer_collection from data tables
-				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=customer_ajax';
+				$this->vars["ajax_url"] = $this->base_url.AMP.'method=customer_ajax';
 			
 			return $this->_view('customer/customer', $this->vars);	
 		}
@@ -1104,7 +1123,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				));
 			
 			// Add the ajax url
-				$this->vars["ajax_url"] = BASE.AMP.'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_ajax';
+				$this->vars["ajax_url"]   = $this->base_url.AMP.'method=product_ajax';
+		
+            // Form action
+		        $this->vars["action"]     = $this->base_url.AMP.'method=product_batch';
 		
 			$output = $this->_view('product/product', $this->vars);
 			return $output;
@@ -2036,8 +2058,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											    "uses_per" 		=> '0'
 										    );
 
+            // Set the form action
+                $this->vars["action"] = $this->base_url.AMP.'method=promo_update';
+                $this->vars["hidden"] = array('promo_id' => 0);
 
-			$this->vars["hidden"] = array('promo_id' => 0);
 			return $this->_view('promo/edit', $this->vars);
 		}
 		
@@ -2094,6 +2118,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$this->vars["products"][] = $this->EE->product_model->get_product_basic($product_id);
 					}
 				} 
+
+            $this->vars["action"] = $this->base_url.AMP.'method=promo_update';
 			$this->vars["hidden"] = array('promo_id' => $promo_id);
 			
 			return $this->_view('promo/edit', $this->vars);	
@@ -2243,6 +2269,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				foreach($this->vars["detail"]["input"] as $in){
 					$this->vars["input"] .= $this->_build_report_input($in);
 				}
+			
+            // Set the form action
+                $this->vars["action"] = $this->base_url.AMP.'method=report_detail'.AMP.'report='.$this->vars["report"];
+			
 			// Export it as a csv 	
 				if(isset($_POST["export"]) && $_POST["export"] == 1){
 					$this->_build_report_csv($this->vars["detail"]);

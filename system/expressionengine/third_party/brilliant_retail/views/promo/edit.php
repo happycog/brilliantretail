@@ -33,13 +33,20 @@ echo $br_header;
 	}
 </style>
 
-<?=form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update', array('method' => 'POST', 'id' => 'promoForm','encrypt' => 'multipart/form-data'),$hidden)?>
-
-					<div id="b2r_page" class="b2r_category">
 <?php
+    echo form_open( $action, 
+                    array(
+                          'method' => 'POST', 
+                          'id' => 'promoForm',
+                          'encrypt' => 'multipart/form-data'
+                          ),
+                    $hidden);
+
 	$start = ($promo[0]["start_dt"] > 0) ? date("n/d/y",strtotime($promo[0]["start_dt"])) : '';
 	$end = ($promo[0]["end_dt"] > 0) ? date("n/d/y",strtotime($promo[0]["end_dt"])) : '';
 ?>
+
+	<div id="b2r_page" class="b2r_category">
 	<table id="promoTableEdit" cellspacing="0" cellpadding="0" border="0" class="product_edit" width="100%">
 		<tr>
 			<th width="35%"><?=lang('br_details')?></td>

@@ -30,7 +30,7 @@
 
 <?php
 	
-	echo form_open_multipart(	'&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment_process',
+	echo form_open_multipart(	$action,
 								array(	'method' 	=> 'POST', 
 										'id' 		=> 'paymentForm'),
 								$hidden);

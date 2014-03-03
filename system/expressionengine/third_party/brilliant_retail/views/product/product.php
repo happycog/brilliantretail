@@ -53,7 +53,7 @@
 	$content = $this->table->generate();
 ?>
 <div id="b2r_page" class="b2r_category">
-    <?=form_open_multipart('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_batch',array('method' => 'POST', 'id' => 'productForm'))?>
+    <?=form_open_multipart($action,array('method' => 'POST', 'id' => 'productForm'))?>
         <div id="filterMenu"> 
 			<fieldset>
 				<legend><?=lang('br_filter_products')?></legend> 
@@ -144,7 +144,7 @@
 		$('.filter').change(function(){
 			var cat_id = $("#category").val();
 			var type_id = $("#type").val();
-			location.href="<?=$base_url;?>&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product&cat_id="+cat_id+"&type_id="+type_id;
+			location.href="<?=str_replace("&amp;","&",$base_url)?>&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product&cat_id="+cat_id+"&type_id="+type_id;
 		})
 		
 		$('#batch_submit').bind('click',function(){

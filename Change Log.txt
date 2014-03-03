@@ -1,5 +1,5 @@
-### Version 1.5.X.X
-*February X, 2013*
+### Version 1.6.0.0
+*March 4, 2014*
 
 * Added a member group filter to the payment gateways
 * Added a member group filter to the shipping methods
@@ -10,7 +10,15 @@
 * Added _br_log_it method to core.brilliant_retail.php for logging and debugging various system calls cache
 * Added weight limit to UPS (150 pounds)
 * Added weight limit to USPS (70 pounds)
-* Updated the action on the product edit form
+* Updated the action on the order detail page (2.8 compatibility) 
+    * Update status form
+    * Add payment form
+    * Add order note form
+* Updated the actions in the product forms (2.8 compatibility)
+    * Product Overview Filters
+    * Product Batch Update
+    * Product create/edit form 
+* Updated the action on the promotion create/edit form (2.8 compatibility) 
 * Updated action value in CP config forms (2.8 compatibility) 
     * Attribute Create
     * Attribute Edit
@@ -25,6 +33,7 @@
     * Store Edit
     * Tax Create 
     * Tax Edit
+* Updated the action on the report detail range filter form (2.8 compatibility) 
 * Updated the category url_title function to remove repeating, leading and trailing separators
 * Updated the checkout method to create an order_id before the payment is processed so the order_id is available in the $data array passed to the gateway.
 * Updated copyright dates from 2010-2012 to 2010-2013 in system files.  
@@ -33,6 +42,7 @@
 * Updated the poe editor on the product edit form to allow for inserting iframes
 * Updated the _secure_url method to properly use the site_index in the path
 * Updated redirect method in the mcp file from native php header:location to EE functions->redirect method
+* Updated the order add note to only accept the defined $_POST variables (issue with Solspace:FreeForm)
 * Fixed an issue with parsing filters in the url on the catalog page.
 * Fixed an issue with removing all "exp_br_" tables when BrilliantRetail is uninstalled. 
 * Fixed an issue with the core url parsing method when passing filters in the catalog. 

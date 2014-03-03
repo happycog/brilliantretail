@@ -24,7 +24,7 @@
 
 	echo $br_header;
 
-	echo form_open('&D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=report_detail&report='.$report,
+	echo form_open( $action,
 					array(	'method' 	=> 'POST', 
 							'id' 		=> 'report_'.$parent, 
 							'encrypt' 	=> 'multipart/form-data'));

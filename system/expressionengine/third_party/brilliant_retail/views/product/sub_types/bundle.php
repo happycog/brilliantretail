@@ -93,11 +93,17 @@
 	        	function(data){
 
 	            	$('#bundle_result tfoot').hide();
+	            	$('#bundle_result tbody tr').remove();
 	            	
 	            	$.each(data, function(i,item){
 	            		$('	<tr id="product_'+item.product_id+'"><td>'+item.title+'</td><td>'+type[item.type_id]+'</td><td width="10%"><a href="#" class="add_bundle {product_id:'+item.product_id+'}" ><img src="<?=$theme?>images/add.png" /></a></td></tr>').appendTo($('#bundle_result tbody'));
 	            	});
 
+                    if($('#bundle_result tbody tr').size() == 0)
+                    {
+                        $('#bundle_result tfoot').show();
+	            	}
+	            	
 	            	$('.add_bundle').unbind('click').bind('click',function(){
 						_add_bundle($(this).metadata().product_id);
 						return false;

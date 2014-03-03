@@ -60,11 +60,16 @@ $this->table->set_heading(
 			'style' => 'text-align:center',
 			'width' => '5%')
 );
-$content = $this->table->generate();
-?>
 
-<?=$br_header?>
-<?=form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_batch',array('method' => 'POST', 'id' => 'order_form'))?>
+    $content = $this->table->generate();
+
+    echo $br_header;
+
+    echo form_open( $action,
+                    array(
+                            'method' => 'POST', 
+                            'id'     => 'order_form'));
+?>
 	
 	
 	 <div id="filterMenu"> 

@@ -82,7 +82,7 @@ echo $br_header;
 											</div>
 											<div class="popin-body">
 												<?php
-													echo form_open('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_update_status&order_id='.$hidden["order_id"],array('method' => 'POST', 'id' => 'statusForm'),$hidden);
+													echo form_open($status_action,array('method' => 'POST', 'id' => 'statusForm'),$hidden);
 												?>
 													<select name="status_id" id="status_id">
 													<?php 
@@ -147,10 +147,6 @@ echo $br_header;
 					</tr>
 				</table></td>
 		</tr>
-		
-		
-		
-		
 		<tr>
 			<td width="50%">
 				<table width="100%" class="product_edit" cellpadding="0" cellspacing="0">
@@ -379,7 +375,7 @@ echo $br_header;
   		<tr>
 			<td colspan="2">
 					<?php
-						echo form_open_multipart('D=cp&C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_add_note',array('method' => 'POST', 'id' => 'noteForm'),$hidden);
+						echo form_open_multipart($note_action,array('method' => 'POST', 'id' => 'noteForm'),$hidden);
 					?>
 							<table id="order_notes_form" width="100%" class="order_notes" cellpadding="0" cellspacing="0"> 
 								<tr>
