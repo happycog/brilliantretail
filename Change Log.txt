@@ -3,13 +3,13 @@
 
 * Added a member group filter to the payment gateways
 * Added a member group filter to the shipping methods
-* Added hidden payment_options_available input to checkout payment options form to only show checkout button when available
 * Added the order id to the invoice number field on the Authorize.net gateway
 * Added br_member_profile_update_before hook
 * Added XID to the logout url
 * Added _br_log_it method to core.brilliant_retail.php for logging and debugging various system calls cache
 * Added weight limit to UPS (150 pounds)
 * Added weight limit to USPS (70 pounds)
+* Added hidden payment_options_available input to checkout payment options form to only show checkout button when available
 * Updated the action on the order detail page (2.8 compatibility) 
     * Update status form
     * Add payment form
@@ -36,7 +36,7 @@
 * Updated the action on the report detail range filter form (2.8 compatibility) 
 * Updated the category url_title function to remove repeating, leading and trailing separators
 * Updated the checkout method to create an order_id before the payment is processed so the order_id is available in the $data array passed to the gateway.
-* Updated copyright dates from 2010-2012 to 2010-2013 in system files.  
+* Updated copyright dates from 2010-2012 to 2010-2014 in system files.  
 * Updated the 'Uses Per' label to a more descriptive 'Uses Per Code'
 * Updated the PayPal Standard gateway to set the order to 'New Order' status when issues occur with the IPN Validation
 * Updated the poe editor on the product edit form to allow for inserting iframes
