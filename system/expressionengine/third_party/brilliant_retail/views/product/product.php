@@ -52,8 +52,18 @@
 						   );
 	$content = $this->table->generate();
 ?>
-<div id="b2r_page" class="b2r_category">
-    <?=form_open_multipart($action,array('method' => 'POST', 'id' => 'productForm'))?>
+    
+    <div id="b2r_page" class="b2r_category">
+
+        <?php
+            echo form_open_multipart(
+                                          $action,
+                                          array(
+                                                  'method'    => 'POST',
+                                                  'id'        => 'productForm'
+                                              )
+                                      );
+        ?>
         <div id="filterMenu"> 
 			<fieldset>
 				<legend><?=lang('br_filter_products')?></legend> 

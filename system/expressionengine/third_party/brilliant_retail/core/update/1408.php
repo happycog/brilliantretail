@@ -22,5 +22,5 @@
 /* DEALINGS IN THE SOFTWARE. 								*/	
 /************************************************************/
 
-	$qry = $this->EE->db->query("ALTER TABLE exp_br_order ADD COLUMN `updated` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP");
+	$qry = $this->EE->db->query("ALTER TABLE exp_br_order ADD COLUMN updated timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP");
 	$qry = $this->EE->db->query("UPDATE exp_br_order SET updated = NOW()");

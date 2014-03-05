@@ -1,5 +1,5 @@
 ### Version 1.6.0.0
-*March 4, 2014*
+*March 5, 2014*
 
 * Added a member group filter to the payment gateways
 * Added a member group filter to the shipping methods
@@ -33,7 +33,7 @@
     * Store Edit
     * Tax Create 
     * Tax Edit
-* Updated the action on the report detail range filter form (2.8 compatibility) 
+* Updated the action on the report detail range filter form (2.8 compatibility)
 * Updated the category url_title function to remove repeating, leading and trailing separators
 * Updated the checkout method to create an order_id before the payment is processed so the order_id is available in the $data array passed to the gateway.
 * Updated copyright dates from 2010-2012 to 2010-2014 in system files.  
@@ -53,4 +53,4 @@
 * Fixed an issue with Realex payment gateway
 * Fixed an issue with product attribute type text on output
 * Fixed an issue with creating bundle products (type_id join error)
-* Reset all BR related entries in the exp_actions table 
+* Reset all BR related entries in the exp_actions table

@@ -297,7 +297,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->vars["status_id"] = $arr["status_id"];
 				}
 
-            $this->vars["action"] = $this->base_url.AMP.'method=order_batch';
+            $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_batch';
 
 			return $this->_view('order/order', $this->vars);	
 		}
@@ -579,7 +579,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars['order']['order_total_paid'] 	= $this->_currency_round($payment);
 				$this->vars['order']['order_total_due']		= $this->_currency_round($total-$payment);
 			
-                $this->vars["action"] = $this->base_url.AMP.'method=order_detail_add_payment_process';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=order_detail_add_payment_process';
 			
 			// Lets get our options
 				$this->vars['order']["payment_options"] = $this->_payment_options(TRUE,$this->vars['order']["tax"],$this->vars['order']["shipping"],TRUE);
@@ -1126,8 +1126,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["ajax_url"]   = $this->base_url.AMP.'method=product_ajax';
 		
             // Form action
-		        $this->vars["action"]     = $this->base_url.AMP.'method=product_batch';
-		
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_batch';
+
 			$output = $this->_view('product/product', $this->vars);
 			return $output;
 		}
@@ -1671,7 +1671,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->EE->javascript->compile();
 
             // Set the form action
-                $this->vars["action"] = $this->base_url.AMP.'method=product_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=product_update';
 
 			return $this->_view('product/edit', $this->vars);	
 		}
@@ -2059,7 +2059,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 										    );
 
             // Set the form action
-                $this->vars["action"] = $this->base_url.AMP.'method=promo_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update';
                 $this->vars["hidden"] = array('promo_id' => 0);
 
 			return $this->_view('promo/edit', $this->vars);
@@ -2119,7 +2119,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 				} 
 
-            $this->vars["action"] = $this->base_url.AMP.'method=promo_update';
+            $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update';
 			$this->vars["hidden"] = array('promo_id' => $promo_id);
 			
 			return $this->_view('promo/edit', $this->vars);	
@@ -2271,7 +2271,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			
             // Set the form action
-                $this->vars["action"] = $this->base_url.AMP.'method=report_detail'.AMP.'report='.$this->vars["report"];
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=report_detail'.AMP.'report='.$this->vars["report"];
 			
 			// Export it as a csv 	
 				if(isset($_POST["export"]) && $_POST["export"] == 1){
@@ -2386,7 +2386,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 												);
 
             // Set the form action
-                $this->vars["action"] = $this->base_url.AMP.'method=config_attribute_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attribute_update';
 
 			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
 			
@@ -2410,7 +2410,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["attributes"]["attribute_id"] = $attribute_id;
 			
             // Set the form action
-                $this->vars["action"] = $this->base_url.AMP.'method=config_attribute_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attribute_update';
 
     			$this->vars["content"] = $this->_view('config/attribute_edit', $this->vars);
 
@@ -2457,7 +2457,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["attribute_set_id"] = $attribute_set_id;
 			$this->vars["title"] = '';
 
-            $this->vars["action"] = $this->base_url.AMP.'method=config_attributeset_update';
+            $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attributeset_update';
 
 			$this->vars["content"] = $this->_view('config/attribute_set_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);	
@@ -2482,7 +2482,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["attribute_set_id"] = $attribute_set_id;
 			$this->vars["title"] = $attribute_set[0]["title"];
 
-            $this->vars["action"] = $this->base_url.AMP.'method=config_attributeset_update';
+            $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_attributeset_update';
 
 			$this->vars["content"] = $this->_view('config/attribute_set_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);	
@@ -2551,7 +2551,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$this->vars["categories"] = array();
 				}
 			
-            $this->vars["action"] = $this->base_url.AMP.'method=config_category_update';
+            $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_update';
 
 			$this->vars["content"] = $this->_view('config/category', $this->vars);
 
@@ -2643,7 +2643,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars['products'] = $prod_ary;
 			$this->vars["category"] = $cat[0];
 			
-            $this->vars["action"] = $this->base_url.AMP.'method=config_category_update';
+            $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_category_update';
 
 			$this->vars["content"] = $this->_view('config/category_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
@@ -2795,7 +2795,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				}
 			
             // Set the form action
-                $this->vars["action"] = $this->base_url.AMP.'method=config_email_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_email_update';
 
 			$this->vars["content"] = $this->_view('config/email_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
@@ -3142,7 +3142,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
             $this->vars["group_list"] = $groups;
 
             // Set the form action
-            $this->vars["action"] = $this->base_url.AMP.'method=config_gateway_update';
+            $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_gateway_update';
         
 			$this->vars["content"] = $this->_view('config/gateway_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
@@ -3454,7 +3454,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
                 $this->vars["group_list"] = $groups;
 
             // Set the form action
-                $this->vars["action"] = $this->base_url.AMP.'method=config_shipping_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_shipping_update';
             
 			$this->vars["content"] = $this->_view('config/shipping_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
@@ -3545,7 +3545,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 			$this->vars["countries"] = $this->EE->product_model->get_countries(0);
 			
             // Set the update 
-                $this->vars["action"] = $this->base_url.AMP.'method=config_site_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_site_update';
 			
 			$this->vars["content"] = $this->_view('config/site_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
@@ -3655,7 +3655,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											);
 				
             // Set the update 
-                $this->vars["action"] = $this->base_url.AMP.'method=config_tax_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_update';
 			
 			$this->vars["content"] = $this->_view('config/tax_edit', $this->vars);	
 			
@@ -3691,7 +3691,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["tax"] = $this->EE->tax_model->get_tax_by_id($tax_id);
 
             // Set the update 
-                $this->vars["action"] = $this->base_url.AMP.'method=config_tax_update';
+                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_tax_update';
 
 			$this->vars["content"] = $this->_view('config/tax_edit', $this->vars);	
 			

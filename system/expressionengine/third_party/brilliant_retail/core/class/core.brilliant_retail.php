@@ -40,7 +40,8 @@ class Brilliant_retail_core {
 	public $vars 			= array();
 	public $site_id 		= '';
 	public $br_channel_id 	= '';
-
+    public $cats            = '';
+    
 	private $cat_tree 		= 0;
 	private $cat 			= array();
 	private $cat_count 		= 0;
