@@ -3,6 +3,7 @@
 
 * Added a member group filter to the payment gateways
 * Added a member group filter to the shipping methods
+* Added a member group filter to the promotions
 * Added the order id to the invoice number field on the Authorize.net gateway
 * Added br_member_profile_update_before hook
 * Added XID to the logout url
