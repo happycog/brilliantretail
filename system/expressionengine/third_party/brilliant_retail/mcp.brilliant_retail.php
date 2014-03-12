@@ -2055,12 +2055,22 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											    "product_list" 	=> '',
 											    "min_subtotal" 	=> '1.00',
 											    "min_quantity" 	=> '1',
-											    "uses_per" 		=> '0'
+											    "uses_per" 		=> '0',
+										        "groups"        => array(0)
 										    );
 
             // Set the form action
-                $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update';
+                $this->vars["action"] = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update';
                 $this->vars["hidden"] = array('promo_id' => 0);
+            
+    		// Get the group names
+    			$qry = $this->EE->member_model->get_member_groups();
+    			$groups = array();
+    			foreach($qry->result_array() as $row){
+    				$groups[$row["group_id"]] = $row["group_title"];
+    			}
+    
+    			$this->vars["group_list"] = $groups;
 
 			return $this->_view('promo/edit', $this->vars);
 		}
@@ -2122,6 +2132,18 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
             $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=promo_update';
 			$this->vars["hidden"] = array('promo_id' => $promo_id);
 			
+    		// Get the group names
+    			$qry = $this->EE->member_model->get_member_groups();
+    			$groups = array();
+    			foreach($qry->result_array() as $row){
+    				$groups[$row["group_id"]] = $row["group_title"];
+    			}
+                
+                // Convert groups into array
+                    $this->vars["promo"][0]["groups"] = explode(",",$this->vars["promo"][0]["groups"]);
+                
+    			$this->vars["group_list"] = $groups;
+
 			return $this->_view('promo/edit', $this->vars);	
 		}
 		
@@ -2173,6 +2195,8 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					}
 				}
 	
+	        $_POST["groups"] = join(',',$_POST["groups"]);
+	        
 			$continue = isset($_POST["save_continue"]) ? 1 : 0 ;
 			unset($_POST["category_title"]);
 			unset($_POST["product"]);

@@ -73,6 +73,30 @@ echo $br_header;
 						class="{required:true}"
 						title="<?=lang('br_code').' '.lang('br_is_required')?>" /></td>
 		</tr>
+    	<tr>
+        	<td class="cell_1">
+        		<?=lang('br_member_groups')?></td>
+        	<td>
+            	<select name="groups[]" multiple="multiple" style="width:200px;height:100px;">
+                    <?php
+                        $sel = '';
+                        $all_groups = FALSE;
+                        if(in_array(0,$promo[0]["groups"]))
+                        {
+                            $sel = 'selected="selected"';
+                            $all_groups = TRUE;
+                        }
+                        
+                        echo '<option value="0" '.$sel.'>'.lang('br_all_groups').'</option>';
+                        
+                        foreach($group_list as $key => $val)
+                        {
+                            $sel = (in_array($key,$promo[0]["groups"]) && $all_groups == FALSE) ? 'selected="selected"' : '';
+                            echo '<option value="'.$key.'" '.$sel.'>'.$val.'</option>';
+                        }
+                    ?>
+            	</select></td>
+    	</tr>
 		<tr>
 			<td>
 				<?=lang('br_promo_descr').' *'?></td>

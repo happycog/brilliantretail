@@ -1095,7 +1095,8 @@ class Brilliant_retail_upd {
 				  uses_per int(11) NOT NULL DEFAULT '0',
 				  priority int(11) NOT NULL DEFAULT '1',
 				  stop_rules int(11) NOT NULL DEFAULT '0',
-				  PRIMARY KEY (promo_id)
+				  groups varchar(100) NOT NULL DEFAULT '0',
+                  PRIMARY KEY (promo_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 ## ----------------------------

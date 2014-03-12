@@ -1105,6 +1105,16 @@ class Brilliant_retail_core {
 	
 	function _validate_promo_code($code){
 
+        $groups = explode(',',$code["groups"]);
+        
+        // Test the group id against
+        	if(!in_array(0,$groups)){
+                $group_id = $this->EE->session->userdata["group_id"];
+        		if(!in_array($group_id,$groups)){
+                    return false;        	   
+            	}
+        	}
+        
 		if($code["enabled"] == 0){ return false; }		
 		
 		if($code["uses_per"] > 0){
