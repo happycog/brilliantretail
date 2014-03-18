@@ -90,36 +90,50 @@ class Brilliant_retail_upd {
 		##  Records of exp_member_fields
 		## ----------------------------
 		
-			
-			
-			$fields = array(
-                    array('br_fname','First Name','1'),
-                    array('br_lname','Last Name','2'),
-                    array('br_phone','Phone Number','3'),
-                    array('br_billing_lname','Billing Last Name','100'), 
-                    array('br_billing_fname','Billing First Name','101'), 
-                    array('br_billing_company','Billing Company','102'), 
-                    array('br_billing_address1','Billing Address 1','103'), 
-                    array('br_billing_address2','Billing Address 2','104'), 
-                    array('br_billing_city','Billing City','105'), 
-                    array('br_billing_state','Billing State','106'), 
-                    array('br_billing_zip','Billing Zip','107'), 
-                    array('br_billing_phone','Billing Phone','108'), 
-                    array('br_billing_country','Billing Country','109'),
-                    array('br_shipping_fname','Shipping First Name','200'), 
-                    array('br_shipping_lname','Shipping Last Name','201'), 
-                    array('br_shipping_company','Shipping Company','202'), 
-                    array('br_shipping_address1','Shipping Address 1','203'), 
-                    array('br_shipping_address2','Shipping Address 2','204'), 
-                    array('br_shipping_city','Shipping City','205'), 
-                    array('br_shipping_state','Shipping Address State','206'), 
-                    array('br_shipping_zip','Shipping Address Zip','207'), 
-                    array('br_shipping_phone','Shipping Phone','208'), 
-                    array('br_shipping_country','Shipping Country','209')
-                );	
-
+	      $fields = array(
+                array('br_fname','First Name','1'),
+                array('br_lname','Last Name','2'),
+                array('br_phone','Phone Number','3'),
+                array('br_billing_lname','Billing Last Name','100'), 
+                array('br_billing_fname','Billing First Name','101'), 
+                array('br_billing_company','Billing Company','102'), 
+                array('br_billing_address1','Billing Address 1','103'), 
+                array('br_billing_address2','Billing Address 2','104'), 
+                array('br_billing_city','Billing City','105'), 
+                array('br_billing_state','Billing State','106'), 
+                array('br_billing_zip','Billing Zip','107'), 
+                array('br_billing_phone','Billing Phone','108'), 
+                array('br_billing_country','Billing Country','109'),
+                array('br_shipping_fname','Shipping First Name','200'), 
+                array('br_shipping_lname','Shipping Last Name','201'), 
+                array('br_shipping_company','Shipping Company','202'), 
+                array('br_shipping_address1','Shipping Address 1','203'), 
+                array('br_shipping_address2','Shipping Address 2','204'), 
+                array('br_shipping_city','Shipping City','205'), 
+                array('br_shipping_state','Shipping Address State','206'), 
+                array('br_shipping_zip','Shipping Address Zip','207'), 
+                array('br_shipping_phone','Shipping Phone','208'), 
+                array('br_shipping_country','Shipping Country','209')
+            );	
+    
+            // Get all of the memeber fields
+                $existing = array();
+                $query  = $this->EE->db->from('member_fields');
+                $qry    = $query->get();
+                foreach($qry->result_array() as $rst)  
+                {
+                    $existing[$rst["m_field_name"]] = $rst["m_field_name"];
+                }
+                
+            // Create the new ones      
             foreach ($fields as $f)
             {
+                // It already exists
+                if(isset($existing[$f[0]]))
+                {
+                    continue;
+                }
+                
                 $query = "INSERT INTO exp_member_fields 
                             (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) 
                                 VALUES 
@@ -4566,7 +4580,12 @@ class Brilliant_retail_upd {
             $stores = $qry->get();
             foreach($stores->result_array() as $s)
             {
-                $channel = $this->EE->api_channel_structure->get_channel_info($s["channel_id"]);
+                // Delete the fields / field group
+                if($channel = $this->EE->api_channel_structure->get_channel_info($s["channel_id"])){
+                    $group = $channel->row();
+                    $this->EE->db->delete('field_groups', array('group_id' => $group->field_group));
+                    $this->EE->db->delete('channel_fields', array('group_id' => $group->field_group));
+                }
                 $this->EE->api_channel_structure->delete_channel($s["channel_id"]);
             }
 		  
