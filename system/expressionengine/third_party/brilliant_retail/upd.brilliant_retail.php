@@ -90,39 +90,47 @@ class Brilliant_retail_upd {
 		##  Records of exp_member_fields
 		## ----------------------------
 		
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_fname', 'First Name', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '1')";
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_lname', 'Last Name', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '2')";
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_phone', 'Phone Number', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '3')";
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_lname', 'Billing Last Name', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '100')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_fname', 'Billing First Name', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '101')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_company', 'Billing Company', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '102')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_address1', 'Billing Address 1', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '103')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_address2', 'Billing Address 2', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '104')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_city', 'Billing City', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '105')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_state', 'Billing State', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '106')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_zip', 'Billing Zip', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '107')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_phone', 'Billing Phone', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '108')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_billing_country', 'Billing Country', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '109')";
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_fname', 'Shipping First Name', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '200')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_lname', 'Shipping Last Name', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '201')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_company', 'Shipping Company', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '202')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_address1', 'Shipping Address 1', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '203')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_address2', 'Shipping Address 2', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '204')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_city', 'Shipping City', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '205')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_state', 'Shipping Address State', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '206')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_zip', 'Shipping Address Zip', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '207')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_phone', 'Shipping Phone', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '208')"; 
-			$field[] = "INSERT INTO exp_member_fields (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) VALUES ('br_shipping_country', 'Shipping Country', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '209')";	
+			
+			
+			$fields = array(
+                    array('br_fname','First Name','1'),
+                    array('br_lname','Last Name','2'),
+                    array('br_phone','Phone Number','3'),
+                    array('br_billing_lname','Billing Last Name','100'), 
+                    array('br_billing_fname','Billing First Name','101'), 
+                    array('br_billing_company','Billing Company','102'), 
+                    array('br_billing_address1','Billing Address 1','103'), 
+                    array('br_billing_address2','Billing Address 2','104'), 
+                    array('br_billing_city','Billing City','105'), 
+                    array('br_billing_state','Billing State','106'), 
+                    array('br_billing_zip','Billing Zip','107'), 
+                    array('br_billing_phone','Billing Phone','108'), 
+                    array('br_billing_country','Billing Country','109'),
+                    array('br_shipping_fname','Shipping First Name','200'), 
+                    array('br_shipping_lname','Shipping Last Name','201'), 
+                    array('br_shipping_company','Shipping Company','202'), 
+                    array('br_shipping_address1','Shipping Address 1','203'), 
+                    array('br_shipping_address2','Shipping Address 2','204'), 
+                    array('br_shipping_city','Shipping City','205'), 
+                    array('br_shipping_state','Shipping Address State','206'), 
+                    array('br_shipping_zip','Shipping Address Zip','207'), 
+                    array('br_shipping_phone','Shipping Phone','208'), 
+                    array('br_shipping_country','Shipping Country','209')
+                );	
 
-			foreach ($field as $query)
-			{
-				$this->EE->db->query($query);
-				$id = $this->EE->db->insert_id();
-				$this->EE->dbforge->add_column('member_data', array('m_field_id_'.$id => array(
-																									'type' => 'VARCHAR', 
-												    	                                            'constraint' => '100'
-												        	                                       	)));
-			} 
+            foreach ($fields as $f)
+            {
+                $query = "INSERT INTO exp_member_fields 
+                            (m_field_name,m_field_label,m_field_description,m_field_type,m_field_list_items,m_field_ta_rows,m_field_maxl,m_field_width,m_field_search,m_field_required,m_field_public,m_field_reg,m_field_fmt,m_field_order) 
+                                VALUES 
+                            ('{$f[0]}', '{$f[1]}', '', 'text', '', '10', '100', '100%', 'n', 'n', 'n', 'y', 'none', '{$f[2]}')";
+            	$this->EE->db->query($query);
+            	$id = $this->EE->db->insert_id();
+            	$this->EE->dbforge->add_column('member_data', array('m_field_id_'.$id => array(
+            																						'type' => 'VARCHAR', 
+            									    	                                            'constraint' => '100'
+            									        	                                       	)));
+            } 
 
 		## ----------------------------
 		##  Records of exp_global_variables
@@ -4114,7 +4122,6 @@ class Brilliant_retail_upd {
 		$sql[] = "INSERT INTO exp_br_state (zone_id,code,title,enabled) VALUES (234,'WOR','Worcestershire (county)',1);";
 		$sql[] = "INSERT INTO exp_br_state (zone_id,code,title,enabled) VALUES (234,'WRX','Wrexham',1);";
 		$sql[] = "INSERT INTO exp_br_state (zone_id,code,title,enabled) VALUES (234,'YOR','York (unitary authority)',1);";
-
 		$sql[] = "INSERT INTO exp_br_state (zone_id,code,title,enabled) VALUES (246,'BR','Brändö',1);";
 		$sql[] = "INSERT INTO exp_br_state (zone_id,code,title,enabled) VALUES (246,'EC','Eckerö',1);";
 		$sql[] = "INSERT INTO exp_br_state (zone_id,code,title,enabled) VALUES (246,'FN','Finström',1);";
@@ -4190,7 +4197,7 @@ class Brilliant_retail_upd {
 ## ----------------------------
 	$path = rtrim(realpath(APPPATH.'/../../'),'/').DIRECTORY_SEPARATOR.'media';
 	$sql[] = "INSERT INTO exp_br_store VALUES 
-				('1', '1','0','logo.png', '', '(888) 555-5555', '12207 Wilshire Blvd', 'Suite 201', 'Los Angeles', 'CA', 'USA', '90025', '(888) 555-5555', '1', '96', '12', '5', '5', '1', 'http://".$_SERVER["HTTP_HOST"]."/media/','".$path."','','','',0,0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','checkout/thankyou','customer','product','25',0,0,0,'','','',0)";
+				('1', '1','0','logo.png', '', '(888) 555-5555', '1234 Street Ln.', 'Suite 123', 'Los Angeles', 'CA', 'USA', '90210', '(888) 555-5555', '1', '96', '12', '5', '5', '1', 'http://".$_SERVER["HTTP_HOST"]."/media/','".$path."','','','',0,0,7,14,21,28,'http://".$_SERVER["HTTP_HOST"]."','cart','checkout','checkout/thankyou','customer','product','25',0,0,0,'','','',0)";
 				
 ## ----------------------------
 ##  Table structure for exp_br_tax
@@ -4551,6 +4558,18 @@ class Brilliant_retail_upd {
 	 */	
 	function uninstall() 
 	{
+		// Remove the channel
+            $this->EE->load->library('api'); 
+            $this->EE->api->instantiate('channel_structure');
+            
+            $qry = $this->EE->db->FROM("br_store");
+            $stores = $qry->get();
+            foreach($stores->result_array() as $s)
+            {
+                $channel = $this->EE->api_channel_structure->get_channel_info($s["channel_id"]);
+                $this->EE->api_channel_structure->delete_channel($s["channel_id"]);
+            }
+		  
 		// Clean up the database
 			$query = $this->EE->db->query("SELECT module_id FROM exp_modules WHERE module_name = 'Brilliant_retail'"); 
 					
@@ -4610,6 +4629,8 @@ class Brilliant_retail_upd {
 			$this->EE->db->query($query);
 		}
 
+        
+        
 		$this->reset_cache();
 
 		return TRUE;
@@ -4669,13 +4690,21 @@ class Brilliant_retail_upd {
 	}
 	
 	function reset_cache(){
-		$files = $this->read_dir_files(APPPATH.'cache/brilliant_retail');
-		foreach($files as $f){
-			$nm = APPPATH.'cache/brilliant_retail/'.$f;
-			if(file_exists($nm)){
-				@unlink($nm);
-			}
-		}
+	    $dir    = APPPATH.'cache/brilliant_retail';
+        $it     = new RecursiveDirectoryIterator($dir);
+        $files  = new RecursiveIteratorIterator($it,RecursiveIteratorIterator::CHILD_FIRST);
+
+        foreach($files as $file) {
+            if ($file->getFilename() === '.' || $file->getFilename() === '..') {
+                continue;
+            }
+            if ($file->isDir()){
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+        rmdir($dir);
 	}
 	
 	function read_dir_files($directory){

@@ -215,7 +215,7 @@ $(function() {
 	
 	$('#delete').bind('click',function(){
 		if(confirm('<?=lang('br_confirm_delete_category')?>')){
-			$('#action').val('delete');
+			$('input[name=action]').val('delete');
 			$('#category_update_order').submit();
 		}
 	});

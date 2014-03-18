@@ -2681,6 +2681,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 	 */
 		function config_category_update()
 		{
+
 			if($_POST["action"] == 'order'){
 				$order = explode("&",$_POST["order"]);
 				$i = 0;
