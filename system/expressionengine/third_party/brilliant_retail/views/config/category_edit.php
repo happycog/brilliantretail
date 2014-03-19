@@ -273,6 +273,7 @@ function _init_cat()
 										function(e){
 											e.preventDefault();
 											$(this).parent().parent().remove();	
+								            _set_cat_order();			
 										});
 	$('.input_numeric').change(_set_cat_order);
 	_set_cat_order();

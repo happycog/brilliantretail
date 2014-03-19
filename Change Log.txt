@@ -53,6 +53,7 @@
 * Fixed an issue with the core url parsing method when passing filters in the catalog. 
 * Fixed an issue with the transaction id recorded from the authorize.net payment gateway
 * Fixed an issue with checking category_url titles when editing categories
+* Fixed an issue with removing products from the category edit form
 * Fixed an issue with the default fields showing when creating new promotions
 * Fixed an issue with related products where products from other stores 
 * Fixed an issue with Realex payment gateway
