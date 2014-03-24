@@ -26,6 +26,7 @@ THE SOFTWARE.
 	// proper includes
 		$imageBrowse = TRUE;
 
+
     include_once dirname(__FILE__) . '/php/init_browse.php';
     $PGRUploaderExtension = "";
     if (PGRFileManagerConfig::$allowedExtensions == "") $PGRUploaderExtension = "*.*";
@@ -50,9 +51,9 @@ THE SOFTWARE.
   <script type="text/javascript" src="SWFUpload v2.2.0.1 Core/swfupload.js"></script>
   <script type="text/javascript" src="js/jquery.i18n.js"></script>
   <script type="text/javascript" src="js/jquery.fancybox-1.2.1.pack.js"></script>
-  <?php if (PGRFileManagerConfig::$ckEditorScriptPath):?>
+  <?php if (PGRFileManagerConfig::$ckEditorScriptPath): ?>
   <script type="text/javascript" src="<?=PGRFileManagerConfig::$ckEditorScriptPath ?>"></script>
-  <?php endif;?>
+  <?php endif; ?>
   <script type="text/javascript" src="lang/lang.js"></script>
   <script type="text/javascript" src="js/PGRUploader.js"></script>
   <script type="text/javascript" src="js/PGRContextMenu.js"></script>
@@ -64,13 +65,13 @@ THE SOFTWARE.
   <body>
     <div id="container" class="ui-widget ">
       <div id="buttons">
-      	<?php if (isset($_SESSION['PGRFileManagerAuthorized'])):?>
+      	<?php if (isset($_SESSION['PGRFileManagerAuthorized'])): ?>
       	<form method="post">
       		<div>
         	<button id="btnLogoff" name="logoff" type="submit" class="ui-state-default ui-corner-all" style="float:left">sign out</button>
         	</div>
         </form>
-        <?php endif;?>
+        <?php endif; ?>
         <button id="btnRefresh">refresh</button>
         <select id="fileListType">
             <option value="icons">icons</option>
@@ -81,14 +82,14 @@ THE SOFTWARE.
         <div style="display:none" id="leftColumn">
           <div id="folderList">
           </div>
-          <?php if (PGRFileManagerConfig::$allowEdit):?>
+          <?php if (PGRFileManagerConfig::$allowEdit): ?>
           <div id="uploadPanel" class="" >
             <input type="file" name="fileInput" id="fileInput"  />
             <img id="uploadFiles" src="img/blank.gif" />
             <img id="removeFiles" src="img/blank.gif" />
             <div id="fsUploadProgress"></div>
           </div>
-          <?php endif;?>
+          <?php endif; ?>
         </div>
         <div id="rightColumn">
           <div id="fileList" class="unselectable">                      
@@ -104,18 +105,19 @@ THE SOFTWARE.
         
         $(function() {        	            
             var filemanager = new PGRFileManager({
-            	sId 				: "<?=session_id()?>", 
-                rootDir 			: "<?=PGRFileManagerConfig::$urlPath?>", 
-                allowedExtension 	: "<?=$PGRUploaderExtension?>", 
-                fileDescription 	: "<?=$PGRUploaderDescription?>", 
-                filesType 			: "<?=$PGRUploaderType?>",
-                fileMaxSize 		: "<?=PGRFileManagerConfig::$fileMaxSize?> B",
-                lang 				: "<?=$PGRLang?>",
-                ckEditorFuncNum 	: "<?=$ckEditorFuncNum?>",
-                allowEdit 			: <?=PGRFileManagerConfig::$allowEdit?'true':'false'?>
+            	sId 				: "<?php echo session_id(); ?>", 
+                rootDir 			: "<?php echo PGRFileManagerConfig::$rootPath; ?>", 
+                allowedExtension 	: "<?php echo $PGRUploaderExtension; ?>", 
+                fileDescription 	: "<?php echo $PGRUploaderDescription; ?>", 
+                filesType 			: "<?php echo $PGRUploaderType; ?>",
+                fileMaxSize 		: "<?php echo PGRFileManagerConfig::$fileMaxSize; ?> B",
+                lang 				: "<?php echo $PGRLang; ?>",
+                ckEditorFuncNum 	: "<?php echo $ckEditorFuncNum; ?>",
+                allowEdit 			: <?php echo PGRFileManagerConfig::$allowEdit?'true':'false'; ?>
             });
             filemanager.init();
         });    
     </script>  
   </body>
 </html>
+
