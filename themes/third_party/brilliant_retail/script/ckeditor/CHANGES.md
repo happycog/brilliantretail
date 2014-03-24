@@ -1,6 +1,106 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.3.3
+
+Fixed Issues:
+
+* [#11500](http://dev.ckeditor.com/ticket/11500): [Webkit/Blink] Fixed: Selection lost when setting data in another inline editor. Additionally, [`selection.removeAllRanges()`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.selection-method-removeAllRanges) is now scoped to selection's [root](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.selection-property-root).
+* [#11104](http://dev.ckeditor.com/ticket/11104): [IE] Fixed: Various issues with scrolling and selection when focusing widgets.
+* [#11487](http://dev.ckeditor.com/ticket/11487): Moving mouse over the [Enhanced Image](http://ckeditor.com/addon/image2) widget will no longer change the value returned by the [`editor.checkDirty()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-checkDirty) method.
+* [#8673](http://dev.ckeditor.com/ticket/8673): [WebKit] Fixed: Cannot select and remove the [Page Break](http://ckeditor.com/addon/pagebreak).
+* [#11413](http://dev.ckeditor.com/ticket/11413): Fixed: Incorrect [`editor.execCommand()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-execCommand) behavior.
+* [#11438](http://dev.ckeditor.com/ticket/11438): Splitting table cells vertically is no longer changing table structure.
+* [#8899](http://dev.ckeditor.com/ticket/8899): Fixed: Links in the [About CKEditor](http://ckeditor.com/addon/about) dialog window now open in a new browser window or tab.
+* [#11490](http://dev.ckeditor.com/ticket/11490): Fixed: [Menu button](http://ckeditor.com/addon/menubutton) panel not showing in the source mode.
+* [#11417](http://dev.ckeditor.com/ticket/11417): The [`widget.doubleclick`](http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.widget-event-doubleclick) event is not canceled anymore after editing was triggered.
+* [#11253](http://dev.ckeditor.com/ticket/11253): [IE] Fixed: Clipped upload button in the [Enhanced Image](http://ckeditor.com/addon/image2) dialog window.
+* [#11359](http://dev.ckeditor.com/ticket/11359): Standardized the way anchors are discovered by the [Link](http://ckeditor.com/addon/link) plugin.
+* [#11058](http://dev.ckeditor.com/ticket/11058): [IE8] Fixed: Error when deleting a table row.
+* [#11508](http://dev.ckeditor.com/ticket/11508): Fixed: [`htmlDataProcessor`](http://docs.ckeditor.com/#!/api/CKEDITOR.htmlDataProcessor) discovering protected attributes within other attributes' values.
+* [#11533](http://dev.ckeditor.com/ticket/11533): Widgets: Avoid recurring upcasts if the DOM structure was modified during an upcast.
+* [#11400](http://dev.ckeditor.com/ticket/11400): Fixed: The [`domObject.removeAllListeners()`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.domObject-method-removeAllListeners) method does not remove custom listeners completely.
+* [#11493](http://dev.ckeditor.com/ticket/11493): Fixed: The [`selection.getRanges()`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.selection-method-getRanges) method does not override cached ranges when used with the `onlyEditables` argument.
+* [#11390](http://dev.ckeditor.com/ticket/11390): [IE] All [XML](http://ckeditor.com/addon/xml) plugin [methods](http://docs.ckeditor.com/#!/api/CKEDITOR.xml) now work in IE10+.
+* [#11542](http://dev.ckeditor.com/ticket/11542): [IE11] Fixed: Blurry toolbar icons when Right-to-Left UI language is set.
+* [#11504](http://dev.ckeditor.com/ticket/11504): Fixed: When [`config.fullPage`](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-fullPage) is set to `true`, entities are not encoded in editor output.
+* [#11004](http://dev.ckeditor.com/ticket/11004): Integrated [Enhanced Image](http://ckeditor.com/addon/image2) dialog window with [Advanced Content Filter](http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter).
+* [#11439](http://dev.ckeditor.com/ticket/11439): Fixed: Properties get cloned in the Cell Properties dialog window if multiple cells are selected.
+
+## CKEditor 4.3.2
+
+Fixed Issues:
+
+* [#11331](http://dev.ckeditor.com/ticket/11331): A menu button will have a changed label when selected instead of using the `aria-pressed` attribute.
+* [#11177](http://dev.ckeditor.com/ticket/11177): Widget drag handler improvements:
+  * [#11176](http://dev.ckeditor.com/ticket/11176): Fixed: Initial position is not updated when the widget data object is empty.
+  * [#11001](http://dev.ckeditor.com/ticket/11001): Fixed: Multiple synchronous layout recalculations are caused by initial drag handler positioning causing performance issues.
+  * [#11161](http://dev.ckeditor.com/ticket/11161): Fixed: Drag handler is not repositioned in various situations.
+  * [#11281](http://dev.ckeditor.com/ticket/11281): Fixed: Drag handler and mask are duplicated after widget reinitialization.
+* [#11207](http://dev.ckeditor.com/ticket/11207): [Firefox] Fixed: Misplaced [Enhanced Image](http://ckeditor.com/addon/image2) resizer in the inline editor.
+* [#11102](http://dev.ckeditor.com/ticket/11102): `CKEDITOR.template` improvements:
+  * [#11102](http://dev.ckeditor.com/ticket/11102): Added newline character support.
+  * [#11216](http://dev.ckeditor.com/ticket/11216): Added "\\'" substring support.
+* [#11121](http://dev.ckeditor.com/ticket/11121): [Firefox] Fixed: High Contrast mode is enabled when the editor is loaded in a hidden iframe.
+* [#11350](http://dev.ckeditor.com/ticket/11350): The default value of [`config.contentsCss`](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss) is affected by [`CKEDITOR.getUrl()`](http://docs.ckeditor.com/#!/api/CKEDITOR-method-getUrl).
+* [#11097](http://dev.ckeditor.com/ticket/11097): Improved the [Autogrow](http://ckeditor.com/addon/autogrow) plugin performance when dealing with very big tables.
+* [#11290](http://dev.ckeditor.com/ticket/11290): Removed redundant code in the [Source Dialog](http://ckeditor.com/addon/sourcedialog) plugin.
+* [#11133](http://dev.ckeditor.com/ticket/11133): [Page Break](http://ckeditor.com/addon/pagebreak) becomes editable if pasted.
+* [#11126](http://dev.ckeditor.com/ticket/11126): Fixed: Native Undo executed once the bottom of the snapshot stack is reached.
+* [#11131](http://dev.ckeditor.com/ticket/11131): [Div Editing Area](http://ckeditor.com/addon/divarea): Fixed: Error thrown when switching to source mode if the selection was in widget's nested editable.
+* [#11139](http://dev.ckeditor.com/ticket/11139): [Div Editing Area](http://ckeditor.com/addon/divarea): Fixed: Elements Path is not cleared after switching to source mode.
+* [#10778](http://dev.ckeditor.com/ticket/10778): Fixed a bug with range enlargement. The range no longer expands to visible whitespace.
+* [#11146](http://dev.ckeditor.com/ticket/11146): [IE] Fixed: Preview window switches Internet Explorer to Quirks Mode.
+* [#10762](http://dev.ckeditor.com/ticket/10762): [IE] Fixed: JavaScript code displayed in preview window's URL bar.
+* [#11186](http://dev.ckeditor.com/ticket/11186): Introduced the [`widgets.repository.addUpcastCallback()`](http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.widget.repository-method-addUpcastCallback) method that allows to block upcasting given element to a widget.
+* [#11307](http://dev.ckeditor.com/ticket/11307): Fixed: Paste as Plain Text conflict with the [MooTools](http://mootools.net) library.
+* [#11140](http://dev.ckeditor.com/ticket/11140): [IE11] Fixed: Anchors are not draggable.
+* [#11379](http://dev.ckeditor.com/ticket/11379): Changed default contents `line-height` to unitless values to avoid huge text overlapping (like in [#9696](http://dev.ckeditor.com/ticket/9696)).
+* [#10787](http://dev.ckeditor.com/ticket/10787): [Firefox] Fixed: Broken replacement of text while pasting into `div`-based editor.
+* [#10884](http://dev.ckeditor.com/ticket/10884): Widgets integration with the [Show Blocks](http://ckeditor.com/addon/showblocks) plugin.
+* [#11021](http://dev.ckeditor.com/ticket/11021): Fixed: An error thrown when selecting entire editable contents while fake selection is on.
+* [#11086](http://dev.ckeditor.com/ticket/11086): [IE8] Re-enable inline widgets drag&drop in Internet Explorer 8.
+* [#11372](http://dev.ckeditor.com/ticket/11372): Widgets: Special characters encoded twice in nested editables.
+* [#10068](http://dev.ckeditor.com/ticket/10068): Fixed: Support for protocol-relative URLs.
+* [#11283](http://dev.ckeditor.com/ticket/11283): [Enhanced Image](http://ckeditor.com/addon/image2): A `<div>` element with `text-align: center` and an image inside is not recognised correctly.
+* [#11196](http://dev.ckeditor.com/ticket/11196): [Accessibility Instructions](http://ckeditor.com/addon/a11yhelp): Allowed additional keyboard button labels to be translated in the dialog window.
+
+## CKEditor 4.3.1
+
+**Important Notes:**
+
+* To match the naming convention, the `language` button is now `Language` ([#11201](http://dev.ckeditor.com/ticket/11201)).
+* [Enhanced Image](http://ckeditor.com/addon/image2) button, context menu, command, and icon names match those of the [Image](http://ckeditor.com/addon/image) plugin ([#11222](http://dev.ckeditor.com/ticket/11222)).
+
+Fixed Issues:
+
+* [#11244](http://dev.ckeditor.com/ticket/11244): Changed: The [`widget.repository.checkWidgets()`](http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.widget.repository-method-checkWidgets) method now fires the [`widget.repository.checkWidgets`](http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.widget.repository-event-checkWidgets) event, so from CKEditor 4.3.1 it is preferred to use the method rather than fire the event.
+* [#11171](http://dev.ckeditor.com/ticket/11171): Fixed: [`editor.insertElement()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-insertElement) and [`editor.insertText()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-insertText) methods do not call the [`widget.repository.checkWidgets()`](http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.widget.repository-method-checkWidgets) method.
+* [#11085](http://dev.ckeditor.com/ticket/11085): [IE8] Replaced preview generated by the [Mathematical Formulas](http://ckeditor.com/addon/mathjax) widget with a placeholder.
+* [#11044](http://dev.ckeditor.com/ticket/11044): Enhanced WAI-ARIA support for the [Language](http://ckeditor.com/addon/language) plugin drop-down menu.
+* [#11075](http://dev.ckeditor.com/ticket/11075): With drop-down menu button focused, pressing the *Down Arrow* key will now open the menu and focus its first option.
+* [#11165](http://dev.ckeditor.com/ticket/11165): Fixed: The [File Browser](http://ckeditor.com/addon/filebrowser) plugin cannot be removed from the editor.
+* [#11159](http://dev.ckeditor.com/ticket/11159): [IE9-10] [Enhanced Image](http://ckeditor.com/addon/image2): Fixed buggy discovery of image dimensions.
+* [#11101](http://dev.ckeditor.com/ticket/11101): Drop-down lists no longer break when given double quotes.
+* [#11077](http://dev.ckeditor.com/ticket/11077): [Enhanced Image](http://ckeditor.com/addon/image2): Empty undo step recorded when resizing the image.
+* [#10853](http://dev.ckeditor.com/ticket/10853): [Enhanced Image](http://ckeditor.com/addon/image2): Widget has paragraph wrapper when de-captioning unaligned image.
+* [#11198](http://dev.ckeditor.com/ticket/11198): Widgets: Drag handler is not fully visible when an inline widget is in a heading.
+* [#11132](http://dev.ckeditor.com/ticket/11132): [Firefox] Fixed: Caret is lost after drag and drop of an inline widget.
+* [#11182](http://dev.ckeditor.com/ticket/11182): [IE10-11] Fixed: Editor crashes (IE11) or works with minor issues (IE10) if a page is loaded in Quirks Mode. See [`env.quirks`](http://docs.ckeditor.com/#!/api/CKEDITOR.env-property-quirks) for more details.
+* [#11204](http://dev.ckeditor.com/ticket/11204): Added `figure` and `figcaption` styles to the `contents.css` file so [Enhanced Image](http://ckeditor.com/addon/image2) looks nicer.
+* [#11202](http://dev.ckeditor.com/ticket/11202): Fixed: No newline in [BBCode](http://ckeditor.com/addon/bbcode) mode.
+* [#10890](http://dev.ckeditor.com/ticket/10890): Fixed: Error thrown when pressing the *Delete* key in a list item.
+* [#10055](http://dev.ckeditor.com/ticket/10055): [IE8-10] Fixed: *Delete* pressed on a selected image causes the browser to go back.
+* [#11183](http://dev.ckeditor.com/ticket/11183): Fixed: Inserting a horizontal rule or a table in multiple row selection causes a browser crash. Additionally, the [`editor.insertElement()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-insertElement) method does not insert the element into every range of a selection any more.
+* [#11042](http://dev.ckeditor.com/ticket/11042): Fixed: Selection made on an element containing a non-editable element was not auto faked.
+* [#11125](http://dev.ckeditor.com/ticket/11125): Fixed: Keyboard navigation through menu and drop-down items will now cycle.
+* [#11011](http://dev.ckeditor.com/ticket/11011): Fixed: The [`editor.applyStyle()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-applyStyle) method removes attributes from nested elements.
+* [#11179](http://dev.ckeditor.com/ticket/11179): Fixed: [`editor.destroy()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-destroy) does not cleanup content generated by the [Table Resize](http://ckeditor.com/addon/tableresize) plugin for inline editors.
+* [#11237](http://dev.ckeditor.com/ticket/11237): Fixed: Table border attribute value is deleted when pasting content from Microsoft Word.
+* [#11250](http://dev.ckeditor.com/ticket/11250): Fixed: HTML entities inside the `<textarea>` element are not encoded.
+* [#11260](http://dev.ckeditor.com/ticket/11260): Fixed: Initially disabled buttons are not read by JAWS as disabled.
+* [#11200](http://dev.ckeditor.com/ticket/11200):  Added [Clipboard](http://ckeditor.com/addon/clipboard) plugin as a dependency for [Widget](http://ckeditor.com/addon/widget) to fix drag and drop.
+
 ## CKEditor 4.3
 
 New Features:
@@ -66,15 +166,15 @@ New Features:
   * [Widget plugin](http://ckeditor.com/addon/widget) introducing the [Widget API](http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.widget).
   * New [`editor.enterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-enterMode) and [`editor.shiftEnterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-shiftEnterMode) properties &ndash; normalized versions of [`config.enterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-enterMode) and [`config.shiftEnterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-shiftEnterMode).
   * Dynamic editor settings. Starting from CKEditor 4.3 Beta, *Enter* mode values and [content filter](http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter) instances may be changed dynamically (for example when the caret was placed in an element in which editor features should be adjusted). When you are implementing a new editor feature, you should base its behavior on [dynamic](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-activeEnterMode) or [static](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-enterMode) *Enter* mode values depending on whether this feature works in selection context or globally on editor content.
-      * Dynamic *Enter* mode values &ndash; [`editor.setActiveEnterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-setActiveEnterMode) method, [`editor.activeEnterModeChange`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-activeEnterModeChange) event, and two properties: [`editor.activeEnterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-activeEnterMode) and [`editor.activeShiftEnterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-activeShiftEnterMode).
-      * Dynamic content filter instances &ndash; [`editor.setActiveFilter`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-setActiveFilter) method, [`editor.activeFilterChange`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-activeFilterChange) event, and [`editor.activeFilter`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-activeFilter) property.
-  * "Fake" selection was introduced. It makes it possible to virtually select any element when the real selection remains hidden. See the  [`selection.fake`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.selection-method-fake) method.
-  * Default [`htmlParser.filter`](http://docs.ckeditor.com/#!/api/CKEDITOR.htmlParser.filter) rules are not applied to non-editable elements (elements with `contenteditable` attribute set to `false` and their descendants) anymore. To add a rule which will be applied to all elements you need to pass an additional argument to the [`filter.addRules`](http://docs.ckeditor.com/#!/api/CKEDITOR.htmlParser.filter-method-addRules) method.
+      * Dynamic *Enter* mode values &ndash; [`editor.setActiveEnterMode()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-setActiveEnterMode) method, [`editor.activeEnterModeChange`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-activeEnterModeChange) event, and two properties: [`editor.activeEnterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-activeEnterMode) and [`editor.activeShiftEnterMode`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-activeShiftEnterMode).
+      * Dynamic content filter instances &ndash; [`editor.setActiveFilter()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-setActiveFilter) method, [`editor.activeFilterChange`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-activeFilterChange) event, and [`editor.activeFilter`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-activeFilter) property.
+  * "Fake" selection was introduced. It makes it possible to virtually select any element when the real selection remains hidden. See the  [`selection.fake()`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.selection-method-fake) method.
+  * Default [`htmlParser.filter`](http://docs.ckeditor.com/#!/api/CKEDITOR.htmlParser.filter) rules are not applied to non-editable elements (elements with `contenteditable` attribute set to `false` and their descendants) anymore. To add a rule which will be applied to all elements you need to pass an additional argument to the [`filter.addRules()`](http://docs.ckeditor.com/#!/api/CKEDITOR.htmlParser.filter-method-addRules) method.
   * Dozens of new methods were introduced &ndash; most interesting ones:
-      * [`document.find`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document-method-find),
-      * [`document.findOne`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document-method-findOne),
-      * [`editable.insertElementIntoRange`](http://docs.ckeditor.com/#!/api/CKEDITOR.editable-method-insertElementIntoRange),
-      * [`range.moveToClosestEditablePosition`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.range-method-moveToClosestEditablePosition),
+      * [`document.find()`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document-method-find),
+      * [`document.findOne()`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document-method-findOne),
+      * [`editable.insertElementIntoRange()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editable-method-insertElementIntoRange),
+      * [`range.moveToClosestEditablePosition()`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.range-method-moveToClosestEditablePosition),
       * New methods for [`htmlParser.node`](http://docs.ckeditor.com/#!/api/CKEDITOR.htmlParser.node) and [`htmlParser.element`](http://docs.ckeditor.com/#!/api/CKEDITOR.htmlParser.element).
 * [#10659](http://dev.ckeditor.com/ticket/10659): New [Enhanced Image](http://ckeditor.com/addon/image2) plugin that introduces a widget with integrated image captions, an option to center images, and dynamic "click and drag" resizing.
 * [#10664](http://dev.ckeditor.com/ticket/10664): New [Mathematical Formulas](http://ckeditor.com/addon/mathjax) plugin that introduces the MathJax widget.
@@ -99,13 +199,13 @@ Fixed Issues:
 * [#10308](http://dev.ckeditor.com/ticket/10308): [IE10] Fixed: Unspecified error when deleting a row.
 * [#10945](http://dev.ckeditor.com/ticket/10945): [Chrome] Fixed: Clicking with a mouse inside the editor does not show the caret.
 * [#10912](http://dev.ckeditor.com/ticket/10912): Prevent default action when content of a non-editable link is clicked.
-* [#10913](http://dev.ckeditor.com/ticket/10913): Fixed [`CKEDITOR.plugins.addExternal`](http://docs.ckeditor.com/#!/api/CKEDITOR.resourceManager-method-addExternal) not handling paths including file name specified.
-* [#10666](http://dev.ckeditor.com/ticket/10666): Fixed [`CKEDITOR.tools.isArray`](http://docs.ckeditor.com/#!/api/CKEDITOR.tools-method-isArray) not working cross frame.
+* [#10913](http://dev.ckeditor.com/ticket/10913): Fixed [`CKEDITOR.plugins.addExternal()`](http://docs.ckeditor.com/#!/api/CKEDITOR.resourceManager-method-addExternal) not handling paths including file name specified.
+* [#10666](http://dev.ckeditor.com/ticket/10666): Fixed [`CKEDITOR.tools.isArray()`](http://docs.ckeditor.com/#!/api/CKEDITOR.tools-method-isArray) not working cross frame.
 * [#10910](http://dev.ckeditor.com/ticket/10910): [IE9] Fixed JavaScript error thrown in Compatibility Mode when clicking and/or typing in the editing area.
 * [#10868](http://dev.ckeditor.com/ticket/10868): [IE8] Prevent the browser from crashing when applying the Inline Quotation style.
 * [#10915](http://dev.ckeditor.com/ticket/10915): Fixed: Invalid CSS filter in the Kama skin.
 * [#10914](http://dev.ckeditor.com/ticket/10914): Plugins [Indent List](http://ckeditor.com/addon/indentlist) and [Indent Block](http://ckeditor.com/addon/indentblock) are now included in the build configuration.
-* [#10812](http://dev.ckeditor.com/ticket/10812): Fixed [`range#createBookmark2`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.range-method-createBookmark2) incorrectly normalizing offsets. This bug was causing many issues: [#10850](http://dev.ckeditor.com/ticket/10850), [#10842](http://dev.ckeditor.com/ticket/10842).
+* [#10812](http://dev.ckeditor.com/ticket/10812): Fixed [`range.createBookmark2()`](http://docs.ckeditor.com/#!/api/CKEDITOR.dom.range-method-createBookmark2) incorrectly normalizing offsets. This bug was causing many issues: [#10850](http://dev.ckeditor.com/ticket/10850), [#10842](http://dev.ckeditor.com/ticket/10842).
 * [#10951](http://dev.ckeditor.com/ticket/10951): Reviewed and optimized focus handling on panels (combo, menu buttons, color buttons, and context menu) to enhance accessibility. Fixed [#10705](http://dev.ckeditor.com/ticket/10705), [#10706](http://dev.ckeditor.com/ticket/10706) and [#10707](http://dev.ckeditor.com/ticket/10707).
 * [#10704](http://dev.ckeditor.com/ticket/10704): Fixed a JAWS issue with the Select Color dialog window title not being announced.
 * [#10753](http://dev.ckeditor.com/ticket/10753): The floating toolbar in inline instances now has a dedicated accessibility label.
