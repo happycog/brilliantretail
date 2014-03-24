@@ -4588,10 +4588,14 @@ class Brilliant_retail_upd {
                 }
                 $this->EE->api_channel_structure->delete_channel($s["channel_id"]);
             }
-		  
+        
+        // Remove the snippets and global_vars 
+            $this->EE->db->like('snippet_name','br_')->delete('snippets');		  
+            $this->EE->db->where('variable_name','theme')->delete('global_variables');
+
 		// Clean up the database
 			$query = $this->EE->db->query("SELECT module_id FROM exp_modules WHERE module_name = 'Brilliant_retail'"); 
-					
+
 			$sql[] = "DELETE FROM exp_module_member_groups WHERE module_id = '".$query->row('module_id') ."'";		
 			$sql[] = "DELETE FROM exp_modules WHERE module_name = 'Brilliant_retail'";
 			$sql[] = "DELETE FROM exp_actions WHERE class = 'Brilliant_retail'";
@@ -4648,8 +4652,6 @@ class Brilliant_retail_upd {
 			$this->EE->db->query($query);
 		}
 
-        
-        
 		$this->reset_cache();
 
 		return TRUE;
