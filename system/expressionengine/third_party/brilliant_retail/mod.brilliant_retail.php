@@ -1245,7 +1245,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$amt["price_html"] = '<p class="price">'.$this->_format_money($price).'</p>';
 
 				}
-	
 				// Add and adjust for options
 					$tmp = '';
 					foreach($data as $key => $val){
@@ -1274,7 +1273,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}
 					}
 					$options .= $tmp;
-				
+
 				if($product[0]["image_large"] == ''){ $product[0]["image_large"] = 'products/noimage.jpg'; }
 				if($product[0]["image_thumb"] == ''){ $product[0]["image_thumb"] = 'products/noimage.jpg'; }
 				$content = array(
@@ -1340,10 +1339,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 			// Lets do a cart check to see if we can actually combine any of these:
 			
 				$cart = $this->EE->product_model->cart_get();
+				
 				$product_exists = array();
 				$combine_count 	= 0; 
 				foreach($cart["items"] as $key => $val)
 				{
+					
 					$config_id = ($val['configurable_id'] != "") ? $val['configurable_id'] : 0;
 					
 					if(isset($product_exists[$val['product_id']][$config_id]))
@@ -1479,15 +1480,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 								$price_qty = $qty[md5($key)];
 							}
 							 
-							$price = $this->_check_product_price($p[0],$price_qty);
-								// Check for adjustments
-									if($cart["items"][$key]["adjust"] > 0){
-										$price["price"] += $cart["items"][$key]["adjust"];
-									}elseif($cart["items"][$key]["adjust"] < 0){
-										$price["price"] -= abs($cart["items"][$key]["adjust"]);
-									}
-
-								$cart["items"][$key] = array_merge($cart["items"][$key],$price);
+							// Check the product_price / qty if its not a configurable product
+    							if($p[0]["type_id"] != 7)
+    							{
+        							 $price = $this->_check_product_price($p[0],$price_qty);
+        								// Check for adjustments
+        									if($cart["items"][$key]["adjust"] > 0){
+        										$price["price"] += $cart["items"][$key]["adjust"];
+        									}elseif($cart["items"][$key]["adjust"] < 0){
+        										$price["price"] -= abs($cart["items"][$key]["adjust"]);
+        									}
+        
+        				            $cart["items"][$key] = array_merge($cart["items"][$key],$price);
+    							}
+							
 
 						// Update the cart 
 							$cart["items"][$key]["quantity"] = $qty[md5($key)];	
