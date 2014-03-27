@@ -3070,9 +3070,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 	// Register a customer		
 		function customer_register()
 		{
-			// Load security helper for password hash
-				#$this->EE->load->helper('security');
-			
 			// Verify the security hash 
 				$xid = $this->EE->input->post('XID');
 				$check = $this->EE->security->secure_forms_check($xid);
@@ -3172,13 +3169,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$tmp = $this->EE->customer_model->_get_custom_fields();			
 					foreach($tmp as $key => $val){
 						$custom_fields[$val] = $key;
+                        $member_data[$val]   = '';					   
 					}
 					
-					$member_data = array(
-											$custom_fields["br_fname"] => $data["br_fname"],
-											$custom_fields["br_lname"] => $data["br_lname"]
-										);
-					
+					$member_data[$custom_fields["br_fname"]] = $data["br_fname"];
+					$member_data[$custom_fields["br_lname"]] = $data["br_lname"];
+
 					unset($data["br_fname"]);
 					unset($data["br_lname"]);
 					unset($data["confirm_password"]);
@@ -3188,15 +3184,6 @@ class Brilliant_retail extends Brilliant_retail_core{
 				
 				// Get the member ID 
 					$member_id = $this->EE->db->insert_id();
-
-				// If we are using the new auth library we need to 
-				// resave the password 
-					if(version_compare(APP_VER, '2.2', '<')){
-						# Validate password post EE v.2.2
-							// Load the Auth module
-								$this->EE->load->library('Auth');
-								$this->EE->auth->update_password($member_id,$data['password']);
-					}
 
 				// Call the member_member_register hook 
 					if($this->EE->extensions->active_hook('member_member_register') === TRUE){

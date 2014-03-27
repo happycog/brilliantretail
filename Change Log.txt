@@ -11,6 +11,7 @@
 * Added weight limit to UPS (150 pounds)
 * Added weight limit to USPS (70 pounds)
 * Added hidden payment_options_available input to checkout payment options form to only show checkout button when available
+* Updated the register_form to allow for custom member fields in registration
 * Updated the action on the order detail page (2.8 compatibility) 
     * Update status form
     * Add payment form
