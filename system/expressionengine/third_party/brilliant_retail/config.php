@@ -11,7 +11,7 @@
 /********************************************************************************/
 
 if ( ! defined('BR_VERSION')) {
-    define('BR_VERSION','1.6.0.0');
+    define('BR_VERSION','1.6.0.1');
 }
 
 $config['name']			=	'BrilliantRetail';
