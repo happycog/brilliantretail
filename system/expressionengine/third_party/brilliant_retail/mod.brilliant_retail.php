@@ -3169,7 +3169,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$tmp = $this->EE->customer_model->_get_custom_fields();			
 					foreach($tmp as $key => $val){
 						$custom_fields[$val] = $key;
-                        $member_data[$val]   = '';					   
+                        $member_data[$key]   = '';					   
 					}
 					
 					$member_data[$custom_fields["br_fname"]] = $data["br_fname"];
@@ -3199,7 +3199,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$member_data['member_id'] = $member_id;
 					$str = $this->EE->db->insert_string('member_data', $member_data);
 					$this->EE->db->query($str);
-				
+
 				$_SESSION["br_message"] = lang('br_sign_up_thankyou');
 				$this->EE->functions->redirect($_SERVER["HTTP_REFERER"]);
 			}
