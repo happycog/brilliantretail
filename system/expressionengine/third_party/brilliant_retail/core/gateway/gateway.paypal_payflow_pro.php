@@ -62,30 +62,38 @@ class Gateway_paypal_payflow_pro extends Brilliant_retail_gateway
         $transaction = $payflow->processTransaction();
         $response = $payflow->getResponse();
         if ($transaction) {
-            $card_type = cc_type_number($data["autho_cc_num"]);
-            $details = array(
-                "Method" => "Paypal Payflow Pro",
-                "Card Type" => $card_type,
-                "Card" => 'XXXX' . substr($data["autho_cc_num"], -4, 4),
-                "Approval Code" => $response["AUTHCODE"],
-                "Transaction ID" => $response["PNREF"]
-            );
-
-            $trans = array(
-                'status' => 3,
-                'transaction_id' => $response["PNREF"],
-                'payment_card' => 'XXXX' . substr($data["autho_cc_num"], -4, 4),
-                'payment_type' => 'Authorize',
-                'amount' => $data["order_total"],
-                'details' => serialize($details),
-                'approval' => $response["RESPMSG"],
-            );
+            $trans = $this->create_order($data, $response);
+        } elseif (($response['RESULT'] == '126') && ($config['fraud_filters_actions'] == 'neworder')) {
+            $trans = $this->create_order($data, $response, 1);
         } else {
-            $response = $payflow->getResponse();
             $trans = array(
                 'error' => $response['RESPMSG']
             );
         }
+        return $trans;
+    }
+
+    private function create_order($data, $response, $status = 3)
+    {
+        $card_type = cc_type_number($data["autho_cc_num"]);
+        $details = array(
+            "Method" => "Paypal Payflow Pro",
+            "Card Type" => $card_type,
+            "Card" => 'XXXX' . substr($data["autho_cc_num"], -4, 4),
+            "Approval Code" => $response["AUTHCODE"],
+            "Transaction ID" => $response["PNREF"]
+        );
+
+        $trans = array(
+            'status' => $status,
+            'transaction_id' => $response["PNREF"],
+            'payment_card' => 'XXXX' . substr($data["autho_cc_num"], -4, 4),
+            'payment_type' => 'Authorize',
+            'amount' => $data["order_total"],
+            'details' => serialize($details),
+            'approval' => $response["RESPMSG"],
+        );
+
         return $trans;
     }
 
@@ -172,12 +180,21 @@ class Gateway_paypal_payflow_pro extends Brilliant_retail_gateway
         );
         $data[] = array(
             'config_id' => $config_id,
+            'label' => 'Fraud Filter Actions',
+            'code' => 'fraud_filters_actions',
+            'type' => 'dropdown',
+            'options' => 'neworder:Create a new order|decline:Decline the order',
+            'value' => 'neworder',
+            'sort' => 5
+        );
+        $data[] = array(
+            'config_id' => $config_id,
             'label' => 'Sandbox Mode',
             'code' => 'sandbox',
             'type' => 'dropdown',
             'options' => 'TRUE:True|FALSE:False (Transactions are Live)',
             'value' => 'TRUE',
-            'sort' => 5
+            'sort' => 6
         );
 
         foreach ($data as $d) {
