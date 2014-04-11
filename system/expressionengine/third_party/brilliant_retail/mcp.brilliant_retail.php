@@ -1451,6 +1451,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											<td class="move_config_row">
 												<img src="'.$this->_theme('images/move.png').'" /></td>
 											<td>
+												<input type="hidden" name="config_configurable_id[]" value="'.$c["configurable_id"].'" />
 												<a href="#" class="config_item_remove"><img src="'.$this->_theme('images/delete.png').'" alt="'.lang('br_delete').'" /></a></td>
 										</tr>';
 						}

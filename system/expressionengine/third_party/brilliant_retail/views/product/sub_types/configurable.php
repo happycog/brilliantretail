@@ -128,7 +128,7 @@
 					'<select style="display:none" name="config_adjust_type[]"><option>fixed</option><option>percent</option></select>'+
 					'<input type="text" name="config_adjust[]" value="0.00" /></td>'+
 					'<td class="move_config_row"><img src="<?=$theme?>images/move.png" /></td>'+
-					'<td><a href="#" class="config_item_remove"><img src="<?=$theme?>images/delete.png" /></a></td></tr>';
+					'<td><input type="hidden" name="config_configurable_id[]" value="" /><a href="#" class="config_item_remove"><img src="<?=$theme?>images/delete.png" /></a></td></tr>';
 			$(tmp).prependTo($('#config_selected tbody'));
 
 			// reset the dnd for the rows

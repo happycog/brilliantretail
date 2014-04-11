@@ -1,4 +1,5 @@
 ### Version 1.6.0.1
 *April XX, 2014*
 
+* Updated configurable products to maintain configurable_id when editing products. 
 * Fixed an issue with custom member fields when registering a new account. 

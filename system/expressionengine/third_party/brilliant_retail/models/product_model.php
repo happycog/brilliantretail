@@ -676,11 +676,18 @@ class Product_model extends CI_Model {
 							$data["quantity"] += $data["config_qty"][$i];
 							
 							$configurable[$i] = array(
-														"sku" => $data["config_sku"][$i],
-														"qty" => $data["config_qty"][$i],
-														"adjust_type" => $data["config_adjust_type"][$i],
-														"adjust" =>	$data["config_adjust"][$i]										 		
+														"sku"             => $data["config_sku"][$i],
+														"qty"             => $data["config_qty"][$i],
+														"adjust_type"     => $data["config_adjust_type"][$i],
+														"adjust"          => $data["config_adjust"][$i]										 		
 											 		);
+							
+							// Retain our configurable_id if its an update 
+    							if($data["config_configurable_id"][$i] != '')
+    							{
+        					 		$configurable[$i]["configurable_id"] = $data["config_configurable_id"][$i];
+    							}				 		
+
 							$config = array();
 							foreach($a as $b){
 								$config[$b] = $data["config_attr_".$b][$i];
