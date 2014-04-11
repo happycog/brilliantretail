@@ -135,12 +135,12 @@ class PayFlow {
    */
   private function setupDefaults() {
     $defaults = array(
-      'VENDOR'=>$this->vendor,
-      'PARTNER'=>$this->partner,
-      'USER'=>$this->user,
-      'PWD'=>$this->password,
-      'CUSTIP'=>$_SERVER['REMOTE_ADDR'],
-      'VERBOSITY'=>'MEDIUM',
+      'VENDOR'    => $this->vendor,
+      'PARTNER'   => $this->partner,
+      'USER'      => $this->user,
+      'PWD'       => $this->password,
+      'CUSTIP'    => ($_SERVER['REMOTE_ADDR'] != '127.0.0.1') ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0',
+      'VERBOSITY' => 'MEDIUM',
     );
 
     $this->NVP = array_merge($this->NVP, $defaults);

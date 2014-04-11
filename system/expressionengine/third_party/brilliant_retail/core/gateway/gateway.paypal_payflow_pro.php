@@ -45,10 +45,10 @@ class Gateway_paypal_payflow_pro extends Brilliant_retail_gateway
         $payflow->setPaymentCurrency($this->_config["currency"]);
 
         $payflow->setAmount($data["order_total"], FALSE);
-        $payflow->setCCNumber($data["autho_cc_num"]);
-        $payflow->setCVV($data["autho_cc_code"]);
-        $payflow->setExpiration($data["autho_cc_month"] . $data["autho_cc_year"]);
-        $payflow->setCreditCardName($data["autho_cc_name"]);
+        $payflow->setCCNumber($data["payflow_cc_num"]);
+        $payflow->setCVV($data["payflow_cc_code"]);
+        $payflow->setExpiration($data["payflow_cc_month"] . $data["payflow_cc_year"]);
+        $payflow->setCreditCardName($data["payflow_cc_name"]);
 
         $payflow->setCustomerFirstName($data["br_billing_fname"]);
         $payflow->setCustomerLastName($data["br_billing_lname"]);
@@ -61,6 +61,7 @@ class Gateway_paypal_payflow_pro extends Brilliant_retail_gateway
 
         $transaction = $payflow->processTransaction();
         $response = $payflow->getResponse();
+        
         if ($transaction) {
             $trans = $this->create_order($data, $response);
         } elseif (($response['RESULT'] == '126') && ($config['fraud_filters_actions'] == 'neworder')) {
@@ -75,11 +76,11 @@ class Gateway_paypal_payflow_pro extends Brilliant_retail_gateway
 
     private function create_order($data, $response, $status = 3)
     {
-        $card_type = cc_type_number($data["autho_cc_num"]);
+        $card_type = cc_type_number($data["payflow_cc_num"]);
         $details = array(
             "Method" => "Paypal Payflow Pro",
             "Card Type" => $card_type,
-            "Card" => 'XXXX' . substr($data["autho_cc_num"], -4, 4),
+            "Card" => 'XXXX' . substr($data["payflow_cc_num"], -4, 4),
             "Approval Code" => $response["AUTHCODE"],
             "Transaction ID" => $response["PNREF"]
         );
@@ -87,7 +88,7 @@ class Gateway_paypal_payflow_pro extends Brilliant_retail_gateway
         $trans = array(
             'status' => $status,
             'transaction_id' => $response["PNREF"],
-            'payment_card' => 'XXXX' . substr($data["autho_cc_num"], -4, 4),
+            'payment_card' => 'XXXX' . substr($data["payflow_cc_num"], -4, 4),
             'payment_type' => 'Authorize',
             'amount' => $data["order_total"],
             'details' => serialize($details),
@@ -101,16 +102,16 @@ class Gateway_paypal_payflow_pro extends Brilliant_retail_gateway
     {
         $form = '   <div class="general">
                         <label>Credit Card Name *<br />
-                        <input class="txtinp required" name="autho_cc_name" type="text" /></label>
+                        <input class="txtinp required" name="payflow_cc_name" type="text" /></label>
                     </div>
                     <div class="general">
                         <label>Credit Card Number *<br />
-                        <input class="txtinp required creditcard" name="autho_cc_num" type="text" /></label>
+                        <input class="txtinp required creditcard" name="payflow_cc_num" type="text" /></label>
                     </div>
 
                     <div class="expdate_month">
                         <label>Expiration Date *<br />
-                        <select name="autho_cc_month" class="required">
+                        <select name="payflow_cc_month" class="required">
                           <option value="01">January</option>
                           <option value="02">February</option>
                           <option value="03">March</option>
@@ -127,17 +128,17 @@ class Gateway_paypal_payflow_pro extends Brilliant_retail_gateway
                     </div>
                     <div class="expdate_year">
                         <label>&nbsp;<br />
-                        <select name="autho_cc_year" class="required">';
+                        <select name="payflow_cc_year" class="required">';
         $year = date("Y");
         for ($i = $year; $i <= ($year + 10); $i++) {
-            $form .= '			<option value="' . $i . '">' . $i . '</option>';
+            $form .= '			<option value="' . ($i-2000) . '">' . $i . '</option>';
         }
         $form .= '   	</select></label>
 		                </div>
 		                <div class="clearboth"><!-- --></div>
 		                <div class="card_code">
 		                    <label>Security Code *<br />
-		                    <input class="txtinp required" name="autho_cc_code" type="text" /></label>
+		                    <input class="txtinp required" name="payflow_cc_code" type="text" /></label>
 		                </div>
 		                <div class="clearboth"><!-- --></div>';
         return $form;
