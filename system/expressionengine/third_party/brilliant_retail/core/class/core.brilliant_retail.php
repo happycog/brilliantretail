@@ -2802,13 +2802,15 @@ class Brilliant_retail_core {
 			}
 
 			$taxable = 0;
+			$discount = $this->_get_cart_discount();
+			
 			foreach($cart["items"] as $item){
 				if($item["taxable"] == 1){
-					$sub = $item["quantity"] * ($item["price"] - $item["discount"]);
+					$sub = $item["quantity"] * ($item["price"]);
 					$taxable = $taxable + $sub;
 				}
 			} 
-			$tax = $taxable * $rate / 100;
+			$tax = ($taxable-$discount) * $rate / 100;
 			return $this->_currency_round($tax);
 		}
 	
