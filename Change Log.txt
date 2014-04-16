@@ -1,5 +1,5 @@
-### Version 1.6.0.1
-*April XX, 2014*
+### Version 1.6.1.0
+*April 16, 2014*
 
 * Added Paypal Payflow Pro gateway
 * Updated configurable products to maintain configurable_id when editing products. 
