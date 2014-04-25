@@ -441,8 +441,10 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				$this->vars["groups"] = $groups;
 
             // Create the form actions 
-                $this->vars["status_action"] = $this->base_url.AMP.'method=order_update_status'.AMP.'order_id='.$order_id;
-                $this->vars["note_action"]   = $this->base_url.AMP.'module=brilliant_retail'.AMP.'method=order_add_note';
+                $this->vars["status_action"] = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=brilliant_retail'.AMP.'method=order_update_status'.AMP.'order_id='.$order_id;
+                $this->vars["note_action"]   = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=brilliant_retail'.AMP.'method=order_add_note';
+
+
 
 			// If we are just showing a print view then we need to display 
 			// the print view with a success header and exit
