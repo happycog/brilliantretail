@@ -1060,10 +1060,10 @@ class Brilliant_retail_core {
 			$qry = $this->EE->db->query("SELECT 
 											product_id, 
 											title, 
-											MATCH (title, meta_keyword, detail, sku) AGAINST ('".$queryStr."') as score 
+											MATCH (title, meta_keyword, detail, sku) AGAINST ('".$queryStr."' IN BOOLEAN MODE) as score 
 											FROM exp_br_product 
 											WHERE 
-											MATCH (title, meta_keyword, detail, sku) AGAINST ('".$queryStr."')");
+											MATCH (title, meta_keyword, detail, sku) AGAINST ('".$queryStr."' IN BOOLEAN MODE)");
 			return $qry->result_array();
 		}
 
