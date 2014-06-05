@@ -74,8 +74,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											"config_shipping_install","config_shipping_edit","config_shipping_remove",
 											"config_tax_new","config_tax_edit","tools_clear_cache","s3_get_files");
 											
-			private $disallowed_fieldtypes = array('wygwam','Wyvern');								
-
 	/**
 	 * __construct function
 	 * 
@@ -1363,29 +1361,22 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 
 				$i = 0;
 				foreach($fields as $f){
-					// We only want the custom fields for this channel
-					if(in_array($f["field_type"],$this->disallowed_fieldtypes))
-					{
-						echo 'Unsupported fieldtype: <b>'.$f["field_type"].'</b>';
-						exit;
-					}else{
-						if(isset($f["field_name"])){
-							$this->EE->api_channel_fields->set_settings($f["field_type"],$f);
-							$this->EE->api_channel_fields->setup_handler($f["field_id"]);
+					if(isset($f["field_name"])){
+						$this->EE->api_channel_fields->set_settings($f["field_type"],$f);
+						$this->EE->api_channel_fields->setup_handler($f["field_id"]);
+						
+						// Either put in existing data or nothing on new product
+							$param[0] = ($new_product == FALSE) ? $data["field_id_".$f["field_id"]] : "";
 							
-							// Either put in existing data or nothing on new product
-								$param[0] = ($new_product == FALSE) ? $data["field_id_".$f["field_id"]] : "";
-								
-								// Hack added to deal with double encoding issue 
-								// from rte. Yuck but what can you do? - dpd 
-									$param[0] = form_prep($param[0], "field_id_".$f["field_id"]);
-								
-								$this->vars["custom"][$i] = array(
-																'settings' 		=> $f,
-																'display_field' => $this->EE->api_channel_fields->apply('display_field', $param)
-																);
-								$i++;
-						}
+							// Hack added to deal with double encoding issue 
+							// from rte. Yuck but what can you do? - dpd 
+								$param[0] = form_prep($param[0], "field_id_".$f["field_id"]);
+							
+							$this->vars["custom"][$i] = array(
+															'settings' 		=> $f,
+															'display_field' => $this->EE->api_channel_fields->apply('display_field', $param)
+															);
+							$i++;
 					}
 				}
 
