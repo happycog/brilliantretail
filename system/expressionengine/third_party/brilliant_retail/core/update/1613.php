@@ -39,13 +39,24 @@ foreach($config["store"] as $key => $val)
 {
     $channel = $this->EE->api_channel_structure->get_channel_info($val["channel_id"]);
     $field_group = $channel->result_array()[0]["field_group"];
-    
-    if($key == 1){
+
+    // Get all field type names so we don't create conflicts
+        $fields = array();
+        foreach($this->EE->db->FROM('channel_fields')->where('group_id',$field_group)->get()->result_array() as $rst){
+            $fields[$rst["field_name"]] = $rst["field_name"];
+        }
+        
         $field_name = 'detail';        
-    }else{
-        $field_name = 'detail_'.$key;        
-    }
-             
+        if(isset($fields[$field_name])){
+            $field_name = 'detail_'.$key;            
+            // Put an announcement in the session alert
+            $_SESSION["alert"] = "We couldn't automatically create a custom field named 
+                                  <b>detail</b> because one already existed. A custom field 
+                                  named <b>".$field_name."</b> was created instead. You'll need 
+                                  to update any templates using the product tag to reference that 
+                                  field name.";
+        }
+
     $data = array(
                     'site_id'               => $key,            // Site ID
                     'group_id'              => $field_group,    // (int)

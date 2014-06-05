@@ -1622,12 +1622,6 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 								$this->vars["categories"] = $categories;
 			}
 					
-			// What editor should we use for the detail field
-				
-				$this->EE->load->library('product_form');
-				$this->vars["detail_field"] = $this->EE->product_form->select_editor($products[0]["detail"]);
-			
-				
 			$this->_markitup();
 
 			$this->vars['feeds'] = $this->EE->feed_model->get_feeds();
