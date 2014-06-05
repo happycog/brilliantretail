@@ -10,5 +10,5 @@ now convert the field to any custom field you like.
 * Fixed an issue with custom member fields when registering a new account. 
 * Fixed an issue with updating statuses and posting notes in ExpressionEngine 2.7.* 
 * Removed POE (CKEditor Fieldtype) from the BrilliantRetail distribution
-* Removed shortee from the BrilliantRetail distribution
-* Removed snippet from the BrilliantRetail distribution
+* Removed shortee from the BrilliantRetail distribution and removed tag references in demo theme
+* Removed snippet from the BrilliantRetail distribution and removed tag references in demo theme

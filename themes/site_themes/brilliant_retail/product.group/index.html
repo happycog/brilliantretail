@@ -231,6 +231,10 @@
 		                    			{exp:brilliant_retail:image src="{related_thumb}" width="180" height="150"}</a>
 		                    	</div>
 		                        <h5>{related_title}</h5>
+		                        {exp:brilliant_retail:product_custom product_id="{related_product_id}"}
+		                            {br:detail}
+		                        {/exp:brilliant_retail:product_custom}
+		                        
 		                        <p><a href="{exp:brilliant_retail:path src='product/{related_url}'}">Details</a></p>
 		                    </li>
 	                	{/related_products}

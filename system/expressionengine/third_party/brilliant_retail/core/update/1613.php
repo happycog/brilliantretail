@@ -38,7 +38,8 @@ $this->EE->api->instantiate('channel_structure');
 foreach($config["store"] as $key => $val)
 {
     $channel = $this->EE->api_channel_structure->get_channel_info($val["channel_id"]);
-    $field_group = $channel->result_array()[0]["field_group"];
+    $rst = $channel->result_array();
+    $field_group = $rst[0]["field_group"];
 
     // Get all field type names so we don't create conflicts
         $fields = array();
