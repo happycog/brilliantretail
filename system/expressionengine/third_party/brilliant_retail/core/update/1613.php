@@ -42,8 +42,12 @@ foreach($config["store"] as $key => $val)
 
     // Get all field type names so we don't create conflicts
         $fields = array();
-        foreach($this->EE->db->FROM('channel_fields')->where('group_id',$field_group)->get()->result_array() as $rst){
-            $fields[$rst["field_name"]] = $rst["field_name"];
+        
+        $f = $this->EE->db->FROM('channel_fields')->where('group_id',$field_group)->get();
+        if($f->num_rows() > 0){
+            foreach($f->result_array() as $rst){
+                $fields[$rst["field_name"]] = $rst["field_name"];
+            }
         }
         
         $field_name = 'detail';        
@@ -61,7 +65,7 @@ foreach($config["store"] as $key => $val)
                     'site_id'               => $key,            // Site ID
                     'group_id'              => $field_group,    // (int)
                     'field_name'            => $field_name,     // (string a-zA-Z0-9_- only)
-                    'field_label'           => 'Detail',        // (string)
+                    'field_label'           => 'Description',   // (string)
                     'field_type'            => 'textarea',      // (string a valid fieldtype short name)
                     'field_order'           => 1,               // (int)
                     'field_instructions'    => '',
@@ -77,9 +81,9 @@ foreach($config["store"] as $key => $val)
 
     $new_field = $this->EE->api_channel_fields->update_field($data);
 
-    $products = $this->EE->db->query("  SELECT 
+    $products = $this->EE->db->query("SELECT 
                                         	p.product_id,
-                                        	pe.product_entry_id,
+                                        	pe.entry_id,
                                         	p.detail   
                                         FROM 
                                     	    ".$prefix."br_product p,
@@ -89,10 +93,12 @@ foreach($config["store"] as $key => $val)
                                         AND  
                                             p.site_id = ".$key);
     
-    foreach($products->result_array() as $p){
-        $data = array(
-                        "field_id_".$new_field => $p["detail"]
-                    );
-        $this->EE->db->where('entry_id',$p["product_entry_id"])->update($prefix."channel_data",$data);
+    if($products->num_rows() > 0){
+        foreach($products->result_array() as $p){
+            $data = array(
+                            "field_id_".$new_field => $p["detail"]
+                        );
+            $this->EE->db->where('entry_id',$p["entry_id"])->update($prefix."channel_data",$data);
+        }
     }
 }
