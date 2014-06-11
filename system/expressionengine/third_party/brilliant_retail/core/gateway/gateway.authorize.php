@@ -137,6 +137,7 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 				$response = urldecode(curl_exec($ch));
 				
 				$resp = explode("|",$response);
+
 				if($resp[0] != 1){
 					$trans = array(
 										'error' => $resp[3]

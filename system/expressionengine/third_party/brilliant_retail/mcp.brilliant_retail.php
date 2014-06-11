@@ -3276,7 +3276,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 											);
 				$this->vars["store"] = $this->EE->store_model->get_store_by_id($this->site_id);
 
-            $this->vars['action']	= $this->base_url.AMP.'method=config_permission_update';
+            $this->vars["action"]     = 'C=addons_modules&M=show_module_cp&module=brilliant_retail&method=config_permission_update';
 
 			$this->vars["content"] = $this->_view('config/permission_edit', $this->vars);
 			return $this->_view('config/index', $this->vars);
