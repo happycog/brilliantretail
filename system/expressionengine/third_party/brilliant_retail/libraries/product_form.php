@@ -32,40 +32,18 @@
 		public function __construct()
 		{
 			$this->EE =& get_instance();
-			$this->EE->load->library('api'); 
-			$this->EE->api->instantiate('channel_fields');
 		}
 	
 		public function select_editor($data){
 			
-			$ft = 'poe';
-			$cf = $this->EE->api_channel_fields;
-			$cf->ft_paths[$ft] = PATH_THIRD.$ft;
-			$cf->field_type = $ft;
-			$cf->include_handler($ft);
-			$cf->field_types[$ft] = ucwords($ft).'_ft';
-			$cf->setup_handler($ft);
+			$this->EE->load->add_package_path(PATH_MOD.'rte/');
+			$this->EE->load->library(array('javascript', 'rte_lib'));
+            
+            $this->EE->javascript->output(
+                $this->EE->rte_lib->build_js(0,'#detail', NULL, TRUE)
+            );
 			
-			$settings = array('poe_toolbar' => 1);
-			
-			$cf->field_types[$ft]->settings = $settings;
-
-			$cf->field_types[$ft]->field_name = 'detail';
-			
-			return $cf->apply('display_field', array('data' => $data));
+			return '<textarea id="detail" name="detail">'.$data.'</textarea>';
 
 		}
-		
-		public function config_editor()
-		{
-			$cf->apply('display_settings',array('settings' => array( 'buttons' => array('html', '|', 
-																						'formatting', '|', 'bold', 'italic', '|',
-																						'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-																						'image', 'video', 'file', 'link', '|', 'alignleft', 'aligncenter', 'alignright', '|',
-																						'horizontalrule'))));
-		
-			$this->vars["detail_field"] = $this->EE->table->generate();
-			
-		}
-	
 	}

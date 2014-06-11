@@ -119,11 +119,16 @@ class Gateway_authorize extends Brilliant_retail_gateway {
 				// You can run test transactions against the live transaction url 
 				// but if you want to use the developers sandbox you have to use 
 				// the url below. 
-					#$url = 'https://test.authorize.net/gateway/transact.dll';
-				
-				// Live URl
-					$url = 'https://secure.authorize.net/gateway/transact.dll';
-				
+				    if($config['x_test_request'] == 'TRUE')
+				    {
+        				$url = 'https://test.authorize.net/gateway/transact.dll';    
+				    }
+				    else
+				    {
+                        // Live URl
+                            $url = 'https://secure.authorize.net/gateway/transact.dll';
+				    }
+
 				$ch = curl_init($url);
 				curl_setopt($ch, CURLOPT_HEADER, 0);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);

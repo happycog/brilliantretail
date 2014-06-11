@@ -1181,7 +1181,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 					
 					$data["quantity"] = round($data["quantity"] * 1);
 					if($data["quantity"] == 0){
-						$data["quantity"] = 1;
+						// The quantity passed was 0 so 
+						// lets continue (added for batch adds) -dpd  
+						continue;
 					}
 				
 				$product_id = $data["product_id"];
@@ -1416,6 +1418,25 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}		
 		}
 	
+        function cart_add_form(){
+
+            $form_name 	= $this->EE->TMPL->fetch_param('form_name','cart_add_form');
+            $form_id 	= $this->EE->TMPL->fetch_param('form_id','cart_add_form');
+            $form_class = $this->EE->TMPL->fetch_param('form_class','cart_add_form');
+
+            $action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
+	
+			$form_details = array(
+        							'action'     		=> $action,
+        		                  	'name'           	=> $form_name,
+        		                  	'id'             	=> $form_id,
+        		                  	'class'          	=> $form_class,
+        		                  	'secure'         	=> TRUE
+        		                  );
+	
+			return $this->EE->functions->form_declaration($form_details);
+        }
+
 		function cart_remove()
 		{
 			$this->EE->product_model->cart_unset($this->EE->input->get('id',TRUE));
