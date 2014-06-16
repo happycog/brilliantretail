@@ -1,14 +1,16 @@
-### Version 1.6.1.1
-*April XX, 2014*
+### Version 1.7.0.0
+*July XX, 2014*
 
 * Important: The product detail field has been converted to an expressionengine textarea field type. You can 
 now convert the field to any custom field you like. 
+* Added **br_autologin_checkout** and **br_autologin_register** configuration variables. When set to 'y' the customer will automatically be logged in 
+at guest checkout or registration respecitively. 
 * Added Paypal Payflow Pro gateway
 * Updated configurable products to maintain configurable_id when editing products. 
-* Updated search to better make terms.
-* Updated the description field to a core Textarea RTE field. 
+* Updated search to better handle search terms with dashes. 
+* Updated the product description field to a core Textarea RTE field. 
 * Fixed an issue with tax calculation on cart based promotions 
 * Fixed an issue with custom member fields when registering a new account. 
 * Fixed an issue with updating statuses and posting notes in ExpressionEngine 2.7.*
-* Fixed an issue with saving store permissions
 * Fixed an issue with updating statuses and posting notes in ExpressionEngine 2.7.* 
+* Fixed an issue with saving store permissions in ExpressionEngine 2.7.*

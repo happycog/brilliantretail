@@ -2402,9 +2402,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 							}
 
                         // Auto Login? 
-                            if($this->EE->config->itme('br_autologin') == 'y')
+                            if($this->EE->config->item('br_autologin_checkout') == 'y')
                             {
-                                $this->_autologin($member_id);                        
+                                // Check to make sure they aren't logged in already
+                                if($this->EE->session->userdata('member_id') == 0)
+                                {
+                                    $this->_autologin($member_id);                        
+                                }
                             }
 				}
 			}
@@ -3230,7 +3234,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$this->EE->db->query($str);
 
                 // Auto Login? 
-                    if($this->EE->config->itme('br_autologin') == 'y')
+                    if($this->EE->config->item('br_autologin_register') == 'y')
                     {
                         $this->_autologin($member_id);                        
                     }
@@ -4436,7 +4440,7 @@ class Brilliant_retail extends Brilliant_retail_core{
                 $this->EE->load->library('auth');
 		    		
 		    // First get the member based on the member_id
-                $this->EE->db->where('username', $username);
+                $this->EE->db->where('member_id', $member_id);
                 $query = $this->EE->db->get('members');
 		
             // We know its valid because we just created the member in 
