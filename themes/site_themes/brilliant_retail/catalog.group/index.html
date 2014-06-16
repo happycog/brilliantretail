@@ -126,7 +126,7 @@
 					                        <div>
 					                        	<a href="{exp:brilliant_retail:path src='product/{url}'}" style="height:200">{exp:brilliant_retail:image src="{image_thumb}" width="175" height="210"}</a>
 					                        </div>
-					                        	<p class="title"><a href="{exp:brilliant_retail:path src='product/{url}'}">{exp:snippet total="60"}{title}{/exp:snippet}</a></p>
+					                        	<p class="title"><a href="{exp:brilliant_retail:path src='product/{url}'}">{title}</a></p>
 					                        	{!-- 
 					                        		You can use the {in_stock} variable to test if a product is available 
 					                        		or test in_stock == FALSE as shown below to see if it is out of stock. 
@@ -141,7 +141,7 @@
 					                    		<a href="{exp:brilliant_retail:path src='product/{url}'}">{exp:brilliant_retail:image src="{image_thumb}" width="75" height="90"}</a></div>
 					                        <div class="desc">
 					                        	<h5><a href="{exp:brilliant_retail:path src='product/{url}'}">{title}</a></h5>
-					                            <p>{exp:snippet total="200"}{detail}{/exp:snippet}</p>
+					                            <p>{detail}</p>
 					                            <p><a href="{exp:brilliant_retail:path src='product/{url}'}">+Add to cart</a></p>
 					                        </div>
 					                        <div class="price">{price_html}</div>

@@ -1,6 +1,8 @@
 ### Version 1.6.1.1
 *April XX, 2014*
 
+* Important: The product detail field has been converted to an expressionengine textarea field type. You can 
+now convert the field to any custom field you like. 
 * Added Paypal Payflow Pro gateway
 * Updated configurable products to maintain configurable_id when editing products. 
 * Updated search to better make terms.
@@ -9,3 +11,4 @@
 * Fixed an issue with custom member fields when registering a new account. 
 * Fixed an issue with updating statuses and posting notes in ExpressionEngine 2.7.*
 * Fixed an issue with saving store permissions
+* Fixed an issue with updating statuses and posting notes in ExpressionEngine 2.7.* 

@@ -427,7 +427,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 			{
 				return $output;
 			}
-			
+
 			// Form post url
 				$action = $this->EE->functions->fetch_site_index(0,0).QUERY_MARKER.'ACT='.$this->EE->functions->fetch_action_id('Brilliant_retail', 'cart_add');
 

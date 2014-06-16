@@ -121,23 +121,6 @@
 					</div>
 					
 				</div>
-				
-				<div class="publish_field" id="hold_br_detail">
-
-					<label class="hide_field">
-						<span>
-							<?=lang('br_product_detail')?>
-						</span>
-					</label>
-	
-					<div id="sub_hold_br_detail">
-						<fieldset class="holder">
-							<?=$detail_field?>
-						</fieldset>
-					</div> <!-- /sub_hold_field -->
-
-				</div>
-				
 
 		<?php
 			foreach($custom as $c){
