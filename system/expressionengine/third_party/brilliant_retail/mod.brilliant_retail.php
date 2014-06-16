@@ -2400,6 +2400,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 							{
 								$this->_send_email('customer-account-new', $eml);
 							}
+
+                        // Auto Login? 
+                            if($this->EE->config->itme('br_autologin') == 'y')
+                            {
+                                $this->_autologin($member_id);                        
+                            }
 				}
 			}
 
@@ -3222,6 +3228,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$member_data['member_id'] = $member_id;
 					$str = $this->EE->db->insert_string('member_data', $member_data);
 					$this->EE->db->query($str);
+
+                // Auto Login? 
+                    if($this->EE->config->itme('br_autologin') == 'y')
+                    {
+                        $this->_autologin($member_id);                        
+                    }
 
 				$_SESSION["br_message"] = lang('br_sign_up_thankyou');
                 $return = ($data["return"] != '' ? $data["return"] : $_SERVER["HTTP_REFERER"]);
@@ -4414,4 +4426,31 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 			return $this->EE->session->cache['category_menu_parents'];
 		}
+
+
+    /* Create a private auto login method
+    */
+        private function _autologin($member_id)
+        {
+            // Load Auth Library
+                $this->EE->load->library('auth');
+		    		
+		    // First get the member based on the member_id
+                $this->EE->db->where('username', $username);
+                $query = $this->EE->db->get('members');
+		
+            // We know its valid because we just created the member in 
+            // either the checkout or the registration form
+        		if (!$result = $query->row()){
+        			// We'll return if there is no user though for safe keeping. 
+        			// The user wouldn't be logged in but the parnet checkout / registration
+        			// could continue without error
+            			return;
+        		}
+		
+            // Log them in
+                $session = new Auth_result($result);
+                $session->remember_me(60*60*24);
+                $session->start_session();            
+        }
 }
