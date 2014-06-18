@@ -1,8 +1,11 @@
 ### Version 1.7.0.0
 *July XX, 2014*
 
+* VERY IMPORTANT: The registration form now respects the "Require Member Account Activation?" setting for "Self-activation via email." We have added a new {activation_url} tag 
+to the New Account Email. You MUST update your notification template manually to reflect the new change. Further instructions to do so are here: [INSERT LINK]
 * Important: The product detail field has been converted to an expressionengine textarea field type. You can 
 now convert the field to any custom field you like. 
+* Added **activation_url** tag to the New Account Email template
 * Added **br_autologin_checkout** and **br_autologin_register** configuration variables. When set to 'y' the customer will automatically be logged in 
 at guest checkout or registration respecitively. 
 * Added Paypal Payflow Pro gateway
@@ -16,3 +19,6 @@ at guest checkout or registration respecitively.
 * Fixed an issue with updating statuses and posting notes in ExpressionEngine 2.7.*
 * Fixed an issue with updating statuses and posting notes in ExpressionEngine 2.7.* 
 * Fixed an issue with saving store permissions in ExpressionEngine 2.7.*
+* Fixed parsing issues with the shipping options in checkout related to EE 2.9
+* Fixed parsing issues with the payment methods in checkout related to EE 2.9
+* Fixed parsing issues with sending BrilliantRetail notification emails related to EE 2.9

@@ -1244,8 +1244,11 @@ class Brilliant_retail_core {
 			}
 		
         $output .= '<input type="hidden" id="payment_options_available" value="'.$payment_options_available.'" />';
-        		
-		return $output;
+        
+        // Remove any runtime annotation. 
+            $output = $this->EE->TMPL->parse_globals($output);
+    
+    	return $output;
 	}
 	
 	function _payment_buttons(){
@@ -1411,6 +1414,9 @@ class Brilliant_retail_core {
 				$this->EE->TMPL->parse($tmp);
 				$output .= $tmp;
 			}
+
+        // Remove any runtime annotation. 
+            $output = $this->EE->TMPL->parse_globals($output);
 
 		// Put a hide count of the available shipping options so that we can 
 		// test for availablity with jquery
@@ -2983,11 +2989,13 @@ class Brilliant_retail_core {
 				
 				// Pass output to parse method by reference 
 					$this->EE->TMPL2->parse($output);
-
+                    
 			// Add extension hook to manipulate emails before they are sent out
 				if($this->EE->extensions->active_hook('br_email_send_before') === TRUE){
 					$output = $this->EE->extensions->call('br_email_send_before', $output); 
 				}
+
+				$output = $this->EE->TMPL2->parse_globals($output);
 
 			// Send it
 				$this->EE->email->mailtype = 'html';	

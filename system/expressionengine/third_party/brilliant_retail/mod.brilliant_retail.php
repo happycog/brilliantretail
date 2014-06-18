@@ -1,4 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+
 /************************************************************/
 /*	BrilliantRetail 										*/
 /*															*/
@@ -2383,13 +2386,14 @@ class Brilliant_retail extends Brilliant_retail_core{
 						$password = strtolower(substr(md5(time()),0,8));
 						$member_id = $this->EE->customer_model->create_customer($data,$password,$group_id);
 						$eml[0] = array(
-											"fname" 	=> $data["br_fname"],
-											"lname" 	=> $data["br_lname"],
-											"email" 	=> $data["email"],
-											"password" 	=> $password,
-											"username" 	=> $data["email"],
-											"join_date" => $this->EE->localize->now
-										);
+											"fname" 	     => $data["br_fname"],
+											"lname" 	     => $data["br_lname"],
+											"email" 	     => $data["email"],
+											"password" 	     => $password,
+											"username" 	     => $data["email"],
+											"join_date"      => $this->EE->localize->now, 
+                                            "activation_url" => "" 
+                                        );
 						// Call the member_member_register hook
 							$edata = $this->EE->extensions->call('member_member_register', $eml[0], $member_id);
 							if ($this->EE->extensions->end_script === TRUE) return;
@@ -2799,6 +2803,9 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$snippetdata = $this->vars["snippets"]["br_shipping_layout"]["snippet_contents"];
 					$tmp = $this->EE->TMPL->parse_variables($snippetdata, $vars);
 					$this->EE->TMPL->parse($tmp);
+					
+                    // Remove any runtime annotation. 
+                        $tmp = $this->EE->TMPL->parse_globals($tmp);
 
 				$opts .= $tmp;
 				$shipping_options_available = 1;
@@ -3187,13 +3194,15 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$new['unique_id']		= $this->EE->functions->random('encrypt');
 				$new['join_date']		= $this->EE->localize->now;
 				$new['email']			= $data['email'];
-				$new['screen_name'] 	= ucwords($data['br_fname']).ucwords($data["br_lname"]);
+				$new['screen_name'] 	= ucwords($data['br_fname']).' '.ucwords($data["br_lname"]);
 				$new['url']		 		= isset($data["url"]) ? prep_url($data["url"]) : '' ;
 				$new['location']	 	= isset($data["location"]) ? $data["location"] : '' ;
 				$new['language']	= ($this->EE->config->item('deft_lang')) ? $this->EE->config->item('deft_lang') : 'english';
 				$new['time_format'] = ($this->EE->config->item('time_format')) ? $this->EE->config->item('time_format') : 'us';
 				$new['timezone']	= ($this->EE->config->item('default_site_timezone') && $this->EE->config->item('default_site_timezone') != '') ? $this->EE->config->item('default_site_timezone') : $this->EE->config->item('server_timezone');
-
+                
+                $new['authcode']        = $this->EE->functions->random('alnum', 10);
+                 
 				// Format for email
 					$data["fname"] = $data["br_fname"];
 					$data["lname"] = $data["br_lname"];
@@ -3212,17 +3221,32 @@ class Brilliant_retail extends Brilliant_retail_core{
 					unset($data["br_lname"]);
 					unset($data["confirm_password"]);
 
-				$str = $this->EE->db->insert_string('members', $new);
-				$this->EE->db->query($str);
-
+				
+				    // Do we need to do verification on registrations
+                        $activation_url = '';
+                        
+                        if ($this->EE->config->item('req_mbr_activation') == 'email')
+                        {
+                            $new['group_id'] = 4; // Set to pending
+                            $action_id  = $this->EE->functions->fetch_action_id('Member', 'activate_member');
+                            $activation_url = $this->EE->functions->fetch_site_index(0, 0).QUERY_MARKER.'ACT='.$action_id.'&id='.$new['authcode'];
+                        }
+				
+        				$str = $this->EE->db->insert_string('members', $new);
+        				$this->EE->db->query($str);
+        
 				// Get the member ID
 					$member_id = $this->EE->db->insert_id();
+
 
 				// Call the member_member_register hook
 					if($this->EE->extensions->active_hook('member_member_register') === TRUE){
 						$edata = $this->EE->extensions->call('member_member_register', $new, $member_id);
 						if ($this->EE->extensions->end_script === TRUE) return;
 					}
+
+                // Add the $activation_url to the $new array
+                    $data["activation_url"] = $activation_url;
 
 				// Send the email notification
 					$vars[0] = $data;
@@ -3233,13 +3257,19 @@ class Brilliant_retail extends Brilliant_retail_core{
 					$str = $this->EE->db->insert_string('member_data', $member_data);
 					$this->EE->db->query($str);
 
-                // Auto Login? 
-                    if($this->EE->config->item('br_autologin_register') == 'y')
-                    {
-                        $this->_autologin($member_id);                        
-                    }
+                if ($this->EE->config->item('req_mbr_activation') == 'email'){
+                    $_SESSION["br_message"] = lang('br_sign_up_activate');
+				}else{
+    				$_SESSION["br_message"] = lang('br_sign_up_thankyou');
+                        
+                    // Auto Login if the are not pending
+                     
+                        if($this->EE->config->item('br_autologin_register') == 'y')
+                        {
+                            $this->_autologin($member_id);                        
+                        }
+				}
 
-				$_SESSION["br_message"] = lang('br_sign_up_thankyou');
                 $return = ($data["return"] != '' ? $data["return"] : $_SERVER["HTTP_REFERER"]);
 				$this->EE->functions->redirect($return);
 			}
@@ -4205,10 +4235,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 		function reset_password()
 		{
-			$password = $this->EE->input->post('password',TRUE);
-			$password_confirm = $this->EE->input->post('password_confirm',TRUE);
-			$return 	= $this->EE->input->post('return',TRUE);
-			$token	= $this->EE->input->post('token',TRUE);
+			$password           = $this->EE->input->post('password',TRUE);
+			$password_confirm   = $this->EE->input->post('password_confirm',TRUE);
+			$return 	        = $this->EE->input->post('return',TRUE);
+			$token	            = $this->EE->input->post('token',TRUE);
 
 			if(trim($password) == '' || trim($password_confirm) == '')
 			{

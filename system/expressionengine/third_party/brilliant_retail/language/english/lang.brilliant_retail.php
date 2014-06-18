@@ -634,6 +634,7 @@ $lang = array(
 			"br_customer_exists" => "Customer already exists. Please login below.",
 			"br_invalid_form_id" => "There was an error processing your registration. Please try again.", 
 			"br_sign_up_thankyou" => "Thank you for registering. You can now log in below.", 
+			"br_sign_up_activate" => "You have just been sent an email containing membership activation instructions.",
 			"br_please_login_or_create_an_account_to_checkout" => "Please login below or register a new account to continue",
 			"br_profile_updated_successfully" => "Thank you your profile has been updated.",
 			"br_password_fields_required" 	=> "All password fields are required.", 
