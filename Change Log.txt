@@ -14,6 +14,7 @@ at guest checkout or registration respecitively.
 * Updated configurable products to maintain configurable_id when editing products. 
 * Updated search to better handle search terms with dashes. 
 * Updated the product description field to a core Textarea RTE field. 
+* Fixed an issue with the filtering multiselect attributes
 * Fixed an issue with tax calculation on cart based promotions 
 * Fixed an issue with custom member fields when registering a new account. 
 * Fixed an issue with updating statuses and posting notes in ExpressionEngine 2.7.*
