@@ -1744,6 +1744,7 @@ class Brilliant_retail_core {
 	function _filter_results($vars,$hash,$paginate = true){
 		
 		$url = $this->_parse_url();
+		
 		$filters = array();
 		
 		# Sort Parameters - We automatically set the mode,sort and dir 
@@ -1930,8 +1931,8 @@ class Brilliant_retail_core {
 				foreach($vars[0]["results"] as $key => $val){
 					$product_attrs[$val["product_id"]] = $this->_check_attr($val);
 				}
-				
-			// Build an array of 
+
+			// Build an array of all product attribute options
 				$attr_keys = array();
 				foreach($product_attrs as $p)
 				{
@@ -1946,13 +1947,14 @@ class Brilliant_retail_core {
 			// Are there filters to consider
 				
 				foreach($attr_keys as $key => $val){
-				
-					$attr = array();
-				
-					if(isset($url["filters"][$key])){
+                    
+				    $attr = array();
+                    
+                    if(isset($url["filters"][$key])){
+						
 						// Set an array to check products against after we setup the filters
 							$attr[$key][$url["filters"][$key][0]] = 1;
-						
+
 						// Setup the filters
 							foreach($url["filters"][$key] as $k){
 								$filters[] = array(
@@ -1967,8 +1969,10 @@ class Brilliant_retail_core {
 						foreach($vars[0]["results"] as $key => $v){
 							$keep = FALSE;
 							$a = $product_attrs[$v["product_id"]];
+							
 							foreach($a as $b){
-								if(isset($attr[$b["id"]][$b["label"]["option_id"]])){
+
+							    if(isset($attr[$b["id"]][$b["label"]["option_id"]])){
 									$keep = TRUE;
 									break;
 								}
@@ -1978,7 +1982,7 @@ class Brilliant_retail_core {
 							}
 						}
 						$vars[0]["results"] = array_values($vars[0]["results"]);
-					}
+                    }
 				}
 		
 		// Filter price range 
@@ -2342,6 +2346,20 @@ class Brilliant_retail_core {
 													"label" => array("option_id" => $value) 
 												);							
 							}
+						}
+						if($val["fieldtype"] == 'multiselect'){
+							$value = $val["value"];
+                            if(is_array($value)){
+                                foreach($value as $opt){
+    							    $hash = md5($val["attribute_id"].$opt.'_'.$opt);
+    								$attr[] = array(
+    													"id"	=> $val["attribute_id"],
+    													"hash" 	=> $hash,
+    													"title" => $val["title"],
+    													"label" => array("option_id" => $opt) 
+    												);							
+    							}
+                            }
 						}
 					}
 				}
