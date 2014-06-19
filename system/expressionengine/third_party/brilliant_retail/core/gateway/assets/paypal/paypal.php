@@ -270,7 +270,8 @@ class Paypal extends PaymentGateway
 		
 		$this->ipnResponse = curl_exec($ch);
 
-		if (eregi("VERIFIED", $this->ipnResponse))
+        
+		if (strpos(strtoupper($this->ipnResponse), "VERIFIED"))
 		{
 		 	return true;
 		}
