@@ -1648,11 +1648,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 			return $this->return_data;
 		}
 
-		function cart_total()
+		function cart_total($output = 'default')
 		{
-			// Simple function that adds the currency marker to the
-			// cart total.
-			return $this->_format_money($this->_get_cart_total());
+			if ($output == 'default') {
+						return $this->_format_money($this->_get_cart_total());
+			} elseif ($output == 'basic') {
+						return $this->_get_cart_total();
+			}
 		}
 
 		function cart_related()
