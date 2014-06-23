@@ -23,3 +23,12 @@ at guest checkout or registration respecitively.
 * Fixed parsing issues with the shipping options in checkout related to EE 2.9
 * Fixed parsing issues with the payment methods in checkout related to EE 2.9
 * Fixed parsing issues with sending BrilliantRetail notification emails related to EE 2.9
+* Fixed an issue with Paypal Standard IPN callback
+
+
+
+
+##### DD
+* Added an *output* parameter to the cart_total tag to set the foramting. Defaults to 'formated' and accepts 'basic'
+
+##### EM 

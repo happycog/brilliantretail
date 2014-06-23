@@ -1648,13 +1648,17 @@ class Brilliant_retail extends Brilliant_retail_core{
 			return $this->return_data;
 		}
 
-		function cart_total($output = 'default')
+		function cart_total()
 		{
-			if ($output == 'default') {
-						return $this->_format_money($this->_get_cart_total());
-			} elseif ($output == 'basic') {
-						return $this->_get_cart_total();
-			}
+		    // Tag parameter to control formatting
+    		    $output = $this->EE->TMPL->fetch_param('output','formatted');
+	
+            // return based on output parameter
+    		    if ($output == 'formatted') {
+                    return $this->_format_money($this->_get_cart_total());
+    			} elseif ($output == 'basic') {
+                    return $this->_get_cart_total();
+    			}
 		}
 
 		function cart_related()
