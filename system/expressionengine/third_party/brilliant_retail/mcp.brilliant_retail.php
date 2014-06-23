@@ -745,6 +745,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$vars[0]["site_name"]	 	= $this->EE->config->item('site_name');
 					$vars[0]["media_url"]		= $this->vars["media_url"];
 					$vars[0]["email"]			= $vars[0]["member"]["email"];
+					$vars[0]["created"] = $this->EE->localize->format_date('%m/%d/%Y %h:%i:%s %a',$vars[0]["created"]);
 					
 					$has_notes = FALSE;
 					foreach($vars[0]["notes"] as $note){
