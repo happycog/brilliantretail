@@ -32,4 +32,4 @@ at guest checkout or registration respecitively.
 * Added an *output* parameter to the cart_total tag to set the foramting. Defaults to 'formated' and accepts 'basic'
 
 ##### EM 
-* The "Created" date isn't formatted with you do an order_batch operation
+* Updated the created date on the order_batch operation to properly format. 
