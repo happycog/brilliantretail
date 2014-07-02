@@ -2969,12 +2969,14 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 				return $this->_view('config/index', $this->vars);
 		}
 	
+	/* 
 	function config_integration()
 	{
 	    $this->vars["content"]      = $this->_view('config/integration', $this->vars);
 				
         return $this->_view('config/index', $this->vars);
 	}	
+	*/
 		
 		
 	/**

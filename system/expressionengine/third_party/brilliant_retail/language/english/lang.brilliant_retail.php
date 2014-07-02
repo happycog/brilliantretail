@@ -80,6 +80,7 @@ $lang = array(
 	'nav_br_config_attribute' 		=> 'Attributes',
 	'nav_br_config_attributeset' 	=> 'Attribute Sets',
 	'nav_br_config_site' 			=> 'Store Settings',
+	'nav_br_config_integration' 	=> 'Integrations',
 	'nav_br_config_feeds' 			=> 'Product Feeds',
 	'nav_br_config_category' 		=> 'Categories',
 	'nav_br_config_permission' 		=> 'Permissions',

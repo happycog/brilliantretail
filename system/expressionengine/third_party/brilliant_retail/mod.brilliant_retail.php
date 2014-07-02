@@ -1539,6 +1539,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 								$this->EE->product_model->cart_update($data,$key);
 
+                            // Add the cart_id to the $data array so we can know what row we are working with
+                                $data["cart_id"] = $key;
 
 							// br_product_cartupdate_after manipulate $cart["items"][$key] array
 							// ADDED 1.4.5 by dpd
@@ -2702,6 +2704,11 @@ class Brilliant_retail extends Brilliant_retail_core{
 												"has_donation"		=> $has_donation
 											);
 						if($this->EE->config->item('br_suppress_new_order_email') !== TRUE) {
+    						// Hook after we create the order before cleanup
+    							if($this->EE->extensions->active_hook('br_order_email_before') === TRUE){
+    								$vars = $this->EE->extensions->call('br_order_email_before', $vars, $data);
+    							}
+
 							$this->_send_email('customer-order-new', $vars);
 						}
 
@@ -2961,10 +2968,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 		function states()
 		{
 			// Set the parameters
-				$name = $this->EE->TMPL->fetch_param('name');
-				$id =  $this->EE->TMPL->fetch_param('id');
-				$class =  $this->EE->TMPL->fetch_param('class');
-				$value =  $this->EE->TMPL->fetch_param('value');
+				$name           = $this->EE->TMPL->fetch_param('name');
+				$id             = $this->EE->TMPL->fetch_param('id');
+				$class          = $this->EE->TMPL->fetch_param('class');
+				$value          = $this->EE->TMPL->fetch_param('value');
 				$country_select = $this->EE->TMPL->fetch_param('country_select'); // optional
 
 			// first get the countries

@@ -188,7 +188,15 @@ class Brilliant_retail_gateway extends Brilliant_retail_core{
 				$this->EE->order_model->update_order_status($arr);
 				
 				// Send the notification
-					$this->_send_email('customer-order-new', $vars);
+                    if($this->EE->config->item('br_suppress_new_order_email') !== TRUE) {
+                    
+                    	// Hook after we create the order before cleanup
+                    		if($this->EE->extensions->active_hook('br_order_email_before') === TRUE){
+                    			$vars = $this->EE->extensions->call('br_order_email_before', $vars, $data);
+                    		}
+                    
+                    	$this->_send_email('customer-order-new', $vars);
+                    }
 				
 				// Reduce the inventory
 					foreach($order["items"] as $items){
