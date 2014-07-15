@@ -31,6 +31,7 @@ at guest checkout or registration respecitively.
 * Added the cart_id to the $data array before passing it to the br_product_cartupdate_after hook. 
 * Added br_order_email_before hook to checkout and ipn_create_order methods
 * Updated ipn_create_order to check for br_suppress_new_order_email before sending new email
+* Added br_order_validate_before hook to modify $data array before address validation on checkout
 
 ##### EM 
 * Updated the created date on the order_batch operation to properly format. 

@@ -2245,6 +2245,12 @@ class Brilliant_retail extends Brilliant_retail_core{
 						}
 					}
 
+                // Allow updating of the $data (address) array passed to validation 
+                // Added 1.6.2.4 - dpd 
+
+        			if($this->EE->extensions->active_hook('br_order_validate_before') === TRUE){
+        				$data = $this->EE->extensions->call('br_order_validate_before', $data);
+        			}
 
 				// Let's do some validation...
 				try {
