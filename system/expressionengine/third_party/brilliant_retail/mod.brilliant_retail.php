@@ -1,6 +1,4 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-ini_set('display_errors',1);
-error_reporting(E_ALL);
 
 /************************************************************/
 /*	BrilliantRetail 										*/
@@ -2789,17 +2787,23 @@ class Brilliant_retail extends Brilliant_retail_core{
 				$this->EE->security->restore_xid();
 			}
 
-			$cart 		= $this->EE->product_model->cart_get();
-			$weight 	= 0;
-			$shippable 	= 0;
-			$opts		= '';
+    		$data["cart"] 		= $this->EE->product_model->cart_get();
+			$data["cart_total"] = $this->_get_cart_total();
+			$data["weight"] 	= 0;
+			$data["shippable"] 	= 0;
+			$data["opts"]		= '';
 
-			foreach($cart["items"] as $key => $val){
-				$weight += $cart["items"][$key]["weight"]*$cart["items"][$key]["quantity"];
-				$shippable += $cart["items"][$key]["shippable"];
+			foreach($data["cart"]["items"] as $key => $val){
+				$data["weight"] += $data["cart"]["items"][$key]["weight"]*$data["cart"]["items"][$key]["quantity"];
+				$data["shippable"] += $data["cart"]["items"][$key]["shippable"];
 			}
 
-			if($shippable == 0){
+    		// Add a hook to interact with shipping options 
+    			if($this->EE->extensions->active_hook('br_checkout_shipping_before') === TRUE){
+    				$data = $this->EE->extensions->call('br_checkout_shipping_before', $data);
+    			}
+			
+			if($data["shippable"] == 0){
 				$hash = md5(time().rand(100,1000).time());
 				$_SESSION["shipping"][$hash] = array(
 														"code" 	=> "N/A",
@@ -2826,28 +2830,34 @@ class Brilliant_retail extends Brilliant_retail_core{
                     // Remove any runtime annotation. 
                         $tmp = $this->EE->TMPL->parse_globals($tmp);
 
-				$opts .= $tmp;
+				$data["opts"] .= $tmp;
 				$shipping_options_available = 1;
 
 			}else{
 
-				$data = array(
+				$shipment = array(
 							"to_zip" 		=> $this->EE->input->post('zip',TRUE),
 							"to_state" 		=> $this->EE->input->post('state',TRUE),
 							"to_country" 	=> $this->EE->input->post('country',TRUE),
-							"weight" 		=> $weight,
-							"total" 		=> $this->_get_cart_total()
+							"weight" 		=> $data["weight"],
+							"total" 		=> $data["cart_total"]
 						);
-				$opts .= $this->_shipping_options($data);
-				if($opts == ''){
-					$opts .= lang('br_no_shipping_options_available');
+				$data["opts"] .= $this->_shipping_options($shipment);
+				if($data["opts"] == ''){
+					$data["opts"] .= lang('br_no_shipping_options_available');
 					$shipping_options_available = 0;
 				}else{
 					$shipping_options_available = 1;
 				}
 			}
-			$opts .= '<input type="hidden" name="shipping_options_available" id="shipping_options_available" value="'.$shipping_options_available.'" />';
-			echo $opts;
+			$data["opts"] .= '<input type="hidden" name="shipping_options_available" id="shipping_options_available" value="'.$shipping_options_available.'" />';
+			
+			// Add a hook to interact with shipping options 
+    			if($this->EE->extensions->active_hook('br_checkout_shipping_after') === TRUE){
+    				$data = $this->EE->extensions->call('br_checkout_shipping_after', $data);
+    			}
+
+			echo $data["opts"];
 			exit();
 		}
 
