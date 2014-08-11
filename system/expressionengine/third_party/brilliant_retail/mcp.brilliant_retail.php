@@ -520,11 +520,13 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					// Parse the variables and then the output (for conditionals) 
 						$output = $this->EE->TMPL->parse_variables($template, $vars);
 						$this->EE->TMPL->parse($output);
+	
+	                // Remove any runtime annotation. 
+                        $output = $this->EE->TMPL->parse_globals($output);
 
 					// Add the print js
-						$output = '<html>
-									<head><script type="text/javascript">this.print(true);</script></head>
-									<body>
+						header('Content-Type: text/html; charset=utf-8');
+						$output = '<html><head><script type="text/javascript">this.print(true);</script></head><body>
 									'.$output.'
 									</body>
 									</html>';
@@ -802,6 +804,9 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 						$output = $this->EE->TMPL->parse_variables($template, $vars);
 						$this->EE->TMPL->parse($output);
 					
+		                // Remove any runtime annotation. 
+                            $output = $this->EE->TMPL->parse_globals($output);
+	
 						$view .= $output;
 					
 					// Break each page except the last
@@ -811,6 +816,7 @@ class Brilliant_retail_mcp extends Brilliant_retail_core {
 					$count++;
 				}
 				$js = '<script type="text/javascript">this.print(true);</script>';
+				header('Content-Type: text/html; charset=utf-8');
 				echo '<html><head>'.$js.'</head><body>'.$view.'</body></html>';
 				exit;
 			}
