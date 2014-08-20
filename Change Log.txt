@@ -1,10 +1,9 @@
 ### Version 1.7.0.0
-*July XX, 2014*
+*August 20, 2014*
 
 * VERY IMPORTANT: The registration form now respects the "Require Member Account Activation?" setting for "Self-activation via email." We have added a new {activation_url} tag 
 to the New Account Email. You MUST update your notification template manually to reflect the new change. Further instructions to do so are here: [INSERT LINK]
-* IMPORTANT: The product detail field has been converted to an expressionengine textarea field type. You can 
-now convert the field to any custom field you like. 
+* IMPORTANT: The product detail field has been converted to an expressionengine textarea field type.
 
 * Added **activation_url** tag to the New Account Email template
 * Added **br_autologin_checkout** and **br_autologin_register** configuration variables. When set to 'y' the customer will automatically be logged in 
@@ -12,9 +11,16 @@ at guest checkout or registration respecitively.
 * Added Paypal Payflow Pro gateway
 * Added a return parameter to the customer register_form tag
 * Added a return parameter to the customer customer_profile tag
+* Added an *output* parameter to the cart_total tag to set the foramting. Defaults to 'formated' and accepts 'basic'
+* Added the cart_id to the $data array before passing it to the br_product_cartupdate_after hook. 
+* Added br_order_email_before hook to checkout and ipn_create_order methods
+* Added br_order_validate_before hook to modify $data array before address validation on checkout
 * Updated configurable products to maintain configurable_id when editing products. 
 * Updated search to better handle search terms with dashes. 
 * Updated the product description field to a core Textarea RTE field. 
+* Updated the created date on the order_batch operation to properly format. 
+* Updated ipn_create_order to check for br_suppress_new_order_email before sending new email
+* Fixed an issue with character encoding on the order print and order batch templates
 * Fixed an issue with the filtering multiselect attributes
 * Fixed an issue with tax calculation on cart based promotions 
 * Fixed an issue with custom member fields when registering a new account. 
@@ -25,13 +31,4 @@ at guest checkout or registration respecitively.
 * Fixed parsing issues with the payment methods in checkout related to EE 2.9
 * Fixed parsing issues with sending BrilliantRetail notification emails related to EE 2.9
 * Fixed an issue with Paypal Standard IPN callback
-
-##### DD
-* Added an *output* parameter to the cart_total tag to set the foramting. Defaults to 'formated' and accepts 'basic'
-* Added the cart_id to the $data array before passing it to the br_product_cartupdate_after hook. 
-* Added br_order_email_before hook to checkout and ipn_create_order methods
-* Updated ipn_create_order to check for br_suppress_new_order_email before sending new email
-* Added br_order_validate_before hook to modify $data array before address validation on checkout
-
-##### EM 
-* Updated the created date on the order_batch operation to properly format. 
+* Removed poe, shortee, snippet, and tweetline plguins from the default package. 
