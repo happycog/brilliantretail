@@ -84,6 +84,29 @@
 	                        "message": '<a href="http://docs.brilliantretail.com/5-release-notes/index.html">Full Release Notes.</a>'
 	                }
 	        ]
+		},{
+			"name" : "brilliant_retail",
+			"label": "BrilliantRetail",
+			"version": "1.7.0.0",
+			"types": ["module","fieldtype","extension"],
+			"paths": {
+				"system": [
+					"system/expressionengine/third_party/brilliant_retail"
+				],
+				"themes": [
+					"themes/third_party/brilliant_retail"
+				],
+				"root": [
+					"media"
+				]
+			},
+			"update_notes": [
+	                {
+	                        "version": "1.7.0.0",
+	                        "message": '<a href="http://docs.brilliantretail.com/5-release-notes/index.html">Full Release Notes.</a>'
+	                }
+	        ]
 		}
+		
 	]
 }
