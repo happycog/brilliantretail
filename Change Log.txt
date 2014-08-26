@@ -2,3 +2,4 @@
 *September XX, 2014*
 
 * Fixed an issue with verifying the IPN callback in the PayPal Standard payment gateway
+ 
