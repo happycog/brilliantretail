@@ -2259,7 +2259,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 					// Load our data into a temporary session store so we can redisplay it on error
 					foreach($data as $key => $val)
-						$_SESSION['br_form_post_data'][$key] = $this->EE->input->post($key);
+						$_SESSION['br_form_post_data'][$key] = form_prep($this->EE->input->post($key,TRUE));
 
 					// ---------------------------------------------------
 					// Handle required fields

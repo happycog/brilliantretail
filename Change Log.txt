@@ -2,4 +2,4 @@
 *September XX, 2014*
 
 * Fixed an issue with verifying the IPN callback in the PayPal Standard payment gateway
- 
+* Fixed XSS security issue with form post data in checkout form. Thanks Derek Jones!  
