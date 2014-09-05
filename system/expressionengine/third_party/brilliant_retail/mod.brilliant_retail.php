@@ -3774,10 +3774,10 @@ class Brilliant_retail extends Brilliant_retail_core{
 			}
 			if($valid == true){
 				$_SESSION["br_message"] = $code[0]["descr"];
-				$_SESSION["discount"] = $code[0];
+				$_SESSION["discount"]   = $code[0];
 				$this->promo_check_items($inputCode);
 			}else{
-				$_SESSION["br_alert"] = str_replace("%s",$inputCode,lang('br_discount_invalid'));
+				$_SESSION["br_alert"]   = str_replace("%s",htmlentities($inputCode, ENT_QUOTES),lang('br_discount_invalid'));
 				unset($_SESSION["discount"]);
 			}
 			// Redirect
