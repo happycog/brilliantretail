@@ -1,6 +1,7 @@
 ### Version 1.7.X.X
 *September XX, 2014*
 
+* Added br_parse_js config variable to allow for late template parsing in brilliant_retail:js tag 
 * Fixed an issue with verifying the IPN callback in the PayPal Standard payment gateway
 * Fixed XSS security issue with form post data in checkout form.
 * Fixed XSS security issue with coupon code display in promo_check_code tag.
