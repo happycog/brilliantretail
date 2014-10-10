@@ -4364,11 +4364,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 	function js($js=''){
 
 		$priority = $this->EE->TMPL->fetch_param('priority');
+		
 		if($priority == ''){
 			$priority = $this->EE->session->cache['br_output_js_cnt']++;
 		}
-		$script = ($js != '') ? $js : $this->EE->TMPL->tagdata;
-		$this->EE->session->cache['br_output_js'][$priority][] = $script;
+		$this->EE->session->cache['br_output_js'][$priority][] = ($js != '') ? $js : $this->EE->TMPL->tagdata;
+
+		return;
 	}
 
 	/* Get Url
