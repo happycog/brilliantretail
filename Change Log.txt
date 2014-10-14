@@ -7,3 +7,4 @@
 * Fixed XSS security issue with form post data in checkout form.
 * Fixed XSS security issue with coupon code display in promo_check_code tag.
 * Updated the session check to account for PHP 5.3/5.4 differences. 
+* Updated Google font request in Blank Theme to use // protocol
