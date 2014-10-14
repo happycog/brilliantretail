@@ -1,6 +1,8 @@
-### Version 1.7.X.X
-*September XX, 2014*
+### Version 1.7.1.0
+*October 15, 2014*
 
 * Fixed an issue with verifying the IPN callback in the PayPal Standard payment gateway
+* Fixed an issue with type to brand naming in Stripe Gateway (https://stripe.com/docs/upgrades#2014-06-13)
 * Fixed XSS security issue with form post data in checkout form.
 * Fixed XSS security issue with coupon code display in promo_check_code tag.
+* Updated the session check to account for PHP 5.3/5.4 differences. 

@@ -1,32 +1,22 @@
 <?php
-if(!session_id()){
-if(isset($_POST["PHPSESSID"])){
-session_id($_POST["PHPSESSID"]);
+function is_session_started()
+{
+    if ( php_sapi_name() !== 'cli' ) {
+        if ( version_compare(phpversion(), '5.4.0', '>=') ) {
+            return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
+        } else {
+            return session_id() === '' ? FALSE : TRUE;
+        }
+    }
+    return FALSE;
 }
-session_start();
+if ( is_session_started() === FALSE ) 
+{
+    if(isset($_POST["PHPSESSID"])){
+        session_id($_POST["PHPSESSID"]);
+    }
+    session_start();
 }
-/************************************************************/
-/*	BrilliantRetail 										*/
-/*															*/
-/*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2014						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
-/* 	@link		http://brilliantretail.com 					*/
-/*															*/
-/************************************************************/
-/* NOTICE													*/
-/*															*/
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
-/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
-/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
-/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
-/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
-/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
-/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
-/* DEALINGS IN THE SOFTWARE. 								*/	
-/************************************************************/
 
 include_once(PATH_THIRD.'brilliant_retail/config.php');
 include_once(PATH_THIRD.'brilliant_retail/core/class/shipping.brilliant_retail.php');
