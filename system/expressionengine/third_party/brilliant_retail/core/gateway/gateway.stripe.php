@@ -143,7 +143,7 @@ class Gateway_stripe extends Brilliant_retail_gateway {
 		$details = array(
 			"Method" 		=> "Stripe",
 			"id" 			=> $res->id, 
-			"Card Type" 	=> $res->card->type,
+			"Card Type" 	=> $res->card->brand,
 			"C.C. Num"		=> 'XXXX'.$res->card->last4, 
 			"Exp Year"		=> $res->card->exp_year,
 			"CVC Check"		=> $res->card->cvc_check
