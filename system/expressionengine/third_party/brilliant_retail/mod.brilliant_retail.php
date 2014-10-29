@@ -2460,7 +2460,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 								if($key == 'br_fname' && $member[$key] == '') $data[$key] = $data["br_billing_fname"];
 								if($key == 'br_lname' && $member[$key] == '') $data[$key] = $data["br_billing_lname"];
 								if($key == 'br_phone' && $member[$key] == '') $data[$key] = $data["br_billing_phone"];
-							$update[$fields[$key]] = $data[$key];
+							$update[$fields[$key]] = isset($data[$key]) ? $data[$key] : '';
 						}
 					}
 				}
