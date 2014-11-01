@@ -1968,7 +1968,8 @@ class Brilliant_retail extends Brilliant_retail_core{
 											var cnt = 0;
 											var payment;
 											var shipXHR;
-
+											var totalsXHR;
+											
 											$(function(){
 												ship_to = $('#ship_same_address');
 
@@ -2102,6 +2103,13 @@ class Brilliant_retail extends Brilliant_retail_core{
 										 	}
 
 											function _update_cart_totals(){
+												
+												if(totalsXHR)
+												{
+													totalsXHR.abort();
+												}
+
+												
 												var url = '".$total_action."';
 												var address = 'shipping';
 
@@ -2111,7 +2119,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 													address = 'billing';
 												}
 
-												$.post(	url,
+												totalsXHR = $.post(	url,
 															{
 																'XID' : '".$XID."',
 																'address1': $('input[name=br_'+address+'_address1]').val(),
