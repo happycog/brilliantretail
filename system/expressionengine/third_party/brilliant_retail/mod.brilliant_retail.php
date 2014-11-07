@@ -3765,6 +3765,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($continue){
 					$this->EE->functions->redirect($this->_secure_url($return));
 				}
+				return;
 			}
 			$code = $this->EE->promo_model->get_promo_by_code($inputCode);
 			if($code){
