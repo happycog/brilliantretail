@@ -754,20 +754,20 @@ class Brilliant_retail extends Brilliant_retail_core{
 
 			// Build our variable data
 				$vars[0] = array(
-									'site_id' 			=>  $category[0]['site_id'],
-									'category_id' 		=> 	$category[0]['category_id'],
-									'category_image' 	=>	$img,
-									'category_detail' 	=> 	$category[0]['detail'],
-									'parent_id' 		=>  $category[0]['parent_id'],
-									'category_title' 	=>  $category[0]['title'],
-									'url_title' 		=>  $category[0]['url_title'],
-									'meta_title' 		=>  $category[0]['meta_title'],
-									'meta_keyword' 		=>  $category[0]['meta_keyword'],
-									'meta_descr' 		=>  $category[0]['meta_descr'],
-									'total_results' 	=> 	0,
-									'results' 			=> 	$category[0]["products"],
-									'no_results' 		=> 	array(),
-									'result_filter_set' => ''
+									'site_id' 				=>  $category[0]['site_id'],
+									'parent_id' 			=>  $category[0]['parent_id'],
+									'url_title' 			=>  $category[0]['url_title'],
+									'category_id' 			=> 	$category[0]['category_id'],
+									'category_image' 		=>	$img,
+									'category_detail' 		=> 	$category[0]['detail'],
+									'category_title' 		=>  $category[0]['title'],
+									'category_meta_title' 	=>  $category[0]['meta_title'],
+									'category_meta_keyword' =>  $category[0]['meta_keyword'],
+									'category_meta_descr' 	=>  $category[0]['meta_descr'],
+									'total_results' 		=> 	0,
+									'results' 				=> 	$category[0]["products"],
+									'no_results' 			=> 	array(),
+									'result_filter_set' 	=> ''
 								);
 
 			// Filter the results
@@ -3773,6 +3773,7 @@ class Brilliant_retail extends Brilliant_retail_core{
 				if($continue){
 					$this->EE->functions->redirect($this->_secure_url($return));
 				}
+				return;
 			}
 			$code = $this->EE->promo_model->get_promo_by_code($inputCode);
 			if($code){
