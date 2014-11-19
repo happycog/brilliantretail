@@ -1,0 +1,64 @@
+/* Start the Cart page styles */
+.cart_item {
+	@include grid-column(12);
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #e6e6e6;
+	.cart_item_image {
+		@include grid-column(2);
+		@media #{$small-only} { 
+			@include grid-column(3);
+		}
+	}
+	.cart_item_details {
+		@include grid-column(10);
+		@media #{$small-only} { 
+			@include grid-column(9);
+		}
+		h2, h2 a{
+			font-size: emCalc(15);
+			font-weight: bold;
+		}
+		.item_price {
+			font-weight: bold;
+			font-size: emCalc(14);
+			margin: 0 0 5px 5px;
+			float: right;
+			text-align: right;
+			.remove_cart_item {
+				font-size: emCalc(12);
+				margin-top: 0;
+				font-weight: normal;
+			}
+		}
+		.item_subtotal {
+			font-weight: bold;
+			font-size: emCalc(14);
+			color: lighten($body-font-color,30%);
+		}
+		.item_options {
+			font-size: emCalc(13);
+		}
+	}
+	.cart_item_actions {
+		input, button, .button {
+			border: 1px solid #cccccc;
+			margin-right: 5px;
+			margin-top: 0;
+		}
+		input {
+			width: 50px;
+			display: inline;
+			text-align: center;
+		}
+	}
+}
+.button.remove {
+	padding: 0 4px;
+	margin: 0;
+}
+.row.cart_details {
+	margin-top: 20px;
+	padding-top: 0;
+}
+/* End the Cart page styles */

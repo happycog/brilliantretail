@@ -1,0 +1,180 @@
+{!--
+/************************************************************/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2014                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
+/************************************************************/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
+/************************************************************/
+!--}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {exp:brilliant_retail:meta}
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+  </head>
+<body>
+  <div class="top-nav">
+    <div class="row">
+        <div class="small-12 columns">
+          <ul>
+            <li><a href="#" class="first_link">About Us</a></li>
+            <li><a href="#">F.A.Q.</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li class="login">
+              {if logged_out}
+              <a href="/customer">login</a>
+              {/if}
+              {if logged_in}
+              <a href="/customer">My Account</a>
+              {/if}
+            </li>
+          </ul>
+        </div>
+    </div>
+  </div>
+  <div class="branding">
+    <div class="row">
+      <div class="small-12 medium-8 columns">
+        <a href="/"><img src="/assets/img/design/logo.png" /></a>
+      </div>
+      <div class="small-12 medium-4 columns" id="top-modules">                
+          {exp:brilliant_retail:search_form form_class="form-search"}
+              <div class="row collapse">
+                  <div class="columns small-9">
+                      <input type="text" name="search" placeholder="Search Products…" class="search-query prefix">
+                  </div>
+                  <div class="columns small-3">
+                      <button type="submit" class="button postfix radius">Search</button>
+                  </div>
+              </div>
+          {/exp:brilliant_retail:search_form}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="large-12 columns">
+      <nav class="top-bar" data-topbar role="navigation">
+        <ul class="title-area">
+          <li class="name"></li>
+          <li class="toggle-topbar menu-icon"><a href="#">Main Menu</a></li>
+        </ul>
+        <section class="top-bar-section">
+          {exp:brilliant_retail:category_menu parent_only="yes" class="left"}
+          {/exp:brilliant_retail:category_menu}
+          <ul class="right">
+            <li><a href="/cart">Cart {if {exp:brilliant_retail:cart_items} >= 1}(<span class="cart_total">{exp:brilliant_retail:cart_total}</span>){/if}</a></li>
+          </ul>
+        </section>
+      </nav>
+    </div>
+  </div>
+
+  {!-- body content --}
+    {layout:contents}
+  {!-- end body content --}
+
+
+
+  <div class="global-footer">
+    <div class="row">
+      <!-- ABOUT -->
+      <div class="small-12 medium-4 columns">
+        <h3>Follow Us Online</h3>
+        <p>Vestibulum felis lacus, semper ut euismod ut, dignissim vitae lorem. Aenean iaculis pellentesque mi, ac dignissim quam varius sed. Integer consectetur augue tristique sapien porttitor porttitor. </p>
+        <ul class="inline-list">
+          <li><a href="#"><img src="/assets/img/design/icons/fb.png" /></a></li>
+          <li><a href="#"><img src="/assets/img/design/icons/tw.png" /></a></li>
+          <li><a href="#"><img src="/assets/img/design/icons/gp.png" /></a></li>
+          <li><a href="#"><img src="/assets/img/design/icons/rss.png" /></a></li>
+        </ul>
+      </div>
+      <!-- end ABOUT -->
+      <!-- USEFUL LINKS -->
+      <div class="small-12 medium-4 columns">
+        <h3>Useful links</h3>
+        <ul class="no-bullet">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Downloads</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+      <!-- end USEFUL LINKS -->
+      <!-- NEWSLETTER -->
+      <div class="small-12 medium-4 columns">
+        <h3>Sign up for updates</h3>  
+        <p>Cras dictum, turpis eu lobortis rhoncus, velit dolor euismod metus, eu ultrices sem urna id tellus. Praesent at eros ante. </p>
+        <form class="subscribe-form">
+              <div class="row collapse">
+                  <div class="columns small-9">
+                      <input type="text" name="search" placeholder="Newsletter" class="search-query prefix">
+                  </div>
+                  <div class="columns small-3">
+                      <button type="submit" class="button postfix radius">Submit</button>
+                  </div>
+              </div>
+        </form>
+      </div>
+      <!-- end NEWSLETTER -->            
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <p class="left">We accept:
+          <img src="/assets/img/design/payments/paypal.png" />
+          <img src="/assets/img/design/payments/visa.png" />
+          <img src="/assets/img/design/payments/discover.png" />
+          <img src="/assets/img/design/payments/maestro.png" />
+          <img src="/assets/img/design/payments/master-card.png" /></p>
+          <p class="right"><span>Copyright © {current_time format="%Y"} {site_name} All rights resverved.</span></p>
+        </div>
+    </div>
+  </div>
+
+   
+
+<script type="text/javascript" src="/assets/js/app.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', '{global:google_analytics}', '{site_url}');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

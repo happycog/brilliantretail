@@ -1,0 +1,81 @@
+{layout="_layouts/site"}
+{!--
+/************************************************************/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2014                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
+/************************************************************/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
+/************************************************************/
+!--}
+<div class="row">
+    <div class="columns small-12">
+        <header class="page-header">
+            <h1>Contact us</h1>
+        </header>
+    </div>
+</div>
+
+<div class="row">
+    <div class="columns small-12 medium-4">
+      {exp:brilliant_retail:store}
+      <ul class="vcard">
+        <li class="fn"><h3>{site_name}</h3></li>
+        <li class="street-address">{address1}, {address2}</li>
+        <li class="locality">{city}</li>
+        <li><span class="state">{state}</span>, <span class="zip">{zipcode}</span></li>
+        <li class="email"><a href="#">{email}</a></li>
+        <li class="phone">Office: {phone}<br />Fax: {fax}</li>
+      </ul>
+      {/exp:brilliant_retail:store}
+    </div>
+    <div class="columns small-12 medium-8">
+        {if segment_2 != "thankyou"}
+        {exp:email:contact_form user_recipients="no" recipients="admin@example.com" charset="utf-8" form_class="panel"}
+            <div class="row">
+                <div class="columns small-12 medium-6">
+                    <label>Name</label>
+                    <input class="required" required name="name" id="name" type="text" />
+                </div>
+                <div class="columns small-12 medium-6">
+                    <label>Email</label>
+                    <input class="required" required name="email" id="email" type="email" pattern="email" />
+                </div>
+            </div>
+    		<div class="row">
+                <div class="columns small-12">
+           		<label>Your Message</label>
+            		  <textarea class="txtarea required" required name="user_message" id="user_message"></textarea>
+    		  </div>
+    		</div>
+            <div class="row">
+                <div class="columns small-12">
+            		<input class="button" name="" type="submit" value="Send" />
+        	</div>
+    		</div>
+        {/exp:email:contact_form}
+        {/if}
+        {!-- thank you page --}
+        {if segment_2 == "thankyou"}
+        <div class="panel">
+            <h3>Thank You</h3>
+            <p>Curabitur non dolor ultrices nunc vehicula dapibus. Proin elit odio, venenatis et fringilla vel, rhoncus id tortor. Vestibulum pretium, leo ut fermentum sollicitudin, massa nisi ultricies turpis, vitae condimentum eros augue a diam. </p>
+        </div>
+        {/if}
+    </div>
+</div>

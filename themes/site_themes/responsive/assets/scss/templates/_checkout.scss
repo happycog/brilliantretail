@@ -1,0 +1,76 @@
+/* Start the Checkout page styles */
+
+#shipping_address,
+#instructions {
+	display: none;
+}
+#shipping_options {
+	label {
+		font-weight: bold;
+	}
+}
+#tax_container,
+#discount_container,
+#subtotal_container,
+#total_container,
+#shipping_container,
+.checkout-subtotal {
+	display: inline;
+	float: right;
+	color: $black;
+}
+#discount_container {
+	color: lighten($black,20%);
+}
+.ship_instr textarea {
+	@include grid-column(12,false,false,false,false,false);
+	min-height: 100px;
+}
+.option  {
+	font-size: .8em;
+}
+#shipping_options {
+	margin-left: 5px;
+}
+.payment_form {
+	margin-bottom: 1em;
+}
+  	.year-month {
+  		@include grid-row;
+  		label {
+  			display: block;
+  		}
+  		.expdate_year,
+  		.expdate_month {
+			@include grid-column(6,false,false,false,false,false);
+			padding: 0 1em 0 0;
+  		}
+  	}
+
+.shipping-rates {
+	@extend .no-bullet;
+	margin: 0 0 20px 0;
+	float: left;
+	width: 100%;
+	h4 {
+		display: block;
+		float: left;
+		width: 100%;
+		border-bottom: 1px solid lighten($black,60%);
+		padding-bottom: 3px;
+	}
+	li {
+		float: left;
+		margin-left: 25px;
+		input[type='radio'] {
+			margin-left: -25px;
+		}
+	}
+}
+.payment_form {
+	display: none;
+}
+#checkoutform h3 .label {
+	font-size: .65em;
+}
+/* End the Checkout page styles */

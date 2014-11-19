@@ -1,0 +1,22 @@
+/* Start the home page styles */
+.hero {
+	margin:  0;
+}
+.homepage.catalog{
+    border-bottom: 1px solid $gainsboro;
+    margin-bottom: 2em;
+	p {
+		font-size: emCalc(15);
+		line-height: 1.4;
+		@media #{$small-only} {
+			font-size: emCalc(13);
+		}
+	}
+}
+.best-seller-lead {
+    font-weight: bold;
+    color: $secondary-color;
+    border-bottom: 1px solid $gainsboro;
+    margin-top: 1em;
+}
+/* End the home page styles */

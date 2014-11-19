@@ -1,0 +1,141 @@
+{layout="_layouts/site"}
+{!--
+/************************************************************/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2014                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
+/************************************************************/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
+/************************************************************/
+!--}
+
+{exp:brilliant_retail:product form="no"}
+<div class="row">
+	<div class="columns small-12">
+		<header class="page-header">
+			<h1>{title}</h1>
+			{if no_results}
+				<h1>The product you requested is not available.</h1>
+			{/if}
+		</header>
+	</div>
+</div>
+
+{form_open}	
+<div class="row">
+	<div class="columns small-12 medium-6 large-4 product_image">
+		<img src="/media/{image_large}" />
+		<hr>
+        <ul class="clearing-thumbs" data-clearing>
+        	{images}
+            <li>
+                <a href="/media/{filenm}"><img src="/media/{filenm}" class="th" alt="Image" title="{title}" width="50"/></a>
+            </li>
+            {/images}
+        </ul>
+    </div>                
+	<div class="columns small-12 medium-6 large-4 product_description">
+		{detail}
+	</div>
+    <div class="columns small-12 medium-6 large-4 product_details">
+		{price_html}
+			{if in_stock}
+           	<div class="row">
+				<div class="columns small-12 medium-6">
+					{configurable}
+					<label>{configurable_label}</label>
+					{configurable_select}
+					{/configurable}
+					{configurable_js}
+	            </div>
+				<div class="columns small-12 medium-6">
+					{!-- Donation Product Type !--}
+					{donation}
+					{price_options}
+					{/donation}
+	                    	
+					{!-- Optional Product Options !--}
+					{options}
+					<label>{option_label}</label>
+					{option_input}		
+					{/options}
+				</div>
+			</div>
+			<div class="row collapse product_actions">
+				<div class="columns small-3 medium-2">
+					<label for="right-label" class="prefix">Qty:</label>
+				</div>
+				<div class="columns small-2 medium-2">
+					<input type="number" min="0" class="small-2 columns" name="{product_id}_quantity" value="1" />
+				</div>
+				<div class="columns small-7 medium-8">
+					<button class="button postfix" type="submit" value="submit">Add to Cart</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="columns small-12">
+					<a class="button secondary tiny right" href="{exp:brilliant_retail:wishlist_add product_id="{product_id}" status="public" return="customer/wishlist"}">Add to Wishlist</a>
+				</div>
+			</div>
+			{if:else}
+			<div class="row">
+				<div class="columns small-12">
+					{br_out_of_stock}
+				</div>
+			</div>
+			{/if}
+	</div>
+</div>
+{form_close}       
+           
+
+{exp:brilliant_retail:product_related product_id="{product_id}"}
+<div class="row">
+	<div class="products_related">
+		<h4>You May Also Like</h4>
+		<ul>
+			{related_products}
+			{if related_in_stock}
+			<li class="related_product">
+				<div class="product_image">
+					<a href="{exp:brilliant_retail:path src='product/{related_url}'}">
+					{if image_thumb != ''}
+					<figure>
+						<img src='/media/{related_thumb}' width="180" height="150">
+					</figure>
+					{/if}
+						<p>{related_title}</p>
+					</a>
+				</div>
+				<div class="product_price">
+					{related_price_html}
+				</div>
+				<div class="product_buy">
+					<button class="button tiny secondary" type="submit" value="submit"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+				</div>
+			</li>
+			{/if}
+			{/related_products}
+		</ul>
+	</div>
+</div>
+{/exp:brilliant_retail:product_related}
+    <!-- end YOU MAY ALSO LIKE -->
+                        
+</div>
+{/exp:brilliant_retail:product}

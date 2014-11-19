@@ -1,0 +1,82 @@
+{layout="_layouts/site"}
+{!--
+/************************************************************/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2014                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
+/************************************************************/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
+/************************************************************/
+!--}
+{if logged_out}
+{redirect='customer/login'}
+{/if}
+<div class="row">
+    <div class="small-12 columns">
+        <header class="page-header">
+            <h1>Your Account</h1>
+        </header>
+    </div>
+    <div class="small-12 medium-2 columns">
+    {embed='customer/_sidebar'}
+    </div>
+    <div class="columns small-12 medium-10">
+        {exp:brilliant_retail:show_message}
+        <h2>Recent Orders</h2>
+        <table id="orders">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Date</th>
+                    <th>Ship To</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {exp:brilliant_retail:customer_orders limit="5"}
+                    {orders}
+                        <tr class="{status}">
+                            <td class="col1">
+                                {order_id}
+                            </td>
+                            <td class="col2">
+                                {created format="%n/%d/%y"}
+                            </td>
+                            <td class="col3">
+                                {address}
+                                    {shipping_fname} {shipping_lname}
+                                {/address}
+                            </td>
+                            <td class="col4">
+                                {status}
+                            </td>
+                            <td class="col5">
+                                {currency_marker}{total}
+                            </td>
+                            <td class="text-center">
+                                <a href="{exp:brilliant_retail:path src='customer/order_detail/{order_id}'}">View Order</a>
+                            </td>
+                        </tr>
+                    {/orders}
+                {/exp:brilliant_retail:customer_orders}
+            </tbody>
+        </table> <!-- orders -->
+    </div>
+</div>

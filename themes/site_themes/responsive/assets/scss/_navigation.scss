@@ -1,0 +1,127 @@
+/* Start navigation styles. These include overrides of Foundation styles */
+
+.top-nav {
+	background: $primary-color;
+	ul {
+		list-style-type: none;
+		margin: 10px 0;
+	}
+	li {
+		display: inline;
+		&.login {
+			float: right;
+			a {
+				margin-right: 0;
+			}
+		}
+	}
+	a {
+		color: $white;
+		margin-right: 1em;
+		font-size: emCalc(13);
+	}
+}
+.branding {
+	padding: 3%;
+}
+.user-nav {
+	float: right;
+	a {
+		padding: 0 5px;
+		margin-right: 5px;
+	}
+}
+.columns .side-nav {
+	padding: 0;
+	margin: 2em 0;
+	ul {
+		@include side-nav;
+		padding: 0;
+	}
+	@media #{$small-only} {
+		display: none;
+	}
+}
+.customer-nav {
+	@include side-nav;
+	li {
+		background: $smoke;
+		a {
+			display: block;
+		}
+		.fa {
+			float: right;
+			line-height: 1.5em;
+		}
+	}
+	@media #{$small-only} {
+		text-align: center;
+		li {
+			display: inline-block;
+			a {
+				background: $smoke;
+			}
+		}
+	}
+}
+.filter-heading {
+	border-bottom: 1px solid $side-nav-heading-color;
+	color: $side-nav-heading-color;
+	font-weight: $side-nav-heading-font-weight;
+	font-size: $side-nav-heading-font-size;
+}
+.filter-set-selection {
+	margin-right: 3px;
+}
+
+// Catalog Offscreen Menu
+.mobile-catalog-menu {
+	margin-bottom: 10px;
+	@media #{$medium-up} {
+		display: none;
+	}
+	a {
+		background: $secondary-color;
+		margin: 0;
+		padding-left: 15px;
+		text-align: left;
+		display: block;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		text-transform: uppercase;
+		color: #fff;
+		font-size: 0.8125rem;
+		font-weight: bold;
+		border-bottom: 1px solid #fff;
+		.fa {
+			margin-right: 12px;
+		}
+	}
+	.remove_filter {
+		background: lighten($secondary-color,15%);
+		color: $primary-color;
+		&:hover .fa {
+			color: red;
+		}
+	}
+}
+
+// Footer navigation
+.global-footer .side-nav {
+	li a {
+		color: #fff;
+		&:hover {
+			background: none;
+		}
+	}
+}
+
+
+// Breadcrumbs
+.breadcrumbs {
+	border: none;
+	background: none;
+	margin: 1em 0;
+}
+
+/* End navigation styles. These include overrides of Foundation styles */

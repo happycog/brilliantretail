@@ -1,0 +1,24 @@
+/* Start the Form elements styles */
+/* These include overrides of the Foundation styles */
+
+.change_pw {
+  display: none;
+}
+textarea {
+  min-height: 155px;
+}
+
+label.error {
+  background: $alert-color;
+  color: #fff;
+  padding: .25em;
+  margin-bottom: .5em;
+}
+input.error {
+  border-color: $alert-color;
+}
+small.error {
+  margin-top: -1rem;
+}
+
+/* End the Form elements styles */

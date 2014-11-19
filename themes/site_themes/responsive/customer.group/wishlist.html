@@ -1,0 +1,81 @@
+{layout="_layouts/site"}
+{!--
+/************************************************************/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2014                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
+/************************************************************/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
+/************************************************************/
+!--}
+{if logged_out}
+    {redirect='customer/login'}
+{/if}
+<div class="row">
+    <div class="small-12 columns">
+        <header class="page-header">
+            <h1>Your Account</h1>
+        </header>
+        {exp:brilliant_retail:show_message}
+    </div>
+    <div class="small-12 medium-2 columns">
+    {embed='customer/_sidebar'}
+    </div>
+    <div class="columns small-12 medium-10">
+        <h3 class="heading_title">Wishlist</h3>
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="2">Product</td>
+                    <td>Public</td>
+                    <td>Remove</td>
+                </tr>
+            </thead>
+            
+            {exp:brilliant_retail:wishlist} 
+
+            {no_results}
+                <tr>
+                    <td colspan="4" align="center">You have no items in your wishlist</td>
+                </tr>
+            {/no_results}
+            
+                {results}
+                    <tr>
+                        <td>
+                            <a href="{path='/product'}/{url_title}"><img src="/media/{image_thumb}" width="100"  /></a>
+                        </td>
+                        <td>
+                            <label><a href="{path='/product'}/{url_title}">{title}</a></label>
+                            {notes}
+                             {form_open}
+                            <input type="hidden" name="product_id" value="{product_id}" />
+                            <button class="button secondary tiny" type="submit" value="submit">Add to Cart</button>
+                            {form_close}                               
+                        </td>
+                        <td>{if {is_public}}Yes{if:else}No{/if}</td>
+                        <td>
+                            <a href="{remove_link}" class="button alert">&times;</a>
+                        </td>
+                    </tr>
+                {/results}
+
+            {/exp:brilliant_retail:wishlist}               
+        </table>
+    </div>
+</div>

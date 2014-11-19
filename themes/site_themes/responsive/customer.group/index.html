@@ -1,0 +1,126 @@
+{layout="_layouts/site"}
+{!--
+/************************************************************/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2014                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
+/************************************************************/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
+/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
+/************************************************************/
+!--}
+
+{if logged_out}
+{redirect='customer/login'}
+{/if}
+<div class="row">
+	<div class="small-12 columns">
+		<header class="page-header">
+			<h1>Your Account</h1>
+		</header>
+		{exp:brilliant_retail:show_message}
+	</div>
+	<div class="columns small-12 medium-2">
+	{embed='customer/_sidebar'}
+	</div>
+	<div class="columns small-12 medium-10">
+		<div class="row">
+			{exp:brilliant_retail:customer_profile}
+			<div class="medium-4 small-12 columns">
+	    			<h3>Your Information</h3>
+				<p><strong>{br_fname} {br_lname}</strong><br />
+	        				{email}<br />
+	       				{br_phone}</p>
+				<p><a id="change_pw_link">Change your password?</a><a id="cancel_password">Cancel</a></p>
+				<div class="change_pw panel">
+                	{exp:brilliant_retail:customer_pw_form id="password_edit"}
+					<label>Enter Current Password*</label>
+					<input class="required" name="password" type="password" />
+					<label>New Password*</label>
+					<input class="required" id="new_password" name="new_password" type="password" />
+					<label>Confirm New Password*</label>
+					<input class="required" id="new_password_confirm" name="new_password_confirm" type="password" />
+					<input class="button" name="" type="submit" value="Save" />
+					{/exp:brilliant_retail:customer_pw_form}
+				</div>
+			</div>
+			<div class="medium-4 small-12 columns">
+				<h3>Billing Address</h3>
+				<p><strong>{br_billing_fname}{br_billing_lname}</strong> <br />
+				{br_billing_company}<br />
+				{br_billing_address1} <br />
+				{if '{br_billing_address2}' != ''}{br_billing_address2}<br />{/if}
+				{br_billing_city}, {br_billing_state} {br_billing_zip}<br />
+				{br_billing_phone}<br />
+				<a href="/customer/profile">Update your information?</a></p>
+			</div>
+			<div class="medium-4 small-12 columns">
+				<h3>Shipping Address</h3>
+				<p><strong>{br_shipping_fname} {br_shipping_lname}</strong><br />
+				{br_shipping_company}<br />
+				{br_shipping_address1}<br />
+				{if '{br_shipping_address2}' != ''}{br_shipping_address2}<br />{/if}
+				{br_shipping_city}, {br_shipping_state} {br_shipping_zip}<br />
+				{br_shipping_phone}</p>
+			</div>
+
+			{/exp:brilliant_retail:customer_profile}
+		</div>
+
+		<div class="row">
+			<div class="columns small-12">
+				<h4 id="orders_heading">Your Recent Orders</h4>
+				<table id="orders">
+				    <thead>
+				        <tr>
+				            <th>Order</th>
+				            <th>Date</th>
+				            <th>Ship To</th>
+				            <th>Status</th>
+				            <th>Total</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				        {exp:brilliant_retail:customer_orders limit="5"}
+				            {orders}
+				                <tr class="{status}">
+				                    <td>
+				                        {order_id} <a href="{exp:brilliant_retail:path src='customer/order_detail/{order_id}'}">View</a>
+				                    </td>
+				                    <td>
+				                        {created format="%n/%d/%y"}
+				                    </td>
+				                    <td>
+				                        {address}
+				                            {shipping_fname} {shipping_lname}
+				                        {/address}
+				                    </td>
+				                    <td>
+				                        {status}
+				                    </td>
+				                    <td>
+				                        {currency_marker}{total}
+				                    </td>
+				                </tr>
+				            {/orders}
+				        {/exp:brilliant_retail:customer_orders}
+				    </tbody>
+				</table> <!-- orders -->
+			</div>
+		</div>
+	</div>
+</div>
