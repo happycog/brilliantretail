@@ -1,11 +1,13 @@
-### Version 1.7.1.0
-*October 15, 2014*
+### Version 1.8.0
+*April 27, 2014*
 
+* Relicensed BrilliantRetail under OSL-3.
+* Added a new responsive design theme to replace the original blank theme. 
+* Updated versioning to follow semantic versioning protocols. [Semantic Versioning 2.0.0](http://semver.org/)
 * Added br_parse_js config variable to allow for late template parsing in brilliant_retail:js tag 
 * Fixed an issue with verifying the IPN callback in the PayPal Standard payment gateway
 * Fixed an issue with type to brand naming in Stripe Gateway (https://stripe.com/docs/upgrades#2014-06-13)
 * Fixed XSS security issue with form post data in checkout form.
 * Fixed XSS security issue with coupon code display in promo_check_code tag.
 * Updated the session check to account for PHP 5.3/5.4 differences. 
-* Updated Google font request in Blank Theme to use // protocol
 * Updated checkout javascript to abort checkout_totals callback on sub sequential calls. 
