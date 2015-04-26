@@ -5,7 +5,7 @@
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
 /* 	@copyright	Copyright (c) 2010-2015						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@license	http://opensource.org/licenses/OSL-3.0	*/
 /* 	@link		http://brilliantretail.com 					*/
 /* 	@since		Version 1.0.0 Beta							*/
 /*															*/
@@ -27,7 +27,7 @@
 $this->config->update_site_prefs(array(
 										'member_theme'	=> 'brilliant_retail',
 										'strict_urls'	=> 'y',
-										'site_404'		=> '_assets/404'
+										'site_404'		=> 'store/404'
 										),
 										1 // site id
 								);

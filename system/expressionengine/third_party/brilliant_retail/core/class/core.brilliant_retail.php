@@ -1059,6 +1059,11 @@ class Brilliant_retail_core {
 
 
 		function _validate_license($lic){
+
+			$this->vars["system_message"] = '';
+			/*
+    			We are no longer validating licenses
+    			
 			if(uuid_validate($lic)){
 				$this->vars["system_message"] = '';
 			}else{
@@ -1079,6 +1084,7 @@ class Brilliant_retail_core {
 					$this->vars["system_message"] = '<script type="text/javascript">var _0xd45f=["\x3C\x70\x20\x69\x64\x3D\x22\x62\x32\x72\x5F\x62\x75\x79\x22\x3E\x3C\x62\x3E\x54\x72\x69\x61\x6C\x20\x4D\x6F\x64\x65\x3A\x3C\x2F\x62\x3E\x20\x3C\x61\x20\x68\x72\x65\x66\x3D\x22\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x62\x72\x69\x6C\x6C\x69\x61\x6E\x74\x72\x65\x74\x61\x69\x6C\x2E\x63\x6F\x6D\x22\x20\x74\x61\x72\x67\x65\x74\x3D\x22\x5F\x62\x6C\x61\x6E\x6B\x22\x3E"];_0xd45f[0];document.write(_0xd45f);</script>'.lang('br_buy_license').'</a> '.lang('br_invalid_expired_license').'</p>';
 				}
 			}
+			*/
 		}
 
 	function _discount_amount($total = 0){

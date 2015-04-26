@@ -1,137 +1,79 @@
+{layout="_layouts/site"}
 {!--
 /************************************************************/
-/*	BrilliantRetail 										*/
-/*															*/
-/*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2015						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
-/* 	@link		http://brilliantretail.com 					*/
-/*															*/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2015                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
 /************************************************************/
-/* NOTICE													*/
-/*															*/
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
-/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
-/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
-/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
 /* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
-/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
-/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
-/* DEALINGS IN THE SOFTWARE. 								*/	
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
 /************************************************************/
 !--}
-
 {if logged_in}
 {redirect='customer'}
 {/if}
-
-{embed="_assets/header"}
-
-<body>
-<!-- Header -->
-<header>
-    <div class="wrapper">
-
-			{embed='_assets/topbar'}    
-        
-        <div id="main_menu">
-            
-            {embed="_assets/menu"}
-		
-        </div> <!-- main_menu -->
-        <div class="clearboth"><!-- --></div>
-    
+<div class="row">
+    <div class="small-12 columns">
+        <header class="page-header">
+            <h1>Your Account</h1>
+        </header>
+        {exp:brilliant_retail:show_message}
     </div>
-</header> <!-- header -->
-<!-- end of Header -->
+</div>
+<div class="row">
+    <div class="columns small-12 medium-6">
+        {exp:member:login_form return="customer" form_class="panel" id="login_form"}
+            <h3>Login</h3>
+            <label>Email</label>
+            <input class="required email" name="username" type="text" />
 
-<!-- login -->
-<div id="login" class="page">
-	<div class="wrapper">
-    	
-    	{exp:brilliant_retail:show_message}
-        
-        <div id="main">
-        
-        	{exp:member:login_form return="customer/index" id="login_form"}
-        		<h3>Login</h3>
-                <label>Email<br /><input class="txtinp required: email" name="username" type="text" /></label>
-                <label>Password<br /><input class="txtinp required" name="password" type="password" /></label>
-                <p><a href="{exp:brilliant_retail:path src='customer/password'}">forgot password</a></p>
-                <div class="btn">
-                    <input class="inpbtn" name="" type="submit" value="Login" />
-                </div>
-        	{/exp:member:login_form}            
-            
-            {exp:brilliant_retail:register_form id="register_form"}
-            	<h3>Register</h3>
-                <label>
-                	First Name *<br />
-                	<input 	class="txtinp required" 
-                			name="br_fname" 
-                			type="text" 
-                			value="{if "{exp:brilliant_retail:form_value for='br_fname'}"}{exp:brilliant_retail:form_value for='br_fname'}{/if}" />
-                </label>
-                <label>
-                	Last Name *<br /> 
-                	<input 	class="txtinp required" 
-                			name="br_lname" 
-                			value="{if "{exp:brilliant_retail:form_value for='br_lname'}"}{exp:brilliant_retail:form_value for='br_lname'}{/if}" 
-                			type="text" />
-                </label>
-                <div class="clearboth"><!-- --></div>
-                <label>
-                	Email Address *<br />
-                	<input 	class="txtinp2 required email" 
-                			name="email" 
-                			value="{if "{exp:brilliant_retail:form_value for='email'}"}{exp:brilliant_retail:form_value for='email'}{/if}" 
-                			type="text" />
-                </label>
-                <div class="clearboth"><!-- --></div>
-                <label>
-                	Password *<br />
-                	<input class="txtinp2 required" id="password" name="password" type="password" />
-                </label>
-                <div class="clearboth"><!-- --></div>
-                <label>
-                	Confirm Password *<br />
-                	<input class="txtinp2 required" name="confirm_password" type="password" />
-                </label>
-                <div class="clearboth"><!-- --></div>
-                {if captcha}
-					<label>
-						Enter the word below: *<br />
-						{captcha}<br />
-						<input type="text" name="captcha" value="" size="20" maxlength="20" class="txtinp2 required" />
-					</label>
-				{/if}
-                <div class="clearboth"><!-- --></div>
-                <div class="btn">
-                    <input class="inpbtn" name="" type="submit" value="Register" />
-                </div>
-            {/exp:brilliant_retail:register_form}
-            <div class="clearboth"><!-- --></div>            
-        
-        </div> <!-- main -->
-    
+            <label>Password</label>
+            <input class="required" name="password" type="password" />
+
+            <input class="button" name="" type="submit" value="Login" />
+            <a class="button secondary" href="/customer/password">Forgot your password?</a>
+        {/exp:member:login_form}
     </div>
-</div> <!-- login -->
-<!-- end of login Page -->
-
-{!-- push the validation into the body close with the js method. !--}
-
-{exp:brilliant_retail:js}
-	$(function(){
-		$('#login_form').validate();
-		$('#register_form').validate({
-										rules: {
-												password: {minlength : 7},
-												confirm_password : { equalTo: "#password" }
-										}
-									});
-	});
-{/exp:brilliant_retail:js}
-
-{embed="_assets/footer"}
+    <div class="columns small-12 medium-6">
+        {exp:brilliant_retail:register_form id="register_form" form_class="panel"}
+            <h3>Create Your Account</h3>
+            <div class="row">
+                <div class="large-6 columns small-12">
+                    <label>First Name *</label>
+                    <input  class="required" name="br_fname" type="text" value="" />
+                </div>
+                 <div class="large-6 columns small-12">
+                    <label>Last Name *</label>
+                    <input  class="required" name="br_lname" value="" type="text" />
+                </div>
+            </div>
+            <label>Email Address *</label>
+                <input  class="required email" name="email" value="" type="text" />
+            <div class="row">
+                <div class="columns small-12">
+                    <label>Password *</label>
+                    <input class="required" id="password" name="password" type="password" />
+                </div>
+                <div class="columns small-12">
+                    <label>Confirm Password *</label>
+                    <input class="required" name="confirm_password" type="password" />
+                </div>
+            </div>
+            <input class="button" name="" type="submit" value="Register" />
+        {/exp:brilliant_retail:register_form}
+    </div>
+</div>

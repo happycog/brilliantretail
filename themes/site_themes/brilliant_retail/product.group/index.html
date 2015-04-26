@@ -1,256 +1,141 @@
-{!-- // PRODUCT DETAIL PAGE
+{layout="_layouts/site"}
+{!--
 /************************************************************/
-/*	BrilliantRetail 										*/
-/*															*/
-/*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2015						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
-/* 	@link		http://brilliantretail.com 					*/
-/*															*/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2015                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
 /************************************************************/
-/* NOTICE													*/
-/*															*/
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
-/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
-/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
-/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
 /* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
-/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
-/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
-/* DEALINGS IN THE SOFTWARE. 								*/	
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
 /************************************************************/
-// !--}
+!--}
 
-{embed="_assets/header"}
+{exp:brilliant_retail:product form="no"}
+<div class="row">
+	<div class="columns small-12">
+		<header class="page-header">
+			<h1>{title}</h1>
+			{if no_results}
+				<h1>The product you requested is not available.</h1>
+			{/if}
+		</header>
+	</div>
+</div>
 
-<body>
-
-<!-- Header -->
-<header>
-    <div class="wrapper">
-
-			{embed='_assets/topbar'}    
-        
-        <div id="main_menu">
-            
-            {embed="_assets/menu"}
-		
-        </div> <!-- main_menu -->
-        <div class="clearboth"><!-- --></div>
-    
-    </div>
-</header> <!-- header -->
-<!-- end of Header -->
-
-{exp:brilliant_retail:product}
-	{if no_results}
-		<div id="product" class="page">
-			<div class="wrapper">
-				<h1>
-					The product you requested is not available. 
-				</h1>
+{form_open}	
+<div class="row">
+	<div class="columns small-12 medium-6 large-4 product_image">
+		<img src="/media/{image_large}" />
+		<hr>
+        <ul class="clearing-thumbs" data-clearing>
+        	{images}
+            <li>
+                <a href="/media/{filenm}"><img src="/media/{filenm}" class="th" alt="Image" title="{title}" width="50"/></a>
+            </li>
+            {/images}
+        </ul>
+    </div>                
+	<div class="columns small-12 medium-6 large-4 product_description">
+		{detail}
+	</div>
+    <div class="columns small-12 medium-6 large-4 product_details">
+		{price_html}
+			{if in_stock}
+           	<div class="row">
+				<div class="columns small-12 medium-6">
+					{configurable}
+					<label>{configurable_label}</label>
+					{configurable_select}
+					{/configurable}
+					{configurable_js}
+	            </div>
+				<div class="columns small-12 medium-6">
+					{!-- Donation Product Type !--}
+					{donation}
+					{price_options}
+					{/donation}
+	                    	
+					{!-- Optional Product Options !--}
+					{options}
+					<label>{option_label}</label>
+					{option_input}		
+					{/options}
+				</div>
 			</div>
-		</div>
-	{/if}
-<!-- Product -->
-<div id="product" class="page">
-	<div class="wrapper">
-    
-    	<p id="crumbs"><a href="{exp:brilliant_retail:path src=''}">Home</a> 
-    		{if '{category_title}' != ''}
-    			&nbsp;&gt;&nbsp; <a href="{exp:brilliant_retail:path src='catalog/{category_url}'}">{category_title}</a> 
-    		{/if}
-    		&nbsp;&gt;&nbsp; {title}</p>
-    	
-    	{exp:brilliant_retail:show_message}
-    	
-        <h1>{title}</h1>
-        <h5>sku: {sku}</h5>
-        <div id="dleft" class="left">
-        	<div id="photos">
-            	<div class="large">
-            		{exp:brilliant_retail:image src="{image_large}" watermark="logo.png" watermark_vpos="bottom" mode="matte" watermark_hpos="right" width="390" height="470"}
-            	</div>
-            	
-				{!-- Only show thumbnails if there are more than 1--}
-				
-				{if {image_total} >= 2}
-	                <div class="thumbs">
-	                    <ul>
-	                        {images}
-	                        	<li id="thumb_{image_count}"><a href="{exp:brilliant_retail:image src="{filenm}" width="390" height="470" url_only="yes"}" target="_blank" title="{image_title}">{exp:brilliant_retail:image src="{filenm}" title="{image_title}" width="75" height="90"}</a></li>
-			            	{/images}
-	                    </ul>
-	                </div>
-				{/if}
-                <div class="clearboth"><!-- --></div>
-                <p>{image_large_title}</p>
-            </div><!-- photos -->
-            <h3>Description</h3>
-            <div>
-            	{detail}
-            </div>
-            
-        </div> <!-- dleft -->
-        
-        
-        <div id="dright" class="right">
-        	<div id="details">
-                    {price_html}
-                    
-                    {if in_stock}
-                    
-		                    {!-- 
-		                    	An on_sale flag is also available for if statements.
-		                    	
-		                    	Additional sale price/time tags are available. Sale/Price times 
-		                    	accept the format parameter.
-								
-								Ex: 
-								{if on_sale}
-									{sale_start format="%d/%y"}
-									
-									{base} <= original price
-									{price} <= adjusted sale price
-								{/if}
-		                    !--}
-		                    
-		                    {!--
-		                    	type_id 7 is a donation product. We are hiding it 
-		                    	in the code below.
-		                    !--}
-		
-			                    {if {type_id} != 7}
-			                    	<label>Qty:</label>
-			                    	{quantity_select}
-								{if:else}
-									<input type="hidden" name="{product_id}_quantity" value="1" />
-								{/if}
-							
-							<div class="clearboth"><!-- --></div>
+			<div class="row collapse product_actions">
+				<div class="columns small-3 medium-2">
+					<label for="right-label" class="prefix">Qty:</label>
+				</div>
+				<div class="columns small-2 medium-2">
+					<input type="number" min="0" class="small-2 columns" name="{product_id}_quantity" value="1" />
+				</div>
+				<div class="columns small-7 medium-8">
+					<button class="button postfix" type="submit" value="submit">Add to Cart</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="columns small-12">
+					<a class="button secondary tiny right" href="{exp:brilliant_retail:wishlist_add product_id="{product_id}" status="public" return="customer/wishlist"}">Add to Wishlist</a>
+				</div>
+			</div>
+			{if:else}
+			<div class="row">
+				<div class="columns small-12">
+					{br_out_of_stock}
+				</div>
+			</div>
+			{/if}
+	</div>
+</div>
+{form_close}       
+           
 
-		                   	{if has_tiered_price} 
-								<ul>
-									{tiered_price} 
-										<li>
-											Buy {tiered_qty} for {tiered_price} save {tiered_discount_percent}% ({tiered_discount_value})
-										</li>
-									{/tiered_price}
-								</ul>
-								
-			                    <div class="clearboth"><!-- --></div>
-
-							{/if}		                    
-		                    
-		                    {!-- Insert Product Specific Selectors !--}
-		                    	
-								{!-- Configurable Product Type !--}
-		
-			                    	{configurable}
-			                    		
-			                    		<label>{configurable_label}</label>
-			                    		{configurable_select}<br />
-			                    		<div class="clearboth"><!-- --></div>		
-			                    	{/configurable}
-										
-									{!-- Required to set configurable selectors!--}	
-		
-				                    	{configurable_js}
-		
-		                    	{!-- Donation Product Type !--}
-		                    	                    	
-			                    	{donation}
-		
-										{price_options}
-		
-			                    	{/donation}
-		                    	
-		                    	{!-- Optional Product Options !--}
-		
-			                    	{options}
-			                    		
-			                    		<h5>{option_label}</h5>
-			                    		{option_input}
-			                    		<div class="clearboth"><!-- --></div>
-		
-			                    	{/options}
-								
-		                    {!-- End Insert Product Specific Selectors !--}
-		                    
-		                    <div class="btn">
-		                    	<input class="inpbtn" name="" type="submit" value="Add to Cart" />
-		                    </div>
-
-					{/if} {!-- end of in_stock statement !--}
-					
-					{if in_stock == FALSE}
-						<p>Out of Stock</p>
+{exp:brilliant_retail:product_related product_id="{product_id}"}
+<div class="row">
+	<div class="products_related">
+		<h4>You May Also Like</h4>
+		<ul>
+			{related_products}
+			{if related_in_stock}
+			<li class="related_product">
+				<div class="product_image">
+					<a href="{exp:brilliant_retail:path src='product/{related_url}'}">
+					{if image_thumb != ''}
+					<figure>
+						<img src='/media/{related_thumb}' width="180" height="150">
+					</figure>
 					{/if}
-					                    
-                    <div class="wishlist">
-		            	<a href="{exp:brilliant_retail:wishlist_add product_id="{product_id}" status="public" return="customer/wishlist"}">Add to Wishlist</a>
-		            </div>
-            	<div id="features">
-	                {!-- 
-	                	Attribute Tag Pair will display all 
-	                	custom attributes for the product
-						
-						Alternatively you can can call a specific attribute
-						with "code":
-							{attr:code}
-		                		<h3>{label}</h3>
-			                	<p>{value}</p>
-							{/attr:code} 
-	                !--}
-
-	                {attribute}
-                		<h3>{label}</h3>
-	                	<div>{value}</div>
-					{/attribute}
-
-                </div> <!-- features -->                
-            </div> <!-- details -->
-            
-            <div id="adv">
-            	<ul>
-                	<li><a href="#"><img src="{theme}/images/sample_ad01.jpg" alt="" /></a></li>
-                </ul>
-            </div> <!-- adv -->
-            <div class="clearboth"><!-- --></div>
-            
-            {exp:brilliant_retail:product_related product_id="{product_id}"}
-				<div id="related">
-	            	<h3>Related Products</h3>
-	                <ul>
-	                	{related_products}
-		                	<li {switch='|class="even"'}>
-		                    	<div class="pic">
-		                    		<a href="{exp:brilliant_retail:path src='product/{related_url}'}">
-		                    			{exp:brilliant_retail:image src="{related_thumb}" width="180" height="150"}</a>
-		                    	</div>
-		                        <h5>{related_title}</h5>
-		                        {exp:brilliant_retail:product_custom product_id="{related_product_id}"}
-		                            {br:detail}
-		                        {/exp:brilliant_retail:product_custom}
-		                        
-		                        <p><a href="{exp:brilliant_retail:path src='product/{related_url}'}">Details</a></p>
-		                    </li>
-	                	{/related_products}
-	                </ul>
-	                <div class="clearboth"><!-- --></div>
-	            </div> <!-- related -->	
-			{/exp:brilliant_retail:product_related}
-			
-            
-        </div> <!-- dright -->
-        <div class="clearboth"><!-- --></div>           
-        
-    </div>
-</div> <!-- product -->
-<!-- end of Product Page -->
-
+						<p>{related_title}</p>
+					</a>
+				</div>
+				<div class="product_price">
+					{related_price_html}
+				</div>
+				<div class="product_buy">
+					<button class="button tiny secondary" type="submit" value="submit"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+				</div>
+			</li>
+			{/if}
+			{/related_products}
+		</ul>
+	</div>
+</div>
+{/exp:brilliant_retail:product_related}
+    <!-- end YOU MAY ALSO LIKE -->
+                        
+</div>
 {/exp:brilliant_retail:product}
-
-{embed="_assets/footer"}

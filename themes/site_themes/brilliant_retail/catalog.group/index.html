@@ -1,196 +1,159 @@
-{!-- CATALOG 
+{layout="_layouts/site"}
+{!--
 /************************************************************/
-/*	BrilliantRetail 										*/
-/*															*/
-/*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2015						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
-/* 	@link		http://brilliantretail.com 					*/
-/*															*/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2015                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
 /************************************************************/
-/* NOTICE													*/
-/*															*/
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
-/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
-/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
-/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
 /* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
-/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
-/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
-/* DEALINGS IN THE SOFTWARE. 								*/	
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
 /************************************************************/
 !--}
-{embed="_assets/header"}
-<body>
-<!-- Header -->
-<header>
-    <div class="wrapper">
 
-			{embed='_assets/topbar'}    
-        
-        <div id="main_menu">
-            
-            {embed="_assets/menu"}
-		
-        </div> <!-- main_menu -->
-        <div class="clearboth"><!-- --></div>
-    
-    </div>
-</header> <!-- header -->
-<!-- end of Header -->
+{if segment_2 == ""}{redirect="/"}{/if}
+<div class="row">
+	<div class="small-12 columns">
+		<div class="off-canvas-wrap" data-offcanvas>
+		  <div class="inner-wrap">
+		    <!-- Off Canvas Menu -->
+		    <aside class="left-off-canvas-menu">
+		        <!-- whatever you want goes here -->
+		        <ul>
+					{exp:brilliant_retail:catalog_layered}
+					<h5 class="filter-heading">Shop by {result_layered_label}</h5>
+					<ul class="side-nav filters" role="navigation" title="Filters">
+					{result_layered_item}
+						<li><a href="{exp:brilliant_retail:path src='{result_layered_link}'}">{result_layered_title} {result_layered_count}</a></li>
+					{/result_layered_item}
+					</ul>
+					{/exp:brilliant_retail:catalog_layered}
+		        </ul>
+		    </aside>
 
-<div id="catalog" class="page">
-	<div class="wrapper">
-	
-{exp:brilliant_retail:catalog}
+		    <!-- main content goes here -->
+		    <div class="row">
+				<div class="columns small-12 medium-2">
+					<div class="side-nav">
+						{if segment_3 == "filters"}
+						{exp:brilliant_retail:catalog}
+						<ul role="navigation" title="Filters">
+							{result_filter_set}
+							<li><h5 class="filter-heading"><span class="filter-set-selection">{filter_set_section}</span></h5></li>
+						    	<li class="filter-set"><a href="{exp:brilliant_retail:path src='{filter_set_remove}'}" class="remove_filter">{filter_set_label} <span class="right">&times;</span></a></li>
+							{/result_filter_set}
+						</ul>
+						{/exp:brilliant_retail:catalog}
+						{/if}
 
-    <p id="crumbs"><a href="{exp:brilliant_retail:path src=''}">Home</a> &nbsp;&gt;&nbsp; {category_title} 
-    {result_filter_set}
-	    &nbsp;&gt;&nbsp;
-	    <b>{filter_set_section}:</b> {filter_set_label}&nbsp;<a href="{exp:brilliant_retail:path src='{filter_set_remove}'}" class="remove_filter">X</a>
-    {/result_filter_set}</p>
-    
-<!-- Catalog -->
+						{exp:brilliant_retail:catalog_layered}
+						<h5 class="filter-heading">Shop by {result_layered_label}</h5>
+						<ul class="filters" role="navigation" title="Filters">
+						{result_layered_item}
+							<li><a href="{exp:brilliant_retail:path src='{result_layered_link}'}">{result_layered_title} {result_layered_count}</a></li>
+						{/result_layered_item}
+						</ul>
+						{/exp:brilliant_retail:catalog_layered}
+					</div>
+				</div>
 
-        <div id="sidebar">
-            <h3>Shop by</h3>
-            {exp:brilliant_retail:catalog_layered}
-            	<h4>{result_layered_label}:</h4>
-            	<ul class="shopby">
-            		{result_layered_item}
-            			<li {if result_layered_selected}class="selected"{/if}><a href="{exp:brilliant_retail:path src='{result_layered_link}'}">{result_layered_title} {result_layered_count}</a></li>
-            		{/result_layered_item}
-            	</ul>
-            {/exp:brilliant_retail:catalog_layered}
-        </div> <!-- sidebar -->
-        
-        
-        <div id="subject">
-			
-			{if '{category_image}' != ''}
-	            <div id="banner">
-	            	<img src="{category_image}" alt="" />
-	            </div> <!-- banner -->
-			{/if}
-			
-			{category_detail}
-			
-			<p class="items">
-            	{result_paginate}
-            		{if '{show_paginate}' == 'yes'}
-	            		{result_range} of {total_results} Items | 
-	            		{back} <a href="{exp:brilliant_retail:path src='{link_back}'}">&laquo;</a> {/back}
-	            	{if:else}
-	            		{total_results} Items | 
+				{exp:brilliant_retail:catalog}
+				<div class="columns small-12 medium-10">
+					<div class="mobile-catalog-menu">
+				    	<a class="left-off-canvas-toggle" href="#">Sort &amp; Filter</a>
+						{if segment_3 == "filters"}
+							{result_filter_set}
+						    	<a href="{exp:brilliant_retail:path src='{filter_set_remove}'}" class="remove_filter">{filter_set_label} <span class="right">&times;</span></a>
+							{/result_filter_set}
+						</ul>
+						{/if}
+					</div>
+					<header class="page-header">
+					    <h1>{category_title}</h1>
+					</header>
+					{if no_results}
+					<div class="columns small-12 medium-9">
+						<div id="br_alert" data-alert class="alert-box">
+							<h3>This category contains no products.</h3>
+							<a href="#" class="close">&times;</a>
+						</div>
+					</div>
 					{/if}
-						
-						{pages}
-							<a href="{exp:brilliant_retail:path src='{link_page}'}" {if '{link_active}' == 'yes'}class="active"{/if}>{page_number}</a>
-						{/pages}
-            		
-            		{if '{show_paginate}' == 'yes'}
-	            		{next}<a href="{exp:brilliant_retail:path src='{link_next}'}">&raquo;</a> {/next}| 
-						<a href="{exp:brilliant_retail:path src='{link_show_all}'}">Show All</a> 
-					{/if}
-            	{/result_paginate}
-            </p>
-            <p class="sort">
-            	<b>View:</b>  
-            	<a href="{exp:brilliant_retail:path src='{link_grid}'}" {if '{mode}' == 'grid'}class="active"{/if}>Grid</a> | 
-            	<a href="{exp:brilliant_retail:path src='{link_list}'}" {if '{mode}' == 'list'}class="active"{/if}>List</a>
-            	&nbsp;
-            	&nbsp;
-            	<b>Sort by: </b> 
-            	<a href="{exp:brilliant_retail:path src='{link_sort_relevance}'}" {if '{sort_selected}' == 'relevance'}class="active"{/if}>Relevance</a> | 
-            	<a href="{exp:brilliant_retail:path src='{link_sort_price}'}" {if '{sort_selected}' == 'price'}class="active"{/if}>Price</a> | 
-            	<a href="{exp:brilliant_retail:path src='{link_sort_name}'}" {if '{sort_selected}' == 'name'}class="active"{/if}>Name</a>
-            </p>
-            <div class="clearboth"><!-- --></div>
-				
-				{if no_results}
-					<div id="br_alert">This category contains no products</div>	
-				{/if}
-				
-			    <div id="{mode}">
-	                <ul>
-	                   	{results}
-							<li id="product_{product_count}">
-								{form_open}
-									{!-- 
-										Show the results. By default the system will show in grid mode.
-									!--}
-									{if '{mode}' == 'grid'}
-				                   	    	<a href="{exp:brilliant_retail:path src='product/{url}'}"><img class="overlay" src="{theme}/images/0.gif" alt="" /></a>
-					                        <div>
-					                        	<a href="{exp:brilliant_retail:path src='product/{url}'}" style="height:200">{exp:brilliant_retail:image src="{image_thumb}" width="175" height="210"}</a>
-					                        </div>
-					                        	<p class="title"><a href="{exp:brilliant_retail:path src='product/{url}'}">{title}</a></p>
-					                        	{!-- 
-					                        		You can use the {in_stock} variable to test if a product is available 
-					                        		or test in_stock == FALSE as shown below to see if it is out of stock. 
-					                        	!--}
-					                        	{if in_stock == FALSE}
-					                        		<p style="font-size:12px;color:#CCC">Out of Stock</p>
-					                        	{/if}
-					                        {price_html}
-					                {/if}
-					                {if '{mode}' != 'grid'}
-				                   	    	<div class="pic">
-					                    		<a href="{exp:brilliant_retail:path src='product/{url}'}">{exp:brilliant_retail:image src="{image_thumb}" width="75" height="90"}</a></div>
-					                        <div class="desc">
-					                        	<h5><a href="{exp:brilliant_retail:path src='product/{url}'}">{title}</a></h5>
-					                            <p>{detail}</p>
-					                            <p><a href="{exp:brilliant_retail:path src='product/{url}'}">+Add to cart</a></p>
-					                        </div>
-					                        <div class="price">{price_html}</div>
-					                        <div class="clearboth"><!-- --></div>
-					                {/if}
-								{form_close}
-							</li>
+					<dl class="sub-nav right" role="menu" title="Filter Menu List">
+					  <dt>Sort by:</dt>
+					  <dd {if '{sort_selected}' == 'relevance'}class="active"{/if}><a href="{exp:brilliant_retail:path src='{link_sort_relevance}'}">Relevance</a></dd>
+					  <dd{if '{sort_selected}' == 'price'} class="active"{/if}><a href="{exp:brilliant_retail:path src='{link_sort_price}'}" >Price</a></dd>
+					  <dd{if '{sort_selected}' == 'name'} class="active"{/if}><a href="{exp:brilliant_retail:path src='{link_sort_name}'}" >Name</a></dd>
+					</dl>	
+					<ul class="catalog">
+						{results}
+						<li class="product_list">
+							<div class="row">
+							{form_open}
+								<div class="product_image">
+									<a href="{path='product/{url}'}">
+									{if image_thumb != ''}
+									<figure>
+										<img src="/media/{image_large}"/>
+									</figure>
+									{/if}
+										<p>{title}</p>
+									</a>
+								</div>
+								<div class="product_price">
+									{price_html}
+								</div>
+								<div class="product_buy">
+									{if in_stock}
+									<button class="button secondary tiny" type="submit" value="submit">Add to Cart</button>
+									{if:else}
+									{br_out_of_stock}
+									{/if}
+								</div>
+							{form_close}
+							</div>
+						</li>
 						{/results}
-	                </ul>
-	                <div class="clearboth"><!-- --></div>
-	            </div> <!-- grid -->
-           	
-           	            <p class="items">
-            	{result_paginate_bottom}
-            		{if '{show_paginate}' == 'yes'}
-	            		{result_range} of {total_results} Items | 
-	            		{back}<a href="{exp:brilliant_retail:path src='{link_back}'}">&laquo;</a> {/back}
-	            	{if:else}
-	            		{total_results} Items | 
-					{/if}
-						
-						{pages}<a href="{exp:brilliant_retail:path src='{link_page}'}" {if '{link_active}' == 'yes'}class="active"{/if}>{page_number}</a>&nbsp;{/pages}
-            		
-            		{if '{show_paginate}' == 'yes'}
-	            		{next}<a href="{exp:brilliant_retail:path src='{link_next}'}">&raquo;</a> {/next}| 
-						<a href="{exp:brilliant_retail:path src='{link_show_all}'}">Show All</a> 
-					{/if}
-            	{/result_paginate_bottom} 
-            </p>
-            <p class="sort">
-            	<b>View:</b>  
-            	<a href="{exp:brilliant_retail:path src='{link_grid}'}" {if '{mode}' == 'grid'}class="active"{/if}>Grid</a> | 
-            	<a href="{exp:brilliant_retail:path src='{link_list}'}" {if '{mode}' == 'list'}class="active"{/if}>List</a>
-            	&nbsp;
-            	&nbsp;
-            	<b>Sort by: </b> 
-            	<a href="{exp:brilliant_retail:path src='{link_sort_relevance}'}" {if '{sort_selected}' == 'relevance'}class="active"{/if}>Relevance</a> | 
-            	<a href="{exp:brilliant_retail:path src='{link_sort_price}'}" {if '{sort_selected}' == 'price'}class="active"{/if}>Price</a> | 
-            	<a href="{exp:brilliant_retail:path src='{link_sort_name}'}" {if '{sort_selected}' == 'name'}class="active"{/if}>Name</a>
-            </p>
-            <div class="clearboth"><!-- --></div>
-        
-        </div> <!-- subject -->        
-        <div class="clearboth"><!-- --></div>        
+					</ul>
 
-{/exp:brilliant_retail:catalog}
-        
-    </div>
-</div> <!-- catalog -->
-<!-- end of Catalog Page -->
 
-{embed="_assets/footer"}
+				    	{!-- pagination starts --}
+					<div class="row">
+						{result_paginate_bottom}
+						<div class="pagination-centered">
+						  <ul class="pagination">
+						  	{if '{show_paginate}' == 'yes'}
+						    	{back}<li class="arrow"><a href="{path='{link_back}'}">&laquo;</a></li>{/back}
+						    	{pages}
+						    	<li{if '{link_active}' == 'yes'} class="current"{/if}><a href="{exp:brilliant_retail:path src='{link_page}'}" {if '{link_active}' == 'yes'}class="active"{/if}>{page_number}</a></li>
+						    	{/pages}
+						    	{next}<li class="arrow"><a href="{path='{link_next}'}">&raquo;</a></li>{/next}
+						    	{/if}
+						  </ul>
+						</div>
+						{/result_paginate_bottom} 
+					</div>
+				</div>
+				{/exp:brilliant_retail:catalog}
+			</div>
+		  <!-- close the off-canvas menu -->
+		  <a class="exit-off-canvas"></a>
+
+		  </div>
+		</div>
+	</div>
+</div>
+

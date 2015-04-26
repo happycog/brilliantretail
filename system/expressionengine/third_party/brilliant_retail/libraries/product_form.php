@@ -5,7 +5,7 @@
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
 /* 	@copyright	Copyright © 2010-2014						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@license	http://opensource.org/licenses/OSL-3.0	*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
 /************************************************************/

@@ -1,150 +1,92 @@
-{!-- // STORE INDEX PAGE
-/************************************************************/
-/*	BrilliantRetail 										*/
-/*															*/
-/*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2015						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
-/* 	@link		http://brilliantretail.com 					*/
-/*															*/
-/************************************************************/
-/* NOTICE													*/
-/*															*/
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
-/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
-/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
-/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
-/* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
-/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
-/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
-/* DEALINGS IN THE SOFTWARE. 								*/	
-/************************************************************/
-// !--}
-{embed="_assets/header"}
-<body>
-<!-- Header -->
-<header>
-    <div class="wrapper">
+{layout="_layouts/site"}
 
-			{embed='_assets/topbar'}    
-        
-        <div id="main_menu">
-            
-            {embed="_assets/menu"}
-		
-        </div> <!-- main_menu -->
-        <div class="clearboth"><!-- --></div>
-    
+<div class="row">
+  <div class="columns small-12">
+	 <div class="hero">
+		<a href="#"><img src="/assets/img/design/homepage-slide.jpg" alt="image" /></a>
+	 </div>
+  </div>
+</div>
+
+{exp:brilliant_retail:catalog url_title="beauty"}
+	<div class="row">
+    <div class="columns small-12">
+      <h4 class="best-seller-lead">Best Selling Products</h4>
     </div>
-</header> <!-- header -->
-<!-- end of Header -->
+		<ul class="catalog homepage">
+			{results}
+			<li class="product_list">
+				<div class="row">
+				{form_open}
+					<div class="product_image">
+						<a href="{path='product/{url}'}">
+						{if image_thumb != ''}
+						<figure>
+							<img src="/media/{image_large}"/>
+						</figure>
+						{/if}
+							<p>{title}</p>
+						</a>
+					</div>
+					<div class="product_price">
+						{price_html}
+					</div>
+				{form_close}
+				</div>
+			</li>
+			{/results}
+		</ul>
+	</div>
+{/exp:brilliant_retail:catalog}
 
-<!-- Home Page -->
-<div id="home" class="page">
-	<div class="wrapper">
-    
-        <div id="promos">
-            <div class="hp_slider" style="position:absolute;">
-                <a href="{exp:brilliant_retail:path src='catalog/products'}"><img src="/media/images/home_promo_01.jpg" alt="" /></a>
-            </div>
-            <div class="hp_slider" style="position:absolute;">
-                <a href="{exp:brilliant_retail:path src='catalog/services'}"><img src="/media/images/home_promo_02.jpg" alt="" /></a>
-            </div>
-            <div class="hp_slider" style="position:absolute;">
-                <a href="{exp:brilliant_retail:path src='catalog/downloads'}"><img src="/media/images/home_promo_03.jpg" alt="" /></a>
-            </div>
-            <p class="ctrl" id="promo_control"></p>   
-        </div> <!-- promos -->
-    
-    
-    	<div id="left">
-        	<h2>About</h2>
-            <h5>
-			{exp:channel:entries channel="content" limit="1" url_title="about" disable="categories|member_data|pagination|trackbacks"}
-                {exp:snippet total="300"}
-                	{general-content}
-        	    {/exp:snippet}
-            {/exp:channel:entries} 
-            </h5>
-            
-            {exp:channel:entries channel="home" limit="1" url_title="home_page" disable="categories|member_data|pagination|trackbacks"}
-            
-	            <div id="products">
-	            	{best_sellers limit="4" random="yes"}
-					<h2>Best Selling Products</h2>
-						<ul>
-							{items}	
-								<li>
-									<div>
-										{form_open}
-											<div class="img">
-												<a href="{exp:brilliant_retail:path src='product/{url}'}">{exp:brilliant_retail:image src="{image_large}" alt="{title}" width="100" height="120"}</a>
-											</div>
-										<h6><a href="{exp:brilliant_retail:path src='product/{url}'}">{title}</a></h6>
-										{price_html}
-										<input type="hidden" name="quantity" value="1" />
-										<div class="btn">
-						                	<input class="inpbtn" name="" type="submit" value="Add" />
-						                </div>
-										<div class="clearboth"><!-- Clear Both !--></div>		
-										{form_close}
-									</div>
-								</li>
-							{/items}	
-						</ul>
-	         	            <div class="clearboth"><!-- --></div>
-	
-	            	{/best_sellers}
-	            </div>
-	            
-            <div class="clearboth"><!-- --></div>
 
-            {/exp:channel:entries}
-            
-            <div id="benefits">
-                <h2>Twitter Updates</h2>
-                <ul>
-                	<li>Check out our new store.. Its powered by #brilliantretail<br />1 hour ago</li>
-                	<li>Check out our new store.. Its powered by #brilliantretail<br />yesterday</li>
-                	<li>Check out our new store.. Its powered by #brilliantretail<br />3 days ago</li>
-	            </ul>
-            </div> <!-- benefits -->
-            
-            {exp:mailinglist:form list="default" form_id="email_updates"} 
-            	<h4>E-mail Updates</h4>
-                <label>E-mail</label>
-                <input class="inptxt" name="email" value="{email}" type="text" />
-                <div class="btn">Submit<input name="" type="image" src="{theme}/images/0.gif" alt="Submit" /></div>
-            {/exp:mailinglist:form}
-
-            <div class="clearboth"><!-- --></div>
-        </div> <!-- left -->
-        
-        
-        <div id="right">
-        	<h2>Blog</h2>
-            <ul>
-           		{exp:channel:entries channel="blog" limit="3"}
-	            	<li>
-	                	<div class="pic"><img src="{theme}/images/sample_blog_thumb_small.jpg" alt="" /></div>
-	                    <div class="txt">
-	                    	<h3><a href="{exp:brilliant_retail:path src='blog/detail/{url_title}'}">{title}</a></h3>
-	                        <p class="author"><a href="{exp:brilliant_retail:path src='blog/detail/{url_title}'}#comments">{comment_total} Comments</a> | {entry_date format="%n/%d/%y"} by {author}</p>
-	                        <p>
-	                        	{exp:snippet total="100"}{blog_summary}{/exp:snippet}
-	                        </p>
-	                    </div>
-	                    <div class="clearboth"><!-- --></div>
-	                </li>
-				{/exp:channel:entries} 
-            </ul>
-        </div> <!-- right -->
-        <div class="clearboth"><!-- --></div>
+<div class="row">
+  <!-- ABOUT US -->
+  <div class="small-12 medium-5 columns">
+      <h3>About us</h3>
+      <img src="/assets/img/design/about-us.jpg" class="th left" alt="About Us" title="About Us">
+      <p>Nam molestie ornare interdum. Sed elementum ornare nunc non faucibus. Ut augue mi, feugiat vel varius ut, congue vel risus. Proin sed tortor erat, vitae pulvinar tellus. Maecenas placerat accumsan blandit. Curabitur in nibh in est mattis scelerisque. Nam dignissim odio quis dolor lacinia eget facilisis metus convallis.</p>
+      <p>Curabitur imperdiet dictum ultrices. Morbi et ligula nisi, fermentum volutpat velit. Integer condimentum arcu in libero sagittis euismod. Aenean at commodo lectus. Donec a tellus quis nibh porta pellentesque vitae quis turpis. Donec vitae arcu magna, quis pulvinar justo. Phasellus hendrerit ullamcorper lorem sit amet feugiat.</p>
+      <a class="readmore" href="#">Read More &raquo;</a>
+  </div>
+  <!-- end ABOUT US -->
     
-    </div>
-</div> <!-- home -->
-<!-- end of Home Page -->
-
-{embed="_assets/footer"}
+  <!-- RECENT BLOG ARTICLES -->
+  <div class="small-12 medium-4 columns">
+    <h3>Recent blog articles</h3>
+    <ul class="small-block-grid-1">
+      <li>
+        <h5><a href="">Mauris malesuada egestas odio ut.</a></h5>
+        <p class="legend">11/12/10 by <a href="#">dpdexter</a><span class="comment"><a href="#">22</a></span></p>
+        <img src="/assets/img/design/blog/img1.jpg" class="right th" />
+        <p>Nam molestie ornare interdum. Sed elementum ornare nunc non faucibus. Nam molestie ornare interdum. Sed elementum ornare nunc non faucibus.</p>
+      </li>
+      <li>
+        <h5><a href="">Mauris malesuada egestas odio ut.</a></h5>
+        <p class="legend">11/12/10 by <a href="#">dpdexter</a><span class="comment"><a href="#">22</a></span></p>
+        <img src="/assets/img/design/blog/img1.jpg" class="right th" />
+        <p>Nam molestie ornare interdum. Sed elementum ornare nunc non faucibus. Nam molestie ornare interdum. Sed elementum ornare nunc non faucibus.</p>
+      </li>
+    </ul>
+    <p><a class="readmore" href="blog_list.html">Visit Our Blog &raquo;</a></p>
+  </div>
+  <!-- end RECENT BLOG ARTICLES -->
+    
+    <!-- TWITTER UPDATES -->
+  <div class="small-12 medium-3 columns">
+    <h3>Twitter Updates</h3>
+    <ul class="small-block-grid-1">
+      <li class="tweet">
+        <p>Sed <a href="#">@asDasdaS</a> leo ac diam consequat semper. Phasellus sollicitudin justo eu elit porta ornare.<br>
+        <a href="#">http://typo.ly.com/ht299dg</a></p>
+      </li>
+      <li class="tweet">
+        <p>Sed <a href="#">@AsasaSasa</a> leo ac diam consequat semper. Phasellus sollicitudin justo eu elit porta ornare.<br>
+        <a href="#">http://typo.ly.com/ht299dg</a></p>
+      </li>
+    </ul>
+    <a class="follow_link"><img src="/assets/img/design/icons/follow-icon.png" width="16"> Follow Us</a>
+  </div>
+  <!-- end TWITTER UPDATES -->  
+</div>
+<!-- end CONTENT -->

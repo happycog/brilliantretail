@@ -1,153 +1,162 @@
+{layout="_layouts/site"}
 {!--
 /************************************************************/
-/*	BrilliantRetail 										*/
-/*															*/
-/*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2015						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
-/* 	@link		http://brilliantretail.com 					*/
-/*															*/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2015                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
 /************************************************************/
-/* NOTICE													*/
-/*															*/
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
-/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
-/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
-/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
 /* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
-/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
-/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
-/* DEALINGS IN THE SOFTWARE. 								*/	
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
 /************************************************************/
 !--}
-
 {if logged_out}
 {redirect='customer/login'}
 {/if}
-
-{embed="_assets/header"}
-
-<body>
-
-<!-- Header -->
-<header>
-    <div class="wrapper">
-
-			{embed='_assets/topbar'}    
-        
-        <div id="main_menu">
             
-            {embed="_assets/menu"}
+<div class="row">
+	<div class="small-12 columns">
+		<header class="page-header">
+			<h1>Your Account</h1>
+		</header>
+		{exp:brilliant_retail:show_message}
+	</div>
+	<div class="small-12 medium-2 columns">
+	{embed='customer/_sidebar'}
+	</div>
+	<div class="columns small-12 medium-10">
 		
-        </div> <!-- main_menu -->
-        <div class="clearboth"><!-- --></div>
-    
-    </div>
-</header> <!-- header -->
-<!-- end of Header -->
+		<div class="row">
+			{exp:brilliant_retail:customer_profile}
+        	{form_open}
+	        <div class="large-12 columns">
+         		<h4>General Info</h4>
+         		<div class="row">
+         			<div class="large-4 columns small-12">
+	             		<label>First Name <span class="required">*</span></label>
+	             		<input class="txtinp required" name="br_fname" value="{br_fname}" type="text" />
+	             	</div>
+         			<div class="large-4 columns small-12">
+			            <label>Last Name <span class="required">*</span></label>
+			            <input class="txtinp required" name="br_lname" value="{br_lname}" type="text" />
+			        </div>
+         			<div class="large-4 columns small-12">
+			            <label>Phone</label>
+			            <input class="txtinp" name="br_phone" value="{br_phone}" type="text" />
+					</div>
+				</div>
+				<hr />
+				<div class="row">
+					<div class="large-6 columns small-12">
+						<h5>Billing Address</h5>
+						<div class="panel">
+							<div class="row">
+								<div class="large-6 columns small-12">
+		                            <label>First Name <span class="required">*</span></label>
+		                            <input class="txtinp required" name="br_billing_fname" value="{br_billing_fname}" type="text" />
+		                        </div>
+								<div class="large-6 columns small-12">
+						            <label>Last Name <span class="required">*</span></label>
+						            <input class="txtinp required" name="br_billing_lname" value="{br_billing_lname}" type="text" />
+					            </div>
+				            </div>
 
-<!-- Account -->
-<div id="account" class="page">
-	<div class="wrapper">
-    
-    	{embed='customer/_sidebar'}
+						    <label>Company</label>
+						    <input class="txtinp" name="br_billing_company" value="{br_billing_company}" type="text" />
 
-    	<div id="subject">
-			
-			{exp:brilliant_retail:show_message}
-			
-    		{exp:brilliant_retail:customer_profile}
-	        
-	        {form_open}
-	   		<table id="profile">
-            	<thead>
-                	<tr>
-                    	<th colspan="3">Profile</th>
-                    </tr>
-                </thead>
-                <tbody>
-	                <tr>
-	                   	<td class="col1">
-	                       	<img src="{theme}/images/profile-pic.jpg" alt="" /></td>
-	     				<td valign="top">
-	                 		<strong>General Info</strong><br />
-	                 		<label>First Name*<br /><input class="txtinp required" name="br_fname" value="{br_fname}" type="text" /></label>
-				            <label>Last Name*<br /><input class="txtinp required" name="br_lname" value="{br_lname}" type="text" /></label>
-				        </td>
-				        <td valign="top">
-				        	<strong>&nbsp;</strong><br />
-				        	<label>
-				        		Email<br />{email}<br />
-				        	</label>
-				        	<br />
-				            <label>Phone<br /><input class="txtinp" name="br_phone" value="{br_phone}" type="text" /></label></td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-					    <td valign="top">
-								<p>&nbsp;</p>
-								<strong>Billing Address</strong><br />
-	                            <label>First Name*<br /><input class="txtinp required" name="br_billing_fname" value="{br_billing_fname}" type="text" /></label>
-					            <label>Last Name*<br /><input class="txtinp required" name="br_billing_lname" value="{br_billing_lname}" type="text" /></label>
-					            <label>Company<br /><input class="txtinp" name="br_billing_company" value="{br_billing_company}" type="text" /></label>
-					            <label>Country<br />
-					            	{exp:brilliant_retail:countries name="br_billing_country" id="br_billing_country" class="listinp required" value="{br_billing_country}"}
-					            </label>
-					            <label>Address<br /><input class="txtinp txtinp_nospace" name="br_billing_address1" value="{br_billing_address1}" type="text" /></label><input class="txtinp" name="br_billing_address2" value="{br_billing_address2}" type="text" />
-					            <label>City<br /><input class="txtinp" name="br_billing_city" value="{br_billing_city}" type="text" /></label>
-					            <label>State<br />
+				            <label>Address</label>
+				            <input class="txtinp txtinp_nospace" name="br_billing_address1" value="{br_billing_address1}" type="text" />
+				            <input class="txtinp" name="br_billing_address2" value="{br_billing_address2}" type="text" />
+
+				            <div class="row">
+				            	<div class="large-6 columns small-12">
+						            <label>City <span class="required">*</span></label>
+						            <input class="txtinp required" name="br_billing_city" value="{br_billing_city}" type="text" />
+					            </div>
+				            	<div class="large-6 columns small-12">
+						            <label>State <span class="required">*</span></label>
 					            	{exp:brilliant_retail:states name="br_billing_state" id="br_billing_state" class="listinp required" value="{br_billing_state}" country_select="br_billing_country"}
-					            </label>
-					            <label>Zip/Postal Code<br /><input class="txtinp" name="br_billing_zip" value="{br_billing_zip}" type="text" /></label>
-						</td>
-					    <td valign="top">
-					            <p>&nbsp;</p>
-								<strong>Shipping Address</strong><br />
-	                            <label>First Name*<br /><input class="txtinp required" name="br_shipping_fname" value="{br_shipping_fname}" type="text" /></label>
-					            <label>Last Name*<br /><input class="txtinp required" name="br_shipping_lname" value="{br_shipping_lname}" type="text" /></label>
-					            <label>Company<br /><input class="txtinp" name="br_shipping_company" value="{br_shipping_company}" type="text" /></label>
-					            <label>Country<br />
-					            	{exp:brilliant_retail:countries name="br_shipping_country" id="br_shipping_country" class="listinp required" value="{br_shipping_country}"}
-					            </label>
-					            <label>Address<br /><input class="txtinp txtinp_nospace" name="br_shipping_address1" value="{br_shipping_address1}" type="text" /></label><input class="txtinp" name="br_shipping_address2" value="{br_shipping_address2}" type="text" />
-					            <label>City<br /><input class="txtinp" name="br_shipping_city" value="{br_shipping_city}" type="text" /></label>
-					            <label>State<br />
+								</div>
+							</div>
+							<div class="row">
+				            	<div class="large-6 columns small-12">
+						            <label>Zip/Postal Code</label>
+						            <input class="txtinp" name="br_billing_zip" value="{br_billing_zip}" type="text" />
+								</div>
+				            	<div class="large-6 columns small-12">
+						            <label>Country</label>
+					            	{exp:brilliant_retail:countries name="br_billing_country" id="br_billing_country" class="listinp required" value="{br_billing_country}"}
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="large-6 columns small-12">
+						<h5>Shipping Address</h5>
+						<div class="panel">
+
+							<div class="row">
+				            	<div class="large-6 columns small-12">
+		                            <label>First Name <span class="required">*</span></label>
+		                            <input class="txtinp required" name="br_shipping_fname" value="{br_shipping_fname}" type="text" />
+		                        </div>
+				            	<div class="large-6 columns small-12">
+						            <label>Last Name <span class="required">*</span></label>
+						            <input class="txtinp required" name="br_shipping_lname" value="{br_shipping_lname}" type="text" />
+					            </div>
+				            </div>
+
+				            <label>Company</label>
+				            <input class="txtinp" name="br_shipping_company" value="{br_shipping_company}" type="text" />
+
+
+				            <label>Address</label>
+				            <input class="txtinp txtinp_nospace" name="br_shipping_address1" value="{br_shipping_address1}" type="text" />
+				            <input class="txtinp" name="br_shipping_address2" value="{br_shipping_address2}" type="text" />
+
+				            <div class="row">
+				            	<div class="large-6 columns small-12">
+						            <label>City <span class="required">*</span></label>
+						            <input class="txtinp required" name="br_shipping_city" value="{br_shipping_city}" type="text" />
+								</div>
+				            	<div class="large-6 columns small-12">
+						            <label>State <span class="required">*</span></label>
 					            	{exp:brilliant_retail:states name="br_shipping_state" id="br_shipping_state" class="listinp required" value="{br_shipping_state}" country_select="br_shipping_country"}
-					            </label>
-					            <label>Zip/Postal Code<br /><input class="txtinp" name="br_shipping_zip" value="{br_shipping_zip}" type="text" /></label></td>
-	             	</tr>
-					<tr>
-						<td>&nbsp;</td>
-					    <td valign="top">
-	                    		<strong>Additional Info</strong><br />
-                            	<label>Bio<br /><textarea class="txtarea" name="bio">{bio}</textarea></label>
-            					<label>Interests<br /><textarea class="txtarea" name="interests">{interests}</textarea></label>
-						</td>
-					    <td valign="top">
-					            <strong>Chat</strong><br />
-                            	<label>AIM<br /><input class="txtinp" name="aol_im" value="{aol_im}" type="text" /></label>
-					            <label>Yahoo<br /><input class="txtinp" name="yahoo_im" value="{yahoo_im}" type="text" /></label>
-					            <label>MSN<br /><input class="txtinp" name="msn_im" value="{msn_im}" type="text" /></label>
-					            <label>icq<br /><input class="txtinp" name="icq" value="{icq}" type="text" /></label></td>
-	                </tr>
-	                <tr>
-	                	<td>
-	                		&nbsp;</td>
-	                	<td colspan="2">
-							<div class="btn">
-								<input class="inpbtn" name="" type="submit" value="Submit" />
-							</div></td>
-	                </tr>
-                </tbody>
-            </table> <!-- profile -->
-            {form_close}
-		{/exp:brilliant_retail:customer_profile}
-        </div> <!-- subject -->
-        <div class="clearboth"><!-- --></div>
-    </div>
-</div> 
-<!-- account -->
-<!-- end of Account Page -->
-{embed="_assets/footer"}
+				            	</div>
+			            	</div>
+			            	<div class="row">
+				            	<div class="large-6 columns small-12">
+						            <label>Zip/Postal Code</label>
+						            <input class="txtinp" name="br_shipping_zip" value="{br_shipping_zip}" type="text" />
+								</div>
+								<div class="large-6 columns small-12">
+						            <label>Country</label>
+					            	{exp:brilliant_retail:countries name="br_shipping_country" id="br_shipping_country" class="listinp required" value="{br_shipping_country}"}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="large-4 large-centered small-centered columns">
+				<input class="button large-12 columns" name="" type="submit" value="Save Changes" />
+			</div>
+			</div>
+	        {form_close}
+			{/exp:brilliant_retail:customer_profile}
+		</div>
+	</div>
+</div>
+    			

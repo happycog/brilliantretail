@@ -10,7 +10,7 @@ session_start($sid);
 /*	@package	BrilliantRetail								*/
 /*	@Author		David Dexter  								*/
 /* 	@copyright	Copyright (c) 2010-2015						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
+/* 	@license	http://opensource.org/licenses/OSL-3.0	*/
 /* 	@link		http://brilliantretail.com 					*/
 /*															*/
 /************************************************************/

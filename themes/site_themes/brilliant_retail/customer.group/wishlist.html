@@ -1,114 +1,81 @@
+{layout="_layouts/site"}
 {!--
 /************************************************************/
-/*	BrilliantRetail 										*/
-/*															*/
-/*	@package	BrilliantRetail								*/
-/*	@Author		David Dexter  								*/
-/* 	@copyright	Copyright (c) 2010-2015						*/
-/* 	@license	http://brilliantretail.com/license.html		*/
-/* 	@link		http://brilliantretail.com 					*/
-/*															*/
+/*  BrilliantRetail                                         */
+/*                                                          */
+/*  @package  BrilliantRetail                               */
+/*  @Author   David Dexter                                  */
+/*  @copyright  Copyright (c) 2010-2015                     */
+/*  @license  http://brilliantretail.com/license.html       */
+/*  @link   http://brilliantretail.com                      */
+/*                                                          */
 /************************************************************/
-/* NOTICE													*/
-/*															*/
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 	*/
-/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED	*/
-/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 		*/
-/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT 		*/
+/* NOTICE                                                   */
+/*                                                          */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF    */
+/* ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED  */
+/* TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A      */
+/* PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT      */
 /* SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION	*/
-/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 	*/
-/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 		*/
-/* DEALINGS IN THE SOFTWARE. 								*/	
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION  */
+/* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR  */
+/* IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER      */
+/* DEALINGS IN THE SOFTWARE.                                */  
 /************************************************************/
 !--}
-
 {if logged_out}
-{redirect='customer/login'}
+    {redirect='customer/login'}
 {/if}
-
-{embed="_assets/header"}
-
-<body>
-
-<!-- Header -->
-<header>
-    <div class="wrapper">
-
-			{embed='_assets/topbar'}    
-        
-        <div id="main_menu">
+<div class="row">
+    <div class="small-12 columns">
+        <header class="page-header">
+            <h1>Your Account</h1>
+        </header>
+        {exp:brilliant_retail:show_message}
+    </div>
+    <div class="small-12 medium-2 columns">
+    {embed='customer/_sidebar'}
+    </div>
+    <div class="columns small-12 medium-10">
+        <h3 class="heading_title">Wishlist</h3>
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="2">Product</td>
+                    <td>Public</td>
+                    <td>Remove</td>
+                </tr>
+            </thead>
             
-            {embed="_assets/menu"}
-		
-        </div> <!-- main_menu -->
-        <div class="clearboth"><!-- --></div>
-    
+            {exp:brilliant_retail:wishlist} 
+
+            {no_results}
+                <tr>
+                    <td colspan="4" align="center">You have no items in your wishlist</td>
+                </tr>
+            {/no_results}
+            
+                {results}
+                    <tr>
+                        <td>
+                            <a href="{path='/product'}/{url_title}"><img src="/media/{image_thumb}" width="100"  /></a>
+                        </td>
+                        <td>
+                            <label><a href="{path='/product'}/{url_title}">{title}</a></label>
+                            {notes}
+                             {form_open}
+                            <input type="hidden" name="product_id" value="{product_id}" />
+                            <button class="button secondary tiny" type="submit" value="submit">Add to Cart</button>
+                            {form_close}                               
+                        </td>
+                        <td>{if {is_public}}Yes{if:else}No{/if}</td>
+                        <td>
+                            <a href="{remove_link}" class="button alert">&times;</a>
+                        </td>
+                    </tr>
+                {/results}
+
+            {/exp:brilliant_retail:wishlist}               
+        </table>
     </div>
-</header> <!-- header -->
-<!-- end of Header -->
-
-<!-- Account -->
-<div id="account" class="page">
-	<div class="wrapper">
-    
-    	{embed='customer/_sidebar'}
-
-    	<div id="subject">
-			
-			{exp:brilliant_retail:show_message}
-			
-            {exp:brilliant_retail:wishlist}
-				
-				{if no_results}			
-					<h4 id="wishlist_heading">Wishlist</h4>
-					<div id="wishlist_noresult">There are no items in your wishlist</div>
-				{/if}
-				
-				<div id="wishlist_share">
-		    		<a href="{path='wishlist/{share_hash}'}" target="_blank">Share your wishlist</a> | <a href="{path='customer/wishlist_manage'}">Manage your wishlist</a>
-		    	</div>
-		    	<h4 id="wishlist_heading">Wishlist</h4>
-		    		<table id="wishlist" cellspacing="0">
-		            	<thead>
-		                	<tr>
-		                    	<th class="col1">Image</th>
-		                    	<th class="col2">Product</th>
-		                    	<th class="col3">Public</th>
-		                    </tr>
-		                </thead>
-		                <tbody>
-							{results}
-								<tr>
-									<td>
-										<input type="hidden" name="product_id[]" value="{product_id}" />
-										<a href="/product/{url_title}">{exp:brilliant_retail:image src="{image_thumb}" width="144" height="120"}</a></td>
-									<td>
-										<a href="/product/{url_title}">{title}</a><br />
-										{notes}<br />
-										{form_open}
-											<input type="hidden" name="product_id" value="{product_id}" />
-											<div class="btn">
-												<input type="submit" value="add to cart" class="inpbtn" />
-											</div>
-										{form_close}
-										</td>
-									<td class="col3">
-										{if {is_public}}
-											Yes
-										{if:else}
-											No
-										{/if}</td>
-								</tr>			
-							{/results}
-						</tbody>
-					</table>
-			{/exp:brilliant_retail:wishlist}
-        </div> <!-- subject -->
-        <div class="clearboth"><!-- --></div>
-    </div>
-</div> 
-<!-- account -->
-<!-- end of Account Page -->
-
-{embed="_assets/footer"}
+</div>
