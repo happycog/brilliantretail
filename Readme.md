@@ -1,10 +1,10 @@
 # BrilliantRetail&trade; 
 
-BrilliantRetail&trade; is a powerful e-commerce solution for the ExpressionEngine&trade; content management system brought to you by the team at [Codesly](http://codesly.com). Leverage the power of the ExpressionEngine&trade; member management, security and template flexibility to create enterprise level stores. 
+BrilliantRetail&trade; is a powerful e-commerce solution for the ExpressionEngine&reg; content management system brought to you by the team at [Codesly](http://codesly.com). Leverage the power of the ExpressionEngine member management, security and template flexibility to create enterprise level stores. 
 
 ### Installation & Upgrades 
 
-BrilliantRetail&trade; is an ExpressionEngine&trade; add-on package which contains a field type, extension and module. The installation process is straight forward and documented in the BrilliantRetail&trade; documentsion:
+BrilliantRetail&trade; is an ExpressionEngine add-on package which contains a field type, extension and module. The installation process is straight forward and documented in the BrilliantRetail&trade; documentsion:
 
 * [Installlation Documents](http://docs.BrilliantRetail.com/1-documentation/1-installation-%26-upgrades/index.html)
 * [Upgrading Process](http://docs.BrilliantRetail.com/1-documentation/1-installation-%26-upgrades/index.html###upgrading)
@@ -24,7 +24,7 @@ BrilliantRetail&trade; contains a sample store built on the Zurb Foundation resp
 
 ### Support
 
-The ExpressionEngine&trade; community is very active and helpful. Please post any help questions you may have and make sure to tag them with BrilliantRetail&trade;. The Codesly team will try to help when we can! 
+The ExpressionEngine community is very active and helpful. Please post any help questions you may have and make sure to tag them with BrilliantRetail&trade;. The Codesly team will try to help when we can! 
 
 * [ExpressionEngine Answers](http://ExpressionEngine.stackexchange.com/questions/tagged/BrilliantRetail)
 
@@ -38,5 +38,5 @@ More information is available here:
 
 ### Trademarks
 
-* *ExpressionEngine&trade; is a Trademark of  EllisLab, Inc. - All Rights Reserved*
+* *ExpressionEngine&reg; is a Registered Trademark of  EllisLab, Inc. - All Rights Reserved*
 * *BrilliantRetail&trade; is a Trademark of Codesly, Inc. - All Rights Reserved*
