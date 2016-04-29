@@ -6,7 +6,7 @@ BrilliantRetail&trade; is a powerful e-commerce solution for the ExpressionEngin
 
 BrilliantRetail&trade; is an ExpressionEngine add-on package which contains a field type, extension and module. The installation process is straight forward and documented in the BrilliantRetail&trade; documentsion:
 
-* [Installlation Documents](http://docs.BrilliantRetail.com/1-documentation/1-installation-%26-upgrades/index.html)
+* [Installation Documents](http://docs.BrilliantRetail.com/1-documentation/1-installation-%26-upgrades/index.html)
 * [Upgrading Process](http://docs.BrilliantRetail.com/1-documentation/1-installation-%26-upgrades/index.html###upgrading)
 
 ### Release Notes
@@ -19,7 +19,7 @@ The full release notes are available in the documents.
 
 BrilliantRetail&trade; contains a sample store built on the Zurb Foundation responsive css framework. 
 
-* [Develooper Documents](http://docs.BrilliantRetail.com/1-documentation/index.html)
+* [Developer Documents](http://docs.BrilliantRetail.com/1-documentation/index.html)
 * [User Guide](http://docs.BrilliantRetail.com/2-the-control-panel/index.html)
 
 ### Support
