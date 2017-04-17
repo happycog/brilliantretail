@@ -1,6 +1,6 @@
 # BrilliantRetail&trade;
 
-BrilliantRetail&trade; is a powerful e-commerce solution for the ExpressionEngine&reg; content management system brought to you by the team at [Codesly](http://codesly.com). Leverage the power of the ExpressionEngine member management, security and template flexibility to create enterprise level stores.
+BrilliantRetail&trade; is a powerful e-commerce solution for the ExpressionEngine&reg; content management system brought to you by the team at [Vector Media Group](https://www.vectormediagroup.com). Leverage the power of the ExpressionEngine member management, security and template flexibility to create enterprise level stores.
 
 ### Installation & Upgrades
 
@@ -24,7 +24,7 @@ BrilliantRetail&trade; contains a sample store built on the Zurb Foundation resp
 
 ### Support
 
-The ExpressionEngine community is very active and helpful. Please post any help questions you may have and make sure to tag them with BrilliantRetail&trade;. The Codesly team will try to help when we can!
+The ExpressionEngine community is very active and helpful. Please post any help questions you may have and make sure to tag them with BrilliantRetail&trade;. The Vector Media Group team will try to help when we can!
 
 * [ExpressionEngine Answers](http://ExpressionEngine.stackexchange.com/questions/tagged/BrilliantRetail)
 
@@ -39,4 +39,4 @@ More information is available here:
 ### Trademarks
 
 * *ExpressionEngine&reg; is a Registered Trademark of  EllisLab, Inc. - All Rights Reserved*
-* *BrilliantRetail&trade; is a Trademark of Codesly, Inc. - All Rights Reserved*
+* *BrilliantRetail&trade; is a Trademark of Vector Media Group - All Rights Reserved*
